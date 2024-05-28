@@ -113,7 +113,7 @@ function LoginPage() {
           </button>
           <div>
             <div className='flex items-center gap-2'>
-              <p>Don't have an account?</p>
+              <p>Don&apos;t have an account?</p>
               <button type='button' className='font-bold'>
                 Sign up
               </button>

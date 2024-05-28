@@ -24,7 +24,7 @@ function LoginPage() {
     console.log(data);
   };
   return (
-    <main className='fixed w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center font-medium'>
+    <main className='fixed w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center font-medium text-sm sm:text-base'>
       <section className='fixed w-full h-full top-0 left-0'>
         <Image
           className='w-full h-full object-cover'
@@ -32,8 +32,8 @@ function LoginPage() {
           alt='bg-logo'
         />
       </section>
-      <section className='relative z-10 w-1/2 h-[70vh] bg-neutral-50 rounded-sm grid grid-cols-2 overflow-hidden'>
-        <div className='col-span-1 bg-neutral-800 text-white flex flex-col justify-center items-center gap-8 px-16'>
+      <section className='relative z-10 w-full px-4 md:px-0 md:w-4/5 lg:w-2/3 xl:w-1/2 h-[70vh] rounded-sm grid md:grid-cols-2 overflow-hidden'>
+        <div className='hidden col-span-1 bg-neutral-800 text-white md:flex flex-col justify-center items-center gap-8 px-16'>
           <h1 className='uppercase text-6xl font-bold tracking-[4px]'>
             The black & white form
           </h1>
@@ -48,7 +48,7 @@ function LoginPage() {
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className='col-span-1 p-8 flex flex-col justify-center items-center gap-4'
+          className='col-span-1 px-8 py-4 sm:p-8 bg-neutral-50 flex flex-col justify-center items-center gap-4'
         >
           <h1 className='font-bold text-4xl uppercase tracking-[8px]'>Login</h1>
           <div className='w-full flex flex-col gap-2'>
@@ -111,11 +111,24 @@ function LoginPage() {
           >
             Login
           </button>
-          <div className='flex items-center gap-2'>
-            <p>Don't have an account?</p>
-            <button type='button' className='font-bold'>
-              Sign up
-            </button>
+          <div>
+            <div className='flex items-center gap-2'>
+              <p>Don't have an account?</p>
+              <button type='button' className='font-bold'>
+                Sign up
+              </button>
+            </div>
+            <div className='flex md:hidden flex-col gap-2 items-center'>
+              <p className='text-base font-bold'>Or</p>
+              <div className='flex items-center gap-4'>
+                <button className='bg-neutral-800 rounded-full p-2 text-white hover:text-red-500 transition-colors'>
+                  <FaGoogle className='text-lg' />
+                </button>
+                <button className='bg-neutral-800 rounded-full p-2 text-white hover:text-blue-500 transition-colors'>
+                  <FaFacebookF className='text-lg' />
+                </button>
+              </div>
+            </div>
           </div>
         </form>
       </section>

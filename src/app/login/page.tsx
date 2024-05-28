@@ -57,7 +57,7 @@ function LoginPage() {
               type='email'
               placeholder='Email'
               {...register('email', {
-                required: 'Email is required',
+                required: 'Email is required!',
                 pattern: {
                   value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
                   message: 'Invalid email address!',

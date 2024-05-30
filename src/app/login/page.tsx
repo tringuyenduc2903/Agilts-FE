@@ -73,7 +73,7 @@ function LoginPage() {
               <input
                 className='w-full h-full p-4 border border-neutral-500 rounded-sm'
                 type={isShowPwd ? 'text' : 'password'}
-                placeholder='password'
+                placeholder='Password'
                 {...register('password', {
                   required: 'Password is required!',
                 })}

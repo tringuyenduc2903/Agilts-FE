@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import bgLogo from '@/assets/h4-slider-img-1.jpg';
 import Image from 'next/image';
 import { useForm, SubmitHandler } from 'react-hook-form';

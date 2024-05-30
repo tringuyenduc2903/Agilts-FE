@@ -9,12 +9,14 @@ import {
   FaRegEye,
   FaRegEyeSlash,
 } from 'react-icons/fa6';
+import { useRouter } from 'next/navigation';
 type Form = {
   email: string;
   password: string;
   confirmPassword: string;
 };
 function RegisterPage() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -142,7 +144,11 @@ function RegisterPage() {
           <div>
             <div className='flex items-center gap-2'>
               <p>Already have an account?</p>
-              <button type='button' className='font-bold'>
+              <button
+                type='button'
+                className='font-bold'
+                onClick={() => router.push('/login')}
+              >
                 Sign in
               </button>
             </div>

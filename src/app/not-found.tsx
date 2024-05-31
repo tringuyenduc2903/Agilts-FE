@@ -46,6 +46,7 @@ function NotFound() {
             className='aspect-auto object-cover'
             src={notfound}
             alt='not-found-img'
+            fetchPriority='high'
           />
         </section>
       </div>

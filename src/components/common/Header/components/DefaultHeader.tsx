@@ -1,5 +1,5 @@
 'user client';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import Image from 'next/image';
 import logo from '@/assets/borko-logo-white.png';
 import Link from 'next/link';
@@ -14,6 +14,15 @@ function DefaultHeader() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const pathname = usePathname();
   const router = useRouter();
+  const handleRedirect = useCallback(
+    (isLink: boolean, route: string) => {
+      console.log(route);
+      if (isLink) {
+        router.push(`${route}`);
+      }
+    },
+    [router]
+  );
   return (
     <header className='absolute w-full z-50 p-8 hidden xl:flex justify-between items-center gap-8'>
       <button aria-label='btn-back-home' onClick={() => router.push('/')}>
@@ -39,6 +48,7 @@ function DefaultHeader() {
                       ? 'bg-white text-neutral-700'
                       : ''
                   } transition-colors rounded-sm`}
+                  onClick={() => handleRedirect(r?.isLink, r.link)}
                 >
                   <p className='relative py-1'>
                     <span>{r?.name}</span>
@@ -88,7 +98,7 @@ function DefaultHeader() {
           );
         })}
       </div>
-      <div>
+      <div className='flex items-center gap-8'>
         <div className='relative w-[220px]'>
           <input
             className='w-full placeholder:text-white text-white focus:outline-none font-bold bg-transparent uppercase'
@@ -106,6 +116,9 @@ function DefaultHeader() {
             } transition-all duration-200`}
           ></span>
         </div>
+        <button className='bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'>
+          Login
+        </button>
       </div>
     </header>
   );

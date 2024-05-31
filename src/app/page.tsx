@@ -7,7 +7,7 @@ const DynamicBanner = dynamic(() => import('./_components/Banner'), {
 });
 export default async function Home() {
   return (
-    <main className=''>
+    <main>
       <DynamicBanner />
     </main>
   );

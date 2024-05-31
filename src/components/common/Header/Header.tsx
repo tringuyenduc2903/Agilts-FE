@@ -1,8 +1,31 @@
 'use client';
-import DefaultHeader from './components/DefaultHeader';
-import DesktopNavigation from './components/desktop';
+import { Suspense, lazy, useEffect, useState } from 'react';
+const DesktopNavigation = lazy(() => import('./components/desktop'));
+const MobileNavigation = lazy(() => import('./components/mobile'));
 function Header() {
-  return <DesktopNavigation />;
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setIsMobile(true);
+      } else {
+        setIsMobile(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  return isMobile ? (
+    <Suspense>
+      <MobileNavigation />
+    </Suspense>
+  ) : (
+    <Suspense>
+      <DesktopNavigation />
+    </Suspense>
+  );
 }
 
 export default Header;

@@ -1,18 +1,43 @@
 'user client';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import logo from '@/assets/borko-logo-black.png';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 function DesktopNavigation() {
   const { t } = useTranslation('header');
+  const headerRef = useRef<HTMLElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  useGSAP(
+    () => {
+      if (headerRef.current) {
+        gsap.fromTo(
+          headerRef.current,
+          {
+            translateY: -100,
+          },
+          {
+            translateY: 0,
+            duration: 0.5,
+          }
+        );
+      }
+    },
+    { dependencies: [], scope: headerRef }
+  );
   const [hoverRoute, setHoverRoute] = useState<null | String>(null);
   const [hoverSubRoute, setHoverSubRoute] = useState<null | String>(null);
+  const [isFocusInput, setIsFocusInput] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   return (
-    <header className='fixed bg-white text-neutral-800 w-full top-0 left-0 z-50 px-8 flex justify-between h-[72px] items-center'>
+    <header
+      ref={headerRef}
+      className='fixed bg-white text-neutral-800 w-full top-0 left-0 z-50 px-8 flex justify-between h-[72px] items-center border-b border-neutral-200 shadow'
+    >
       <span
         className={`fixed top-0 left-0 ${
           hoverRoute
@@ -59,7 +84,9 @@ function DesktopNavigation() {
               <span
                 className={`absolute left-1/2 -translate-x-1/2 -bottom-1 ${
                   hoverRoute === 'pages' ||
-                  ['about-us', 'our-services', 'contact-us'].includes(pathname)
+                  ['/about-us', '/our-services', '/contact-us'].includes(
+                    pathname
+                  )
                     ? 'w-8'
                     : 'w-0'
                 } h-[2px] bg-red-500 transition-all duration-200`}
@@ -81,7 +108,7 @@ function DesktopNavigation() {
                 <span className='w-6 h-[2px] bg-red-600'></span>
                 <span
                   className={`absolute w-[180px] px-4 left-0 top-1/2 -translate-y-1/2 ${
-                    hoverSubRoute === 'about-us'
+                    hoverSubRoute === 'about-us' || pathname === '/about-us'
                       ? 'translate-x-[20%]'
                       : 'translate-x-0'
                   } bg-white transition-all duration-200`}
@@ -100,7 +127,8 @@ function DesktopNavigation() {
                 <span className='w-6 h-[2px] bg-red-600'></span>
                 <span
                   className={`absolute w-[180px] px-4 left-0 top-1/2 -translate-y-1/2 ${
-                    hoverSubRoute === 'our-services'
+                    hoverSubRoute === 'our-services' ||
+                    pathname === '/our-services'
                       ? 'translate-x-[20%]'
                       : 'translate-x-0'
                   } bg-white transition-all duration-200`}
@@ -119,7 +147,7 @@ function DesktopNavigation() {
                 <span className='w-6 h-[2px] bg-red-600'></span>
                 <span
                   className={`absolute w-[180px] px-4 left-0 top-1/2 -translate-y-1/2 ${
-                    hoverSubRoute === 'contact'
+                    hoverSubRoute === 'contact' || pathname === '/contact'
                       ? 'translate-x-[20%]'
                       : 'translate-x-0'
                   } bg-white transition-all duration-200`}
@@ -148,7 +176,28 @@ function DesktopNavigation() {
           </p>
         </Link>
       </section>
-      <section></section>
+      <section className='flex items-center gap-8'>
+        <div className='relative w-[220px]'>
+          <input
+            className='w-full placeholder:text-neutral-800 text-neutral-800 focus:outline-none font-bold bg-transparent uppercase'
+            type='text'
+            placeholder={t('search')}
+            dir='rtl'
+            ref={inputRef}
+            onFocus={() => setIsFocusInput(true)}
+            onBlur={() => setIsFocusInput(false)}
+          />
+          <span className='absolute -bottom-2 left-0 w-full h-[2px] bg-neutral-300'></span>
+          <span
+            className={`absolute -bottom-2 left-0 h-[2px] w-full bg-red-500 z-10 ${
+              isFocusInput ? 'opacity-100' : 'opacity-0'
+            } transition-all duration-200`}
+          ></span>
+        </div>
+        <button className='bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'>
+          {t('login')}
+        </button>
+      </section>
     </header>
   );
 }

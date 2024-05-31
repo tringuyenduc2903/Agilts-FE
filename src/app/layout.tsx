@@ -1,8 +1,12 @@
 import type { Metadata } from 'next';
 import { Rajdhani } from 'next/font/google';
 import './globals.css';
-import Header from '@/components/common/Header/Header';
 import { I18nProvider } from '@/lib/i18n/i18n';
+import dynamic from 'next/dynamic';
+const DynamicHeader = dynamic(
+  () => import('@/components/common/Header/Header'),
+  { ssr: false }
+);
 const inter = Rajdhani({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
@@ -22,7 +26,7 @@ export default async function RootLayout({
     <html lang='en'>
       <body className={`${inter.className} h-screen`}>
         <I18nProvider>
-          <Header />
+          <DynamicHeader />
           {children}
         </I18nProvider>
       </body>

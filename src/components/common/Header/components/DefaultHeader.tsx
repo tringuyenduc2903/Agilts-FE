@@ -93,7 +93,7 @@ function DefaultHeader() {
           <input
             className='w-full placeholder:text-white text-white focus:outline-none font-bold bg-transparent uppercase'
             type='text'
-            placeholder='SEARCH'
+            placeholder={t('search')}
             dir='rtl'
             ref={inputRef}
             onFocus={() => setIsFocusInput(true)}

@@ -1,10 +1,14 @@
-import Image from 'next/image';
-import Banner from './_components/Banner';
-
-export default function Home() {
+import dynamic from 'next/dynamic';
+const DynamicBanner = dynamic(() => import('./_components/Banner'), {
+  ssr: false,
+  loading: () => (
+    <section className='skeleton relative w-full h-screen'></section>
+  ),
+});
+export default async function Home() {
   return (
     <main className=''>
-      <Banner />
+      <DynamicBanner />
     </main>
   );
 }

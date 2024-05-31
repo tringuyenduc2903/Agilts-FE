@@ -15,7 +15,7 @@ function DefaultHeader() {
   const pathname = usePathname();
   const router = useRouter();
   return (
-    <header className='absolute w-full z-50 p-8 flex justify-between items-center gap-8'>
+    <header className='absolute w-full z-50 p-8 hidden xl:flex justify-between items-center gap-8'>
       <button aria-label='btn-back-home' onClick={() => router.push('/')}>
         <Image width={170} height={70} src={logo} alt='logo' />
       </button>

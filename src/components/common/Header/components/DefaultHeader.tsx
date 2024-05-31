@@ -3,9 +3,12 @@ import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import logo from '@/assets/borko-logo-white.png';
 import Link from 'next/link';
-import { routes } from '../headerData';
+import { generateRoutes } from '../headerData';
 import { usePathname, useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 function DefaultHeader() {
+  const { t } = useTranslation('header');
+  const routes = generateRoutes(t);
   const [isHoverButton, setIsHoverButton] = useState<null | String>(null);
   const [isFocusInput, setIsFocusInput] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);

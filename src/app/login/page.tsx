@@ -27,6 +27,10 @@ function LoginPage() {
   };
   return (
     <main className='fixed w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center font-medium text-sm sm:text-base'>
+      <section
+        className='fixed top-0 left-0 w-full h-full z-[5]'
+        style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+      ></section>
       <section className='fixed w-full h-full top-0 left-0'>
         <Image
           fetchPriority='high'

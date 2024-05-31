@@ -140,21 +140,20 @@ function Banner() {
   }, [isAutoChangeSlide]);
   return (
     <section
-      className='relative w-full h-screen overflow-hidden'
+      className='relative w-full h-[70vh] md:h-screen overflow-hidden'
       ref={container}
     >
       <article className='w-full h-full'>
         <div className='w-full h-full' ref={imgRef}>
           <Image
-            className='w-full h-full'
-            objectFit='cover'
+            className='w-full h-full object-cover'
             src={banners[curSlide].img}
             alt={banners[curSlide].sku}
           />
         </div>
         <div className='absolute top-0 left-0 w-full h-full z-10 flex justify-between items-center'>
-          <div className='flex items-center'>
-            <div className='h-full w-1/2 flex items-center gap-2'>
+          <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 xl:top-0 xl:left-0 xl:-translate-x-0 xl:-translate-y-0 xl:relative xl:w-1/2 flex items-center'>
+            <div className='w-full h-full flex items-center gap-2'>
               {banners[curSlide].sku.split('').map((s, index) => {
                 return (
                   <p
@@ -162,7 +161,7 @@ function Banner() {
                     ref={(el) => {
                       skuRefs.current[index] = el;
                     }}
-                    className='text-[290px] uppercase font-bold text-neutral-200 opacity-30'
+                    className='text-[72px] sm:text-[128px] md:text-[220px] xl:text-[290px] uppercase font-bold text-neutral-200 opacity-30'
                   >
                     {s}
                   </p>
@@ -170,62 +169,65 @@ function Banner() {
               })}
             </div>
           </div>
-          <div className='h-full w-1/2 grid grid-cols-8 gap-8'>
-            <div className='col-span-5 h-full flex flex-col justify-center gap-8'>
+          <div className='py-8 md:py-0 h-full w-full xl:w-1/2 xl:grid xl:grid-cols-8 flex flex-col gap-8 px-4 sm:px-8 xl:px-0 justify-center'>
+            <div className='xl:col-span-5 h-max xl:h-full flex flex-col justify-center items-center sm:items-start md:items-center xl:items-start gap-4 md:gap-8'>
               <h1
                 ref={subTitleRef}
-                className='uppercase text-red-600 font-medium tracking-[16px]'
+                className='uppercase text-center sm:text-start md:text-center xl:text-start text-sm md:text-base text-red-600 font-medium tracking-[16px]'
               >
                 {banners[curSlide].subTitle}
               </h1>
               <h2
                 ref={titleRef}
-                className='text-[70px] h-[130px] leading-[64px] tracking-[8px] text-neutral-100 font-bold'
+                className='text-center sm:text-start md:text-center xl:text-start text-3xl sm:text-4xl md:text-[70px] md:h-[130px] leading-8 md:leading-[64px] tracking-[6px] md:tracking-[8px] text-neutral-100 font-bold'
               >
                 {banners[curSlide].title}
               </h2>
               <p
                 ref={descriptionRef}
-                className='text-neutral-50 text-medium text-lg'
+                className='text-neutral-50 text-medium xl:w-full sm:w-2/3 w-full text-sm md:text-lg line-clamp-3 md:line-clamp-none'
               >
                 {banners[curSlide].description}
               </p>
               {banners[curSlide] && (
-                <div ref={btnRef} className='text-sm flex items-center gap-6'>
+                <div
+                  ref={btnRef}
+                  className='text-sm flex flex-col md:flex-row items-center sm:items-start md:items-center gap-4 md:gap-6'
+                >
                   <button
-                    className='relative w-[195px] h-[55px] uppercase bg-red-600 text-white px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'
+                    className='relative w-max sm:w-[195px] h-[36px] sm:h-[46px] md:h-[55px] text-sm md:text-base uppercase bg-red-600 text-white px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'
                     onMouseEnter={() => setIsHoverButton('view-more')}
                     onMouseLeave={() => setIsHoverButton(null)}
                   >
                     <span
-                      className={`absolute top-1/2 left-4 -translate-y-1/2 ${
+                      className={`sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${
                         isHoverButton === 'view-more'
-                          ? 'translate-x-[27%]'
-                          : 'translate-x-0'
+                          ? 'sm:translate-x-[27%] md:translate-x-[18%]'
+                          : 'sm:translate-x-0'
                       } px-4 z-10 bg-red-600 transition-all duration-200`}
                     >
                       View More
                     </span>
-                    <span className='w-full flex items-center'>
+                    <span className='w-full hidden sm:flex items-center'>
                       <span className='w-full h-[1px] bg-white'></span>
                       <span className='w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-l-[10px] border-l-white'></span>
                     </span>
                   </button>
                   <button
-                    className='relative w-[200px] h-[55px] uppercase bg-neutral-50 text-neutral-800 px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'
+                    className='relative w-max sm:w-[200px] h-[36px] sm:h-[46px] md:h-[55px] text-sm md:text-base uppercase bg-neutral-50 text-neutral-800 px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'
                     onMouseEnter={() => setIsHoverButton('contact')}
                     onMouseLeave={() => setIsHoverButton(null)}
                   >
                     <span
-                      className={`absolute top-1/2 left-4 -translate-y-1/2 ${
+                      className={`sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${
                         isHoverButton === 'contact'
-                          ? 'translate-x-[23%]'
-                          : 'translate-x-0'
+                          ? 'sm:translate-x-[23%] md:translate-x-[15%]'
+                          : 'sm:translate-x-0'
                       } px-4 z-10 bg-white transition-all duration-200`}
                     >
                       Contact Us
                     </span>
-                    <span className='w-full flex items-center'>
+                    <span className='w-full hidden sm:flex items-center'>
                       <span className='w-full h-[1px] bg-neutral-800'></span>
                       <span className='w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-l-[10px] border-l-neutral-700'></span>
                     </span>
@@ -234,7 +236,7 @@ function Banner() {
               )}
             </div>
             {banners[curSlide] && (
-              <div className='col-span-3 h-full flex flex-col justify-center rotate-90 text-neutral-50 text-sm font-bold'>
+              <div className='xl:col-span-3 h-max xl:h-full flex flex-col justify-center xl:rotate-90 text-neutral-50 text-sm font-bold'>
                 <div className='border-b border-neutral-200 pb-2 flex justify-between gap-4'>
                   <p className='tracking-[8px]'>0{curSlide + 1}/03</p>
                   <p ref={tagRef} className='uppercase'>
@@ -247,7 +249,7 @@ function Banner() {
         </div>
       </article>
       {banners[curSlide] && (
-        <div className='absolute z-20 w-full bottom-6 flex justify-between px-8'>
+        <div className='absolute z-20 w-full bottom-6 hidden md:flex justify-between px-8'>
           <button
             className='relative w-[200px] h-[55px] uppercase bg-neutral-50 text-neutral-800 px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'
             onMouseEnter={() => {

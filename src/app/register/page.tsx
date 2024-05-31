@@ -37,7 +37,7 @@ function RegisterPage() {
           alt='bg-logo'
         />
       </section>
-      <section className='relative z-10 w-full px-4 md:px-0 md:w-4/5 lg:w-2/3 xl:w-1/2 h-[70vh] rounded-sm grid md:grid-cols-2 overflow-hidden'>
+      <section className='relative z-10 w-full px-4 md:px-0 md:w-4/5 lg:w-2/3 xl:w-1/2 h-[80vh] rounded-sm grid md:grid-cols-2 overflow-hidden'>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className='col-span-1 px-8 py-4 sm:p-8 bg-neutral-50 flex flex-col justify-center items-center gap-4'

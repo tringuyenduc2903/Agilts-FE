@@ -1,4 +1,9 @@
 {
   "view-more": "Xem thêm",
-  "contact-us": "Liên hệ"
+  "contact-us": "Liên hệ",
+  "back-home": "Về trang chủ",
+  "error-page": "Lỗi trang",
+  "page-not-found": "Không tìm thấy trang",
+  "error-page-mess1": "Ối! Trang bạn đang tìm kiếm không tồn tại.",
+  "error-page-mess2": "Nó có thể đã được di chuyển hoặc bị xóa."
 }

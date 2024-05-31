@@ -35,7 +35,7 @@ input::-webkit-outer-spin-button {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #666666;
+  background: #dc2626;
   border-radius: 2px;
 }
 .skeleton {

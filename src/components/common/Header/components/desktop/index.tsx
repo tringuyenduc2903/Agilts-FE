@@ -72,7 +72,7 @@ function DesktopNavigation() {
               <span
                 className={`absolute left-1/2 -translate-x-1/2 -bottom-1 ${
                   hoverRoute === 'home' || pathname === '/' ? 'w-8' : 'w-0'
-                } h-[2px] bg-red-500 transition-all duration-200`}
+                } h-[2px] bg-red-500 transition-all duration-300`}
               ></span>
             </p>
           </Link>
@@ -98,14 +98,14 @@ function DesktopNavigation() {
                     )
                       ? 'w-8'
                       : 'w-0'
-                  } h-[2px] bg-red-500 transition-all duration-200`}
+                  } h-[2px] bg-red-500 transition-all duration-300`}
                 ></span>
               </p>
             </button>
             <ul
               className={`absolute left-0 w-[240px] ${
                 hoverRoute === 'pages' ? 'h-[240px]' : 'h-0'
-              } transition-[height] duration-200 bg-white text-neutral-500 uppercase overflow-hidden`}
+              } transition-[height] duration-300 bg-white text-neutral-500 uppercase overflow-hidden`}
             >
               <li className='w-full px-4 pt-12'>
                 <Link
@@ -120,7 +120,7 @@ function DesktopNavigation() {
                       hoverSubRoute === 'about-us' || pathname === '/about-us'
                         ? 'translate-x-[20%]'
                         : 'translate-x-0'
-                    } bg-white transition-all duration-200`}
+                    } bg-white transition-all duration-300`}
                   >
                     {t('about-us')}
                   </span>
@@ -140,7 +140,7 @@ function DesktopNavigation() {
                       pathname === '/our-services'
                         ? 'translate-x-[20%]'
                         : 'translate-x-0'
-                    } bg-white transition-all duration-200`}
+                    } bg-white transition-all duration-300`}
                   >
                     {t('our-services')}
                   </span>
@@ -159,7 +159,7 @@ function DesktopNavigation() {
                       hoverSubRoute === 'contact' || pathname === '/contact'
                         ? 'translate-x-[20%]'
                         : 'translate-x-0'
-                    } bg-white transition-all duration-200`}
+                    } bg-white transition-all duration-300`}
                   >
                     {t('contact-us')}
                   </span>
@@ -180,7 +180,7 @@ function DesktopNavigation() {
               <span
                 className={`absolute left-1/2 -translate-x-1/2 -bottom-1 ${
                   hoverRoute === 'shop' || pathname === '/shop' ? 'w-8' : 'w-0'
-                } h-[2px] bg-red-500 transition-all duration-200`}
+                } h-[2px] bg-red-500 transition-all duration-300`}
               ></span>
             </p>
           </Link>
@@ -200,10 +200,10 @@ function DesktopNavigation() {
             <span
               className={`absolute -bottom-2 left-0 h-[2px] w-full bg-red-500 z-10 ${
                 isFocusInput ? 'opacity-100' : 'opacity-0'
-              } transition-all duration-200`}
+              } transition-all duration-300`}
             ></span>
           </div>
-          <button className='bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'>
+          <button className='bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm' onClick={() => router.push('/login')}>
             {t('login')}
           </button>
         </section>

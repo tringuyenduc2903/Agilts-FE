@@ -9,7 +9,7 @@ function NotFound() {
   const [isHoverButton, setIsHoverButton] = useState(false);
   const router = useRouter();
   return (
-    <main className='m-auto pt-[72px] container h-[70vh] px-4'>
+    <main className='m-auto pt-[72px] container h-screen px-4'>
       <div className='relative w-full h-full flex items-center justify-center'>
         <section className='w-full lg:w-1/2 relative z-10 flex flex-col gap-4'>
           <h1 className='text-center lg:text-start sm:text-base md:text-lg text-red-600 tracking-[4px] md:tracking-[8px] uppercase font-bold'>

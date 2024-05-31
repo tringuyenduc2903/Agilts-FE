@@ -1,10 +1,14 @@
 import type { Metadata } from 'next';
 import { Rajdhani } from 'next/font/google';
-import './globals.css';
 import { I18nProvider } from '@/lib/i18n/i18n';
 import dynamic from 'next/dynamic';
+import './globals.css';
 const DynamicHeader = dynamic(
   () => import('@/components/common/Header/Header'),
+  { ssr: false }
+);
+const DynamicFooter = dynamic(
+  () => import('@/components/common/Footer/Footer'),
   { ssr: false }
 );
 const inter = Rajdhani({
@@ -28,6 +32,7 @@ export default async function RootLayout({
         <I18nProvider>
           <DynamicHeader />
           {children}
+          <DynamicFooter />
         </I18nProvider>
       </body>
     </html>

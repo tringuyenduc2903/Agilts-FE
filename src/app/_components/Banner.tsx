@@ -142,7 +142,7 @@ function Banner() {
   }, [isAutoChangeSlide]);
   return (
     <section
-      className='relative w-full h-[70vh] md:h-screen overflow-hidden'
+      className='relative pt-[72px] w-full h-[70vh] md:h-screen overflow-hidden'
       ref={container}
     >
       {banners?.map((b: any, index: number) => {

@@ -37,17 +37,17 @@ function RegisterPage() {
           alt='bg-logo'
         />
       </section>
-      <section className='relative z-10 w-full px-4 md:px-0 md:w-4/5 lg:w-2/3 xl:w-1/2 h-[80vh] rounded-sm grid md:grid-cols-2 overflow-hidden'>
+      <section className='relative z-10 w-full px-4 py-8 md:px-0 md:w-4/5 lg:w-2/3 xl:w-1/2 h-[80vh] rounded-sm grid md:grid-cols-2 overflow-hidden'>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className='col-span-1 px-8 py-4 sm:p-8 bg-neutral-50 flex flex-col justify-center items-center gap-4'
         >
-          <h1 className='font-bold text-4xl uppercase tracking-[8px]'>
+          <h1 className='font-bold text-2xl md:text-4xl uppercase tracking-[4px] md:tracking-[8px]'>
             Register
           </h1>
           <div className='w-full flex flex-col gap-2'>
             <input
-              className='w-full h-full p-4 border border-neutral-500 rounded-sm'
+              className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
               type='email'
               placeholder='Email'
               {...register('email', {
@@ -59,13 +59,15 @@ function RegisterPage() {
               })}
             />
             {errors.email && (
-              <p className='text-red-500 font-bold'>{errors.email?.message}</p>
+              <p className='text-red-500 font-bold text-sm md:text-base'>
+                {errors.email?.message}
+              </p>
             )}
           </div>
           <div className='w-full flex flex-col gap-2'>
             <div className='relative w-full'>
               <input
-                className='w-full h-full p-4 border border-neutral-500 rounded-sm'
+                className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                 type={isShowPwd ? 'text' : 'password'}
                 placeholder='Password'
                 {...register('password', {
@@ -94,7 +96,7 @@ function RegisterPage() {
               )}
             </div>
             {errors.password && (
-              <p className='text-red-500 font-bold'>
+              <p className='text-red-500 font-bold text-sm md:text-base'>
                 {errors.password?.message}
               </p>
             )}
@@ -102,7 +104,7 @@ function RegisterPage() {
           <div className='w-full flex flex-col gap-2'>
             <div className='relative w-full'>
               <input
-                className='w-full h-full p-4 border border-neutral-500 rounded-sm'
+                className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                 type={isShowConfirmPwd ? 'text' : 'password'}
                 placeholder='Confirm password'
                 {...register('confirmPassword', {
@@ -131,13 +133,13 @@ function RegisterPage() {
               )}
             </div>
             {errors.confirmPassword && (
-              <p className='text-red-500 font-bold'>
+              <p className='text-red-500 font-bold text-sm md:text-base'>
                 {errors.confirmPassword?.message}
               </p>
             )}
           </div>
           <button
-            className='w-full rounded-sm bg-neutral-800 text-white py-4 font-bold tracking-[4px] text-lg'
+            className='w-full rounded-sm bg-neutral-800 text-white py-4 font-bold tracking-[4px] text-base md:text-lg'
             type='submit'
           >
             Register

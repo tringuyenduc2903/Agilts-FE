@@ -53,10 +53,12 @@ function LoginPage() {
           onSubmit={handleSubmit(onSubmit)}
           className='col-span-1 px-8 py-4 sm:p-8 bg-neutral-50 flex flex-col justify-center items-center gap-4'
         >
-          <h1 className='font-bold text-4xl uppercase tracking-[8px]'>Login</h1>
+          <h1 className='font-bold text-2xl md:text-4xl uppercase tracking-[4px] md:tracking-[8px]'>
+            Login
+          </h1>
           <div className='w-full flex flex-col gap-2'>
             <input
-              className='w-full h-full p-4 border border-neutral-500 rounded-sm'
+              className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
               type='email'
               placeholder='Email'
               {...register('email', {
@@ -68,13 +70,15 @@ function LoginPage() {
               })}
             />
             {errors.email && (
-              <p className='text-red-500 font-bold'>{errors.email?.message}</p>
+              <p className='text-red-500 font-bold text-sm md:text-base'>
+                {errors.email?.message}
+              </p>
             )}
           </div>
           <div className='w-full flex flex-col gap-2'>
             <div className='relative w-full'>
               <input
-                className='w-full h-full p-4 border border-neutral-500 rounded-sm'
+                className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                 type={isShowPwd ? 'text' : 'password'}
                 placeholder='Password'
                 {...register('password', {
@@ -103,13 +107,13 @@ function LoginPage() {
               )}
             </div>
             {errors.password && (
-              <p className='text-red-500 font-bold'>
+              <p className='text-red-500 font-bold text-sm md:text-base'>
                 {errors.password?.message}
               </p>
             )}
           </div>
           <button
-            className='w-full rounded-sm bg-neutral-800 text-white py-4 font-bold tracking-[4px] text-lg'
+            className='w-full rounded-sm bg-neutral-800 text-white py-4 font-bold tracking-[4px] text-base md:text-lg'
             type='submit'
           >
             Login

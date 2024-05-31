@@ -4,7 +4,9 @@ import Image from 'next/image';
 import { banners } from './bannerData';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { useTranslation } from 'react-i18next';
 function Banner() {
+  const { t } = useTranslation('common');
   const [isHoverButton, setIsHoverButton] = useState<String | null>(null);
   const [curSlide, setCurSlide] = useState(0);
   const [isAutoChangeSlide, setIsAutoChangeSlide] = useState(true);
@@ -212,13 +214,13 @@ function Banner() {
                         onMouseLeave={() => setIsHoverButton(null)}
                       >
                         <span
-                          className={`sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${
+                          className={`w-[124px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${
                             isHoverButton === 'view-more'
-                              ? 'sm:translate-x-[27%] md:translate-x-[18%]'
+                              ? 'sm:translate-x-[17%]'
                               : 'sm:translate-x-0'
                           } px-4 z-10 bg-red-600 transition-all duration-200`}
                         >
-                          View More
+                          {t('view-more')}
                         </span>
                         <span className='w-full hidden sm:flex items-center'>
                           <span className='w-full h-[1px] bg-white'></span>
@@ -231,13 +233,13 @@ function Banner() {
                         onMouseLeave={() => setIsHoverButton(null)}
                       >
                         <span
-                          className={`sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${
+                          className={`w-[132px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${
                             isHoverButton === 'contact'
-                              ? 'sm:translate-x-[23%] md:translate-x-[15%]'
+                              ? 'sm:translate-x-[14%]'
                               : 'sm:translate-x-0'
                           } px-4 z-10 bg-white transition-all duration-200`}
                         >
-                          Contact Us
+                          {t('contact-us')}
                         </span>
                         <span className='w-full hidden sm:flex items-center'>
                           <span className='w-full h-[1px] bg-neutral-800'></span>

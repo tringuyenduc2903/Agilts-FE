@@ -7,6 +7,10 @@ const DynamicHeader = dynamic(
   () => import('@/components/common/Header/Header'),
   { ssr: false }
 );
+const DynamicScrollToTop = dynamic(
+  () => import('@/components/common/Button/ScrollToTop'),
+  { ssr: false }
+);
 const DynamicFooter = dynamic(
   () => import('@/components/common/Footer/Footer'),
   { ssr: false }
@@ -32,6 +36,7 @@ export default async function RootLayout({
         <I18nProvider>
           <DynamicHeader />
           {children}
+          <DynamicScrollToTop />
           <DynamicFooter />
         </I18nProvider>
       </body>

@@ -28,9 +28,9 @@ function LoginPage() {
     console.log(data);
   };
   return (
-    <main className='fixed w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center font-medium text-sm sm:text-base'>
+    <main className='relative w-full h-screen flex justify-center items-center font-medium text-sm sm:text-base'>
       <section
-        className='fixed top-0 left-0 w-full h-full z-[5]'
+        className='absolute top-0 left-0 w-full h-full z-[5]'
         style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       ></section>
       <section className='fixed w-full h-full top-0 left-0'>
@@ -41,7 +41,7 @@ function LoginPage() {
           alt='bg-logo'
         />
       </section>
-      <section className='relative z-10 w-full px-4 md:px-0 md:w-4/5 lg:w-2/3 xl:w-1/2 h-[70vh] rounded-sm grid md:grid-cols-2 overflow-hidden'>
+      <section className='relative z-10 w-full h-full px-4 py-32 md:px-0 md:w-4/5 lg:w-2/3 xl:w-1/2 rounded-sm grid md:grid-cols-2 overflow-hidden'>
         <div className='hidden col-span-1 bg-neutral-800 text-white md:flex flex-col justify-center items-center gap-8 px-16'>
           <h1 className='uppercase text-6xl font-bold tracking-[4px]'>
             The black & white form

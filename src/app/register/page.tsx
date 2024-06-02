@@ -30,12 +30,12 @@ function RegisterPage() {
     console.log(data);
   };
   return (
-    <main className='fixed w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center font-medium text-sm sm:text-base'>
+    <main className='relative w-full h-screen flex justify-center items-center font-medium text-sm sm:text-base'>
       <section
-        className='fixed top-0 left-0 w-full h-full z-[5]'
+        className='absolute top-0 left-0 w-full h-full z-[5]'
         style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       ></section>
-      <section className='fixed w-full h-full top-0 left-0'>
+      <section className='absolute w-full h-full top-0 left-0'>
         <Image
           fetchPriority='high'
           className='w-full h-full object-cover'
@@ -43,7 +43,7 @@ function RegisterPage() {
           alt='bg-logo'
         />
       </section>
-      <section className='relative z-10 w-full px-4 py-8 md:px-0 md:w-4/5 lg:w-2/3 xl:w-1/2 h-[80vh] rounded-sm grid md:grid-cols-2 overflow-hidden'>
+      <section className='relative z-10 w-full h-full px-4 py-32 md:px-0 md:w-4/5 lg:w-2/3 xl:w-1/2 rounded-sm grid md:grid-cols-2 overflow-hidden'>
         <form
           onSubmit={handleSubmit(onSubmit)}
           className='col-span-1 px-8 py-4 sm:p-8 bg-neutral-50 flex flex-col justify-center items-center gap-4'

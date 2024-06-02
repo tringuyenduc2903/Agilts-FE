@@ -10,12 +10,14 @@ import {
   FaRegEyeSlash,
 } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
 type Form = {
   email: string;
   password: string;
   confirmPassword: string;
 };
 function RegisterPage() {
+  const { t } = useTranslation('common');
   const router = useRouter();
   const {
     register,
@@ -47,7 +49,7 @@ function RegisterPage() {
           className='col-span-1 px-8 py-4 sm:p-8 bg-neutral-50 flex flex-col justify-center items-center gap-4'
         >
           <h1 className='font-bold text-2xl md:text-4xl uppercase tracking-[4px] md:tracking-[8px]'>
-            Register
+            {t('register')}
           </h1>
           <div className='w-full flex flex-col gap-2'>
             <input
@@ -55,10 +57,10 @@ function RegisterPage() {
               type='email'
               placeholder='Email'
               {...register('email', {
-                required: 'Email is required!',
+                required: `${t('required-email')}`,
                 pattern: {
                   value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-                  message: 'Invalid email address!',
+                  message: `${t('invalid-email')}}`,
                 },
               })}
             />
@@ -73,9 +75,9 @@ function RegisterPage() {
               <input
                 className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                 type={isShowPwd ? 'text' : 'password'}
-                placeholder='Password'
+                placeholder={`${t('password')}`}
                 {...register('password', {
-                  required: 'Password is required!',
+                  required: `${t('required-pwd')}`,
                 })}
               />
               {isShowPwd && (
@@ -110,9 +112,9 @@ function RegisterPage() {
               <input
                 className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                 type={isShowConfirmPwd ? 'text' : 'password'}
-                placeholder='Confirm password'
+                placeholder={`${t('confirm-pwd')}`}
                 {...register('confirmPassword', {
-                  required: 'Confirm password is required!',
+                  required: `${t('required-confirm-pwd')}`,
                 })}
               />
               {isShowConfirmPwd && (
@@ -146,21 +148,21 @@ function RegisterPage() {
             className='w-full rounded-sm bg-neutral-800 text-white py-4 font-bold tracking-[4px] text-base md:text-lg'
             type='submit'
           >
-            Register
+            {t('register')}
           </button>
           <div>
             <div className='flex items-center gap-2'>
-              <p>Already have an account?</p>
+              <p>{t('mess-have-account')}</p>
               <button
                 type='button'
                 className='font-bold'
                 onClick={() => router.push('/login')}
               >
-                Sign in
+                {t('sign-in')}
               </button>
             </div>
             <div className='flex md:hidden flex-col gap-2 items-center'>
-              <p className='text-base font-bold'>Or</p>
+              <p className='text-base font-bold'>{t('or')}</p>
               <div className='flex items-center gap-4'>
                 <button className='bg-neutral-800 rounded-full p-2 text-white hover:text-red-500 transition-colors'>
                   <FaGoogle className='text-lg' />

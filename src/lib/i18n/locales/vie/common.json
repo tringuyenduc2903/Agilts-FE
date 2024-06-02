@@ -5,5 +5,18 @@
   "error-page": "Lỗi trang",
   "page-not-found": "Không tìm thấy trang",
   "error-page-mess1": "Ối! Trang bạn đang tìm kiếm không tồn tại.",
-  "error-page-mess2": "Nó có thể đã được di chuyển hoặc bị xóa."
+  "error-page-mess2": "Nó có thể đã được di chuyển hoặc bị xóa.",
+  "login": "Đăng nhập",
+  "register": "Đăng ký",
+  "sign-up": "Đăng ký",
+  "sign-in": "Đăng nhập",
+  "mess-no-account": "Chưa có tài khoản?",
+  "mess-have-account": "Đã có tài khoản?",
+  "or": "Hoặc",
+  "password": "Mật khẩu",
+  "confirm-pwd": "Nhập lại mật khẩu",
+  "required-pwd": "Yêu cầu có mật khẩu!",
+  "required-confirm-pwd": "Yêu cầu có nhập lại mật khẩu!",
+  "required-email": "Yêu cầu có email!",
+  "invalid-email": "Địa chỉ email không hợp lệ!"
 }

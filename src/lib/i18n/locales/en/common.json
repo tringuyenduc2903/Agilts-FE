@@ -16,5 +16,7 @@
   "required-pwd": "Password is required!",
   "required-confirm-pwd": "Confirm password is required!",
   "required-email": "Email is required!",
-  "invalid-email": "Invalid email address!"
+  "invalid-email": "Invalid email address!",
+  "performance": "Performance",
+  "our-services": "Our Services"
 }

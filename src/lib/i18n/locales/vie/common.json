@@ -18,5 +18,7 @@
   "required-pwd": "Yêu cầu có mật khẩu!",
   "required-confirm-pwd": "Yêu cầu có nhập lại mật khẩu!",
   "required-email": "Yêu cầu có email!",
-  "invalid-email": "Địa chỉ email không hợp lệ!"
+  "invalid-email": "Địa chỉ email không hợp lệ!",
+  "performance": "Hiệu suất",
+  "our-services": "Dịch vụ"
 }

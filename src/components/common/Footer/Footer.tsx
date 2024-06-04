@@ -7,7 +7,7 @@ import {
 } from 'react-icons/fa6';
 function Footer() {
   return (
-    <footer>
+    <footer className='relative z-10'>
       <section className='bg-neutral-900 py-16 px-4'>
         <div className='container m-auto grid grid-cols-1 lg:grid-cols-3 gap-8'>
           <div className='col-span-1 flex flex-col gap-4'>

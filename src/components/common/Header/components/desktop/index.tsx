@@ -169,17 +169,19 @@ function DesktopNavigation() {
           </div>
           <Link
             className={`h-full uppercase flex justify-center items-center px-4 ${
-              hoverRoute === 'shop' ? 'bg-white' : ''
+              hoverRoute === 'products' ? 'bg-white' : ''
             }`}
-            href={'/shop'}
-            onMouseEnter={() => setHoverRoute('shop')}
+            href={'/products'}
+            onMouseEnter={() => setHoverRoute('products')}
             onMouseLeave={() => setHoverRoute(null)}
           >
             <p className='relative py-1'>
-              <span>{t('shop')}</span>
+              <span>{t('products')}</span>
               <span
                 className={`absolute left-1/2 -translate-x-1/2 -bottom-1 ${
-                  hoverRoute === 'shop' || pathname === '/shop' ? 'w-8' : 'w-0'
+                  hoverRoute === 'products' || pathname === '/products'
+                    ? 'w-8'
+                    : 'w-0'
                 } h-[2px] bg-red-500 transition-all duration-300`}
               ></span>
             </p>
@@ -203,7 +205,10 @@ function DesktopNavigation() {
               } transition-all duration-300`}
             ></span>
           </div>
-          <button className='bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm' onClick={() => router.push('/login')}>
+          <button
+            className='bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
+            onClick={() => router.push('/login')}
+          >
             {t('login')}
           </button>
         </section>

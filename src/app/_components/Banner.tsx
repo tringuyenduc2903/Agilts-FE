@@ -5,7 +5,9 @@ import { banners } from './bannerData';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useTranslation } from 'react-i18next';
+import { useRouter } from 'next/navigation';
 function Banner() {
+  const router = useRouter();
   const { t } = useTranslation('common');
   const [isHoverButton, setIsHoverButton] = useState<String | null>(null);
   const [curSlide, setCurSlide] = useState(0);
@@ -231,6 +233,7 @@ function Banner() {
                         className='relative w-max sm:w-[200px] h-[36px] sm:h-[46px] md:h-[55px] text-sm md:text-base uppercase bg-neutral-50 text-neutral-800 px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'
                         onMouseEnter={() => setIsHoverButton('contact')}
                         onMouseLeave={() => setIsHoverButton(null)}
+                        onClick={() => router.push('/contact')}
                       >
                         <span
                           className={`w-[132px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${

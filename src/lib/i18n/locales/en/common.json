@@ -18,5 +18,12 @@
   "required-email": "Email is required!",
   "invalid-email": "Invalid email address!",
   "performance": "Performance",
-  "our-services": "Our Services"
+  "our-services": "Our Services",
+  "get-in-touch": "Get in touch",
+  "your-name": "Your name",
+  "your-email": "Your email",
+  "your-message": "Your message",
+  "required-name": "Name is required!",
+  "required-message": "Message is required!",
+  "send-message": "Send message"
 }

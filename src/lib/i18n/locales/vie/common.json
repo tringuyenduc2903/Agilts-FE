@@ -20,5 +20,12 @@
   "required-email": "Yêu cầu có email!",
   "invalid-email": "Địa chỉ email không hợp lệ!",
   "performance": "Hiệu suất",
-  "our-services": "Dịch vụ"
+  "our-services": "Dịch vụ",
+  "get-in-touch": "Liên lạc",
+  "your-name": "Tên của bạn",
+  "your-email": "Địa chỉ email",
+  "your-message": "Lời nhắn của bạn",
+  "required-name": "Cần có tên của bạn!",
+  "required-message": "Cần có lời nhắn của bạn!",
+  "send-message": "Gửi tin nhắn"
 }

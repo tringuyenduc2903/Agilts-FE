@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import bgLogo from '@/assets/h4-slider-img-1.jpg';
 import Image from 'next/image';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -11,10 +11,12 @@ import {
 } from 'react-icons/fa6';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
+import { useRegisterMutation } from '@/lib/redux/query/userQuery';
+import { ModalContext } from '@/context/ModalProvider';
 type Form = {
   email: string;
   password: string;
-  confirmPassword: string;
+  password_confirmation: string;
 };
 function RegisterPage() {
   const { t } = useTranslation('common');
@@ -26,9 +28,34 @@ function RegisterPage() {
   } = useForm<Form>();
   const [isShowPwd, setIsShowPwd] = useState(false);
   const [isShowConfirmPwd, setIsShowConfirmPwd] = useState(false);
-  const onSubmit: SubmitHandler<Form> = (data) => {
-    console.log(data);
+  const { setVisibleModal } = useContext(ModalContext);
+  const [
+    registerUser,
+    {
+      data: registerData,
+      isSuccess: isSuccessRegister,
+      isLoading: isLoadingRegister,
+      isError: isErrorRegister,
+      error: errorRegister,
+    },
+  ] = useRegisterMutation();
+  const onSubmit: SubmitHandler<Form> = async (data) => {
+    await registerUser(data);
   };
+  useEffect(() => {
+    if (isSuccessRegister && registerData) {
+      console.log(registerData);
+    }
+    if (isErrorRegister && 'data' in errorRegister) {
+      const err = errorRegister.data as { message: string };
+      setVisibleModal({
+        visibleToastModal: {
+          type: 'error',
+          message: err?.message,
+        },
+      });
+    }
+  }, [isSuccessRegister, registerData, isErrorRegister, errorRegister]);
   return (
     <main className='relative w-full h-screen flex justify-center items-center font-medium text-sm sm:text-base'>
       <section
@@ -86,6 +113,7 @@ function RegisterPage() {
                   className='absolute top-1/2 -translate-y-1/2 right-2'
                   aria-label='show-pwd-btn'
                   onClick={() => setIsShowPwd(false)}
+                  disabled={isLoadingRegister}
                 >
                   <FaRegEye className='text-xl' />
                 </button>
@@ -96,6 +124,7 @@ function RegisterPage() {
                   className='absolute top-1/2 -translate-y-1/2 right-2'
                   aria-label='hide-pwd-btn'
                   onClick={() => setIsShowPwd(true)}
+                  disabled={isLoadingRegister}
                 >
                   <FaRegEyeSlash className='text-xl' />
                 </button>
@@ -113,7 +142,7 @@ function RegisterPage() {
                 className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                 type={isShowConfirmPwd ? 'text' : 'password'}
                 placeholder={`${t('confirm-pwd')}`}
-                {...register('confirmPassword', {
+                {...register('password_confirmation', {
                   required: `${t('required-confirm-pwd')}`,
                 })}
               />
@@ -138,15 +167,16 @@ function RegisterPage() {
                 </button>
               )}
             </div>
-            {errors.confirmPassword && (
+            {errors.password_confirmation && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.confirmPassword?.message}
+                {errors.password_confirmation?.message}
               </p>
             )}
           </div>
           <button
             className='w-full rounded-sm bg-neutral-800 text-white py-4 font-bold tracking-[4px] text-base md:text-lg'
             type='submit'
+            disabled={isLoadingRegister}
           >
             {t('register')}
           </button>
@@ -157,6 +187,7 @@ function RegisterPage() {
                 type='button'
                 className='font-bold'
                 onClick={() => router.push('/login')}
+                disabled={isLoadingRegister}
               >
                 {t('sign-in')}
               </button>
@@ -164,10 +195,16 @@ function RegisterPage() {
             <div className='flex md:hidden flex-col gap-2 items-center'>
               <p className='text-base font-bold'>{t('or')}</p>
               <div className='flex items-center gap-4'>
-                <button className='bg-neutral-800 rounded-full p-2 text-white hover:text-red-500 transition-colors'>
+                <button
+                  className='bg-neutral-800 rounded-full p-2 text-white hover:text-red-500 transition-colors'
+                  disabled={isLoadingRegister}
+                >
                   <FaGoogle className='text-lg' />
                 </button>
-                <button className='bg-neutral-800 rounded-full p-2 text-white hover:text-blue-500 transition-colors'>
+                <button
+                  className='bg-neutral-800 rounded-full p-2 text-white hover:text-blue-500 transition-colors'
+                  disabled={isLoadingRegister}
+                >
                   <FaFacebookF className='text-lg' />
                 </button>
               </div>

@@ -1,7 +1,13 @@
+import { userApi } from './query/userQuery';
 import { configureStore } from '@reduxjs/toolkit';
+import userReducer from './slice/userSlice';
 export const store = configureStore({
-  reducer: {},
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(),
+  reducer: {
+    user: userReducer,
+    [userApi.reducerPath]: userApi.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(userApi.middleware),
 });
 export type AppDispatch = typeof store.dispatch;
 

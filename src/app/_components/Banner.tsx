@@ -6,6 +6,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
+import { getCSRFToken } from '@/lib/utils/getCsrfToken';
 function Banner() {
   const router = useRouter();
   const { t } = useTranslation('common');

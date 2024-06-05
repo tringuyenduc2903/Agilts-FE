@@ -178,14 +178,6 @@ function RegisterPage() {
           <h1 className='uppercase text-6xl font-bold tracking-[4px]'>
             The black & white form
           </h1>
-          {/* <div className='flex items-center gap-4'>
-            <button className='bg-white rounded-full p-3 text-neutral-800 hover:text-red-500 transition-colors'>
-              <FaGoogle className='text-xl' />
-            </button>
-            <button className='bg-white rounded-full p-3 text-neutral-800 hover:text-blue-500 transition-colors'>
-              <FaFacebookF className='text-xl' />
-            </button>
-          </div> */}
         </div>
       </section>
     </main>

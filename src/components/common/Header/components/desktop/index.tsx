@@ -193,7 +193,7 @@ function DesktopNavigation() {
               className='w-full placeholder:text-neutral-800 text-neutral-800 focus:outline-none font-bold bg-transparent uppercase'
               type='text'
               placeholder={t('search')}
-              dir='rtl'
+              // dir='rtl'
               ref={inputRef}
               onFocus={() => setIsFocusInput(true)}
               onBlur={() => setIsFocusInput(false)}

@@ -7,7 +7,7 @@ const DynamicBreadCrumbs = dynamic(
 const DynamicProducts = dynamic(() => import('./_components/ProductsList'));
 function ProductsLayout() {
   return (
-    <main className='w-full pt-[72px] flex flex-col'>
+    <main className='w-full min-h-screen pt-[72px] flex flex-col'>
       <DynamicBreadCrumbs />
       <DynamicProducts />
     </main>

@@ -9,7 +9,7 @@ type SelectedSort = {
     | 'Sort by latest'
     | 'Sort by price: low to high'
     | 'Sort by price: high to low';
-value: 'default' | 'popularity' | 'average_rating' | 'latest' | ''
+  value: 'default' | 'popularity' | 'average_rating' | 'latest' | 'low_to_high' | 'high to low';
 };
 function ProductsList() {
   const [searchFocus, setSearchFocus] = useState(false);
@@ -18,10 +18,9 @@ function ProductsList() {
     name: 'default sorting',
     value: 'default',
   });
-  const handleSelectedSort = useCallback(() => {
-    // const {value} = e.target
-    // const nameOption = e.target[e.target.selectedIndex].getAttribute('name');
-  },[])
+  const handleSelectedSort = useCallback((name: string, value: string) => {
+    setCurSort({ name, value });
+  }, [curSort]);
   return (
     <section className='py-16'>
       <div className='container m-auto px-4 flex flex-col lg:flex-row justify-between gap-4'>
@@ -34,7 +33,7 @@ function ProductsList() {
               className='m-auto sm:m-0 w-full h-[56px] flex items-stretch uppercase font-bold border border-neutral-200 rounded overflow-hidden'
               onClick={() => setIsSortDropdown((prevState) => !prevState)}
             >
-              <span className='w-full h-full px-4 flex justify-start items-center tracking-[2px]'>
+              <span className='w-full h-full px-4 flex justify-start items-center tracking-[2px] text-sm'>
                 Default sorting
               </span>
               <span className='h-full px-4 bg-red-500'>
@@ -46,22 +45,22 @@ function ProductsList() {
                 isSortDropdown ? 'flex' : 'hidden'
               } border border-neutral-200 flex-col`}
             >
-              <button className='text-start px-4 py-1 uppercase font-bold tracking-[2px] hover:text-red-500 transition-colors'>
+              <button className='text-start text-sm px-4 py-1 uppercase font-bold tracking-[2px] hover:text-red-500 transition-colors' onClick={() => handleSelectedSort('default sorting', 'default')}>
                 Default sorting
               </button>
-              <button className='text-start px-4 py-1 uppercase font-bold tracking-[2px] hover:text-red-500 transition-colors'>
+              <button className='text-start text-sm px-4 py-1 uppercase font-bold tracking-[2px] hover:text-red-500 transition-colors'>
                 Sort by popularity
               </button>
-              <button className='text-start px-4 py-1 uppercase font-bold tracking-[2px] hover:text-red-500 transition-colors'>
+              <button className='text-start text-sm px-4 py-1 uppercase font-bold tracking-[2px] hover:text-red-500 transition-colors'>
                 Sort by average rating
               </button>
-              <button className='text-start px-4 py-1 uppercase font-bold tracking-[2px] hover:text-red-500 transition-colors'>
+              <button className='text-start text-sm px-4 py-1 uppercase font-bold tracking-[2px] hover:text-red-500 transition-colors'>
                 Sort by latest
               </button>
-              <button className='text-start px-4 py-1 uppercase font-bold tracking-[2px] hover:text-red-500 transition-colors'>
+              <button className='text-start text-sm px-4 py-1 uppercase font-bold tracking-[2px] hover:text-red-500 transition-colors'>
                 Sort by price: low to high
               </button>
-              <button className='text-start px-4 py-1 uppercase font-bold tracking-[2px] hover:text-red-500 transition-colors'>
+              <button className='text-start text-sm px-4 py-1 uppercase font-bold tracking-[2px] hover:text-red-500 transition-colors'>
                 Sort by price: high to low
               </button>
             </div>
@@ -74,7 +73,7 @@ function ProductsList() {
             >
               <input
                 type='text'
-                className='w-full h-full px-4 flex justify-start items-center tracking-[2px] uppercase'
+                className='w-full h-full px-4 flex justify-start items-center tracking-[2px] uppercase text-sm'
                 placeholder='Your search...'
                 onFocus={() => setSearchFocus(true)}
                 onBlur={() => setSearchFocus(false)}

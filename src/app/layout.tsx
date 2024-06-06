@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { Rajdhani } from 'next/font/google';
+import { Open_Sans } from 'next/font/google';
 import { I18nProvider } from '@/lib/i18n/i18n';
 import dynamic from 'next/dynamic';
 import getCSRFCookie from '@/api/CrsfCookie';
@@ -19,7 +19,7 @@ const DynamicFooter = dynamic(
   { ssr: false }
 );
 const DynamicModal = dynamic(() => import('@/components/modal/Modal'));
-const inter = Rajdhani({
+const inter = Open_Sans({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
 });

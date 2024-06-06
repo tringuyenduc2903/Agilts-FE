@@ -6,7 +6,6 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
-import { getCSRFToken } from '@/lib/utils/getCsrfToken';
 function Banner() {
   const router = useRouter();
   const { t } = useTranslation('common');
@@ -196,7 +195,7 @@ function Banner() {
                   </h1>
                   <h2
                     ref={curSlide === index ? titleRef : null}
-                    className='text-center sm:text-start md:text-center xl:text-start text-3xl sm:text-4xl md:text-[70px] md:h-[130px] leading-8 md:leading-[64px] tracking-[6px] md:tracking-[8px] text-neutral-100 font-bold'
+                    className='text-center sm:text-start md:text-center xl:text-start text-3xl sm:text-4xl md:text-[70px] md:h-[200px] leading-8 md:leading-[64px] tracking-[6px] md:tracking-[8px] text-neutral-100 font-bold'
                   >
                     {b.title}
                   </h2>
@@ -212,7 +211,7 @@ function Banner() {
                       className='text-sm flex flex-col md:flex-row items-center sm:items-start md:items-center gap-4 md:gap-6'
                     >
                       <button
-                        className='relative w-max sm:w-[195px] h-[36px] sm:h-[46px] md:h-[55px] text-sm md:text-base uppercase bg-red-600 text-white px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'
+                        className='relative w-max sm:w-[195px] h-[36px] sm:h-[46px] md:h-[55px] uppercase bg-red-600 text-white px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center text-sm'
                         onMouseEnter={() => setIsHoverButton('view-more')}
                         onMouseLeave={() => setIsHoverButton(null)}
                       >
@@ -231,7 +230,7 @@ function Banner() {
                         </span>
                       </button>
                       <button
-                        className='relative w-max sm:w-[200px] h-[36px] sm:h-[46px] md:h-[55px] text-sm md:text-base uppercase bg-neutral-50 text-neutral-800 px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'
+                        className='relative w-max sm:w-[200px] h-[36px] sm:h-[46px] md:h-[55px] text-sm uppercase bg-neutral-50 text-neutral-800 px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'
                         onMouseEnter={() => setIsHoverButton('contact')}
                         onMouseLeave={() => setIsHoverButton(null)}
                         onClick={() => router.push('/contact')}
@@ -288,9 +287,9 @@ function Banner() {
             <span
               className={`absolute top-1/2 right-4 -translate-y-1/2 ${
                 isHoverButton === 'prev'
-                  ? '-translate-x-[34%]'
+                  ? '-translate-x-[28%]'
                   : 'translate-x-0'
-              } px-4 z-10 transition-all duration-200 bg-white`}
+              } px-4 z-10 transition-all duration-200 bg-white text-sm`}
             >
               Previous
             </span>
@@ -313,10 +312,8 @@ function Banner() {
           >
             <span
               className={`absolute top-1/2 left-4 -translate-y-1/2 ${
-                isHoverButton === 'next'
-                  ? 'translate-x-[106%]'
-                  : 'translate-x-0'
-              } px-4 z-10 bg-white transition-all duration-200`}
+                isHoverButton === 'next' ? 'translate-x-[95%]' : 'translate-x-0'
+              } px-4 z-10 bg-white transition-all duration-200 text-sm`}
             >
               Next
             </span>

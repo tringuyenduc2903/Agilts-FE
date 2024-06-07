@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import './globals.css';
 import StoreProvider from '@/contexts/StoreProvider';
 import { ModalProvider } from '@/contexts/ModalProvider';
+import { FetchDataProvider } from '@/contexts/FetchDataProvider';
 const DynamicHeader = dynamic(
   () => import('@/components/common/Header/Header'),
   { ssr: false }
@@ -41,15 +42,17 @@ export default async function RootLayout({
     <html lang='en'>
       <body className={`${inter.className} flex flex-col justify-between`}>
         <StoreProvider>
-          <I18nProvider>
-            <ModalProvider>
-              <DynamicHeader />
-              {children}
-              <DynamicScrollToTop />
-              <DynamicFooter />
-              <DynamicModal />
-            </ModalProvider>
-          </I18nProvider>
+          <FetchDataProvider>
+            <I18nProvider>
+              <ModalProvider>
+                <DynamicHeader />
+                {children}
+                <DynamicScrollToTop />
+                <DynamicFooter />
+                <DynamicModal />
+              </ModalProvider>
+            </I18nProvider>
+          </FetchDataProvider>
         </StoreProvider>
       </body>
     </html>

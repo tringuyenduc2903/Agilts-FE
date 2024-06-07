@@ -1,26 +1,22 @@
-import { getCSRFToken } from '@/lib/utils/getCsrfToken';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { axiosBaseQuery } from '../config/axios';
 
 export const userApi = createApi({
   reducerPath: 'userApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL,
-    prepareHeaders: (headers) => {
-      const csrfToken = getCSRFToken();
-      if (csrfToken) {
-        headers.set('X-Requested-With', 'XMLHttpRequest');
-        headers.set('X-CSRF-TOKEN', csrfToken);
-      }
-    },
+  baseQuery: axiosBaseQuery({
+    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL as string,
   }),
   endpoints: (builder) => {
     return {
       register: builder.mutation({
-        query: (body) => ({
-          url: `/register`,
-          method: 'POST',
-          body: body,
-        }),
+        query: (body) => {
+          console.log(body);
+          return {
+            url: `/register`,
+            method: 'POST',
+            data: body,
+          };
+        },
       }),
     };
   },

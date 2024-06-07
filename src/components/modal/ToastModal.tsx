@@ -1,4 +1,4 @@
-import { ModalContext } from '@/context/ModalProvider';
+import { ModalContext } from '@/contexts/ModalProvider';
 import React, { useContext, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/ReactToastify.css';

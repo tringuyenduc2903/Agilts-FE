@@ -7,10 +7,12 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import MenuIcon from './components/MenuIcon';
 function DesktopNavigation() {
   const { t } = useTranslation('header');
   const headerRef = useRef<HTMLElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
   useGSAP(
     () => {
       if (headerRef.current) {
@@ -37,7 +39,7 @@ function DesktopNavigation() {
     <>
       <div
         className={`fixed top-0 left-0 ${
-          hoverRoute
+          hoverRoute || isOpenMenu
             ? 'w-full h-full z-[500] opacity-100'
             : 'w-0 h-0 -z-10 opacity-0'
         } transition-opacity duration-300`}
@@ -49,7 +51,7 @@ function DesktopNavigation() {
       >
         <div
           className={`fixed top-0 left-0 ${
-            hoverRoute
+            hoverRoute || isOpenMenu
               ? 'w-full h-full z-20 opacity-100'
               : 'w-0 h-0 -z-10 opacity-0'
           } transition-opacity duration-300`}
@@ -205,11 +207,26 @@ function DesktopNavigation() {
               } transition-all duration-300`}
             ></span>
           </div>
-          <button
+          {/* <button
             className='bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
             onClick={() => router.push('/login')}
           >
             {t('login')}
+          </button> */}
+          <button>
+            <span className='text-neutral-800 text-sm uppercase font-bold tracking-[2px]'>
+              {t('cart')}
+            </span>
+            <span className='p-2 text-[8px]'>0</span>
+          </button>
+          <button
+            className='rounded-sm relative z-50'
+            onClick={() => setIsOpenMenu((prevState) => !prevState)}
+          >
+            <MenuIcon
+              isOpenMenu={isOpenMenu}
+              closeMenu={() => setIsOpenMenu(false)}
+            />
           </button>
         </section>
       </header>

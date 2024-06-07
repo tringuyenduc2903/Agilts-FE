@@ -25,5 +25,21 @@
   "your-message": "Your message",
   "required-name": "Name is required!",
   "required-message": "Message is required!",
-  "send-message": "Send message"
+  "send-message": "Send message",
+  "showing": "Showing",
+  "of": "Of",
+  "result": "Result",
+  "results": "Results",
+  "default_sorting": "Default",
+  "sort_by_popularity": "Popularity",
+  "sort_by_average_rating": "Average rating",
+  "sort_by_latest": "Latest",
+  "sort_by_price_low": "Low to high",
+  "sort_by_price_high": "High to low",
+  "sort": "Sort",
+  "your_search": "Your Search",
+  "home": "Home",
+  "products": "Products",
+  "name": "Your Name",
+  "register_message": "Register account successfully!"
 }

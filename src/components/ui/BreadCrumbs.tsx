@@ -2,7 +2,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 function BreadCrumbs() {
+  const { t } = useTranslation('common');
   const pathname = usePathname();
   const renderedBreadcrumbs = pathname
     .replace('/', '')
@@ -15,19 +17,19 @@ function BreadCrumbs() {
             className='font-bold uppercase tracking-[2px] hover:text-red-500 transition-colors'
             href={`/${b}`}
           >
-            {b}
+            {t(`${b}`)}
           </Link>
         </div>
       );
     });
   return (
-    <section className='bg-neutral-200 text-neutral-800'>
-      <div className='container m-auto p-4 flex items-center gap-4 text-sm'>
+    <section className='bg-neutral-100 text-neutral-800'>
+      <div className='container m-auto px-4 py-6 flex items-center gap-4 text-sm'>
         <Link
           className='font-bold uppercase tracking-[2px] hover:text-red-500 transition-colors'
           href='/'
         >
-          Home
+          {t('home')}
         </Link>
         {renderedBreadcrumbs}
       </div>

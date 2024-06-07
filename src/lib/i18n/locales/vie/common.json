@@ -27,5 +27,21 @@
   "your-message": "Lời nhắn của bạn",
   "required-name": "Cần có tên của bạn!",
   "required-message": "Cần có lời nhắn của bạn!",
-  "send-message": "Gửi tin nhắn"
+  "send-message": "Gửi tin nhắn",
+  "showing": "Hiển thị",
+  "of": "trên",
+  "result": "Kết quả",
+  "results": "Kết quả",
+  "default_sorting": "Mặc định",
+  "sort_by_popularity": "Phổ biến",
+  "sort_by_average_rating": "Đánh giá trung bình",
+  "sort_by_latest": "Mới nhất",
+  "sort_by_price_low": "Theo giá thấp đến cao",
+  "sort_by_price_high": "Theo giá cao đến thấp",
+  "sort": "Sắp xếp",
+  "your_search": "Tìm kiếm của bạn",
+  "home": "Trang chủ",
+  "products": "Sản phẩm",
+  "name": "Tên của bạn",
+  "register_message": "Đăng ký tài khoản thành công!"
 }

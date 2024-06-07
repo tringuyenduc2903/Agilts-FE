@@ -1,5 +1,5 @@
 'use client';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import bgLogo from '@/assets/h4-slider-img-1.jpg';
 import Image from 'next/image';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -12,8 +12,10 @@ import {
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useRegisterMutation } from '@/lib/redux/query/userQuery';
-import { ModalContext } from '@/context/ModalProvider';
+import { ModalContext } from '@/contexts/ModalProvider';
+import getCSRFCookie from '@/api/CrsfCookie';
 type Form = {
+  name: string;
   email: string;
   password: string;
   password_confirmation: string;
@@ -21,41 +23,50 @@ type Form = {
 function RegisterPage() {
   const { t } = useTranslation('common');
   const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Form>();
+  const { register, handleSubmit } = useForm<Form>();
   const [isShowPwd, setIsShowPwd] = useState(false);
   const [isShowConfirmPwd, setIsShowConfirmPwd] = useState(false);
   const { setVisibleModal } = useContext(ModalContext);
   const [
     registerUser,
     {
-      data: registerData,
       isSuccess: isSuccessRegister,
       isLoading: isLoadingRegister,
       isError: isErrorRegister,
       error: errorRegister,
     },
   ] = useRegisterMutation();
+  const errors = useMemo(() => {
+    if (errorRegister && errorRegister) {
+      const error = errorRegister as any;
+      return error?.data?.errors;
+    } else {
+      return null;
+    }
+  }, [isErrorRegister, errorRegister]);
   const onSubmit: SubmitHandler<Form> = async (data) => {
+    await getCSRFCookie();
     await registerUser(data);
   };
   useEffect(() => {
-    if (isSuccessRegister && registerData) {
-      console.log(registerData);
-    }
-    if (isErrorRegister && 'data' in errorRegister) {
-      const err = errorRegister.data as { message: string };
+    if (isSuccessRegister) {
       setVisibleModal({
         visibleToastModal: {
-          type: 'error',
-          message: err?.message,
+          type: 'success',
+          message: `${t('register_message')}`,
         },
       });
     }
-  }, [isSuccessRegister, registerData, isErrorRegister, errorRegister]);
+    if (isErrorRegister && errorRegister) {
+      const err = errorRegister as any;
+      setVisibleModal({
+        visibleToastModal: {
+          type: 'error',
+          message: err?.data?.message,
+        },
+      });
+    }
+  }, [isSuccessRegister, isErrorRegister, errorRegister, setVisibleModal, t]);
   return (
     <main className='relative w-full h-screen flex justify-center items-center font-medium text-sm sm:text-base'>
       <section
@@ -73,6 +84,7 @@ function RegisterPage() {
       <section className='relative z-10 w-full h-full px-4 py-32 md:px-0 md:w-4/5 lg:w-2/3 xl:w-1/2 rounded-sm grid md:grid-cols-2 overflow-hidden'>
         <form
           onSubmit={handleSubmit(onSubmit)}
+          method='POST'
           className='col-span-1 px-8 py-4 sm:p-8 bg-neutral-50 flex flex-col justify-center items-center gap-4'
         >
           <h1 className='font-bold text-2xl md:text-4xl uppercase tracking-[4px] md:tracking-[8px]'>
@@ -81,19 +93,26 @@ function RegisterPage() {
           <div className='w-full flex flex-col gap-2'>
             <input
               className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+              type='name'
+              placeholder={`${t('name')}`}
+              {...register('name')}
+            />
+            {errors?.name && (
+              <p className='text-red-500 font-bold text-sm md:text-base'>
+                {errors.name[0]}
+              </p>
+            )}
+          </div>
+          <div className='w-full flex flex-col gap-2'>
+            <input
+              className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
               type='email'
               placeholder='Email'
-              {...register('email', {
-                required: `${t('required-email')}`,
-                pattern: {
-                  value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
-                  message: `${t('invalid-email')}}`,
-                },
-              })}
+              {...register('email')}
             />
-            {errors.email && (
+            {errors?.email && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.email?.message}
+                {errors.email[0]}
               </p>
             )}
           </div>
@@ -103,9 +122,7 @@ function RegisterPage() {
                 className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                 type={isShowPwd ? 'text' : 'password'}
                 placeholder={`${t('password')}`}
-                {...register('password', {
-                  required: `${t('required-pwd')}`,
-                })}
+                {...register('password')}
               />
               {isShowPwd && (
                 <button
@@ -130,9 +147,9 @@ function RegisterPage() {
                 </button>
               )}
             </div>
-            {errors.password && (
+            {errors?.password && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.password?.message}
+                {errors.password[0]}
               </p>
             )}
           </div>
@@ -142,9 +159,7 @@ function RegisterPage() {
                 className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                 type={isShowConfirmPwd ? 'text' : 'password'}
                 placeholder={`${t('confirm-pwd')}`}
-                {...register('password_confirmation', {
-                  required: `${t('required-confirm-pwd')}`,
-                })}
+                {...register('password_confirmation')}
               />
               {isShowConfirmPwd && (
                 <button
@@ -167,11 +182,6 @@ function RegisterPage() {
                 </button>
               )}
             </div>
-            {errors.password_confirmation && (
-              <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.password_confirmation?.message}
-              </p>
-            )}
           </div>
           <button
             className='w-full rounded-sm bg-neutral-800 text-white py-4 font-bold tracking-[4px] text-base md:text-lg'

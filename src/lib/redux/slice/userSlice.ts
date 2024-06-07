@@ -7,4 +7,6 @@ export const userSlice = createSlice({
   },
   reducers: {},
 });
+
+export const userInfo = (state: any) => state.user.user;
 export default userSlice.reducer;

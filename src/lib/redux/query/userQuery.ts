@@ -6,20 +6,26 @@ export const userApi = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL as string,
   }),
+  tagTypes: ['users'],
   endpoints: (builder) => {
     return {
+      getUser: builder.query({
+        query: () => ({
+          url: `/user`,
+          method: 'GET',
+        }),
+        providesTags: ['users'],
+      }),
       register: builder.mutation({
-        query: (body) => {
-          console.log(body);
-          return {
-            url: `/register`,
-            method: 'POST',
-            data: body,
-          };
-        },
+        query: (body) => ({
+          url: `/register`,
+          method: 'POST',
+          data: body,
+        }),
+        invalidatesTags: ['users'],
       }),
     };
   },
 });
 
-export const { useRegisterMutation } = userApi;
+export const { useGetUserQuery, useRegisterMutation } = userApi;

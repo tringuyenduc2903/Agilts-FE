@@ -5,6 +5,12 @@
   "about-us": "About us",
   "our-services": "Our services",
   "contact-us": "Contact us",
+  "cart": "Cart",
   "search": "Search",
-  "login": "Login"
+  "login": "Login",
+  "logout": "Logout",
+  "welcome": "Welcome",
+  "my_account": "My Account",
+  "settings": "Settings",
+  "help": "Help"
 }

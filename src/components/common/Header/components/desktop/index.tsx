@@ -32,6 +32,7 @@ function DesktopNavigation() {
   );
   const [hoverRoute, setHoverRoute] = useState<null | String>(null);
   const [hoverSubRoute, setHoverSubRoute] = useState<null | String>(null);
+  const [hoverCart, setHoverCart] = useState(false);
   const [isFocusInput, setIsFocusInput] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -44,6 +45,7 @@ function DesktopNavigation() {
             : 'w-0 h-0 -z-10 opacity-0'
         } transition-opacity duration-300`}
         style={{ backgroundColor: 'rgba(0,0,0,0.1)' }}
+        onClick={() => setIsOpenMenu(false)}
       ></div>
       <header
         ref={headerRef}
@@ -51,11 +53,12 @@ function DesktopNavigation() {
       >
         <div
           className={`fixed top-0 left-0 ${
-            hoverRoute || isOpenMenu
+            hoverRoute || isOpenMenu || hoverCart
               ? 'w-full h-full z-20 opacity-100'
               : 'w-0 h-0 -z-10 opacity-0'
           } transition-opacity duration-300`}
           style={{ backgroundColor: 'rgba(0,0,0,0.1)' }}
+          onClick={() => setIsOpenMenu(false)}
         ></div>
         <button aria-label='btn-back-home' onClick={() => router.push('/')}>
           <Image width={170} height={70} src={logo} alt='logo' />
@@ -207,27 +210,29 @@ function DesktopNavigation() {
               } transition-all duration-300`}
             ></span>
           </div>
-          {/* <button
-            className='bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
-            onClick={() => router.push('/login')}
+          <button
+            className='relative z-50 flex items-center gap-2'
+            onMouseOver={() => setHoverCart(true)}
+            onMouseOut={() => setHoverCart(false)}
           >
-            {t('login')}
-          </button> */}
-          <button>
             <span className='text-neutral-800 text-sm uppercase font-bold tracking-[2px]'>
               {t('cart')}
             </span>
-            <span className='p-2 text-[8px]'>0</span>
+            <span
+              className={`p-2 size-[24px] text-[12px] flex justify-center items-center font-bold ${
+                hoverCart ? 'text-white bg-red-500' : 'bg-neutral-300'
+              } transition-colors`}
+            >
+              0
+            </span>
           </button>
-          <button
-            className='rounded-sm relative z-50'
-            onClick={() => setIsOpenMenu((prevState) => !prevState)}
-          >
+          <div className='rounded-sm relative z-50'>
             <MenuIcon
               isOpenMenu={isOpenMenu}
+              openMenu={() => setIsOpenMenu(true)}
               closeMenu={() => setIsOpenMenu(false)}
             />
-          </button>
+          </div>
         </section>
       </header>
     </>

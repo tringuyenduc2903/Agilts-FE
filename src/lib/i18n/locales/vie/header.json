@@ -5,6 +5,12 @@
   "about-us": "Về chúng tôi",
   "our-services": "Dịch vụ",
   "contact-us": "Liên hệ",
+  "cart": "Giỏ hàng",
   "search": "Tìm kiếm",
-  "login": "Đăng nhập"
+  "login": "Đăng nhập",
+  "welcome": "Chào mừng",
+  "logout": "Đăng xuất",
+  "my_account": "Tài khoản",
+  "settings": "Cài đặt",
+  "help": "Trợ giúp"
 }

@@ -19,11 +19,11 @@ function Header() {
   }, []);
   return isMobile ? (
     <Suspense>
-      <MobileNavigation />
+      <MobileNavigation isMobile={isMobile} />
     </Suspense>
   ) : (
     <Suspense>
-      <DesktopNavigation />
+      <DesktopNavigation isDesktop={!isMobile} />
     </Suspense>
   );
 }

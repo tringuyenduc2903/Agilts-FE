@@ -96,7 +96,7 @@ const MenuRoutes: React.FC<Props> = ({ isOpenMenu, closeMenu }) => {
             </button>
             <ul
               className={` ${
-                subRoute === 'pages' ? 'h-[180px]' : 'h-0'
+                subRoute === 'pages' ? 'h-[144px]' : 'h-0'
               } transition-[height] duration-200 bg-white text-neutral-500 uppercase overflow-hidden`}
             >
               <li className='w-full px-2 text-sm'>

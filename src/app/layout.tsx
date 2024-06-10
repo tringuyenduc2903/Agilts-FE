@@ -39,7 +39,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
+    <html lang='vi'>
       <body className={`${inter.className} flex flex-col justify-between`}>
         <StoreProvider>
           <FetchDataProvider>

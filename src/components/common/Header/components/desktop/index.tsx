@@ -48,7 +48,7 @@ function DesktopNavigation({ isDesktop }: { isDesktop: boolean }) {
         onClick={() => setIsOpenMenu(false)}
       ></div>
       <header
-        ref={headerRef}
+        ref={isDesktop ? headerRef : null}
         className='fixed bg-white text-neutral-800 w-full top-0 left-0 z-[999] px-8 flex justify-between h-[72px] items-center border-b border-neutral-200 shadow'
       >
         <div

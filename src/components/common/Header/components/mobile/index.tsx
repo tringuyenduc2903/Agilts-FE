@@ -29,21 +29,26 @@ function MobileNavigation({ isMobile }: { isMobile: boolean }) {
     { dependencies: [isMobile], scope: headerRef }
   );
   return (
-    <header
-      ref={headerRef}
-      className='fixed h-[72px] w-full top-0 left-0 px-4 flex justify-between items-center z-[999] bg-white'
-    >
-      <button aria-label='btn-back-home' onClick={() => router.push('/')}>
-        <Image width={170} height={70} src={logo} alt='logo' />
-      </button>
-      <button onClick={() => setIsOpenMenu(true)} aria-label='open-menu-routes'>
-        <FaAlignRight className='text-2xl' />
-      </button>
+    <>
+      <header
+        ref={isMobile ? headerRef : null}
+        className='fixed h-[72px] w-full top-0 left-0 px-4 flex justify-between items-center z-50 bg-white'
+      >
+        <button aria-label='btn-back-home' onClick={() => router.push('/')}>
+          <Image width={170} height={70} src={logo} alt='logo' />
+        </button>
+        <button
+          onClick={() => setIsOpenMenu(true)}
+          aria-label='open-menu-routes'
+        >
+          <FaAlignRight className='text-2xl' />
+        </button>
+      </header>
       <MenuRoutes
         isOpenMenu={isOpenMenu}
         closeMenu={() => setIsOpenMenu(false)}
       />
-    </header>
+    </>
   );
 }
 

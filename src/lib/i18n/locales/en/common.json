@@ -41,5 +41,6 @@
   "home": "Home",
   "products": "Products",
   "name": "Your Name",
-  "register_message": "Register account successfully!"
+  "register_message": "Register account successfully!",
+  "err_429": "Too many request. Try again!"
 }

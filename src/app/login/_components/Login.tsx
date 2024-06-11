@@ -84,8 +84,8 @@ function LoginForm() {
           alt='bg-logo'
         />
       </section>
-      <section className='relative z-10 w-full h-full px-4 py-32 md:px-0 md:w-4/5 lg:w-2/3 xl:w-1/2 rounded-sm grid md:grid-cols-2 overflow-hidden'>
-        <div className='hidden col-span-1 bg-neutral-800 text-white md:flex flex-col justify-center items-center gap-8 px-16'>
+      <section className='relative z-10 w-full h-full px-4 py-32 md:px-0 md:w-4/5 lg:w-2/3 2xl:w-1/2 rounded-sm grid lg:grid-cols-2 overflow-hidden'>
+        <div className='hidden col-span-1 bg-neutral-800 text-white lg:flex flex-col justify-center items-center gap-8 px-16'>
           <h1 className='uppercase text-6xl font-bold tracking-[4px]'>
             The black & white form
           </h1>
@@ -175,7 +175,7 @@ function LoginForm() {
                 {...register('remember')}
               />
               <label className='font-bold text-sm' htmlFor='remember'>
-                Remember me
+                {t('remember_me')}
               </label>
             </div>
             {/* {errors.email && (
@@ -203,7 +203,7 @@ function LoginForm() {
                 {t('sign-up')}
               </button>
             </div>
-            <div className='flex md:hidden flex-col gap-2 items-center'>
+            <div className='flex lg:hidden flex-col gap-2 items-center'>
               <p className='text-base font-bold'>{t('or')}</p>
               <div className='flex items-center gap-4'>
                 <button

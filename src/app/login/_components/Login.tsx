@@ -52,14 +52,12 @@ function LoginForm() {
     }
     if (isErrorLogin && errorLogin) {
       const error = errorLogin as any;
-      if (error?.status == 429) {
-        setVisibleModal({
-          visibleToastModal: {
-            type: 'error',
-            message: `${t('err_429')}`,
-          },
-        });
-      }
+      setVisibleModal({
+        visibleToastModal: {
+          type: 'error',
+          message: error?.data?.message,
+        },
+      });
     }
   }, [
     isSuccessLogin,
@@ -68,7 +66,6 @@ function LoginForm() {
     errorLogin,
     setVisibleModal,
     router,
-    t,
   ]);
   return (
     <main className='relative w-full h-screen flex justify-center items-center font-medium text-sm sm:text-base'>

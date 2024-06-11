@@ -12,7 +12,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useLoginMutation } from '@/lib/redux/query/userQuery';
-import getCSRFCookie from '@/api/CrsfCookie';
+import getCSRFCookie from '@/api/CsrfCookie';
 import { ModalContext } from '@/contexts/ModalProvider';
 type Form = {
   email: string;

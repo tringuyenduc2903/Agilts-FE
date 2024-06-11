@@ -13,7 +13,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useRegisterMutation } from '@/lib/redux/query/userQuery';
 import { ModalContext } from '@/contexts/ModalProvider';
-import getCSRFCookie from '@/api/CrsfCookie';
+import getCSRFCookie from '@/api/CsrfCookie';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 type Form = {
   name: string;

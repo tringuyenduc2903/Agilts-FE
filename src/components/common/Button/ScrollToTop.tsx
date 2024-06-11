@@ -21,7 +21,6 @@ function ScrollToTop() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-  console.log(window.scrollY);
   return (
     <button
       className={`fixed bottom-8 right-8 p-6 bg-red-600 rounded-sm z-[100] flex flex-col items-center ${

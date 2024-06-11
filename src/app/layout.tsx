@@ -27,11 +27,12 @@ const inter = Open_Sans({
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: 'Trang chủ',
-    description: 'Trang chủ của agilts',
-    // other: {
-    //   'csrf-token': csrfToken as string,
-    // },
+    title: {
+      template: `%s | Agilts`,
+      default: 'Trang chủ Agilts',
+    },
+    description: 'Trang chủ của Agilts',
+    keywords: 'xe may, xe máy',
   };
 }
 export default async function RootLayout({

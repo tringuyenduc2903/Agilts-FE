@@ -44,5 +44,6 @@
   "products": "Sản phẩm",
   "name": "Tên của bạn",
   "register_message": "Đăng ký tài khoản thành công!",
-  "err_429": "Quá nhiều yêu cầu. Thử lại sau!"
+  "err_429": "Quá nhiều yêu cầu. Thử lại sau!",
+  "remember_me": "Ghi nhớ tôi"
 }

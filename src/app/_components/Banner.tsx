@@ -211,14 +211,14 @@ function Banner() {
                       className='text-sm flex flex-col md:flex-row items-center sm:items-start md:items-center gap-4 md:gap-6'
                     >
                       <button
-                        className='relative w-max sm:w-[195px] h-[36px] sm:h-[46px] md:h-[55px] uppercase bg-red-600 text-white px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center text-sm'
+                        className='relative w-max sm:w-[220px] h-[36px] sm:h-[46px] md:h-[55px] uppercase bg-red-600 text-white px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center text-sm'
                         onMouseEnter={() => setIsHoverButton('view-more')}
                         onMouseLeave={() => setIsHoverButton(null)}
                       >
                         <span
-                          className={`w-[124px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${
+                          className={`w-[142px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${
                             isHoverButton === 'view-more'
-                              ? 'sm:translate-x-[17%]'
+                              ? 'sm:translate-x-[20%]'
                               : 'sm:translate-x-0'
                           } px-4 z-10 bg-red-600 transition-all duration-200`}
                         >
@@ -230,15 +230,15 @@ function Banner() {
                         </span>
                       </button>
                       <button
-                        className='relative w-max sm:w-[200px] h-[36px] sm:h-[46px] md:h-[55px] text-sm uppercase bg-neutral-50 text-neutral-800 px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'
+                        className='relative w-max sm:w-[220px] h-[36px] sm:h-[46px] md:h-[55px] text-sm uppercase bg-neutral-50 text-neutral-800 px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'
                         onMouseEnter={() => setIsHoverButton('contact')}
                         onMouseLeave={() => setIsHoverButton(null)}
                         onClick={() => router.push('/contact')}
                       >
                         <span
-                          className={`w-[132px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${
+                          className={`w-[142px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${
                             isHoverButton === 'contact'
-                              ? 'sm:translate-x-[14%]'
+                              ? 'sm:translate-x-[20%]'
                               : 'sm:translate-x-0'
                           } px-4 z-10 bg-white transition-all duration-200`}
                         >

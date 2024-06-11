@@ -22,7 +22,7 @@ function Contact() {
     console.log(data);
   };
   return (
-    <main className='w-full flex flex-col gap-8'>
+    <main className='w-full pt-[72px] flex flex-col gap-8'>
       <section className='absolute h-[500px] w-full -z-10 hidden lg:block'>
         <Image
           className='w-full h-full object-cover'

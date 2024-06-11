@@ -1,8 +1,7 @@
 'use client';
 import getCSRFCookie from '@/api/CsrfCookie';
 import useClickOutside from '@/lib/hooks/useClickOutside';
-import { useLoginMutation } from '@/lib/redux/query/userQuery';
-import { userInfo } from '@/lib/redux/slice/userSlice';
+import { useLogoutMutation } from '@/lib/redux/query/userQuery';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import React, {
@@ -27,7 +26,7 @@ type Props = {
 };
 const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
   const { user } = useContext(FetchDataContext);
-  const { t } = useTranslation('header');
+  const { t, i18n } = useTranslation('header');
   const { setVisibleModal } = useContext(ModalContext);
   const router = useRouter();
   const pathname = usePathname();
@@ -43,13 +42,20 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
       isError: isErrorLogout,
       error: errorLogout,
     },
-  ] = useLoginMutation();
+  ] = useLogoutMutation();
   const handleRedirect = useCallback(
     (link: string) => {
       router.push(`${link}`);
       closeMenu();
     },
     [router, closeMenu]
+  );
+  const handleChangeLang = useCallback(
+    (lang: string) => {
+      i18n.changeLanguage(lang);
+      closeMenu();
+    },
+    [i18n, closeMenu]
   );
   const handleLogout = useCallback(async () => {
     await getCSRFCookie();
@@ -166,9 +172,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
             onMouseLeave={() => setHoverRoute(null)}
           >
             <button className='w-full uppercase flex justify-between items-center gap-8'>
-              <p className='relative py-1'>
-                <span>{t('pages')}</span>
-              </p>
+              <p>{t('pages')}</p>
               <FaAngleRight
                 className={`${
                   subRoute === 'pages' ? 'rotate-90' : 'rotate-0'
@@ -258,18 +262,72 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
               <span>{t('products')}</span>
             </p>
           </Link>
+          <div>
+            <button
+              className={`w-full uppercase flex justify-between items-center gap-8 ${
+                subRoute === 'languages' ? 'text-red-500' : ''
+              } transition-colors`}
+              onClick={() =>
+                setSubRoute((prevState) => {
+                  if (prevState === 'languages') return null;
+                  return 'languages';
+                })
+              }
+              onMouseEnter={() => setHoverRoute('languages')}
+              onMouseLeave={() => setHoverRoute(null)}
+            >
+              <p>{t('languages')}</p>
+              <FaAngleRight
+                className={`${
+                  subRoute === 'languages' ? 'rotate-90' : 'rotate-0'
+                } transition-all duration-100 text-sm`}
+              />
+            </button>
+            <ul
+              className={` ${
+                subRoute === 'languages' ? 'h-[90px]' : 'h-0'
+              } transition-[height] duration-200 bg-white text-neutral-500 overflow-hidden`}
+            >
+              <li className='w-full px-2 text-sm'>
+                <button
+                  className={`relative w-full h-[48px] flex items-center gap-2 px-4 uppercase ${
+                    hoverSubRoute === 'english' || i18n.language === 'en'
+                      ? 'text-red-500'
+                      : ''
+                  } transition-colors`}
+                  onClick={() => handleChangeLang('en')}
+                  onMouseOver={() => setHoverSubRoute('english')}
+                  onMouseOut={() => setHoverSubRoute(null)}
+                >
+                  {t('english')}
+                </button>
+              </li>
+              <li className='w-full px-2 text-sm'>
+                <button
+                  className={`relative w-full h-[48px] flex items-center gap-2 px-4 uppercase ${
+                    hoverSubRoute === 'vietnamese' || i18n.language === 'vie'
+                      ? 'text-red-500'
+                      : ''
+                  } transition-colors`}
+                  onClick={() => handleChangeLang('vie')}
+                  onMouseOver={() => setHoverSubRoute('vietnamese')}
+                  onMouseOut={() => setHoverSubRoute(null)}
+                >
+                  {t('vietnamese')}
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
-        <button
-          className='mt-auto ml-auto bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
-          // onClick={() => {
-          //   router.push('/login');
-          //   closeMenu();
-          // }}
-          onClick={handleLogout}
-          disabled={isLoadingLogout}
-        >
-          {t('logout')}
-        </button>
+        {user && (
+          <button
+            className='mt-auto ml-auto bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
+            onClick={handleLogout}
+            disabled={isLoadingLogout}
+          >
+            {t('logout')}
+          </button>
+        )}
       </div>
     </aside>
   );

@@ -8,14 +8,14 @@ import { useTranslation } from 'react-i18next';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import MenuIcon from './components/MenuIcon';
-function DesktopNavigation({ isDesktop }: { isDesktop: boolean }) {
+function DesktopNavigation() {
   const { t } = useTranslation('header');
   const headerRef = useRef<HTMLElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   useGSAP(
     () => {
-      if (headerRef.current && isDesktop) {
+      if (headerRef.current) {
         gsap.fromTo(
           headerRef.current,
           {
@@ -28,7 +28,7 @@ function DesktopNavigation({ isDesktop }: { isDesktop: boolean }) {
         );
       }
     },
-    { dependencies: [isDesktop], scope: headerRef }
+    { dependencies: [], scope: headerRef }
   );
   const [hoverRoute, setHoverRoute] = useState<null | String>(null);
   const [hoverSubRoute, setHoverSubRoute] = useState<null | String>(null);
@@ -48,7 +48,7 @@ function DesktopNavigation({ isDesktop }: { isDesktop: boolean }) {
         onClick={() => setIsOpenMenu(false)}
       ></div>
       <header
-        ref={isDesktop ? headerRef : null}
+        ref={headerRef}
         className='fixed bg-white text-neutral-800 w-full top-0 left-0 z-[999] px-8 flex justify-between h-[72px] items-center border-b border-neutral-200 shadow'
       >
         <div

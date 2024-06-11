@@ -7,13 +7,13 @@ import { FaAlignRight } from 'react-icons/fa6';
 import MenuRoutes from './components/MenuRoutes';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-function MobileNavigation({ isMobile }: { isMobile: boolean }) {
+function MobileNavigation() {
   const router = useRouter();
   const headerRef = useRef<HTMLElement | null>(null);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   useGSAP(
     () => {
-      if (headerRef.current && isMobile) {
+      if (headerRef.current) {
         gsap.fromTo(
           headerRef.current,
           {
@@ -26,12 +26,12 @@ function MobileNavigation({ isMobile }: { isMobile: boolean }) {
         );
       }
     },
-    { dependencies: [isMobile], scope: headerRef }
+    { dependencies: [], scope: headerRef }
   );
   return (
     <>
       <header
-        ref={isMobile ? headerRef : null}
+        ref={headerRef}
         className='fixed h-[72px] w-full top-0 left-0 px-4 flex justify-between items-center z-50 bg-white'
       >
         <button aria-label='btn-back-home' onClick={() => router.push('/')}>

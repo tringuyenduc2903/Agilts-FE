@@ -9,7 +9,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import MenuIcon from './components/MenuIcon';
 function DesktopNavigation() {
-  const { t } = useTranslation('header');
+  const { t, i18n } = useTranslation('header');
   const headerRef = useRef<HTMLElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
@@ -191,6 +191,62 @@ function DesktopNavigation() {
               ></span>
             </p>
           </Link>
+          <div
+            className={`relative h-full px-4 cursor-pointer ${
+              hoverRoute === 'languages' ? 'bg-white' : ''
+            }`}
+            onMouseEnter={() => setHoverRoute('languages')}
+            onMouseLeave={() => setHoverRoute(null)}
+          >
+            <button
+              className={`w-full h-full uppercase flex justify-center items-center px-4 ${
+                hoverRoute === 'languages' ? 'bg-white' : ''
+              }`}
+            >
+              <p className='relative py-1'>
+                <span>{t('languages')}</span>
+                <span
+                  className={`absolute left-1/2 -translate-x-1/2 -bottom-1 ${
+                    hoverRoute === 'languages' ? 'w-8' : 'w-0'
+                  } h-[2px] bg-red-500 transition-all duration-300`}
+                ></span>
+              </p>
+            </button>
+            <ul
+              className={`absolute left-0 w-[240px] ${
+                hoverRoute === 'languages' ? 'h-[180px]' : 'h-0'
+              } transition-[height] duration-300 bg-white text-neutral-500 uppercase overflow-hidden`}
+            >
+              <li className='w-full px-4 pt-12'>
+                <button
+                  className={`relative w-full h-[48px] flex items-center gap-2 px-4 uppercase ${
+                    hoverSubRoute === 'english' || i18n.language === 'en'
+                      ? 'text-red-500'
+                      : ''
+                  } transition-colors`}
+                  onMouseOver={() => setHoverSubRoute('english')}
+                  onMouseOut={() => setHoverSubRoute(null)}
+                  onClick={() => i18n.changeLanguage('en')}
+                >
+                  {t('english')}
+                </button>
+              </li>
+              <li className='w-full px-4'>
+                <button
+                  className={`relative w-full h-[48px] flex items-center gap-2 px-4 uppercase ${
+                    hoverSubRoute === 'vietnamese' || i18n.language === 'vie'
+                      ? 'text-red-500'
+                      : ''
+                  } transition-colors`}
+                  onMouseOver={() => setHoverSubRoute('vietnamese')}
+                  onMouseOut={() => setHoverSubRoute(null)}
+                  onClick={() => i18n.changeLanguage('vie')}
+                >
+                  {t('vietnamese')}
+                </button>
+              </li>
+            </ul>
+          </div>
         </section>
         <section className='flex items-center gap-8'>
           <div className='relative w-[220px]'>

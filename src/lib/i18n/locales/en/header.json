@@ -13,5 +13,8 @@
   "my_account": "My Account",
   "settings": "Settings",
   "help": "Help",
-  "success_logout": "Logout successfully!"
+  "success_logout": "Logout successfully!",
+  "languages": "Languages",
+  "english": "English",
+  "vietnamese": "Vietnamese"
 }

@@ -1,25 +1,49 @@
 'use client';
+import getCSRFCookie from '@/api/CsrfCookie';
 import useClickOutside from '@/lib/hooks/useClickOutside';
+import { useLoginMutation } from '@/lib/redux/query/userQuery';
 import { userInfo } from '@/lib/redux/slice/userSlice';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import React, { LegacyRef, useCallback, useState } from 'react';
+import React, {
+  LegacyRef,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaXmark, FaAngleRight } from 'react-icons/fa6';
-import { useSelector } from 'react-redux';
+import {
+  IoPersonCircleOutline,
+  IoSettingsOutline,
+  IoHelpCircleOutline,
+} from 'react-icons/io5';
+import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { ModalContext } from '@/contexts/ModalProvider';
 type Props = {
   isOpenMenu: boolean;
   closeMenu: () => void;
 };
 const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
-  const user = useSelector(userInfo);
+  const { user } = useContext(FetchDataContext);
   const { t } = useTranslation('header');
+  const { setVisibleModal } = useContext(ModalContext);
   const router = useRouter();
   const pathname = usePathname();
   const [hoverRoute, setHoverRoute] = useState<null | String>(null);
   const [subRoute, setSubRoute] = useState<null | String>(null);
   const [hoverSubRoute, setHoverSubRoute] = useState<null | String>(null);
   const { sectionRef } = useClickOutside(closeMenu);
+  const [
+    logout,
+    {
+      isSuccess: isSuccessLogout,
+      isLoading: isLoadingLogout,
+      isError: isErrorLogout,
+      error: errorLogout,
+    },
+  ] = useLoginMutation();
   const handleRedirect = useCallback(
     (link: string) => {
       router.push(`${link}`);
@@ -27,6 +51,30 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
     },
     [router, closeMenu]
   );
+  const handleLogout = useCallback(async () => {
+    await getCSRFCookie();
+    await logout(null);
+  }, [logout]);
+  useEffect(() => {
+    closeMenu();
+    if (isSuccessLogout) {
+      setVisibleModal({
+        visibleToastModal: {
+          type: 'success',
+          message: `${t('success_logout')}`,
+        },
+      });
+    }
+    if (isErrorLogout && errorLogout) {
+      const error = errorLogout as any;
+      setVisibleModal({
+        visibleToastModal: {
+          type: 'error',
+          message: error?.data?.message,
+        },
+      });
+    }
+  }, [isSuccessLogout, isErrorLogout, errorLogout, setVisibleModal, t]);
   return (
     <aside
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
@@ -41,7 +89,36 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
       >
         <div className='pb-4 border-b border-neutral-300 flex justify-between'>
           {user ? (
-            <div></div>
+            <div className='w-full h-full font-medium flex flex-col gap-2'>
+              <p className='text-2xl font-bold'>{t('welcome')}</p>
+              <div>
+                <h2 className='text-xl'>{user?.name}</h2>
+                <p className='text-sm'>{user?.email}</p>
+              </div>
+              <div className='my-4 flex flex-col gap-4 items-start'>
+                <button
+                  className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
+                  disabled={isLoadingLogout}
+                >
+                  <IoPersonCircleOutline className='text-2xl' />
+                  <p>{t('my_account')}</p>
+                </button>
+                <button
+                  className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
+                  disabled={isLoadingLogout}
+                >
+                  <IoSettingsOutline className='text-2xl' />
+                  <p>{t('settings')}</p>
+                </button>
+                <button
+                  className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
+                  disabled={isLoadingLogout}
+                >
+                  <IoHelpCircleOutline className='text-2xl' />
+                  <p>{t('help')}</p>
+                </button>
+              </div>
+            </div>
           ) : (
             <button
               className='bg-red-600 text-white px-8 py-2 tracking-[2px] text-base font-bold rounded-sm'
@@ -50,7 +127,11 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
               {t('login')}
             </button>
           )}
-          <button aria-label='close-menu-routes' onClick={closeMenu}>
+          <button
+            className='w-max h-max'
+            aria-label='close-menu-routes'
+            onClick={closeMenu}
+          >
             <FaXmark className='text-2xl' />
           </button>
         </div>
@@ -178,6 +259,17 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
             </p>
           </Link>
         </div>
+        <button
+          className='mt-auto ml-auto bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
+          // onClick={() => {
+          //   router.push('/login');
+          //   closeMenu();
+          // }}
+          onClick={handleLogout}
+          disabled={isLoadingLogout}
+        >
+          {t('logout')}
+        </button>
       </div>
     </aside>
   );

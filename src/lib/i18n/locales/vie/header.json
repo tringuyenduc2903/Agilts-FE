@@ -13,5 +13,8 @@
   "my_account": "Tài khoản",
   "settings": "Cài đặt",
   "help": "Trợ giúp",
-  "success_logout": "Đăng xuất thành công!"
+  "success_logout": "Đăng xuất thành công!",
+  "languages": "Ngôn ngữ",
+  "english": "Tiếng Anh",
+  "vietnamese": "Tiếng Việt"
 }

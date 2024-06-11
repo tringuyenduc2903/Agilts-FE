@@ -1,5 +1,5 @@
 import useClickOutside from '@/lib/hooks/useClickOutside';
-import { userInfo } from '@/lib/redux/slice/userSlice';
+import { setUser, userInfo } from '@/lib/redux/slice/userSlice';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useRouter } from 'next/navigation';
@@ -11,7 +11,7 @@ import React, {
   useRef,
 } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   IoPersonCircleOutline,
   IoSettingsOutline,
@@ -29,6 +29,7 @@ type Props = {
 const MenuIcon: React.FC<Props> = React.memo(
   ({ isOpenMenu, closeMenu, openMenu }) => {
     const { t } = useTranslation('header');
+    const dispatch = useDispatch();
     const { setVisibleModal } = useContext(ModalContext);
     const user = useSelector(userInfo);
     const router = useRouter();
@@ -107,6 +108,7 @@ const MenuIcon: React.FC<Props> = React.memo(
             message: `${t('success_logout')}`,
           },
         });
+        dispatch(setUser(null));
       }
       if (isErrorLogout && errorLogout) {
         const error = errorLogout as any;
@@ -117,7 +119,14 @@ const MenuIcon: React.FC<Props> = React.memo(
           },
         });
       }
-    }, [isSuccessLogout, isErrorLogout, errorLogout, setVisibleModal, t]);
+    }, [
+      isSuccessLogout,
+      isErrorLogout,
+      errorLogout,
+      setVisibleModal,
+      t,
+      dispatch,
+    ]);
     return (
       <div className='relative'>
         <button

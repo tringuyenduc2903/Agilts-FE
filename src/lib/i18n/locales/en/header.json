@@ -12,5 +12,6 @@
   "welcome": "Welcome",
   "my_account": "My Account",
   "settings": "Settings",
-  "help": "Help"
+  "help": "Help",
+  "success_logout": "Logout successfully!"
 }

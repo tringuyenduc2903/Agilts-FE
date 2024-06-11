@@ -12,5 +12,6 @@
   "logout": "Đăng xuất",
   "my_account": "Tài khoản",
   "settings": "Cài đặt",
-  "help": "Trợ giúp"
+  "help": "Trợ giúp",
+  "success_logout": "Đăng xuất thành công!"
 }

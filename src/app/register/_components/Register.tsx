@@ -93,7 +93,7 @@ function RegisterForm() {
           </h1>
           <div className='w-full flex flex-col gap-2'>
             <input
-              className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+              className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
               type='name'
               placeholder={`${t('name')}`}
               {...register('name')}
@@ -106,7 +106,7 @@ function RegisterForm() {
           </div>
           <div className='w-full flex flex-col gap-2'>
             <input
-              className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+              className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
               type='email'
               placeholder='Email'
               {...register('email')}
@@ -120,7 +120,7 @@ function RegisterForm() {
           <div className='w-full flex flex-col gap-2'>
             <div className='relative w-full'>
               <input
-                className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+                className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                 type={isShowPwd ? 'text' : 'password'}
                 placeholder={`${t('password')}`}
                 {...register('password')}
@@ -157,7 +157,7 @@ function RegisterForm() {
           <div className='w-full flex flex-col gap-2'>
             <div className='relative w-full'>
               <input
-                className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+                className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                 type={isShowConfirmPwd ? 'text' : 'password'}
                 placeholder={`${t('confirm-pwd')}`}
                 {...register('password_confirmation')}
@@ -185,7 +185,7 @@ function RegisterForm() {
             </div>
           </div>
           <button
-            className='w-full rounded-sm bg-neutral-800 text-white py-4 font-bold tracking-[4px] text-base md:text-lg'
+            className='w-full rounded-sm bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
             type='submit'
             disabled={isLoadingRegister}
           >

@@ -112,7 +112,7 @@ function LoginForm() {
           <div className='w-full flex flex-col gap-2'>
             <input
               disabled={isLoadingLogin}
-              className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+              className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
               type='email'
               placeholder='Email'
               formNoValidate
@@ -128,7 +128,7 @@ function LoginForm() {
             <div className='relative w-full'>
               <input
                 disabled={isLoadingLogin}
-                className='w-full h-full p-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+                className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                 type={isShowPwd ? 'text' : 'password'}
                 placeholder={`${t('password')}`}
                 {...register('password')}
@@ -163,12 +163,11 @@ function LoginForm() {
             )}
           </div>
           <div className='w-full flex flex-col gap-2'>
-            <div className='flex items-center gap-2'>
+            <div className='flex items-center gap-2 relative'>
               <input
+                className='checked:bg-red-500'
                 disabled={isLoadingLogin}
-                className='text-sm md:text-base'
                 type='checkbox'
-                placeholder='Remember'
                 {...register('remember')}
               />
               <label className='font-bold text-sm' htmlFor='remember'>
@@ -182,7 +181,7 @@ function LoginForm() {
             )} */}
           </div>
           <button
-            className='w-full rounded-sm bg-neutral-800 text-white py-4 font-bold tracking-[4px] text-base md:text-lg'
+            className='w-full rounded-sm bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
             type='submit'
             disabled={isLoadingLogin}
           >

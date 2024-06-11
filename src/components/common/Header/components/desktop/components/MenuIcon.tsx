@@ -3,7 +3,13 @@ import { userInfo } from '@/lib/redux/slice/userSlice';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { useRouter } from 'next/navigation';
-import React, { LegacyRef, useRef } from 'react';
+import React, {
+  LegacyRef,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import {
@@ -11,6 +17,9 @@ import {
   IoSettingsOutline,
   IoHelpCircleOutline,
 } from 'react-icons/io5';
+import { useLogoutMutation } from '@/lib/redux/query/userQuery';
+import { ModalContext } from '@/contexts/ModalProvider';
+import getCSRFCookie from '@/api/CsrfCookie';
 type Props = {
   isOpenMenu: boolean;
   openMenu: () => void;
@@ -20,12 +29,21 @@ type Props = {
 const MenuIcon: React.FC<Props> = React.memo(
   ({ isOpenMenu, closeMenu, openMenu }) => {
     const { t } = useTranslation('header');
+    const { setVisibleModal } = useContext(ModalContext);
     const user = useSelector(userInfo);
     const router = useRouter();
     const container = useRef<HTMLButtonElement | null>(null);
     const circlesRef = useRef<(HTMLDivElement | null)[]>([]);
     const { sectionRef } = useClickOutside(closeMenu);
-
+    const [
+      logout,
+      {
+        isSuccess: isSuccessLogout,
+        isLoading: isLoadingLogout,
+        isError: isErrorLogout,
+        error: errorLogout,
+      },
+    ] = useLogoutMutation();
     useGSAP(
       () => {
         if (circlesRef.current.length > 0 && container.current && isOpenMenu) {
@@ -76,9 +94,34 @@ const MenuIcon: React.FC<Props> = React.memo(
         ></div>
       );
     }
+    const handleLogout = useCallback(async () => {
+      await getCSRFCookie();
+      await logout(null);
+    }, [logout]);
+    useEffect(() => {
+      closeMenu();
+      if (isSuccessLogout) {
+        setVisibleModal({
+          visibleToastModal: {
+            type: 'success',
+            message: `${t('success_logout')}`,
+          },
+        });
+      }
+      if (isErrorLogout && errorLogout) {
+        const error = errorLogout as any;
+        setVisibleModal({
+          visibleToastModal: {
+            type: 'error',
+            message: error?.data?.message,
+          },
+        });
+      }
+    }, [isSuccessLogout, isErrorLogout, errorLogout, setVisibleModal, t]);
     return (
       <div className='relative'>
         <button
+          disabled={isLoadingLogout}
           onClick={isOpenMenu ? closeMenu : openMenu}
           ref={container}
           className='circles-menu bg-red-500 p-6 w-full h-full grid grid-cols-4 gap-1'
@@ -105,15 +148,24 @@ const MenuIcon: React.FC<Props> = React.memo(
                   <p>{user?.email}</p>
                 </div>
                 <div className='my-4 flex flex-col gap-4 items-start'>
-                  <button className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'>
+                  <button
+                    className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
+                    disabled={isLoadingLogout}
+                  >
                     <IoPersonCircleOutline className='text-2xl' />
                     <p>{t('my_account')}</p>
                   </button>
-                  <button className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'>
+                  <button
+                    className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
+                    disabled={isLoadingLogout}
+                  >
                     <IoSettingsOutline className='text-2xl' />
                     <p>{t('settings')}</p>
                   </button>
-                  <button className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'>
+                  <button
+                    className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
+                    disabled={isLoadingLogout}
+                  >
                     <IoHelpCircleOutline className='text-2xl' />
                     <p>{t('help')}</p>
                   </button>
@@ -124,6 +176,8 @@ const MenuIcon: React.FC<Props> = React.memo(
                   //   router.push('/login');
                   //   closeMenu();
                   // }}
+                  onClick={handleLogout}
+                  disabled={isLoadingLogout}
                 >
                   {t('logout')}
                 </button>
@@ -131,6 +185,7 @@ const MenuIcon: React.FC<Props> = React.memo(
             ) : (
               <button
                 className='mt-auto ml-auto bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
+                disabled={isLoadingLogout}
                 onClick={() => {
                   router.push('/login');
                   closeMenu();

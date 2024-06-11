@@ -29,7 +29,10 @@ export const FetchDataProvider = ({
     if (isSuccessUser && userData) {
       dispatch(setUser(userData));
     }
-  }, [dispatch, isSuccessUser, userData]);
+    if (isErrorUser) {
+      dispatch(setUser(null));
+    }
+  }, [dispatch, isSuccessUser, userData, isErrorUser]);
   const contextValue = {
     user,
     isLoadingUser,

@@ -43,5 +43,6 @@
   "name": "Your Name",
   "register_message": "Register account successfully!",
   "err_429": "Too many request. Try again!",
-  "remember_me": "Remember me"
+  "remember_me": "Remember me",
+  "success_logout": "Logout successfully!"
 }

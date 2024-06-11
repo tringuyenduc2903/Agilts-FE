@@ -83,7 +83,7 @@ function LoginForm() {
       </section>
       <section className='relative z-10 w-full h-full px-4 py-32 md:px-0 md:w-4/5 lg:w-2/3 2xl:w-1/2 rounded-sm grid lg:grid-cols-2 overflow-hidden'>
         <div className='hidden col-span-1 bg-neutral-800 text-white lg:flex flex-col justify-center items-center gap-8 px-16'>
-          <h1 className='uppercase text-6xl font-bold tracking-[4px]'>
+          <h1 className='uppercase text-[56px] leading-[56px] font-bold tracking-[4px]'>
             The black & white form
           </h1>
           <div className='flex items-center gap-4'>

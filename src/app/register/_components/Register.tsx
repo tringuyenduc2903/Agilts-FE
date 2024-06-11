@@ -223,7 +223,7 @@ function RegisterForm() {
           </div>
         </form>
         <div className='hidden col-span-1 bg-neutral-800 text-white lg:flex flex-col justify-center items-center gap-8 px-16'>
-          <h1 className='uppercase text-6xl font-bold tracking-[4px]'>
+          <h1 className='uppercase text-[56px] leading-[56px] font-bold tracking-[4px]'>
             The black & white form
           </h1>
         </div>

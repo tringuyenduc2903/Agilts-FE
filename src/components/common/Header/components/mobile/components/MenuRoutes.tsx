@@ -11,7 +11,7 @@ type Props = {
   isOpenMenu: boolean;
   closeMenu: () => void;
 };
-const MenuRoutes: React.FC<Props> = ({ isOpenMenu, closeMenu }) => {
+const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
   const user = useSelector(userInfo);
   const { t } = useTranslation('header');
   const router = useRouter();
@@ -181,6 +181,6 @@ const MenuRoutes: React.FC<Props> = ({ isOpenMenu, closeMenu }) => {
       </div>
     </aside>
   );
-};
-
+});
+MenuRoutes.displayName = 'MenuRoutes';
 export default MenuRoutes;

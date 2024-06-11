@@ -145,5 +145,5 @@ const MenuIcon: React.FC<Props> = React.memo(
     );
   }
 );
-
+MenuIcon.displayName = 'MenuIcon';
 export default MenuIcon;

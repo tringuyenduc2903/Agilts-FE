@@ -68,6 +68,7 @@ function LoginForm() {
     errorLogin,
     setVisibleModal,
     router,
+    t,
   ]);
   return (
     <main className='relative w-full h-screen flex justify-center items-center font-medium text-sm sm:text-base'>

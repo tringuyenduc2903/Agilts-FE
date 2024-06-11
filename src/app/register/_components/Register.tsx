@@ -39,7 +39,7 @@ function RegisterForm() {
     },
   ] = useRegisterMutation();
   const errors = useMemo(() => {
-    if (errorRegister && errorRegister) {
+    if (isErrorRegister && errorRegister) {
       const error = errorRegister as any;
       return error?.data?.errors;
     }

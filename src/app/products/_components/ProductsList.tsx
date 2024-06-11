@@ -26,13 +26,10 @@ function ProductsList() {
     name: 'default_sorting',
     value: 'default',
   });
-  const handleSelectedSort = useCallback(
-    (name: string, value: string) => {
-      setCurSort({ name, value });
-      setIsSortDropdown(false);
-    },
-    [curSort, isSortDropdown]
-  );
+  const handleSelectedSort = useCallback((name: string, value: string) => {
+    setCurSort({ name, value });
+    setIsSortDropdown(false);
+  }, []);
   return (
     <section className='py-16'>
       <div className='container m-auto px-4 flex flex-col lg:flex-row justify-between gap-4'>

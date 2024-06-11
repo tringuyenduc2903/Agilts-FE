@@ -34,12 +34,15 @@ function GoogleMapComponent() {
   });
 
   const [map, setMap] = useState(null);
-  const onLoad = useCallback(function callback(map: any) {
-    const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
+  const onLoad = useCallback(
+    function callback(map: any) {
+      const bounds = new window.google.maps.LatLngBounds(center);
+      map.fitBounds(bounds);
 
-    setMap(map);
-  }, []);
+      setMap(map);
+    },
+    [center]
+  );
   const onUnmount = useCallback(function callback() {
     setMap(null);
   }, []);

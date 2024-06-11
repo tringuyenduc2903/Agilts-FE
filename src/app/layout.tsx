@@ -1,11 +1,12 @@
 import { Metadata } from 'next';
 import { Open_Sans } from 'next/font/google';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 import { I18nProvider } from '@/lib/i18n/i18n';
-import dynamic from 'next/dynamic';
-import './globals.css';
-import StoreProvider from '@/contexts/StoreProvider';
 import { ModalProvider } from '@/contexts/ModalProvider';
 import { FetchDataProvider } from '@/contexts/FetchDataProvider';
+import StoreProvider from '@/contexts/StoreProvider';
+import dynamic from 'next/dynamic';
+import './globals.css';
 const DynamicHeader = dynamic(
   () => import('@/components/common/Header/Header'),
   { ssr: false }
@@ -54,6 +55,7 @@ export default async function RootLayout({
             </I18nProvider>
           </FetchDataProvider>
         </StoreProvider>
+        <SpeedInsights />
       </body>
     </html>
   );

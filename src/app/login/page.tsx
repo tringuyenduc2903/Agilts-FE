@@ -9,11 +9,12 @@ const DynamicLoginForm = dynamic(() => import('./_components/Login'), {
 });
 function LoginPage() {
   const router = useRouter();
-  const { user, isSuccessUser } = useContext(FetchDataContext);
+  const { user, isSuccessUser, isLoadingUser } = useContext(FetchDataContext);
   if (user || isSuccessUser) {
     router.replace('/');
   }
-
+  if (isLoadingUser)
+    return <main className='relative skeleton h-screen w-full'></main>;
   return <DynamicLoginForm />;
 }
 

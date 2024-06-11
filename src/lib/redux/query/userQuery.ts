@@ -37,7 +37,7 @@ export const userApi = createApi({
           url: '/logout',
           method: 'POST',
         }),
-        // invalidatesTags: ['users'],
+        invalidatesTags: ['users'],
       }),
     };
   },

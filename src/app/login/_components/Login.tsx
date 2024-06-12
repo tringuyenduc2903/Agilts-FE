@@ -47,8 +47,12 @@ function LoginForm() {
     await login({ ...data, remember: true });
   };
   useEffect(() => {
-    if (isSuccessLogin) {
-      router.replace('/');
+    if (isSuccessLogin && loginData) {
+      if (loginData?.two_factor) {
+        router.replace('/');
+      } else {
+        router.replace('/two-factor-qr-code');
+      }
     }
     if (isErrorLogin && errorLogin) {
       const error = errorLogin as any;
@@ -188,6 +192,14 @@ function LoginForm() {
             {t('login')}
           </button>
           <div>
+            <div className='my-2 flex justify-center items-center'>
+              <button
+                type='button'
+                onClick={() => router.push('/forgot-password')}
+              >
+                {t('forgot-password')}
+              </button>
+            </div>
             <div className='flex items-center gap-2'>
               <p>{t('mess-no-account')}</p>
               <button

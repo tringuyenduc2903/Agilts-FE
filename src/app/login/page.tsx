@@ -4,10 +4,7 @@ import React, { useContext } from 'react';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { useRouter } from 'next/navigation';
 import Loading from '../loading';
-const DynamicLoginForm = dynamic(() => import('./_components/Login'), {
-  ssr: false,
-  loading: () => <main className='relative skeleton h-screen w-full'></main>,
-});
+const DynamicLoginForm = dynamic(() => import('./_components/Login'));
 function LoginPage() {
   const router = useRouter();
   const { isSuccessUser, isLoadingUser } = useContext(FetchDataContext);

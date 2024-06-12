@@ -4,10 +4,7 @@ import React, { useContext } from 'react';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { useRouter } from 'next/navigation';
 import Loading from '../loading';
-const DynamicRegister = dynamic(() => import('./_components/Register'), {
-  ssr: false,
-  loading: () => <main className='relative skeleton h-screen w-full'></main>,
-});
+const DynamicRegister = dynamic(() => import('./_components/Register'));
 function RegisterPage() {
   const router = useRouter();
   const { isSuccessUser, isLoadingUser } = useContext(FetchDataContext);

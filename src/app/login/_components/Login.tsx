@@ -197,7 +197,7 @@ function LoginForm() {
                 type='button'
                 onClick={() => router.push('/forgot-password')}
               >
-                {t('forgot-password')}
+                {t('forgot-password')}?
               </button>
             </div>
             <div className='flex items-center gap-2'>

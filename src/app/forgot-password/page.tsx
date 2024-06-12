@@ -7,12 +7,15 @@ import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import { useForgotPasswordMutation } from '@/lib/redux/query/userQuery';
 import { ModalContext } from '@/contexts/ModalProvider';
+import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { notFound } from 'next/navigation';
 
 type Form = {
   email: string;
 };
 function ForgotPasswordPage() {
   const { t } = useTranslation('common');
+  const { user, isLoadingUser, isSuccessUser } = useContext(FetchDataContext);
   const { setVisibleModal } = useContext(ModalContext);
   const { register, handleSubmit } = useForm<Form>();
   const [
@@ -48,6 +51,9 @@ function ForgotPasswordPage() {
       });
     }
   }, [isSuccessPost, postData, isErrorPost, errorPost, setVisibleModal]);
+  if (isLoadingUser)
+    return <main className='relative skeleton h-screen w-full'></main>;
+  if (user && isSuccessUser && !isLoadingUser) return notFound();
   return (
     <main className='w-full pt-[72px] flex flex-col'>
       <section className='absolute h-[500px] w-full -z-10 hidden lg:block'>

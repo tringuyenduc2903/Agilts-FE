@@ -84,7 +84,7 @@ function TwoFactorQrCodePage() {
             >
               {t('confirm-pwd')}
             </label>
-            <div className='relative w-[220px] sm:w-[280px] mx-auto lg:w-full'>
+            <div className='relative w-full'>
               <input
                 className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                 type={isShowPwd ? 'text' : 'password'}
@@ -112,14 +112,12 @@ function TwoFactorQrCodePage() {
                 </button>
               )}
             </div>
-            <div className='w-[220px] sm:w-[280px] mx-auto lg:w-full'>
-              <button
-                className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white px-4 py-2 md:py-3 font-bold tracking-[2px]'
-                type='submit'
-              >
-                {t('submit')}
-              </button>
-            </div>
+            <button
+              className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
+              type='submit'
+            >
+              {t('submit')}
+            </button>
           </form>
         </div>
       </section>

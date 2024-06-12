@@ -1,5 +1,4 @@
 'use client';
-import dynamic from 'next/dynamic';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { useRouter } from 'next/navigation';

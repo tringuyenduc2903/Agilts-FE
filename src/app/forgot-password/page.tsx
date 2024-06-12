@@ -9,6 +9,7 @@ import { useForgotPasswordMutation } from '@/lib/redux/query/userQuery';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { notFound } from 'next/navigation';
+import Loading from '../loading';
 
 type Form = {
   email: string;
@@ -51,8 +52,7 @@ function ForgotPasswordPage() {
       });
     }
   }, [isSuccessPost, postData, isErrorPost, errorPost, setVisibleModal]);
-  if (isLoadingUser)
-    return <main className='relative skeleton h-screen w-full'></main>;
+  if (isLoadingUser) return <Loading />;
   if (user && isSuccessUser && !isLoadingUser) return notFound();
   return (
     <main className='w-full pt-[72px] flex flex-col'>

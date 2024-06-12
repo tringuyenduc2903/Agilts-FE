@@ -13,6 +13,7 @@ import bgImg from '@/assets/port-title-area.jpg';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import getCSRFCookie from '@/api/CsrfCookie';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
+import Loading from '../loading';
 type Form = {
   password: string;
 };
@@ -50,8 +51,7 @@ function TwoFactorQrCodePage() {
     await getCSRFCookie();
     await confirmPassword(data.password);
   };
-  if (isLoadingUser || isLoadingCode)
-    return <main className='relative skeleton h-screen w-full'></main>;
+  if (isLoadingUser || isLoadingCode) return <Loading />;
   // console.log(codeData, isSuccessCode, isErrorCode);
   // console.log(statusConfirm, isSuccessStatus, isErrorStatus, errorStatus);
   return (

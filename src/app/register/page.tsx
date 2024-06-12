@@ -1,7 +1,7 @@
 'use client';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
-import { useRouter } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import Loading from '../loading';
 import bgLogo from '@/assets/h4-slider-img-1.jpg';
 import Image from 'next/image';
@@ -58,6 +58,7 @@ function RegisterPage() {
           message: `${t('register_message')}`,
         },
       });
+      router.replace('/');
     }
     if (isErrorRegister && errorRegister) {
       const err = errorRegister as any;
@@ -68,9 +69,16 @@ function RegisterPage() {
         },
       });
     }
-  }, [isSuccessRegister, isErrorRegister, errorRegister, setVisibleModal, t]);
-  if (isSuccessUser && !isLoadingUser) {
-    router.replace('/');
+  }, [
+    isSuccessRegister,
+    isErrorRegister,
+    errorRegister,
+    setVisibleModal,
+    t,
+    router,
+  ]);
+  if (isSuccessUser && !isLoadingUser && !isSuccessRegister) {
+    return notFound();
   }
   if (isLoadingUser) return <Loading />;
   return (

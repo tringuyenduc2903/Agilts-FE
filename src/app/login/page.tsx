@@ -1,7 +1,7 @@
 'use client';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
-import { useRouter } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import Loading from '../loading';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -74,8 +74,8 @@ function LoginPage() {
     setVisibleModal,
     router,
   ]);
-  if (isSuccessUser && !isLoadingUser) {
-    router.replace('/');
+  if (isSuccessUser && !isLoadingUser && !isSuccessLogin) {
+    return notFound();
   }
   if (isLoadingUser) return <Loading />;
   return (

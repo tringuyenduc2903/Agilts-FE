@@ -24,6 +24,25 @@ export const userApi = createApi({
         }),
         invalidatesTags: ['users'],
       }),
+      confirmPassword: builder.mutation({
+        query: (password) => ({
+          url: '/user/confirm-password',
+          method: 'POST',
+          data: {
+            password: password,
+          },
+        }),
+      }),
+      confirmPasswordStatus: builder.query({
+        query: () => ({
+          url: '/user/confirmed-password-status',
+        }),
+      }),
+      twoFactorQrCode: builder.query({
+        query: () => ({
+          url: '/user/two-factor-qr-code',
+        }),
+      }),
       register: builder.mutation({
         query: (body) => ({
           url: `/register`,
@@ -39,6 +58,15 @@ export const userApi = createApi({
         }),
         invalidatesTags: ['users'],
       }),
+      forgotPassword: builder.mutation({
+        query: (email) => ({
+          url: '/forgot-password',
+          method: 'POST',
+          data: {
+            email: email,
+          },
+        }),
+      }),
     };
   },
 });
@@ -46,6 +74,10 @@ export const userApi = createApi({
 export const {
   useGetUserQuery,
   useLoginMutation,
+  useConfirmPasswordMutation,
+  useConfirmPasswordStatusQuery,
+  useTwoFactorQrCodeQuery,
   useRegisterMutation,
   useLogoutMutation,
+  useForgotPasswordMutation,
 } = userApi;

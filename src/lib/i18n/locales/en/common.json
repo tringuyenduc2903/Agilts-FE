@@ -43,5 +43,10 @@
   "name": "Your Name",
   "register_message": "Register account successfully!",
   "err_429": "Too many request. Try again!",
-  "remember_me": "Remember me"
+  "remember_me": "Remember me",
+  "two-factor": "2FA",
+  "submit": "Submit",
+  "forgot-password": "Forgot password?",
+  "find-your-account": "Find Your Account",
+  "enter_email": "Enter your email..."
 }

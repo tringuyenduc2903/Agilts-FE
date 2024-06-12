@@ -46,7 +46,8 @@
   "remember_me": "Remember me",
   "two-factor": "2FA",
   "submit": "Submit",
-  "forgot-password": "Forgot password?",
+  "forgot-password": "Forgot password",
   "find-your-account": "Find Your Account",
-  "enter_email": "Enter your email..."
+  "enter_email": "Enter your email...",
+  "reset-password": "Reset Password"
 }

@@ -48,7 +48,8 @@
   "remember_me": "Ghi nhớ tôi",
   "two-factor": "2FA",
   "submit": "Xác nhận",
-  "forgot-password": "Quên mật khẩu?",
+  "forgot-password": "Quên mật khẩu",
   "find-your-account": "Tìm tài khoản của bạn",
-  "enter_email": "Nhập địa chỉ email..."
+  "enter_email": "Nhập địa chỉ email...",
+  "reset-password": "Đặt lại mật khẩu"
 }

@@ -20,6 +20,8 @@ import {
 } from 'react-icons/io5';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
+import { useDispatch } from 'react-redux';
+import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
 type Props = {
   isOpenMenu: boolean;
   closeMenu: () => void;
@@ -27,6 +29,7 @@ type Props = {
 const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
   const { user } = useContext(FetchDataContext);
   const { t, i18n } = useTranslation('header');
+  const dispatch = useDispatch();
   const { setVisibleModal } = useContext(ModalContext);
   const router = useRouter();
   const pathname = usePathname();
@@ -70,6 +73,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
           message: `${t('success_logout')}`,
         },
       });
+      dispatch(setIsLoggedIn(false));
     }
     if (isErrorLogout && errorLogout) {
       const error = errorLogout as any;
@@ -80,7 +84,14 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
         },
       });
     }
-  }, [isSuccessLogout, isErrorLogout, errorLogout, setVisibleModal, t]);
+  }, [
+    isSuccessLogout,
+    isErrorLogout,
+    errorLogout,
+    setVisibleModal,
+    t,
+    dispatch,
+  ]);
   return (
     <aside
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}

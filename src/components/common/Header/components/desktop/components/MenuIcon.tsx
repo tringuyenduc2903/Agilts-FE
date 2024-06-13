@@ -19,6 +19,8 @@ import { useLogoutMutation } from '@/lib/redux/query/userQuery';
 import { ModalContext } from '@/contexts/ModalProvider';
 import getCSRFCookie from '@/api/CsrfCookie';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { useDispatch } from 'react-redux';
+import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
 type Props = {
   isOpenMenu: boolean;
   openMenu: () => void;
@@ -28,6 +30,7 @@ type Props = {
 const MenuIcon: React.FC<Props> = React.memo(
   ({ isOpenMenu, closeMenu, openMenu }) => {
     const { t } = useTranslation('header');
+    const dispatch = useDispatch();
     const { setVisibleModal } = useContext(ModalContext);
     const { user } = useContext(FetchDataContext);
     const router = useRouter();
@@ -106,6 +109,7 @@ const MenuIcon: React.FC<Props> = React.memo(
             message: `${t('success_logout')}`,
           },
         });
+        dispatch(setIsLoggedIn(false));
       }
       if (isErrorLogout && errorLogout) {
         const error = errorLogout as any;
@@ -116,7 +120,14 @@ const MenuIcon: React.FC<Props> = React.memo(
           },
         });
       }
-    }, [isSuccessLogout, isErrorLogout, errorLogout, setVisibleModal, t]);
+    }, [
+      isSuccessLogout,
+      isErrorLogout,
+      errorLogout,
+      setVisibleModal,
+      t,
+      dispatch,
+    ]);
     return (
       <div className='relative'>
         {!isOpenMenu && (

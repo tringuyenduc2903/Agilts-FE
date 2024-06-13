@@ -33,7 +33,7 @@ const MenuIcon: React.FC<Props> = React.memo(
     const router = useRouter();
     const container = useRef<HTMLButtonElement | null>(null);
     const circlesRef = useRef<(HTMLDivElement | null)[]>([]);
-    const { sectionRef } = useClickOutside(closeMenu);
+    const { sectionRef, clickOutside } = useClickOutside(closeMenu);
     const [
       logout,
       {
@@ -119,16 +119,28 @@ const MenuIcon: React.FC<Props> = React.memo(
     }, [isSuccessLogout, isErrorLogout, errorLogout, setVisibleModal, t]);
     return (
       <div className='relative'>
-        <button
-          disabled={isLoadingLogout}
-          onClick={isOpenMenu ? closeMenu : openMenu}
-          ref={container}
-          className='circles-menu bg-red-500 p-6 w-full h-full grid grid-cols-4 gap-1'
-        >
-          {circles}
-        </button>
+        {!isOpenMenu && (
+          <button
+            disabled={isLoadingLogout}
+            onClick={openMenu}
+            ref={container}
+            className='relative circles-menu bg-red-500 p-6 w-full h-full grid grid-cols-4 gap-1'
+          >
+            {circles}
+          </button>
+        )}
+        {isOpenMenu && (
+          <button
+            disabled={isLoadingLogout}
+            onClick={() => clickOutside}
+            ref={container}
+            className='relative circles-menu bg-red-500 p-6 w-full h-full grid grid-cols-4 gap-1'
+          >
+            {circles}
+          </button>
+        )}
         <div
-          ref={isOpenMenu ? (sectionRef as LegacyRef<HTMLDivElement>) : null}
+          ref={sectionRef as LegacyRef<HTMLDivElement>}
           className={`absolute right-0 w-[520px] ${
             isOpenMenu ? 'h-[80vh]' : 'h-0'
           } transition-[height] duration-200 bg-white overflow-hidden`}
@@ -157,6 +169,10 @@ const MenuIcon: React.FC<Props> = React.memo(
                   <button
                     className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
                     disabled={isLoadingLogout}
+                    onClick={() => {
+                      router.push('/user/settings');
+                      closeMenu();
+                    }}
                   >
                     <IoSettingsOutline className='text-2xl' />
                     <p>{t('settings')}</p>

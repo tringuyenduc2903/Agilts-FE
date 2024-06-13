@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-function BreadCrumbs() {
+const BreadCrumbs = React.memo(() => {
   const { t } = useTranslation('common');
   const pathname = usePathname();
   const renderedBreadcrumbs = pathname
@@ -35,6 +35,6 @@ function BreadCrumbs() {
       </div>
     </section>
   );
-}
-
+});
+BreadCrumbs.displayName = 'BreadCrumbs';
 export default BreadCrumbs;

@@ -50,6 +50,9 @@ function LoginPage() {
     await login({ ...data, remember: true });
   };
   useEffect(() => {
+    setVisibleModal({ visibleLoadingModal: isLoadingLogin });
+  }, [isLoadingLogin, setVisibleModal]);
+  useEffect(() => {
     if (isSuccessLogin && loginData) {
       if (loginData?.two_factor) {
         router.replace('/');

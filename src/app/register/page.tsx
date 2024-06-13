@@ -51,6 +51,9 @@ function RegisterPage() {
     await registerUser(data);
   };
   useEffect(() => {
+    setVisibleModal({ visibleLoadingModal: isLoadingRegister });
+  }, [isLoadingRegister, setVisibleModal]);
+  useEffect(() => {
     if (isSuccessRegister) {
       setVisibleModal({
         visibleToastModal: {

@@ -5,6 +5,7 @@ type InitialState = {
     type: 'success' | 'error' | 'warning' | 'info';
     message: string;
   };
+  visibleLoadingModal: boolean;
 };
 const SET_VISIBLE_MODAL = 'SET_VISIBLE_MODAL';
 const CLOSE_ALL_MODAL = 'CLOSE_ALL_MODAL';

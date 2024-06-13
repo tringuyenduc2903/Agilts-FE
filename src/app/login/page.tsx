@@ -147,28 +147,19 @@ function LoginPage() {
                 placeholder={`${t('password')}`}
                 {...register('password')}
               />
-              {isShowPwd && (
-                <button
-                  type='button'
-                  className='absolute top-1/2 -translate-y-1/2 right-2'
-                  aria-label='show-pwd-btn'
-                  onClick={() => setIsShowPwd(false)}
-                  disabled={isLoadingLogin}
-                >
+              <button
+                type='button'
+                className='absolute top-1/2 -translate-y-1/2 right-2'
+                aria-label='toggle-pwd-btn'
+                onClick={() => setIsShowPwd(!isShowPwd)}
+                disabled={isLoadingLogin}
+              >
+                {isShowPwd ? (
                   <FaRegEye className='text-xl' />
-                </button>
-              )}
-              {!isShowPwd && (
-                <button
-                  type='button'
-                  className='absolute top-1/2 -translate-y-1/2 right-2'
-                  aria-label='hide-pwd-btn'
-                  onClick={() => setIsShowPwd(true)}
-                  disabled={isLoadingLogin}
-                >
+                ) : (
                   <FaRegEyeSlash className='text-xl' />
-                </button>
-              )}
+                )}
+              </button>
             </div>
             {errors?.password && (
               <p className='text-red-500 font-bold text-sm md:text-base'>

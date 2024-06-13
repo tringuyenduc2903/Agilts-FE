@@ -16,6 +16,8 @@ import {
   FaRegEye,
   FaRegEyeSlash,
 } from 'react-icons/fa6';
+import { useDispatch } from 'react-redux';
+import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
 type Form = {
   email: string;
   password: string;
@@ -25,6 +27,7 @@ function LoginPage() {
   const router = useRouter();
   const { user, isLoadingUser, refetchUser } = useContext(FetchDataContext);
   const { t } = useTranslation('common');
+  const dispatch = useDispatch();
   const { setVisibleModal } = useContext(ModalContext);
   const { register, handleSubmit } = useForm<Form>();
   const [isShowPwd, setIsShowPwd] = useState(false);
@@ -59,6 +62,7 @@ function LoginPage() {
   }, [isLoadingLogin, isErrorLogin, isSuccessLogin, setVisibleModal]);
   useEffect(() => {
     if (isSuccessLogin && loginData) {
+      dispatch(setIsLoggedIn(true));
       if (loginData?.two_factor) {
         router.replace('/two-factor-qr-code');
       } else {
@@ -83,7 +87,9 @@ function LoginPage() {
     setVisibleModal,
     router,
     refetchUser,
+    dispatch,
   ]);
+  if (user) return router.replace('/');
   if (user && !isLoadingUser) {
     return notFound();
   }

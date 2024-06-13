@@ -3,7 +3,7 @@
 import React, { createContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useGetUserQuery } from '@/lib/redux/query/userQuery';
-import { setUser, userInfo } from '@/lib/redux/slice/userSlice';
+import { setIsLoggedIn, setUser, userInfo } from '@/lib/redux/slice/userSlice';
 import { User } from '@/types/types';
 type FetchData = {
   user: User | null;
@@ -32,6 +32,7 @@ export const FetchDataProvider = ({
   useEffect(() => {
     if (isSuccessUser) {
       dispatch(setUser(userData));
+      dispatch(setIsLoggedIn(true));
     } else if (isErrorUser) {
       dispatch(setUser(null));
     }

@@ -88,5 +88,7 @@
   "mess_enter_code": "Nhập mã gồm 6 chữ số do ứng dụng xác thực tạo",
   "recovery_title": "Danh sách mã khôi phục",
   "recovery_mess": " Xin vui lòng không chia sẽ các mã khôi phục cho những người dùng khác.",
-  "copy_list": "Sao chép danh sách"
+  "copy_list": "Sao chép danh sách",
+  "enter_recovery_code": "Nhập mã khôi phục",
+  "recovery_code": "Nhập mã khôi phục"
 }

@@ -73,7 +73,6 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
   const onSubmit: SubmitHandler<Form> = async (data) => {
     await confirm2FA(data.code);
   };
-  console.log(listCodes);
   useGSAP(
     () => {
       if (fistStepRef.current && curStep === 1) {

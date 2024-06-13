@@ -114,6 +114,13 @@ export const userApi = createApi({
           method: 'POST',
         }),
       }),
+      verifyTwoFactor: builder.mutation({
+        query: (body) => ({
+          url: '/two-factor-challenge',
+          method: 'POST',
+          data: body,
+        }),
+      }),
     };
   },
 });
@@ -134,4 +141,5 @@ export const {
   useConfirm2FAMutation,
   useGetRecoveryCodesQuery,
   usePostRecoveryCodesMutation,
+  useVerifyTwoFactorMutation,
 } = userApi;

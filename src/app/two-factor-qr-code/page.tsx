@@ -1,72 +1,57 @@
 'use client';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
-import {
-  useConfirmPasswordMutation,
-  useConfirmPasswordStatusQuery,
-  useTwoFactorQrCodeQuery,
-} from '@/lib/redux/query/userQuery';
+import { useVerifyTwoFactorMutation } from '@/lib/redux/query/userQuery';
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
-import React, { useContext, useEffect, useState } from 'react';
+import { notFound, useRouter } from 'next/navigation';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import bgImg from '@/assets/port-title-area.jpg';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import getCSRFCookie from '@/api/CsrfCookie';
-import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
 import Loading from '../loading';
-import { ModalContext } from '@/contexts/ModalProvider';
+import { useSelector } from 'react-redux';
+import { isLoggedInState } from '@/lib/redux/slice/userSlice';
 type Form = {
-  password: string;
+  code: string;
+  recovery_code: string;
 };
 function TwoFactorQrCodePage() {
   const { t } = useTranslation('common');
-  const { setVisibleModal } = useContext(ModalContext);
-  const { user, isSuccessUser, isLoadingUser } = useContext(FetchDataContext);
-  const [isShowPwd, setIsShowPwd] = useState(false);
-  const { register, handleSubmit } = useForm<Form>();
+  const isLoggedIn = useSelector(isLoggedInState);
+  const router = useRouter();
+  const { user, isSuccessUser, isLoadingUser, refetchUser } =
+    useContext(FetchDataContext);
   const [
-    confirmPassword,
+    verifyTwoFactor,
     {
-      isSuccess: isSuccessConfirm,
-      isLoading: isLoadingConfirm,
-      isError: isErrorConfirm,
-      error: errorConfirm,
+      isSuccess: isSuccessVerify,
+      isLoading: isLoadingVerify,
+      isError: isErrorVerify,
+      error: errorVerify,
     },
-  ] = useConfirmPasswordMutation();
-  const {
-    data: statusConfirm,
-    isLoading: isLoadingStatus,
-    isSuccess: isSuccessStatus,
-    isError: isErrorStatus,
-    error: errorStatus,
-  } = useConfirmPasswordStatusQuery(null, { skip: !isSuccessConfirm });
-  const {
-    data: codeData,
-    isSuccess: isSuccessCode,
-    isLoading: isLoadingCode,
-    isError: isErrorCode,
-  } = useTwoFactorQrCodeQuery(null, { skip: !isSuccessStatus });
+  ] = useVerifyTwoFactorMutation();
+  const errors = useMemo(() => {
+    if (isErrorVerify && errorVerify) {
+      const error = errorVerify as any;
+      return error?.data?.errors;
+    }
+    return null;
+  }, [isErrorVerify, errorVerify]);
+  const { register, handleSubmit } = useForm<Form>();
   const onSubmit: SubmitHandler<Form> = async (data) => {
     await getCSRFCookie();
-    await confirmPassword(data.password);
+    await verifyTwoFactor(data);
   };
-  console.log(isLoadingUser);
   useEffect(() => {
-    setVisibleModal({ visibleLoadingModal: isLoadingConfirm });
-  }, [isLoadingConfirm, setVisibleModal]);
-  if (
-    (user === null && !isSuccessUser && !isLoadingUser) ||
-    (user &&
-      user.two_factor_confirmed_at !== null &&
-      isSuccessUser &&
-      !isLoadingUser)
-  ) {
-    return notFound();
+    if (isSuccessVerify) {
+      refetchUser();
+    }
+  }, [isSuccessVerify, refetchUser]);
+  if (user && !isSuccessUser && !isLoadingUser) {
+    return router.push('/');
   }
-  if (isLoadingUser || isLoadingCode) return <Loading />;
-  // console.log(codeData, isSuccessCode, isErrorCode);
-  // console.log(statusConfirm, isSuccessStatus, isErrorStatus, errorStatus);
-  console.log(user);
+  if (isLoadingUser) return <Loading />;
+  if (!isLoggedIn) return notFound();
   return (
     <main className='w-full pt-[72px] flex flex-col'>
       <section className='absolute h-[500px] w-full -z-10 hidden lg:block'>
@@ -91,45 +76,56 @@ function TwoFactorQrCodePage() {
             method='POST'
             className='flex flex-col gap-4'
           >
-            <label
-              className='lg:text-neutral-800 text-white text-center lg:text-start'
-              htmlFor='password'
-            >
-              {t('confirm-pwd')}
-            </label>
-            <div className='relative w-full'>
-              <input
-                className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
-                type={isShowPwd ? 'text' : 'password'}
-                placeholder={`${t('password')}`}
-                {...register('password')}
-              />
-              {isShowPwd && (
-                <button
-                  type='button'
-                  className='absolute top-1/2 -translate-y-1/2 right-2'
-                  aria-label='show-pwd-btn'
-                  onClick={() => setIsShowPwd(false)}
-                >
-                  <FaRegEye className='text-xl' />
-                </button>
-              )}
-              {!isShowPwd && (
-                <button
-                  type='button'
-                  className='absolute top-1/2 -translate-y-1/2 right-2'
-                  aria-label='hide-pwd-btn'
-                  onClick={() => setIsShowPwd(true)}
-                >
-                  <FaRegEyeSlash className='text-xl' />
-                </button>
-              )}
+            <div className='flex flex-col gap-2'>
+              <label
+                className='lg:text-neutral-800 text-white text-center lg:text-start'
+                htmlFor='code'
+              >
+                {t('enter_key')}
+              </label>
+              <div className='relative w-full'>
+                <input
+                  className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+                  type='text'
+                  placeholder={`${t('mess_enter_code')}`}
+                  {...register('code')}
+                  disabled={isLoadingVerify}
+                />
+                {errors?.code && (
+                  <p className='text-red-500 font-bold text-sm md:text-base'>
+                    {errors.code[0]}
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className='flex flex-col gap-2'>
+              <label
+                className='lg:text-neutral-800 text-white text-center lg:text-start'
+                htmlFor='recovery_code'
+              >
+                {t('enter_recovery_code')}
+              </label>
+              <div className='relative w-full'>
+                <input
+                  className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+                  type='text'
+                  placeholder={`${t('recovery_code')}`}
+                  {...register('recovery_code')}
+                  disabled={isLoadingVerify}
+                />
+                {errors?.recovery_code && (
+                  <p className='text-red-500 font-bold text-sm md:text-base'>
+                    {errors.recovery_code[0]}
+                  </p>
+                )}
+              </div>
             </div>
             <button
               className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
               type='submit'
+              disabled={isLoadingVerify}
             >
-              {t('submit')}
+              {isLoadingVerify ? `...${t('loading')}` : t('submit')}
             </button>
           </form>
         </div>

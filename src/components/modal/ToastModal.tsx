@@ -32,9 +32,10 @@ const ToastModal = () => {
 
   return (
     <ToastContainer
+      className='text-sm md:text-base'
       position='bottom-right'
       autoClose={3000}
-      newestOnTop
+      newestOnTop={true}
       closeOnClick
       pauseOnFocusLoss
       stacked

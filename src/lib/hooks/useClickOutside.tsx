@@ -27,11 +27,11 @@ const useClickOutside = (cb: Props) => {
   );
 
   useEffect(() => {
-    // document.addEventListener('mousedown', clickOutside);
+    document.addEventListener('mousedown', clickOutside);
     document.addEventListener('keydown', handleKeyPress);
 
     return () => {
-      // document.removeEventListener('mousedown', clickOutside);
+      document.removeEventListener('mousedown', clickOutside);
       document.removeEventListener('keydown', handleKeyPress);
     };
   }, [clickOutside, handleKeyPress]);

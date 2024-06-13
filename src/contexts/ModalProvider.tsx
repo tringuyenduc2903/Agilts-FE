@@ -6,6 +6,7 @@ type InitialState = {
     message: string;
   };
   visibleLoadingModal: boolean;
+  visibleTwoFactorAuthenticationModal: boolean;
 };
 const SET_VISIBLE_MODAL = 'SET_VISIBLE_MODAL';
 const CLOSE_ALL_MODAL = 'CLOSE_ALL_MODAL';

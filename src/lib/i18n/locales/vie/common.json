@@ -52,5 +52,19 @@
   "find-your-account": "Tìm tài khoản của bạn",
   "enter_email": "Nhập địa chỉ email...",
   "reset-password": "Đặt lại mật khẩu",
-  "loading": "Đang tải"
+  "loading": "Đang tải",
+  "password_security": "Mật khẩu và bảo mật",
+  "accounts_center": "Trung tâm tài khoản",
+  "mess_accounts_center": "Quản lý trải nghiệm được kết nối và cài đặt tài khoản của bạn.",
+  "account_settings": "Cài đặt tài khoản",
+  "login_recovery": "Đăng nhập & khôi phục",
+  "mess_login_recovery": "Quản lý mật khẩu, tùy chọn đăng nhập và phương pháp khôi phục của bạn.",
+  "change_password": "Đổi mật khẩu",
+  "two_factor_authentication": "Xác thực 2 yếu tố",
+  "accounts": "Tài khoản",
+  "profiles": "Hồ sơ",
+  "mess_profiles": "Quản lý thông tin hồ sơ của bạn.",
+  "current_password": "Mật khẩu hiện tại",
+  "new_password": "Mật khẩu mới",
+  "re_new_password": "Nhập lại mật khẩu mới"
 }

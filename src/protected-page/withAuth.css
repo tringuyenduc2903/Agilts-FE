@@ -12,7 +12,7 @@
   inset: 0px;
   border-radius: 50%;
   border: 5px solid #dc2626;
-  animation: prixClipFix 2s linear infinite;
+  animation: prixClipFix 1s linear infinite;
 }
 
 @keyframes rotate {

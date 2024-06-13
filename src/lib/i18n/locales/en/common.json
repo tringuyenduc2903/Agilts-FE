@@ -50,5 +50,19 @@
   "find-your-account": "Find Your Account",
   "enter_email": "Enter your email...",
   "reset-password": "Reset Password",
-  "loading": "Loading"
+  "loading": "Loading",
+  "password_security": "Password and security",
+  "accounts_center": "Accounts center",
+  "mess_accounts_center": "Manage your connected experiences and account settings.",
+  "account_settings": "Account settings",
+  "login_recovery": "Login & recovery",
+  "mess_login_recovery": "Manage your passwords, login preferences and recovery methods.",
+  "change_password": "Change password",
+  "two_factor_authentication": "Two-factor authentication",
+  "accounts": "Accounts",
+  "profiles": "Profiles",
+  "mess_profiles": "Manage your profile info.",
+  "current_password": "Current password",
+  "new_password": "New password",
+  "re_new_password": "Re-type new password"
 }

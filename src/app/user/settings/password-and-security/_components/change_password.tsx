@@ -188,13 +188,13 @@ const ChangePassword: React.FC<Props> = ({ closePopup }) => {
                 </p>
               )}
             </div>
-            <button
+            {/* <button
               type='button'
               className='w-max text-start font-bold'
               disabled={isLoadingChangePassword}
             >
               {t('forgot-password')}?
-            </button>
+            </button> */}
           </div>
           <button
             type='submit'

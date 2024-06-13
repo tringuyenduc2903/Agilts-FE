@@ -11,6 +11,7 @@ import getCSRFCookie from '@/api/CsrfCookie';
 import Loading from '../loading';
 import { useSelector } from 'react-redux';
 import { isLoggedInState } from '@/lib/redux/slice/userSlice';
+import { ModalContext } from '@/contexts/ModalProvider';
 type Form = {
   code: string;
   recovery_code: string;
@@ -21,6 +22,7 @@ function TwoFactorQrCodePage() {
   const router = useRouter();
   const { user, isSuccessUser, isLoadingUser, refetchUser } =
     useContext(FetchDataContext);
+  const { setVisibleModal } = useContext(ModalContext);
   const [
     verifyTwoFactor,
     {
@@ -44,11 +46,17 @@ function TwoFactorQrCodePage() {
   };
   useEffect(() => {
     if (isSuccessVerify) {
+      setVisibleModal({
+        visibleToastModal: {
+          type: 'success',
+          message: 'Xác thực tài khoản thành công!',
+        },
+      });
       refetchUser();
     }
-  }, [isSuccessVerify, refetchUser]);
-  if (user && !isSuccessUser && !isLoadingUser) {
-    return router.push('/');
+  }, [isSuccessVerify, refetchUser, setVisibleModal]);
+  if (user && isSuccessUser && !isLoadingUser) {
+    return router.replace('/');
   }
   if (isLoadingUser) return <Loading />;
   if (!isLoggedIn) return notFound();

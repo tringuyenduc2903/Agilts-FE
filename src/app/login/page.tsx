@@ -54,11 +54,11 @@ function LoginPage() {
   }, [isLoadingLogin, setVisibleModal]);
   useEffect(() => {
     if (isSuccessLogin && loginData) {
-      if (loginData?.two_factor) {
-        router.replace('/');
-      } else {
-        router.replace('/two-factor-qr-code');
-      }
+      router.replace('/');
+      // if (loginData?.two_factor) {
+      // } else {
+      //   router.replace('/two-factor-qr-code');
+      // }
     }
     if (isErrorLogin && errorLogin) {
       const error = errorLogin as any;

@@ -24,7 +24,7 @@ type Form = {
 };
 function RegisterPage() {
   const router = useRouter();
-  const { isSuccessUser, isLoadingUser } = useContext(FetchDataContext);
+  const { user, isLoadingUser } = useContext(FetchDataContext);
   const { t } = useTranslation('common');
   const { register, handleSubmit } = useForm<Form>();
   const [isShowPwd, setIsShowPwd] = useState(false);
@@ -51,8 +51,13 @@ function RegisterPage() {
     await registerUser(data);
   };
   useEffect(() => {
-    setVisibleModal({ visibleLoadingModal: isLoadingRegister });
-  }, [isLoadingRegister, setVisibleModal]);
+    if (isLoadingRegister) {
+      setVisibleModal({ visibleLoadingModal: isLoadingRegister });
+    }
+    if (isErrorRegister || isSuccessRegister) {
+      setVisibleModal({ visibleLoadingModal: false });
+    }
+  }, [isLoadingRegister, isErrorRegister, isSuccessRegister, setVisibleModal]);
   useEffect(() => {
     if (isSuccessRegister) {
       router.replace('/');
@@ -80,10 +85,10 @@ function RegisterPage() {
     t,
     router,
   ]);
-  if (isSuccessUser && !isLoadingUser) {
+  if (user && !isLoadingUser) {
     return notFound();
   }
-  if (isLoadingUser || isLoadingRegister) return <Loading />;
+  if (isLoadingUser) return <Loading />;
   return (
     <main className='relative w-full h-screen flex justify-center items-center font-medium text-sm sm:text-base'>
       <section

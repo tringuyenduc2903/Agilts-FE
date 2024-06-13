@@ -23,7 +23,7 @@ type Form = {
 };
 function LoginPage() {
   const router = useRouter();
-  const { isSuccessUser, isLoadingUser } = useContext(FetchDataContext);
+  const { user, isLoadingUser } = useContext(FetchDataContext);
   const { t } = useTranslation('common');
   const { setVisibleModal } = useContext(ModalContext);
   const { register, handleSubmit } = useForm<Form>();
@@ -50,8 +50,13 @@ function LoginPage() {
     await login({ ...data, remember: true });
   };
   useEffect(() => {
-    setVisibleModal({ visibleLoadingModal: isLoadingLogin });
-  }, [isLoadingLogin, setVisibleModal]);
+    if (isLoadingLogin) {
+      setVisibleModal({ visibleLoadingModal: isLoadingLogin });
+    }
+    if (isErrorLogin || isSuccessLogin) {
+      setVisibleModal({ visibleLoadingModal: false });
+    }
+  }, [isLoadingLogin, isErrorLogin, isSuccessLogin, setVisibleModal]);
   useEffect(() => {
     if (isSuccessLogin && loginData) {
       if (loginData?.two_factor) {
@@ -77,7 +82,7 @@ function LoginPage() {
     setVisibleModal,
     router,
   ]);
-  if (isSuccessUser && !isLoadingUser && !isSuccessLogin) {
+  if (user && !isLoadingUser) {
     return notFound();
   }
   if (isLoadingUser) return <Loading />;
@@ -170,6 +175,7 @@ function LoginPage() {
           <div className='w-full flex flex-col gap-2'>
             <div className='flex items-center gap-2 relative'>
               <input
+                id='remember'
                 className='checked:bg-red-500'
                 disabled={isLoadingLogin}
                 type='checkbox'

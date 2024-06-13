@@ -139,7 +139,13 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
         },
       });
     }
-  }, [isErrQrCode, errorQrCode, isErrSecretKey, errorSecretKey]);
+  }, [
+    isErrQrCode,
+    errorQrCode,
+    isErrSecretKey,
+    errorSecretKey,
+    setVisibleModal,
+  ]);
   useEffect(() => {
     if (isSuccessConfirm) {
       setCurStep(4);
@@ -335,7 +341,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
             <div className='border border-neutral-300 rounded-sm p-4'>
               {isSuccessListCodes &&
                 listCodes?.map((c: string) => {
-                  return <p>{c}</p>;
+                  return <p key={c}>{c}</p>;
                 })}
             </div>
             <div className='w-full flex justify-center'>

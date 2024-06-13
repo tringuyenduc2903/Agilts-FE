@@ -76,7 +76,14 @@ function ResetPasswordPage() {
         },
       });
     }
-  }, [isSuccessPost, postData, isErrorPost, errorPost, setVisibleModal]);
+  }, [
+    isSuccessPost,
+    postData,
+    isErrorPost,
+    errorPost,
+    setVisibleModal,
+    formState,
+  ]);
   if (isLoadingUser) return <Loading />;
   if (user && isSuccessUser && !isLoadingUser) return notFound();
   return (

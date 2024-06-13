@@ -68,7 +68,13 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
         },
       });
     }
-  }, [isSuccessChangePassword, isErrorChangePassword, errorChangePassword]);
+  }, [
+    isSuccessChangePassword,
+    isErrorChangePassword,
+    errorChangePassword,
+    setVisibleModal,
+    closePopup,
+  ]);
   return (
     <section
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}

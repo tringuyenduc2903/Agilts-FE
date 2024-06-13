@@ -112,6 +112,10 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                 <button
                   className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
                   disabled={isLoadingLogout}
+                  onClick={() => {
+                    router.push('/user/settings');
+                    closeMenu();
+                  }}
                 >
                   <IoSettingsOutline className='text-2xl' />
                   <p>{t('settings')}</p>

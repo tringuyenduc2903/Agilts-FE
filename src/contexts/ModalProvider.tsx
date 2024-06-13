@@ -7,6 +7,11 @@ type InitialState = {
   };
   visibleLoadingModal: boolean;
   visibleTwoFactorAuthenticationModal: boolean;
+  visibleConfirmPasswordModal: {
+    // cb: () => Promise<void> | null;
+    state: 'success' | 'error' | 'idle';
+    display: boolean;
+  };
 };
 const SET_VISIBLE_MODAL = 'SET_VISIBLE_MODAL';
 const CLOSE_ALL_MODAL = 'CLOSE_ALL_MODAL';

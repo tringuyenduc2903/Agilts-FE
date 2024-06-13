@@ -38,11 +38,6 @@ export const userApi = createApi({
           url: '/user/confirmed-password-status',
         }),
       }),
-      twoFactorQrCode: builder.query({
-        query: () => ({
-          url: '/user/two-factor-qr-code',
-        }),
-      }),
       register: builder.mutation({
         query: (body) => ({
           url: `/register`,
@@ -81,6 +76,46 @@ export const userApi = createApi({
           data: body,
         }),
       }),
+      turnOn2FA: builder.mutation({
+        query: () => ({
+          url: '/user/two-factor-authentication',
+          method: 'POST',
+          body: {
+            force: true,
+          },
+        }),
+      }),
+      twoFactorQrCode: builder.query({
+        query: () => ({
+          url: '/user/two-factor-qr-code',
+        }),
+      }),
+      twoFactorSecretKey: builder.query({
+        query: () => ({
+          url: '/user/two-factor-secret-key',
+        }),
+      }),
+      confirm2FA: builder.mutation({
+        query: (code) => ({
+          url: '/user/confirmed-two-factor-authentication',
+          method: 'POST',
+          data: {
+            code: code,
+          },
+        }),
+        invalidatesTags: ['users'],
+      }),
+      getRecoveryCodes: builder.query({
+        query: () => ({
+          url: '/user/two-factor-recovery-codes',
+        }),
+      }),
+      postRecoveryCodes: builder.mutation({
+        query: () => ({
+          url: '/user/two-factor-recovery-codes',
+          method: 'POST',
+        }),
+      }),
     };
   },
 });
@@ -90,10 +125,15 @@ export const {
   useLoginMutation,
   useConfirmPasswordMutation,
   useConfirmPasswordStatusQuery,
-  useTwoFactorQrCodeQuery,
   useRegisterMutation,
   useLogoutMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useChangePasswordMutation,
+  useTurnOn2FAMutation,
+  useTwoFactorQrCodeQuery,
+  useTwoFactorSecretKeyQuery,
+  useConfirm2FAMutation,
+  useGetRecoveryCodesQuery,
+  usePostRecoveryCodesMutation,
 } = userApi;

@@ -1,12 +1,20 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaAngleRight } from 'react-icons/fa6';
-import ChangePassword from './_components/change_password';
+import ChangePasswordPopup from './_components/change_password';
 import withAuth from '@/protected-page/withAuth';
+import TwoFactorAuthenticationPopup from './_components/two_factor_authentication';
+import { ModalContext } from '@/contexts/ModalProvider';
 function PasswordAndSecurityPage() {
   const { t } = useTranslation('common');
+  const { state, setVisibleModal } = useContext(ModalContext);
   const [curPopup, setCurPopup] = useState<String | null>(null);
+  useEffect(() => {
+    if (state.visibleConfirmPasswordModal?.state === 'success') {
+      setCurPopup('two_factor_authentication');
+    }
+  }, [state.visibleConfirmPasswordModal?.state]);
   return (
     <div className='flex flex-col gap-8'>
       <section>
@@ -26,14 +34,24 @@ function PasswordAndSecurityPage() {
         </button>
         <button
           className='p-4 flex justify-between items-center gap-4 font-medium hover:bg-neutral-100 transition-colors'
-          onClick={() => setCurPopup('two_factor_authentication')}
+          onClick={() =>
+            setVisibleModal({
+              visibleConfirmPasswordModal: {
+                state: 'idle',
+                display: true,
+              },
+            })
+          }
         >
           <span>{t('two_factor_authentication')}</span>
           <FaAngleRight />
         </button>
       </section>
       {curPopup === 'change_password' && (
-        <ChangePassword closePopup={() => setCurPopup(null)} />
+        <ChangePasswordPopup closePopup={() => setCurPopup(null)} />
+      )}
+      {curPopup === 'two_factor_authentication' && (
+        <TwoFactorAuthenticationPopup closePopup={() => setCurPopup(null)} />
       )}
     </div>
   );

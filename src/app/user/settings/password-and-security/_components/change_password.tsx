@@ -21,7 +21,7 @@ type Form = {
 type Props = {
   closePopup: () => void;
 };
-const ChangePassword: React.FC<Props> = ({ closePopup }) => {
+const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
   const { register, handleSubmit } = useForm<Form>();
   const { t } = useTranslation('common');
   const { setVisibleModal } = useContext(ModalContext);
@@ -211,4 +211,4 @@ const ChangePassword: React.FC<Props> = ({ closePopup }) => {
   );
 };
 
-export default ChangePassword;
+export default ChangePasswordPopup;

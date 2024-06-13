@@ -55,13 +55,13 @@ function RegisterPage() {
   }, [isLoadingRegister, setVisibleModal]);
   useEffect(() => {
     if (isSuccessRegister) {
+      router.replace('/');
       setVisibleModal({
         visibleToastModal: {
           type: 'success',
           message: `${t('register_message')}`,
         },
       });
-      router.replace('/');
     }
     if (isErrorRegister && errorRegister) {
       const err = errorRegister as any;
@@ -80,10 +80,10 @@ function RegisterPage() {
     t,
     router,
   ]);
-  if (isSuccessUser && !isLoadingUser && !isSuccessRegister) {
+  if (isSuccessUser && !isLoadingUser) {
     return notFound();
   }
-  if (isLoadingUser) return <Loading />;
+  if (isLoadingUser || isLoadingRegister) return <Loading />;
   return (
     <main className='relative w-full h-screen flex justify-center items-center font-medium text-sm sm:text-base'>
       <section

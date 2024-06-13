@@ -1,10 +1,14 @@
 import { Metadata } from 'next';
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: 'Quên mật khẩu',
-    description: 'Tìm mật khẩu đã quên của bạn',
-  };
-}
+// export async function generateMetadata(): Promise<Metadata> {
+//   return {
+//     title: 'Quên mật khẩu',
+//     description: 'Tìm mật khẩu đã quên của bạn',
+//   };
+// }
+export const metadata: Metadata = {
+  title: 'Quên mật khẩu',
+  description: 'Tìm mật khẩu đã quên của bạn',
+};
 export default async function ForgotPasswordLayout({
   children,
 }: Readonly<{

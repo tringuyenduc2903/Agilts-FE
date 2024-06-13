@@ -124,28 +124,19 @@ function ResetPasswordPage() {
                   placeholder={`${t('password')}`}
                   {...register('password')}
                 />
-                {isShowPwd && (
-                  <button
-                    type='button'
-                    className='absolute top-1/2 -translate-y-1/2 right-2'
-                    aria-label='show-pwd-btn'
-                    onClick={() => setIsShowPwd(false)}
-                    disabled={isLoadingPost}
-                  >
+                <button
+                  type='button'
+                  className='absolute top-1/2 -translate-y-1/2 right-2'
+                  aria-label='show-pwd-btn'
+                  onClick={() => setIsShowPwd(false)}
+                  disabled={isLoadingPost}
+                >
+                  {isShowPwd ? (
                     <FaRegEye className='text-xl' />
-                  </button>
-                )}
-                {!isShowPwd && (
-                  <button
-                    type='button'
-                    className='absolute top-1/2 -translate-y-1/2 right-2'
-                    aria-label='hide-pwd-btn'
-                    onClick={() => setIsShowPwd(true)}
-                    disabled={isLoadingPost}
-                  >
+                  ) : (
                     <FaRegEyeSlash className='text-xl' />
-                  </button>
-                )}
+                  )}
+                </button>
               </div>
               {errors?.password && (
                 <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -161,26 +152,18 @@ function ResetPasswordPage() {
                   placeholder={`${t('confirm-pwd')}`}
                   {...register('password_confirmation')}
                 />
-                {isShowConfirmPwd && (
-                  <button
-                    type='button'
-                    className='absolute top-1/2 -translate-y-1/2 right-2'
-                    aria-label='show-pwd-btn'
-                    onClick={() => setIsShowConfirmPwd(false)}
-                  >
+                <button
+                  type='button'
+                  className='absolute top-1/2 -translate-y-1/2 right-2'
+                  aria-label='show-pwd-btn'
+                  onClick={() => setIsShowConfirmPwd(!isShowConfirmPwd)}
+                >
+                  {isShowConfirmPwd ? (
                     <FaRegEye className='text-xl' />
-                  </button>
-                )}
-                {!isShowConfirmPwd && (
-                  <button
-                    type='button'
-                    className='absolute top-1/2 -translate-y-1/2 right-2'
-                    aria-label='hide-pwd-btn'
-                    onClick={() => setIsShowConfirmPwd(true)}
-                  >
+                  ) : (
                     <FaRegEyeSlash className='text-xl' />
-                  </button>
-                )}
+                  )}
+                </button>
               </div>
             </div>
             <button

@@ -25,16 +25,25 @@ const inter = Open_Sans({
   weight: ['300', '400', '500', '600', '700'],
 });
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: {
-      template: `%s | Agilts`,
-      default: 'Trang chủ Agilts',
-    },
-    description: 'Trang chủ của Agilts',
-    keywords: 'xe may, xe máy',
-  };
-}
+// export async function generateMetadata(): Promise<Metadata> {
+//   return {
+//     title: {
+//       template: `%s | Agilts`,
+//       default: 'Trang chủ Agilts',
+//     },
+//     description: 'Trang chủ của Agilts',
+//     keywords: 'xe may, xe máy',
+//   };
+// }
+export const metadata: Metadata = {
+  title: {
+    template: `%s | Agilts`,
+    default: 'Trang chủ Agilts',
+  },
+  description: 'Trang chủ của Agilts',
+  keywords: 'xe may, xe máy',
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{

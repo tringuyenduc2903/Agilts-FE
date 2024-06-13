@@ -1,14 +1,16 @@
 'use client';
+
+import React, { createContext, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useGetUserQuery } from '@/lib/redux/query/userQuery';
 import { setUser, userInfo } from '@/lib/redux/slice/userSlice';
 import { User } from '@/types/types';
-import React, { createContext, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 type FetchData = {
-  user: null | User;
+  user: User | null;
   isLoadingUser: boolean;
   isSuccessUser: boolean;
   isErrorUser: boolean;
+  refetchUser: () => void;
 };
 export const FetchDataContext = createContext({} as FetchData);
 
@@ -24,22 +26,25 @@ export const FetchDataProvider = ({
     isSuccess: isSuccessUser,
     isLoading: isLoadingUser,
     isError: isErrorUser,
+    refetch: refetchUser,
   } = useGetUserQuery(null);
+
   useEffect(() => {
-    if (isSuccessUser && userData) {
+    if (isSuccessUser) {
       dispatch(setUser(userData));
-    }
-    if (isErrorUser) {
+    } else if (isErrorUser) {
       dispatch(setUser(null));
     }
-  }, [dispatch, isSuccessUser, userData, isErrorUser]);
+  }, [dispatch, isSuccessUser, isErrorUser, userData]);
+
   return (
     <FetchDataContext.Provider
       value={{
-        user: user,
+        user,
         isLoadingUser,
         isSuccessUser,
         isErrorUser,
+        refetchUser,
       }}
     >
       {children}

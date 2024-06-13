@@ -24,7 +24,7 @@ type Form = {
 };
 function RegisterPage() {
   const router = useRouter();
-  const { user, isLoadingUser } = useContext(FetchDataContext);
+  const { user, isLoadingUser, refetchUser } = useContext(FetchDataContext);
   const { t } = useTranslation('common');
   const { register, handleSubmit } = useForm<Form>();
   const [isShowPwd, setIsShowPwd] = useState(false);
@@ -60,13 +60,14 @@ function RegisterPage() {
   }, [isLoadingRegister, isErrorRegister, isSuccessRegister, setVisibleModal]);
   useEffect(() => {
     if (isSuccessRegister) {
-      router.replace('/');
       setVisibleModal({
         visibleToastModal: {
           type: 'success',
           message: `${t('register_message')}`,
         },
       });
+      router.replace('/');
+      refetchUser();
     }
     if (isErrorRegister && errorRegister) {
       const err = errorRegister as any;
@@ -84,6 +85,7 @@ function RegisterPage() {
     setVisibleModal,
     t,
     router,
+    refetchUser,
   ]);
   if (user && !isLoadingUser) {
     return notFound();

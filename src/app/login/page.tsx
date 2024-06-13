@@ -23,7 +23,7 @@ type Form = {
 };
 function LoginPage() {
   const router = useRouter();
-  const { user, isLoadingUser } = useContext(FetchDataContext);
+  const { user, isLoadingUser, refetchUser } = useContext(FetchDataContext);
   const { t } = useTranslation('common');
   const { setVisibleModal } = useContext(ModalContext);
   const { register, handleSubmit } = useForm<Form>();
@@ -64,6 +64,7 @@ function LoginPage() {
       } else {
         router.replace('/');
       }
+      refetchUser();
     }
     if (isErrorLogin && errorLogin) {
       const error = errorLogin as any;
@@ -81,6 +82,7 @@ function LoginPage() {
     errorLogin,
     setVisibleModal,
     router,
+    refetchUser,
   ]);
   if (user && !isLoadingUser) {
     return notFound();

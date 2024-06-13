@@ -43,7 +43,6 @@ export const userApi = createApi({
           method: 'POST',
           data: body,
         }),
-        invalidatesTags: ['users'],
       }),
       logout: builder.mutation({
         query: () => ({

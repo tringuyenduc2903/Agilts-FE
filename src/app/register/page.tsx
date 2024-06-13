@@ -144,7 +144,7 @@ function RegisterPage() {
               <button
                 type='button'
                 className='absolute top-1/2 -translate-y-1/2 right-2'
-                aria-label='show-pwd-btn'
+                aria-label='toggle-pwd-btn'
                 onClick={() => setIsShowPwd(!isShowPwd)}
                 disabled={isLoadingRegister}
               >
@@ -172,7 +172,7 @@ function RegisterPage() {
               <button
                 type='button'
                 className='absolute top-1/2 -translate-y-1/2 right-2'
-                aria-label='show-pwd-btn'
+                aria-label='toggle-pwd-btn'
                 onClick={() => setIsShowConfirmPwd(!isShowConfirmPwd)}
               >
                 {isShowConfirmPwd ? (

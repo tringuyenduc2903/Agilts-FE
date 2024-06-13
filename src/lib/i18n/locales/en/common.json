@@ -49,5 +49,6 @@
   "forgot-password": "Forgot password",
   "find-your-account": "Find Your Account",
   "enter_email": "Enter your email...",
-  "reset-password": "Reset Password"
+  "reset-password": "Reset Password",
+  "loading": "Loading"
 }

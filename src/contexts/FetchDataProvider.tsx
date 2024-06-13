@@ -33,14 +33,10 @@ export const FetchDataProvider = ({
       dispatch(setUser(null));
     }
   }, [dispatch, isSuccessUser, userData, isErrorUser]);
-  const contextValue = {
-    user,
-    isLoadingUser,
-    isSuccessUser,
-    isErrorUser,
-  };
   return (
-    <FetchDataContext.Provider value={contextValue}>
+    <FetchDataContext.Provider
+      value={{ user: user, isLoadingUser, isSuccessUser, isErrorUser }}
+    >
       {children}
     </FetchDataContext.Provider>
   );

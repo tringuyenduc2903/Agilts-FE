@@ -7,18 +7,20 @@ import {
 } from '@/lib/redux/query/userQuery';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import bgImg from '@/assets/port-title-area.jpg';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import getCSRFCookie from '@/api/CsrfCookie';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
 import Loading from '../loading';
+import { ModalContext } from '@/contexts/ModalProvider';
 type Form = {
   password: string;
 };
 function TwoFactorQrCodePage() {
   const { t } = useTranslation('common');
+  const { setVisibleModal } = useContext(ModalContext);
   const { user, isSuccessUser, isLoadingUser } = useContext(FetchDataContext);
   const [isShowPwd, setIsShowPwd] = useState(false);
   const { register, handleSubmit } = useForm<Form>();
@@ -44,16 +46,27 @@ function TwoFactorQrCodePage() {
     isLoading: isLoadingCode,
     isError: isErrorCode,
   } = useTwoFactorQrCodeQuery(null, { skip: !isSuccessStatus });
-  if (!user && !isSuccessUser && !isLoadingUser) {
-    return notFound();
-  }
   const onSubmit: SubmitHandler<Form> = async (data) => {
     await getCSRFCookie();
     await confirmPassword(data.password);
   };
+  console.log(isLoadingUser);
+  useEffect(() => {
+    setVisibleModal({ visibleLoadingModal: isLoadingConfirm });
+  }, [isLoadingConfirm, setVisibleModal]);
+  if (
+    (user === null && !isSuccessUser && !isLoadingUser) ||
+    (user &&
+      user.two_factor_confirmed_at !== null &&
+      isSuccessUser &&
+      !isLoadingUser)
+  ) {
+    return notFound();
+  }
   if (isLoadingUser || isLoadingCode) return <Loading />;
   // console.log(codeData, isSuccessCode, isErrorCode);
   // console.log(statusConfirm, isSuccessStatus, isErrorStatus, errorStatus);
+  console.log(user);
   return (
     <main className='w-full pt-[72px] flex flex-col'>
       <section className='absolute h-[500px] w-full -z-10 hidden lg:block'>

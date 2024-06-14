@@ -7,6 +7,7 @@ import { FetchDataProvider } from '@/contexts/FetchDataProvider';
 import StoreProvider from '@/contexts/StoreProvider';
 import dynamic from 'next/dynamic';
 import './globals.css';
+import Script from 'next/script';
 const DynamicHeader = dynamic(
   () => import('@/components/common/Header/Header'),
   { ssr: false }
@@ -51,6 +52,10 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang='vi'>
+      <Script
+        defer
+        src='https://code.iconify.design/3/3.1.0/iconify.min.js'
+      ></Script>
       <body className={`${inter.className} flex flex-col justify-between`}>
         <StoreProvider>
           <FetchDataProvider>

@@ -23,20 +23,6 @@ export const userApi = createApi({
           data: body,
         }),
       }),
-      confirmPassword: builder.mutation({
-        query: (password) => ({
-          url: '/user/confirm-password',
-          method: 'POST',
-          data: {
-            password: password,
-          },
-        }),
-      }),
-      confirmPasswordStatus: builder.query({
-        query: () => ({
-          url: '/user/confirmed-password-status',
-        }),
-      }),
       register: builder.mutation({
         query: (body) => ({
           url: `/register`,
@@ -50,6 +36,28 @@ export const userApi = createApi({
           method: 'POST',
         }),
         invalidatesTags: ['users'],
+      }),
+      updateUser: builder.mutation({
+        query: (body) => ({
+          url: '/user/profile-information',
+          method: 'PUT',
+          data: body,
+        }),
+        invalidatesTags: ['users'],
+      }),
+      confirmPassword: builder.mutation({
+        query: (password) => ({
+          url: '/user/confirm-password',
+          method: 'POST',
+          data: {
+            password: password,
+          },
+        }),
+      }),
+      confirmPasswordStatus: builder.query({
+        query: () => ({
+          url: '/user/confirmed-password-status',
+        }),
       }),
       forgotPassword: builder.mutation({
         query: (email) => ({
@@ -136,10 +144,11 @@ export const userApi = createApi({
 export const {
   useGetUserQuery,
   useLoginMutation,
-  useConfirmPasswordMutation,
-  useConfirmPasswordStatusQuery,
   useRegisterMutation,
   useLogoutMutation,
+  useUpdateUserMutation,
+  useConfirmPasswordMutation,
+  useConfirmPasswordStatusQuery,
   useForgotPasswordMutation,
   useResetPasswordMutation,
   useChangePasswordMutation,

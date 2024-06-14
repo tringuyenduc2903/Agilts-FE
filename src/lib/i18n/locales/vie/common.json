@@ -93,5 +93,16 @@
   "recovery_code": "Nhập mã khôi phục",
   "cancel": "Hủy",
   "title_del_2fa": "Bạn chắc chắn rằng mình muốn gỡ 2FA?",
-  "des_del_2fa": "Xác thực 2 bước (2FA) là phương pháp bảo mật quản lý truy nhập và danh tính yêu cầu hai hình thức nhận dạng để truy nhập tài nguyên và dữ liệu. 2FA cung cấp cho các doanh nghiệp khả năng giám sát, đồng thời giúp bảo vệ những thông tin và mạng dễ bị tấn công nhất của họ."
+  "des_del_2fa": "Xác thực 2 bước (2FA) là phương pháp bảo mật quản lý truy nhập và danh tính yêu cầu hai hình thức nhận dạng để truy nhập tài nguyên và dữ liệu. 2FA cung cấp cho các doanh nghiệp khả năng giám sát, đồng thời giúp bảo vệ những thông tin và mạng dễ bị tấn công nhất của họ.",
+  "gender": "Giới tính",
+  "phone": "Số điện thoại",
+  "birthday": "Ngày sinh",
+  "select_gender": "Chọn giới tính",
+  "male": "Nam",
+  "female": "Nữ",
+  "unknown": "Không xác định",
+  "update": "Cập nhật",
+  "user_information": "Thông tin người dùng",
+  "last_updated_at": "Cập nhật lần cuối",
+  "verified_at": "Đã xác thực"
 }

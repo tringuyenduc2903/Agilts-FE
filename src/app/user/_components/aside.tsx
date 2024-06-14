@@ -34,6 +34,7 @@ function Aside() {
                 ? 'bg-red-500 text-white'
                 : 'hover:bg-red-50'
             } transition-colors`}
+            onClick={() => router.push('/user/settings/accounts')}
           >
             <IoPersonCircleOutline className='text-2xl' />
             <span className='font-medium'>{t('accounts')}</span>

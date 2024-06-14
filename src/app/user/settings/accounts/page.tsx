@@ -5,6 +5,7 @@ import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { useUpdateUserMutation } from '@/lib/redux/query/userQuery';
 import { formatPhoneNumberToVietnam } from '@/lib/utils/format';
+import withAuth from '@/protected-page/withAuth';
 import Image from 'next/image';
 import React, {
   useCallback,
@@ -296,4 +297,4 @@ function AccountsPage() {
   );
 }
 
-export default AccountsPage;
+export default withAuth(AccountsPage);

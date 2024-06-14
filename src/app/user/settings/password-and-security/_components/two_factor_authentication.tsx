@@ -2,7 +2,9 @@ import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
 import {
   useConfirm2FAMutation,
+  useDeleteTwoFactorMutation,
   useGetRecoveryCodesQuery,
+  usePostRecoveryCodesMutation,
   useTurnOn2FAMutation,
   useTwoFactorQrCodeQuery,
   useTwoFactorSecretKeyQuery,
@@ -21,12 +23,12 @@ type Form = {
   code: string;
 };
 const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
-  const { user } = useContext(FetchDataContext);
+  const { user, refetchUser } = useContext(FetchDataContext);
   const { t } = useTranslation('common');
   const { setVisibleModal } = useContext(ModalContext);
   const [curStep, setCurStep] = useState(1);
   const containerRef = useRef<HTMLElement | null>(null);
-  const fistStepRef = useRef<HTMLDivElement | null>(null);
+  const firstStepRef = useRef<HTMLDivElement | null>(null);
   const secondStepRef = useRef<HTMLDivElement | null>(null);
   const thirdStepRef = useRef<HTMLDivElement | null>(null);
   const fourthStepRef = useRef<HTMLDivElement | null>(null);
@@ -57,11 +59,21 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
       error: errorConfirm,
     },
   ] = useConfirm2FAMutation();
+  const [
+    postRecoveryCodes,
+    { isSuccess: isSuccessRecoveryCodes, isLoading: isLoadingRecoveryCodes },
+  ] = usePostRecoveryCodesMutation();
   const {
     data: listCodes,
     isSuccess: isSuccessListCodes,
     isLoading: isLoadingListCodes,
-  } = useGetRecoveryCodesQuery(null, { skip: !isSuccessConfirm });
+  } = useGetRecoveryCodesQuery(null, {
+    skip: !isSuccessConfirm && !isSuccessRecoveryCodes,
+  });
+  const [
+    deleteTwoFactor,
+    { isSuccess: isSuccessDelete, isLoading: isLoadingDelete },
+  ] = useDeleteTwoFactorMutation();
   const errors = useMemo(() => {
     if (isErrorConfirm && errorConfirm) {
       const error = errorConfirm as any;
@@ -73,47 +85,22 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
   const onSubmit: SubmitHandler<Form> = async (data) => {
     await confirm2FA(data.code);
   };
-  useGSAP(
-    () => {
-      if (fistStepRef.current && curStep === 1) {
+  useGSAP(() => {
+    const animateStep = (stepRef: React.RefObject<HTMLDivElement>) => {
+      if (stepRef.current) {
         gsap.fromTo(
-          fistStepRef.current,
-          {
-            translateX: 500,
-          },
-          {
-            translateX: 0,
-            duration: 0.3,
-          }
+          stepRef.current,
+          { translateX: 500 },
+          { translateX: 0, duration: 0.3 }
         );
       }
-      if (secondStepRef.current && curStep === 2) {
-        gsap.fromTo(
-          secondStepRef.current,
-          {
-            translateX: 500,
-          },
-          {
-            translateX: 0,
-            duration: 0.3,
-          }
-        );
-      }
-      if (thirdStepRef.current && curStep === 3) {
-        gsap.fromTo(
-          secondStepRef.current,
-          {
-            translateX: 500,
-          },
-          {
-            translateX: 0,
-            duration: 0.3,
-          }
-        );
-      }
-    },
-    { dependencies: [curStep], scope: containerRef }
-  );
+    };
+
+    if (curStep === 1) animateStep(firstStepRef);
+    if (curStep === 2) animateStep(secondStepRef);
+    if (curStep === 3) animateStep(thirdStepRef);
+    if (curStep === 4) animateStep(fourthStepRef);
+  }, [curStep]);
   useEffect(() => {
     if (isSuccessTurnOn) {
       setCurStep(2);
@@ -150,6 +137,19 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
       setCurStep(4);
     }
   }, [isSuccessConfirm]);
+  useEffect(() => {
+    if (isSuccessDelete) {
+      refetchUser();
+      setVisibleModal('visibleConfirmModal');
+      setVisibleModal({
+        visibleToastModal: {
+          type: 'success',
+          message: 'Đã gỡ xác thực 2 bước thành công!',
+        },
+      });
+      closePopup();
+    }
+  }, [isSuccessDelete, refetchUser, setVisibleModal, closePopup]);
   return (
     <section
       ref={containerRef}
@@ -160,7 +160,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
       <div className='max-w-[540px] w-full bg-white rounded-sm overflow-hidden px-4 py-6 flex flex-col gap-6'>
         {curStep === 1 && (
           <div
-            ref={curStep === 1 ? fistStepRef : null}
+            ref={curStep === 1 ? firstStepRef : null}
             className='flex flex-col gap-4'
           >
             <div className='w-full flex justify-end'>
@@ -178,6 +178,47 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
                 : t('mess_2fa_off')}
             </p>
             <p>{t('mess_alert_2fa')}</p>
+            {user?.two_factor_confirmed_at && (
+              <button
+                className='w-max font-bold text-red-500'
+                disabled={isLoadingRecoveryCodes}
+                onClick={async () => await postRecoveryCodes(null)}
+              >
+                Tạo danh sách dự phòng mới
+              </button>
+            )}
+            {user?.two_factor_confirmed_at &&
+              (isLoadingListCodes || isLoadingRecoveryCodes) && (
+                <div className='relative w-full h-[250px] flex justify-center items-center'>
+                  <div className='loader'></div>
+                </div>
+              )}
+            {user?.two_factor_confirmed_at &&
+              isSuccessRecoveryCodes &&
+              isSuccessListCodes &&
+              !isLoadingListCodes && (
+                <div className='flex flex-col gap-2'>
+                  <div className='border border-neutral-300 rounded-sm p-4'>
+                    {isSuccessListCodes &&
+                      listCodes?.map((c: string) => {
+                        return <p key={c}>{c}</p>;
+                      })}
+                  </div>
+                  <div className='w-full flex justify-center'>
+                    <CopyToClipboard
+                      text={listCodes}
+                      onCopy={() => console.log('copied')}
+                    >
+                      <button
+                        className='w-max font-bold'
+                        disabled={isLoadingListCodes}
+                      >
+                        {t('copy_list')}
+                      </button>
+                    </CopyToClipboard>
+                  </div>
+                </div>
+              )}
             <div className='w-full flex justify-end'>
               {!user?.two_factor_confirmed_at && (
                 <button
@@ -190,7 +231,17 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
               {user?.two_factor_confirmed_at && (
                 <button
                   className='w-max font-bold bg-neutral-800 text-white py-2 px-4 md:py-3 md:px-6 rounded-sm'
-                  // onClick={async () => await turnOn2FA(null)}
+                  disabled={isLoadingRecoveryCodes}
+                  onClick={() =>
+                    setVisibleModal({
+                      visibleConfirmModal: {
+                        title: `${t('title_del_2fa')}`,
+                        description: `${t('des_del_2fa')}`,
+                        isLoading: isLoadingDelete,
+                        cb: async () => await deleteTwoFactor(null),
+                      },
+                    })
+                  }
                 >
                   {t('turn_off')}
                 </button>
@@ -337,25 +388,33 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
               {t('recovery_title')}
             </p>
             <p>{t('recovery_mess')}</p>
-            <div className='border border-neutral-300 rounded-sm p-4'>
-              {isSuccessListCodes &&
-                listCodes?.map((c: string) => {
-                  return <p key={c}>{c}</p>;
-                })}
-            </div>
-            <div className='w-full flex justify-center'>
-              <CopyToClipboard
-                text={listCodes}
-                onCopy={() => console.log('copied')}
-              >
-                <button
-                  className='w-max font-bold'
-                  disabled={isLoadingListCodes}
-                >
-                  {t('copy_list')}
-                </button>
-              </CopyToClipboard>
-            </div>
+            {isLoadingListCodes && curStep === 4 && (
+              <div className='relative w-full h-[250px] flex justify-center items-center'>
+                <div className='loader'></div>
+              </div>
+            )}
+            {isSuccessListCodes && !isLoadingListCodes && curStep === 4 && (
+              <div className='flex flex-col gap-2'>
+                <div className='border border-neutral-300 rounded-sm p-4'>
+                  {listCodes?.map((c: string) => {
+                    return <p key={c}>{c}</p>;
+                  })}
+                </div>
+                <div className='w-full flex justify-center'>
+                  <CopyToClipboard
+                    text={listCodes}
+                    onCopy={() => console.log('copied')}
+                  >
+                    <button
+                      className='w-max font-bold'
+                      disabled={isLoadingListCodes}
+                    >
+                      {t('copy_list')}
+                    </button>
+                  </CopyToClipboard>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -6,7 +6,7 @@ export const userApi = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL as string,
   }),
-  tagTypes: ['users'],
+  tagTypes: ['users', 'recover_codes'],
   endpoints: (builder) => {
     return {
       getUser: builder.query({
@@ -107,18 +107,26 @@ export const userApi = createApi({
         query: () => ({
           url: '/user/two-factor-recovery-codes',
         }),
+        providesTags: ['recover_codes'],
       }),
       postRecoveryCodes: builder.mutation({
         query: () => ({
           url: '/user/two-factor-recovery-codes',
           method: 'POST',
         }),
+        invalidatesTags: ['recover_codes'],
       }),
       verifyTwoFactor: builder.mutation({
         query: (body) => ({
           url: '/two-factor-challenge',
           method: 'POST',
           data: body,
+        }),
+      }),
+      deleteTwoFactor: builder.mutation({
+        query: () => ({
+          url: '/user/two-factor-authentication',
+          method: 'DELETE',
         }),
       }),
     };
@@ -142,4 +150,5 @@ export const {
   useGetRecoveryCodesQuery,
   usePostRecoveryCodesMutation,
   useVerifyTwoFactorMutation,
+  useDeleteTwoFactorMutation,
 } = userApi;

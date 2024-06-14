@@ -90,5 +90,8 @@
   "recovery_mess": " Xin vui lòng không chia sẽ các mã khôi phục cho những người dùng khác.",
   "copy_list": "Sao chép danh sách",
   "enter_recovery_code": "Nhập mã khôi phục",
-  "recovery_code": "Nhập mã khôi phục"
+  "recovery_code": "Nhập mã khôi phục",
+  "cancel": "Hủy",
+  "title_del_2fa": "Bạn chắc chắn rằng mình muốn gỡ 2FA?",
+  "des_del_2fa": "Xác thực 2 bước (2FA) là phương pháp bảo mật quản lý truy nhập và danh tính yêu cầu hai hình thức nhận dạng để truy nhập tài nguyên và dữ liệu. 2FA cung cấp cho các doanh nghiệp khả năng giám sát, đồng thời giúp bảo vệ những thông tin và mạng dễ bị tấn công nhất của họ."
 }

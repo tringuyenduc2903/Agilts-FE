@@ -12,6 +12,12 @@ type InitialState = {
     state: 'success' | 'error' | 'idle';
     display: boolean;
   };
+  visibleConfirmModal: {
+    title: string;
+    description: string;
+    isLoading: boolean;
+    cb: () => void;
+  };
 };
 const SET_VISIBLE_MODAL = 'SET_VISIBLE_MODAL';
 const CLOSE_ALL_MODAL = 'CLOSE_ALL_MODAL';

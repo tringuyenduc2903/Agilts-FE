@@ -2,7 +2,6 @@
 import { notFound } from 'next/navigation';
 import React, { useContext } from 'react';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
-import './withAuth.css';
 function withAuth(Component: any) {
   return function useAuth(props: any) {
     const { isLoadingUser, isErrorUser } = useContext(FetchDataContext);

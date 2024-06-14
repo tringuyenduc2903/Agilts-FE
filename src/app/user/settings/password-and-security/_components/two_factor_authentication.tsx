@@ -85,22 +85,25 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
   const onSubmit: SubmitHandler<Form> = async (data) => {
     await confirm2FA(data.code);
   };
-  useGSAP(() => {
-    const animateStep = (stepRef: React.RefObject<HTMLDivElement>) => {
-      if (stepRef.current) {
-        gsap.fromTo(
-          stepRef.current,
-          { translateX: 500 },
-          { translateX: 0, duration: 0.3 }
-        );
-      }
-    };
+  useGSAP(
+    () => {
+      const animateStep = (stepRef: React.RefObject<HTMLDivElement>) => {
+        if (stepRef.current) {
+          gsap.fromTo(
+            stepRef.current,
+            { translateX: 500 },
+            { translateX: 0, duration: 0.3 }
+          );
+        }
+      };
 
-    if (curStep === 1) animateStep(firstStepRef);
-    if (curStep === 2) animateStep(secondStepRef);
-    if (curStep === 3) animateStep(thirdStepRef);
-    if (curStep === 4) animateStep(fourthStepRef);
-  }, [curStep]);
+      if (curStep === 1) animateStep(firstStepRef);
+      if (curStep === 2) animateStep(secondStepRef);
+      if (curStep === 3) animateStep(thirdStepRef);
+      if (curStep === 4) animateStep(fourthStepRef);
+    },
+    { dependencies: [curStep], scope: containerRef }
+  );
   useEffect(() => {
     if (isSuccessTurnOn) {
       setCurStep(2);

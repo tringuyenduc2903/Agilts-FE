@@ -1,5 +1,11 @@
 'use client';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { notFound, useRouter } from 'next/navigation';
 import Loading from '../loading';
@@ -52,6 +58,14 @@ function LoginPage() {
     await getCSRFCookie();
     await login({ ...data, remember: true });
   };
+  const redirectToOauth = useCallback((provider: 'google' | 'facebook') => {
+    if (typeof window !== 'undefined') {
+      window.open(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/redirect/${provider}`,
+        '_self'
+      );
+    }
+  }, []);
   useEffect(() => {
     if (isLoadingLogin) {
       setVisibleModal({ visibleLoadingModal: isLoadingLogin });
@@ -117,12 +131,14 @@ function LoginPage() {
             <button
               className='bg-white rounded-full p-3 text-neutral-800 hover:text-red-500 transition-colors'
               disabled={isLoadingLogin}
+              onClick={() => redirectToOauth('google')}
             >
               <FaGoogle className='text-xl' />
             </button>
             <button
               className='bg-white rounded-full p-3 text-neutral-800 hover:text-blue-500 transition-colors'
               disabled={isLoadingLogin}
+              onClick={() => redirectToOauth('facebook')}
             >
               <FaFacebookF className='text-xl' />
             </button>
@@ -232,12 +248,14 @@ function LoginPage() {
                 <button
                   className='bg-neutral-800 rounded-full p-2 text-white hover:text-red-500 transition-colors'
                   disabled={isLoadingLogin}
+                  onClick={() => redirectToOauth('google')}
                 >
                   <FaGoogle className='text-lg' />
                 </button>
                 <button
                   className='bg-neutral-800 rounded-full p-2 text-white hover:text-blue-500 transition-colors'
                   disabled={isLoadingLogin}
+                  onClick={() => redirectToOauth('facebook')}
                 >
                   <FaFacebookF className='text-lg' />
                 </button>

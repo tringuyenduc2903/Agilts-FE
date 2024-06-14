@@ -1,5 +1,11 @@
 'use client';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { notFound, useRouter } from 'next/navigation';
 import Loading from '../loading';
@@ -50,6 +56,14 @@ function RegisterPage() {
     await getCSRFCookie();
     await registerUser(data);
   };
+  const redirectToOauth = useCallback((provider: 'google' | 'facebook') => {
+    if (typeof window !== 'undefined') {
+      window.open(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/redirect/${provider}`,
+        '_self'
+      );
+    }
+  }, []);
   useEffect(() => {
     if (isLoadingRegister) {
       setVisibleModal({ visibleLoadingModal: isLoadingRegister });
@@ -216,6 +230,7 @@ function RegisterPage() {
                   type='button'
                   className='bg-neutral-800 rounded-full p-2 text-white hover:text-red-500 transition-colors'
                   disabled={isLoadingRegister}
+                  onClick={() => redirectToOauth('google')}
                 >
                   <FaGoogle className='text-lg' />
                 </button>
@@ -223,6 +238,7 @@ function RegisterPage() {
                   type='button'
                   className='bg-neutral-800 rounded-full p-2 text-white hover:text-blue-500 transition-colors'
                   disabled={isLoadingRegister}
+                  onClick={() => redirectToOauth('facebook')}
                 >
                   <FaFacebookF className='text-lg' />
                 </button>

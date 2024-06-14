@@ -129,6 +129,7 @@ function LoginPage() {
           </h1>
           <div className='flex items-center gap-4'>
             <button
+              type='button'
               className='bg-white rounded-full p-3 text-neutral-800 hover:text-red-500 transition-colors'
               disabled={isLoadingLogin}
               onClick={() => redirectToOauth('google')}
@@ -136,6 +137,7 @@ function LoginPage() {
               <FaGoogle className='text-xl' />
             </button>
             <button
+              type='button'
               className='bg-white rounded-full p-3 text-neutral-800 hover:text-blue-500 transition-colors'
               disabled={isLoadingLogin}
               onClick={() => redirectToOauth('facebook')}
@@ -246,6 +248,7 @@ function LoginPage() {
               <p className='text-base font-bold'>{t('or')}</p>
               <div className='flex items-center gap-4'>
                 <button
+                  type='button'
                   className='bg-neutral-800 rounded-full p-2 text-white hover:text-red-500 transition-colors'
                   disabled={isLoadingLogin}
                   onClick={() => redirectToOauth('google')}
@@ -253,6 +256,7 @@ function LoginPage() {
                   <FaGoogle className='text-lg' />
                 </button>
                 <button
+                  type='button'
                   className='bg-neutral-800 rounded-full p-2 text-white hover:text-blue-500 transition-colors'
                   disabled={isLoadingLogin}
                   onClick={() => redirectToOauth('facebook')}

@@ -1,5 +1,11 @@
 'use client';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import bgImg from '@/assets/port-title-area.jpg';
 import Image from 'next/image';
@@ -54,10 +60,13 @@ function ResetPasswordPage() {
     }
     return null;
   }, [isErrorPost, errorPost]);
-  const onSubmit: SubmitHandler<Form> = async (data) => {
-    await handleGetCSRFCookie();
-    await resetPassword({ ...data, token: token });
-  };
+  const onSubmit: SubmitHandler<Form> = useCallback(
+    async (data) => {
+      await handleGetCSRFCookie();
+      await resetPassword({ ...data, token: token });
+    },
+    [handleGetCSRFCookie, resetPassword]
+  );
   useEffect(() => {
     if (isSuccessPost && postData) {
       setVisibleModal({

@@ -59,10 +59,13 @@ function LoginPage() {
     }
     return null;
   }, [isErrorLogin, errorLogin]);
-  const onSubmit: SubmitHandler<Form> = async (data) => {
-    await handleGetCSRFCookie();
-    await login({ ...data, remember: true });
-  };
+  const onSubmit: SubmitHandler<Form> = useCallback(
+    async (data) => {
+      await handleGetCSRFCookie();
+      await login({ ...data, remember: true });
+    },
+    [handleGetCSRFCookie, login]
+  );
   const redirectToOauth = useCallback((provider: 'google' | 'facebook') => {
     if (typeof window !== 'undefined') {
       window.open(

@@ -57,10 +57,13 @@ function RegisterPage() {
     }
     return null;
   }, [isErrorRegister, errorRegister]);
-  const onSubmit: SubmitHandler<Form> = async (data) => {
-    await handleGetCSRFCookie();
-    await registerUser(data);
-  };
+  const onSubmit: SubmitHandler<Form> = useCallback(
+    async (data) => {
+      await handleGetCSRFCookie();
+      await registerUser(data);
+    },
+    [handleGetCSRFCookie, registerUser]
+  );
   const redirectToOauth = useCallback((provider: 'google' | 'facebook') => {
     if (typeof window !== 'undefined') {
       window.open(

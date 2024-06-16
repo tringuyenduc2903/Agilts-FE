@@ -12,7 +12,14 @@ import {
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaAngleLeft, FaXmark } from 'react-icons/fa6';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -82,9 +89,12 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
     return null;
   }, [isErrorConfirm, errorConfirm]);
   const { register, handleSubmit } = useForm<Form>();
-  const onSubmit: SubmitHandler<Form> = async (data) => {
-    await confirm2FA(data.code);
-  };
+  const onSubmit: SubmitHandler<Form> = useCallback(
+    async (data) => {
+      await confirm2FA(data.code);
+    },
+    [confirm2FA]
+  );
   useGSAP(
     () => {
       const animateStep = (stepRef: React.RefObject<HTMLDivElement>) => {

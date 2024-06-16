@@ -1,5 +1,5 @@
 'use client';
-import React, { useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import bgImg from '@/assets/port-title-area.jpg';
 import Image from 'next/image';
@@ -34,10 +34,13 @@ function ForgotPasswordPage() {
       error: errorPost,
     },
   ] = useForgotPasswordMutation();
-  const onSubmit: SubmitHandler<Form> = async (data) => {
-    await handleGetCSRFCookie();
-    await forgotPassword(data.email);
-  };
+  const onSubmit: SubmitHandler<Form> = useCallback(
+    async (data) => {
+      await handleGetCSRFCookie();
+      await forgotPassword(data.email);
+    },
+    [handleGetCSRFCookie, forgotPassword]
+  );
   useEffect(() => {
     if (isSuccessPost && postData) {
       setVisibleModal({

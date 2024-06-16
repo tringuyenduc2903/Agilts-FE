@@ -3,7 +3,7 @@ import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { useVerifyTwoFactorMutation } from '@/lib/redux/query/userQuery';
 import Image from 'next/image';
 import { notFound, useRouter } from 'next/navigation';
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import bgImg from '@/assets/port-title-area.jpg';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -45,10 +45,13 @@ function TwoFactorQrCodePage() {
     return null;
   }, [isErrorVerify, errorVerify]);
   const { register, handleSubmit } = useForm<Form>();
-  const onSubmit: SubmitHandler<Form> = async (data) => {
-    await handleGetCSRFCookie();
-    await verifyTwoFactor(data);
-  };
+  const onSubmit: SubmitHandler<Form> = useCallback(
+    async (data) => {
+      await handleGetCSRFCookie();
+      await verifyTwoFactor(data);
+    },
+    [handleGetCSRFCookie, verifyTwoFactor]
+  );
   useEffect(() => {
     if (isSuccessVerify) {
       setVisibleModal({

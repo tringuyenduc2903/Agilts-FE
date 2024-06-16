@@ -34,12 +34,13 @@ function AccountsPage() {
   const { register, handleSubmit, reset, watch } = useForm<Form>({
     defaultValues: { ...user },
   });
-
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedPhone = localStorage.getItem('country_phone');
       if (savedPhone) {
-        setSelectedPhone(JSON.parse(savedPhone) || countries_phone[0]);
+        setSelectedPhone(JSON.parse(savedPhone));
+      } else {
+        setSelectedPhone(countries_phone[0]);
       }
     }
   }, []);

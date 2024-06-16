@@ -32,13 +32,12 @@ const ToastModal = () => {
 
   return (
     <ToastContainer
+      limit={1}
       className='text-sm md:text-base'
       position='bottom-right'
       autoClose={3000}
-      newestOnTop={true}
       closeOnClick
       pauseOnFocusLoss
-      stacked
     />
   );
 };

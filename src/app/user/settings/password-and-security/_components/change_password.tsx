@@ -22,7 +22,8 @@ type Props = {
   closePopup: () => void;
 };
 const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
-  const { register, handleSubmit } = useForm<Form>();
+  const { register, handleSubmit, watch } = useForm<Form>();
+  const watchValues = watch();
   const { handleGetCSRFCookie, isLoadingCSRF } = useContext(FetchDataContext);
   const { t } = useTranslation('common');
   const { setVisibleModal } = useContext(ModalContext);
@@ -89,7 +90,7 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
         <div className='w-full flex justify-end'>
           <button
             aria-label='close-change-password'
-            aria-disabled={isLoadingChangePassword || isLoadingCSRF}
+            disabled={isLoadingChangePassword || isLoadingCSRF}
             onClick={closePopup}
           >
             <FaXmark className='text-2xl' />
@@ -205,9 +206,15 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
           <button
             type='submit'
             className='font-bold bg-neutral-800 text-white py-3 md:py-4 rounded-sm'
-            disabled={isLoadingChangePassword || isLoadingCSRF}
+            disabled={
+              isLoadingChangePassword ||
+              isLoadingCSRF ||
+              !watchValues.current_password ||
+              !watchValues.password ||
+              !watchValues.password_confirmation
+            }
           >
-            {isLoadingChangePassword
+            {isLoadingChangePassword || isLoadingCSRF
               ? `...${t('loading')}`
               : t('change_password')}
           </button>

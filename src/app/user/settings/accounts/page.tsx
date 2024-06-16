@@ -55,7 +55,7 @@ function AccountsPage() {
   const [
     updateUser,
     {
-      data: updateData,
+      // data: updateData,
       isLoading: isLoadingUpdate,
       isSuccess: isSuccessUpdate,
       isError: isErrorUpdate,
@@ -119,7 +119,7 @@ function AccountsPage() {
   }, [user, reset]);
 
   useEffect(() => {
-    if (isSuccessUpdate && updateData) {
+    if (isSuccessUpdate) {
       setVisibleModal({
         visibleToastModal: {
           type: 'success',
@@ -136,13 +136,7 @@ function AccountsPage() {
         },
       });
     }
-  }, [
-    isSuccessUpdate,
-    updateData,
-    isErrorUpdate,
-    errorUpdate,
-    setVisibleModal,
-  ]);
+  }, [isSuccessUpdate, isErrorUpdate, errorUpdate, setVisibleModal]);
 
   return (
     <div className='flex flex-col gap-6'>

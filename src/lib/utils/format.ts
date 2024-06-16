@@ -6,5 +6,9 @@ export function formatPhoneNumberToVietnam(
   if (phoneNumber.startsWith('0')) {
     formattedNumber = phoneNumber.slice(1);
   }
-  return `+${code}${formattedNumber}`;
+  if (phoneNumber.startsWith('+')) {
+    return phoneNumber;
+  } else {
+    return `+${code}${formattedNumber}`;
+  }
 }

@@ -1,4 +1,4 @@
-import getCSRFCookie from '@/api/CsrfCookie';
+import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
 import useClickOutside from '@/lib/hooks/useClickOutside';
 import {
@@ -20,6 +20,7 @@ type Form = {
 };
 function ConfirmPasswordModal() {
   const { setVisibleModal } = useContext(ModalContext);
+  const { handleGetCSRFCookie, isLoadingCSRF } = useContext(FetchDataContext);
   const { t } = useTranslation('common');
   const [isShowCurPwd, setIsShowCurPwd] = useState(false);
   const { sectionRef } = useClickOutside(() => {
@@ -61,7 +62,7 @@ function ConfirmPasswordModal() {
     return null;
   }, [isErrorConfirm, errorConfirm, isErrorStatus, errorStatus]);
   const onSubmit: SubmitHandler<Form> = async (data) => {
-    await getCSRFCookie();
+    await handleGetCSRFCookie();
     await confirmPassword(data.password);
   };
   useEffect(() => {
@@ -78,14 +79,12 @@ function ConfirmPasswordModal() {
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
-      aria-disabled={isLoadingConfirm || isLoadingStatus}
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
         method='POST'
         className='max-w-[540px] w-full bg-white rounded-sm overflow-hidden px-4 py-6 flex flex-col gap-6'
         ref={sectionRef as LegacyRef<HTMLFormElement>}
-        aria-disabled={isLoadingConfirm || isLoadingStatus}
       >
         <h1 className='text-lg md:text-xl font-bold'>
           {t('title_confirm_password')}
@@ -93,7 +92,7 @@ function ConfirmPasswordModal() {
         <p> {t('mess_confirm_password')}</p>
         <div className='relative w-full'>
           <input
-            disabled={isLoadingConfirm || isLoadingStatus}
+            disabled={isLoadingConfirm || isLoadingStatus || isLoadingCSRF}
             className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
             type={isShowCurPwd ? 'text' : 'password'}
             placeholder={`${t('current_password')}`}
@@ -104,7 +103,7 @@ function ConfirmPasswordModal() {
             className='absolute top-1/2 -translate-y-1/2 right-2'
             aria-label='toggle-pwd-btn'
             onClick={() => setIsShowCurPwd(!isShowCurPwd)}
-            disabled={isLoadingConfirm || isLoadingStatus}
+            disabled={isLoadingConfirm || isLoadingStatus || isLoadingCSRF}
           >
             {isShowCurPwd ? (
               <FaRegEye className='text-xl' />
@@ -121,9 +120,9 @@ function ConfirmPasswordModal() {
         <button
           type='submit'
           className='font-bold bg-neutral-800 text-white py-3 md:py-4 rounded-sm'
-          disabled={isLoadingConfirm || isLoadingStatus}
+          disabled={isLoadingConfirm || isLoadingStatus || isLoadingCSRF}
         >
-          {isLoadingConfirm || isLoadingStatus
+          {isLoadingConfirm || isLoadingStatus || isLoadingCSRF
             ? `...${t('loading')}`
             : t('submit')}
         </button>

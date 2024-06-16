@@ -24,10 +24,12 @@ function GoogleMapComponent() {
     };
   }, [isDesktop]);
 
-  const center = {
-    lat: -3.745,
-    lng: -38.523,
-  };
+  const center = useMemo(() => {
+    return {
+      lat: -3.745,
+      lng: -38.523,
+    };
+  }, []);
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: 'YOUR_API_KEY',

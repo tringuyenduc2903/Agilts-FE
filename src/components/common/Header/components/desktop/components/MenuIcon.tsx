@@ -17,7 +17,6 @@ import {
 } from 'react-icons/io5';
 import { useLogoutMutation } from '@/lib/redux/query/userQuery';
 import { ModalContext } from '@/contexts/ModalProvider';
-import getCSRFCookie from '@/api/CsrfCookie';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
@@ -32,7 +31,8 @@ const MenuIcon: React.FC<Props> = React.memo(
     const { t } = useTranslation('header');
     const dispatch = useDispatch();
     const { setVisibleModal } = useContext(ModalContext);
-    const { user } = useContext(FetchDataContext);
+    const { user, handleGetCSRFCookie, isLoadingCSRF } =
+      useContext(FetchDataContext);
     const router = useRouter();
     const container = useRef<HTMLButtonElement | null>(null);
     const circlesRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -97,9 +97,9 @@ const MenuIcon: React.FC<Props> = React.memo(
       );
     }
     const handleLogout = useCallback(async () => {
-      await getCSRFCookie();
+      await handleGetCSRFCookie();
       await logout(null);
-    }, [logout]);
+    }, [logout, handleGetCSRFCookie]);
     useEffect(() => {
       closeMenu();
       if (isSuccessLogout) {
@@ -127,12 +127,13 @@ const MenuIcon: React.FC<Props> = React.memo(
       setVisibleModal,
       t,
       dispatch,
+      closeMenu,
     ]);
     return (
       <div className='relative'>
         {!isOpenMenu && (
           <button
-            disabled={isLoadingLogout}
+            disabled={isLoadingLogout || isLoadingCSRF}
             onClick={openMenu}
             ref={container}
             className='relative circles-menu bg-red-500 p-6 w-full h-full grid grid-cols-4 gap-1'
@@ -142,7 +143,7 @@ const MenuIcon: React.FC<Props> = React.memo(
         )}
         {isOpenMenu && (
           <button
-            disabled={isLoadingLogout}
+            disabled={isLoadingLogout || isLoadingCSRF}
             onClick={() => clickOutside}
             ref={container}
             className='relative circles-menu bg-red-500 p-6 w-full h-full grid grid-cols-4 gap-1'
@@ -172,14 +173,14 @@ const MenuIcon: React.FC<Props> = React.memo(
                 <div className='my-4 flex flex-col gap-4 items-start'>
                   <button
                     className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
-                    disabled={isLoadingLogout}
+                    disabled={isLoadingLogout || isLoadingCSRF}
                   >
                     <IoPersonCircleOutline className='text-2xl' />
                     <p>{t('my_account')}</p>
                   </button>
                   <button
                     className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
-                    disabled={isLoadingLogout}
+                    disabled={isLoadingLogout || isLoadingCSRF}
                     onClick={() => {
                       router.push('/user/settings');
                       closeMenu();
@@ -190,7 +191,7 @@ const MenuIcon: React.FC<Props> = React.memo(
                   </button>
                   <button
                     className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
-                    disabled={isLoadingLogout}
+                    disabled={isLoadingLogout || isLoadingCSRF}
                   >
                     <IoHelpCircleOutline className='text-2xl' />
                     <p>{t('help')}</p>
@@ -203,7 +204,7 @@ const MenuIcon: React.FC<Props> = React.memo(
                   //   closeMenu();
                   // }}
                   onClick={handleLogout}
-                  disabled={isLoadingLogout}
+                  disabled={isLoadingLogout || isLoadingCSRF}
                 >
                   {t('logout')}
                 </button>
@@ -211,7 +212,7 @@ const MenuIcon: React.FC<Props> = React.memo(
             ) : (
               <button
                 className='mt-auto ml-auto bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
-                disabled={isLoadingLogout}
+                disabled={isLoadingLogout || isLoadingCSRF}
                 onClick={() => {
                   router.push('/login');
                   closeMenu();

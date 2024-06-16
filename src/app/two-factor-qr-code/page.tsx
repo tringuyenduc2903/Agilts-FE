@@ -7,7 +7,6 @@ import React, { useContext, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import bgImg from '@/assets/port-title-area.jpg';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import getCSRFCookie from '@/api/CsrfCookie';
 import Loading from '../loading';
 import { useSelector } from 'react-redux';
 import { isLoggedInState } from '@/lib/redux/slice/userSlice';
@@ -20,8 +19,14 @@ function TwoFactorQrCodePage() {
   const { t } = useTranslation('common');
   const isLoggedIn = useSelector(isLoggedInState);
   const router = useRouter();
-  const { user, isSuccessUser, isLoadingUser, refetchUser } =
-    useContext(FetchDataContext);
+  const {
+    user,
+    isSuccessUser,
+    isLoadingUser,
+    refetchUser,
+    handleGetCSRFCookie,
+    isLoadingCSRF,
+  } = useContext(FetchDataContext);
   const { setVisibleModal } = useContext(ModalContext);
   const [
     verifyTwoFactor,
@@ -41,7 +46,7 @@ function TwoFactorQrCodePage() {
   }, [isErrorVerify, errorVerify]);
   const { register, handleSubmit } = useForm<Form>();
   const onSubmit: SubmitHandler<Form> = async (data) => {
-    await getCSRFCookie();
+    await handleGetCSRFCookie();
     await verifyTwoFactor(data);
   };
   useEffect(() => {
@@ -97,7 +102,7 @@ function TwoFactorQrCodePage() {
                   type='text'
                   placeholder={`${t('mess_enter_code')}`}
                   {...register('code')}
-                  disabled={isLoadingVerify}
+                  disabled={isLoadingVerify || isLoadingCSRF}
                 />
                 {errors?.code && (
                   <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -119,7 +124,7 @@ function TwoFactorQrCodePage() {
                   type='text'
                   placeholder={`${t('recovery_code')}`}
                   {...register('recovery_code')}
-                  disabled={isLoadingVerify}
+                  disabled={isLoadingVerify || isLoadingCSRF}
                 />
                 {errors?.recovery_code && (
                   <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -131,9 +136,11 @@ function TwoFactorQrCodePage() {
             <button
               className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
               type='submit'
-              disabled={isLoadingVerify}
+              disabled={isLoadingVerify || isLoadingCSRF}
             >
-              {isLoadingVerify ? `...${t('loading')}` : t('submit')}
+              {isLoadingVerify || isLoadingCSRF
+                ? `...${t('loading')}`
+                : t('submit')}
             </button>
           </form>
         </div>

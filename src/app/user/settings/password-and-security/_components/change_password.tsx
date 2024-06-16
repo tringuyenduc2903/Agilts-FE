@@ -1,4 +1,4 @@
-import getCSRFCookie from '@/api/CsrfCookie';
+import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
 import useClickOutside from '@/lib/hooks/useClickOutside';
 import { useChangePasswordMutation } from '@/lib/redux/query/userQuery';
@@ -23,6 +23,7 @@ type Props = {
 };
 const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
   const { register, handleSubmit } = useForm<Form>();
+  const { handleGetCSRFCookie, isLoadingCSRF } = useContext(FetchDataContext);
   const { t } = useTranslation('common');
   const { setVisibleModal } = useContext(ModalContext);
   const [isShowCurPwd, setIsShowCurPwd] = useState(false);
@@ -46,7 +47,7 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
     return null;
   }, [isErrorChangePassword, errorChangePassword]);
   const onSubmit: SubmitHandler<Form> = async (data) => {
-    await getCSRFCookie();
+    await handleGetCSRFCookie();
     await changePassword(data);
   };
   useEffect(() => {
@@ -79,7 +80,6 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
     <section
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'
-      aria-disabled={isLoadingChangePassword}
       onClick={() => clickOutside}
     >
       <div
@@ -89,7 +89,7 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
         <div className='w-full flex justify-end'>
           <button
             aria-label='close-change-password'
-            aria-disabled={isLoadingChangePassword}
+            aria-disabled={isLoadingChangePassword || isLoadingCSRF}
             onClick={closePopup}
           >
             <FaXmark className='text-2xl' />
@@ -106,7 +106,7 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
               <label htmlFor='current_password'>{t('current_password')}</label>
               <div className='relative w-full'>
                 <input
-                  disabled={isLoadingChangePassword}
+                  disabled={isLoadingChangePassword || isLoadingCSRF}
                   className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                   type={isShowCurPwd ? 'text' : 'password'}
                   placeholder={`${t('current_password')}`}
@@ -117,7 +117,7 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
                   className='absolute top-1/2 -translate-y-1/2 right-2'
                   aria-label='toggle-pwd-btn'
                   onClick={() => setIsShowCurPwd(!isShowCurPwd)}
-                  disabled={isLoadingChangePassword}
+                  disabled={isLoadingChangePassword || isLoadingCSRF}
                 >
                   {isShowCurPwd ? (
                     <FaRegEye className='text-xl' />
@@ -136,7 +136,7 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
               <label htmlFor='password'>{t('new_password')}</label>
               <div className='relative w-full'>
                 <input
-                  disabled={isLoadingChangePassword}
+                  disabled={isLoadingChangePassword || isLoadingCSRF}
                   className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                   type={isShowNewPwd ? 'text' : 'password'}
                   placeholder={`${t('new_password')}`}
@@ -147,7 +147,7 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
                   className='absolute top-1/2 -translate-y-1/2 right-2'
                   aria-label='toggle-pwd-btn'
                   onClick={() => setIsShowNewPwd(!isShowNewPwd)}
-                  disabled={isLoadingChangePassword}
+                  disabled={isLoadingChangePassword || isLoadingCSRF}
                 >
                   {isShowNewPwd ? (
                     <FaRegEye className='text-xl' />
@@ -168,7 +168,7 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
               </label>
               <div className='relative w-full'>
                 <input
-                  disabled={isLoadingChangePassword}
+                  disabled={isLoadingChangePassword || isLoadingCSRF}
                   className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                   type={isShowReNewPwd ? 'text' : 'password'}
                   placeholder={`${t('re_new_password')}`}
@@ -179,7 +179,7 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
                   className='absolute top-1/2 -translate-y-1/2 right-2'
                   aria-label='toggle-pwd-btn'
                   onClick={() => setIsShowReNewPwd(!isShowReNewPwd)}
-                  disabled={isLoadingChangePassword}
+                  disabled={isLoadingChangePassword || isLoadingCSRF}
                 >
                   {isShowReNewPwd ? (
                     <FaRegEye className='text-xl' />
@@ -205,7 +205,7 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
           <button
             type='submit'
             className='font-bold bg-neutral-800 text-white py-3 md:py-4 rounded-sm'
-            disabled={isLoadingChangePassword}
+            disabled={isLoadingChangePassword || isLoadingCSRF}
           >
             {isLoadingChangePassword
               ? `...${t('loading')}`

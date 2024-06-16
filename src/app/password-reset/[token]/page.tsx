@@ -1,5 +1,4 @@
 'use client';
-import getCSRFCookie from '@/api/CsrfCookie';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import bgImg from '@/assets/port-title-area.jpg';
@@ -21,7 +20,13 @@ function ResetPasswordPage() {
   const { token } = useParams();
   const searchParams = useSearchParams();
   const { t } = useTranslation('common');
-  const { user, isLoadingUser, isSuccessUser } = useContext(FetchDataContext);
+  const {
+    user,
+    isLoadingUser,
+    isSuccessUser,
+    handleGetCSRFCookie,
+    isLoadingCSRF,
+  } = useContext(FetchDataContext);
   const { setVisibleModal } = useContext(ModalContext);
   const [isShowPwd, setIsShowPwd] = useState(false);
   const [isShowConfirmPwd, setIsShowConfirmPwd] = useState(false);
@@ -50,7 +55,7 @@ function ResetPasswordPage() {
     return null;
   }, [isErrorPost, errorPost]);
   const onSubmit: SubmitHandler<Form> = async (data) => {
-    await getCSRFCookie();
+    await handleGetCSRFCookie();
     await resetPassword({ ...data, token: token });
   };
   useEffect(() => {
@@ -136,7 +141,7 @@ function ResetPasswordPage() {
                   className='absolute top-1/2 -translate-y-1/2 right-2'
                   aria-label='show-pwd-btn'
                   onClick={() => setIsShowPwd(false)}
-                  disabled={isLoadingPost}
+                  disabled={isLoadingPost || isLoadingCSRF}
                 >
                   {isShowPwd ? (
                     <FaRegEye className='text-xl' />
@@ -176,9 +181,11 @@ function ResetPasswordPage() {
             <button
               className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
               type='submit'
-              disabled={isLoadingPost}
+              disabled={isLoadingPost || isLoadingCSRF}
             >
-              {t('submit')}
+              {isLoadingPost || isLoadingCSRF
+                ? `...${t('loading')}`
+                : t('submit')}
             </button>
           </form>
         </div>

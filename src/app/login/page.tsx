@@ -13,7 +13,6 @@ import { ModalContext } from '@/contexts/ModalProvider';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLoginMutation } from '@/lib/redux/query/userQuery';
-import getCSRFCookie from '@/api/CsrfCookie';
 import bgLogo from '@/assets/h4-slider-img-1.jpg';
 import Image from 'next/image';
 import {
@@ -31,7 +30,13 @@ type Form = {
 };
 function LoginPage() {
   const router = useRouter();
-  const { user, isLoadingUser, refetchUser } = useContext(FetchDataContext);
+  const {
+    user,
+    isLoadingUser,
+    refetchUser,
+    handleGetCSRFCookie,
+    isLoadingCSRF,
+  } = useContext(FetchDataContext);
   const { t } = useTranslation('common');
   const dispatch = useDispatch();
   const { setVisibleModal } = useContext(ModalContext);
@@ -55,7 +60,7 @@ function LoginPage() {
     return null;
   }, [isErrorLogin, errorLogin]);
   const onSubmit: SubmitHandler<Form> = async (data) => {
-    await getCSRFCookie();
+    await handleGetCSRFCookie();
     await login({ ...data, remember: true });
   };
   const redirectToOauth = useCallback((provider: 'google' | 'facebook') => {
@@ -156,7 +161,7 @@ function LoginPage() {
           </h1>
           <div className='w-full flex flex-col gap-2'>
             <input
-              disabled={isLoadingLogin}
+              disabled={isLoadingLogin || isLoadingCSRF}
               className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
               type='email'
               placeholder='Email'
@@ -172,7 +177,7 @@ function LoginPage() {
           <div className='w-full flex flex-col gap-2'>
             <div className='relative w-full'>
               <input
-                disabled={isLoadingLogin}
+                disabled={isLoadingLogin || isLoadingCSRF}
                 className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                 type={isShowPwd ? 'text' : 'password'}
                 placeholder={`${t('password')}`}
@@ -183,7 +188,7 @@ function LoginPage() {
                 className='absolute top-1/2 -translate-y-1/2 right-2'
                 aria-label='toggle-pwd-btn'
                 onClick={() => setIsShowPwd(!isShowPwd)}
-                disabled={isLoadingLogin}
+                disabled={isLoadingLogin || isLoadingCSRF}
               >
                 {isShowPwd ? (
                   <FaRegEye className='text-xl' />
@@ -203,7 +208,7 @@ function LoginPage() {
               <input
                 id='remember'
                 className='checked:bg-red-500'
-                disabled={isLoadingLogin}
+                disabled={isLoadingLogin || isLoadingCSRF}
                 type='checkbox'
                 {...register('remember')}
               />
@@ -220,7 +225,7 @@ function LoginPage() {
           <button
             className='w-full rounded-sm bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
             type='submit'
-            disabled={isLoadingLogin}
+            disabled={isLoadingLogin || isLoadingCSRF}
           >
             {t('login')}
           </button>
@@ -239,7 +244,7 @@ function LoginPage() {
                 type='button'
                 className='font-bold'
                 onClick={() => router.push('/register')}
-                disabled={isLoadingLogin}
+                disabled={isLoadingLogin || isLoadingCSRF}
               >
                 {t('sign-up')}
               </button>
@@ -250,7 +255,7 @@ function LoginPage() {
                 <button
                   type='button'
                   className='bg-neutral-800 rounded-full p-2 text-white hover:text-red-500 transition-colors'
-                  disabled={isLoadingLogin}
+                  disabled={isLoadingLogin || isLoadingCSRF}
                   onClick={() => redirectToOauth('google')}
                 >
                   <FaGoogle className='text-lg' />
@@ -258,7 +263,7 @@ function LoginPage() {
                 <button
                   type='button'
                   className='bg-neutral-800 rounded-full p-2 text-white hover:text-blue-500 transition-colors'
-                  disabled={isLoadingLogin}
+                  disabled={isLoadingLogin || isLoadingCSRF}
                   onClick={() => redirectToOauth('facebook')}
                 >
                   <FaFacebookF className='text-lg' />

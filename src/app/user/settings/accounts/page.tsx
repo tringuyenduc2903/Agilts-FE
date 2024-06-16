@@ -1,5 +1,4 @@
 'use client';
-import getCSRFCookie from '@/api/CsrfCookie';
 import { CountryPhone, countries_phone } from '@/config/phone';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
@@ -27,7 +26,8 @@ type Form = {
 
 function AccountsPage() {
   const { t } = useTranslation('common');
-  const { user } = useContext(FetchDataContext);
+  const { user, handleGetCSRFCookie, isLoadingCSRF } =
+    useContext(FetchDataContext);
   const { setVisibleModal } = useContext(ModalContext);
   const [openSelectPhone, setOpenSelectPhone] = useState(false);
   const [selectedPhone, setSelectedPhone] = useState<CountryPhone | null>(null);
@@ -102,7 +102,7 @@ function AccountsPage() {
   }, [selectedPhone, openSelectPhone]);
 
   const onSubmit: SubmitHandler<Form> = async (data) => {
-    await getCSRFCookie();
+    await handleGetCSRFCookie();
     await updateUser({
       ...data,
       phone_number: formatPhoneNumberToVietnam(
@@ -150,7 +150,6 @@ function AccountsPage() {
         className='flex flex-col gap-4'
         onSubmit={handleSubmit(onSubmit)}
         method='POST'
-        aria-disabled={isLoadingUpdate}
       >
         <div className='flex flex-col gap-2'>
           <label htmlFor='name'>{t('name')}</label>
@@ -159,7 +158,7 @@ function AccountsPage() {
             type='text'
             id='name'
             {...register('name')}
-            disabled={isLoadingUpdate}
+            disabled={isLoadingUpdate || isLoadingCSRF}
           />
           {errors?.name && (
             <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -194,7 +193,7 @@ function AccountsPage() {
             type='date'
             id='birthday'
             {...register('birthday')}
-            disabled={isLoadingUpdate}
+            disabled={isLoadingUpdate || isLoadingCSRF}
           />
           {errors?.birthday && (
             <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -211,7 +210,7 @@ function AccountsPage() {
               type='text'
               id='phone'
               {...register('phone_number')}
-              disabled={isLoadingUpdate}
+              disabled={isLoadingUpdate || isLoadingCSRF}
             />
             <ul
               className={`absolute left-0 top-[150%] bg-white max-h-[30vh] ${
@@ -255,7 +254,7 @@ function AccountsPage() {
             id='gender'
             className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base focus:outline-none'
             {...register('gender')}
-            disabled={isLoadingUpdate}
+            disabled={isLoadingUpdate || isLoadingCSRF}
           >
             <option value=''>{t('select_gender')}</option>
             <option value={0}>{t('male')}</option>
@@ -274,7 +273,7 @@ function AccountsPage() {
               className='font-bold bg-red-500 hover:bg-red-600 transition-colors text-white px-6 py-3 rounded-sm'
               type='button'
               onClick={() => reset({ ...user })}
-              disabled={isLoadingUpdate}
+              disabled={isLoadingUpdate || isLoadingCSRF}
             >
               {t('cancel')}
             </button>
@@ -282,7 +281,7 @@ function AccountsPage() {
           <button
             className='font-bold bg-neutral-800 text-white px-4 py-3 rounded-sm'
             type='submit'
-            disabled={isLoadingUpdate}
+            disabled={isLoadingUpdate || isLoadingCSRF}
           >
             {t('update')}
           </button>

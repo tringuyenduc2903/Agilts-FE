@@ -21,7 +21,6 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useRegisterMutation } from '@/lib/redux/query/userQuery';
 import { ModalContext } from '@/contexts/ModalProvider';
-import getCSRFCookie from '@/api/CsrfCookie';
 type Form = {
   name: string;
   email: string;
@@ -30,7 +29,13 @@ type Form = {
 };
 function RegisterPage() {
   const router = useRouter();
-  const { user, isLoadingUser, refetchUser } = useContext(FetchDataContext);
+  const {
+    user,
+    isLoadingUser,
+    refetchUser,
+    handleGetCSRFCookie,
+    isLoadingCSRF,
+  } = useContext(FetchDataContext);
   const { t } = useTranslation('common');
   const { register, handleSubmit } = useForm<Form>();
   const [isShowPwd, setIsShowPwd] = useState(false);
@@ -53,7 +58,7 @@ function RegisterPage() {
     return null;
   }, [isErrorRegister, errorRegister]);
   const onSubmit: SubmitHandler<Form> = async (data) => {
-    await getCSRFCookie();
+    await handleGetCSRFCookie();
     await registerUser(data);
   };
   const redirectToOauth = useCallback((provider: 'google' | 'facebook') => {
@@ -167,7 +172,7 @@ function RegisterPage() {
                 className='absolute top-1/2 -translate-y-1/2 right-2'
                 aria-label='toggle-pwd-btn'
                 onClick={() => setIsShowPwd(!isShowPwd)}
-                disabled={isLoadingRegister}
+                disabled={isLoadingRegister || isLoadingCSRF}
               >
                 {isShowPwd ? (
                   <FaRegEye className='text-xl' />
@@ -218,7 +223,7 @@ function RegisterPage() {
                 type='button'
                 className='font-bold'
                 onClick={() => router.push('/login')}
-                disabled={isLoadingRegister}
+                disabled={isLoadingRegister || isLoadingCSRF}
               >
                 {t('sign-in')}
               </button>
@@ -229,7 +234,7 @@ function RegisterPage() {
                 <button
                   type='button'
                   className='bg-neutral-800 rounded-full p-2 text-white hover:text-red-500 transition-colors'
-                  disabled={isLoadingRegister}
+                  disabled={isLoadingRegister || isLoadingCSRF}
                   onClick={() => redirectToOauth('google')}
                 >
                   <FaGoogle className='text-lg' />
@@ -237,7 +242,7 @@ function RegisterPage() {
                 <button
                   type='button'
                   className='bg-neutral-800 rounded-full p-2 text-white hover:text-blue-500 transition-colors'
-                  disabled={isLoadingRegister}
+                  disabled={isLoadingRegister || isLoadingCSRF}
                   onClick={() => redirectToOauth('facebook')}
                 >
                   <FaFacebookF className='text-lg' />

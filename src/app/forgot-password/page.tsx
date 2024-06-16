@@ -1,5 +1,4 @@
 'use client';
-import getCSRFCookie from '@/api/CsrfCookie';
 import React, { useContext, useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import bgImg from '@/assets/port-title-area.jpg';
@@ -16,7 +15,13 @@ type Form = {
 };
 function ForgotPasswordPage() {
   const { t } = useTranslation('common');
-  const { user, isLoadingUser, isSuccessUser } = useContext(FetchDataContext);
+  const {
+    user,
+    isLoadingUser,
+    isSuccessUser,
+    handleGetCSRFCookie,
+    isLoadingCSRF,
+  } = useContext(FetchDataContext);
   const { setVisibleModal } = useContext(ModalContext);
   const { register, handleSubmit } = useForm<Form>();
   const [
@@ -30,7 +35,7 @@ function ForgotPasswordPage() {
     },
   ] = useForgotPasswordMutation();
   const onSubmit: SubmitHandler<Form> = async (data) => {
-    await getCSRFCookie();
+    await handleGetCSRFCookie();
     await forgotPassword(data.email);
   };
   useEffect(() => {
@@ -95,9 +100,11 @@ function ForgotPasswordPage() {
             </div>
             <button
               className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
-              disabled={isLoadingPost}
+              disabled={isLoadingPost || isLoadingCSRF}
             >
-              {t('submit')}
+              {isLoadingPost || isLoadingCSRF
+                ? `...${t('loading')}`
+                : t('submit')}
             </button>
           </form>
         </div>

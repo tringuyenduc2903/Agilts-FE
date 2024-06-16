@@ -91,7 +91,6 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
     setVisibleModal,
     t,
     dispatch,
-    closeMenu,
   ]);
   return (
     <aside

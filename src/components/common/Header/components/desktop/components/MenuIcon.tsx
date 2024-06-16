@@ -127,7 +127,6 @@ const MenuIcon: React.FC<Props> = React.memo(
       setVisibleModal,
       t,
       dispatch,
-      closeMenu,
     ]);
     return (
       <div className='relative'>

@@ -4,6 +4,7 @@ import useClickOutside from '@/lib/hooks/useClickOutside';
 import { useChangePasswordMutation } from '@/lib/redux/query/userQuery';
 import React, {
   LegacyRef,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -47,10 +48,13 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
     }
     return null;
   }, [isErrorChangePassword, errorChangePassword]);
-  const onSubmit: SubmitHandler<Form> = async (data) => {
-    await handleGetCSRFCookie();
-    await changePassword(data);
-  };
+  const onSubmit: SubmitHandler<Form> = useCallback(
+    async (data) => {
+      await handleGetCSRFCookie();
+      await changePassword(data);
+    },
+    [handleGetCSRFCookie, changePassword]
+  );
   useEffect(() => {
     if (isSuccessChangePassword) {
       setVisibleModal({

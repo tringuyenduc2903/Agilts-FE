@@ -1,7 +1,8 @@
 import { ModalContext } from '@/contexts/ModalProvider';
 import React, { useContext, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.css';
+
 const ToastModal = () => {
   const { state } = useContext(ModalContext);
   useEffect(() => {
@@ -29,7 +30,6 @@ const ToastModal = () => {
       }
     }
   }, [state.visibleToastModal]);
-
   return (
     <ToastContainer
       limit={1}

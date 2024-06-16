@@ -39,7 +39,7 @@ function AccountsPage() {
     if (typeof window !== 'undefined') {
       const savedPhone = localStorage.getItem('country_phone');
       if (savedPhone) {
-        setSelectedPhone(JSON.parse(savedPhone));
+        setSelectedPhone(JSON.parse(savedPhone) || countries_phone[0]);
       }
     }
   }, []);

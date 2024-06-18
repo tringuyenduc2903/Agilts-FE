@@ -28,7 +28,7 @@ type Props = {
 
 const MenuIcon: React.FC<Props> = React.memo(
   ({ isOpenMenu, closeMenu, openMenu }) => {
-    const t = useTranslations('common');
+    const t = useTranslations('header');
     const dispatch = useDispatch();
     const { setVisibleModal } = useContext(ModalContext);
     const { user, handleGetCSRFCookie, isLoadingCSRF } =

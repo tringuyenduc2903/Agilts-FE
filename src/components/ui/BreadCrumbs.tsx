@@ -1,15 +1,15 @@
 'use client';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import { getCookies } from 'cookies-next';
 const BreadCrumbs = React.memo(() => {
+  const { locale } = useParams();
   const t = useTranslations('common');
   const pathname = usePathname();
   const renderedBreadcrumbs = pathname
+    .replace(`/${locale}`, '')
     .replace('/', '')
-    .replace(`${getCookies()?.NEXT_LOCALE}`, '')
     .split('/')
     .map((b) => {
       return (

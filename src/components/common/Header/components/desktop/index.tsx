@@ -73,7 +73,10 @@ function DesktopNavigation() {
           style={{ backgroundColor: 'rgba(0,0,0,0.1)' }}
           onClick={() => setIsOpenMenu(false)}
         ></div>
-        <button aria-label='btn-back-home' onClick={() => router.push('/')}>
+        <button
+          aria-label='btn-back-home'
+          onClick={() => router.push(`/${curLang}`)}
+        >
           <Image width={170} height={70} src={logo} alt='logo' />
         </button>
         <section className='relative z-[999] h-full flex items-center font-bold tracking-[1px]'>

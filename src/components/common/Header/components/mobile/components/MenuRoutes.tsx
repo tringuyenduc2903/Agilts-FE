@@ -21,6 +21,7 @@ import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
+import { getCookies, setCookie } from 'cookies-next';
 type Props = {
   isOpenMenu: boolean;
   closeMenu: () => void;
@@ -48,19 +49,20 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
     },
   ] = useLogoutMutation();
   const handleRedirect = useCallback(
-    (link: string) => {
-      router.push(`${link}`);
+    (url: string) => {
+      const curLang = getCookies().NEXT_LOCALE || 'vi';
+      router.push(`/${curLang}/${url}`);
       closeMenu();
     },
-    [router, closeMenu]
+    [router, closeMenu, getCookies]
   );
   const handleChangeLang = useCallback(
     (lang: string) => {
+      setCookie('NEXT_LOCALE', lang);
       router.replace(`/${lang}`);
-      localStorage.setItem('agilts-customer', lang);
       closeMenu();
     },
-    [closeMenu, router]
+    [closeMenu, router, setCookie]
   );
   const handleLogout = useCallback(async () => {
     await handleGetCSRFCookie();
@@ -126,10 +128,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                 <button
                   className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
                   disabled={isLoadingLogout || isLoadingCSRF}
-                  onClick={() => {
-                    router.push('/user/settings');
-                    closeMenu();
-                  }}
+                  onClick={() => handleRedirect('user/settings')}
                 >
                   <IoSettingsOutline className='text-2xl' />
                   <p>{t('settings')}</p>
@@ -166,7 +165,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
               hoverRoute === 'home' || pathname === '/' ? 'text-red-500' : ''
             } transition-colors`}
             href={'/'}
-            onClick={() => handleRedirect('/')}
+            onClick={() => handleRedirect('')}
             onMouseEnter={() => setHoverRoute('home')}
             onMouseLeave={() => setHoverRoute(null)}
             aria-disabled={isLoadingLogout || isLoadingCSRF}
@@ -209,7 +208,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
                   href={'/about-us'}
-                  onClick={() => handleRedirect('/about-us')}
+                  onClick={() => handleRedirect('about-us')}
                   onMouseOver={() => setHoverSubRoute('about-us')}
                   onMouseOut={() => setHoverSubRoute(null)}
                   aria-disabled={isLoadingLogout || isLoadingCSRF}
@@ -230,7 +229,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
                   href={'/our-services'}
-                  onClick={() => handleRedirect('/our-services')}
+                  onClick={() => handleRedirect('our-services')}
                   onMouseOver={() => setHoverSubRoute('our-services')}
                   onMouseOut={() => setHoverSubRoute(null)}
                   aria-disabled={isLoadingLogout || isLoadingCSRF}
@@ -252,7 +251,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
                   href={'/contact'}
-                  onClick={() => handleRedirect('/contact')}
+                  onClick={() => handleRedirect('contact')}
                   onMouseOver={() => setHoverSubRoute('contact')}
                   onMouseOut={() => setHoverSubRoute(null)}
                   aria-disabled={isLoadingLogout || isLoadingCSRF}
@@ -278,7 +277,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                 : ''
             } transition-colors`}
             href={'/products'}
-            onClick={() => handleRedirect('/products')}
+            onClick={() => handleRedirect('products')}
             onMouseEnter={() => setHoverRoute('products')}
             onMouseLeave={() => setHoverRoute(null)}
             aria-disabled={isLoadingLogout || isLoadingCSRF}

@@ -20,6 +20,7 @@ import { ModalContext } from '@/contexts/ModalProvider';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
+import { getCookies } from 'cookies-next';
 type Props = {
   isOpenMenu: boolean;
   openMenu: () => void;
@@ -96,6 +97,14 @@ const MenuIcon: React.FC<Props> = React.memo(
         ></div>
       );
     }
+    const handleRedirect = useCallback(
+      (url: string) => {
+        const curLang = getCookies().NEXT_LOCALE || 'vi';
+        router.push(`/${curLang}/${url}`);
+        closeMenu();
+      },
+      [router, closeMenu, getCookies]
+    );
     const handleLogout = useCallback(async () => {
       await handleGetCSRFCookie();
       await logout(null);
@@ -180,10 +189,7 @@ const MenuIcon: React.FC<Props> = React.memo(
                   <button
                     className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
                     disabled={isLoadingLogout || isLoadingCSRF}
-                    onClick={() => {
-                      router.push('/user/settings');
-                      closeMenu();
-                    }}
+                    onClick={() => handleRedirect('user/settings')}
                   >
                     <IoSettingsOutline className='text-2xl' />
                     <p>{t('settings')}</p>
@@ -208,10 +214,7 @@ const MenuIcon: React.FC<Props> = React.memo(
               <button
                 className='mt-auto ml-auto bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
                 disabled={isLoadingLogout || isLoadingCSRF}
-                onClick={() => {
-                  router.push('/login');
-                  closeMenu();
-                }}
+                onClick={() => handleRedirect('login')}
               >
                 {t('login')}
               </button>

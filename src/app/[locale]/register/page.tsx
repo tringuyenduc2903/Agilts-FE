@@ -21,6 +21,7 @@ import {
 import { useTranslations } from 'next-intl';
 import { useRegisterMutation } from '@/lib/redux/query/userQuery';
 import { ModalContext } from '@/contexts/ModalProvider';
+import { getCookies } from 'cookies-next';
 type Form = {
   name: string;
   email: string;
@@ -234,7 +235,9 @@ function RegisterPage() {
               <button
                 type='button'
                 className='font-bold'
-                onClick={() => router.push('/login')}
+                onClick={() =>
+                  router.push(`/${getCookies()?.NEXT_LOCALE || 'vi'}/login`)
+                }
                 disabled={isLoadingRegister || isLoadingCSRF}
               >
                 {t('sign-in')}

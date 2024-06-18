@@ -1,4 +1,8 @@
 {
+  "error": {
+    "message": "Something went wrong!",
+    "btn": "Try again"
+  },
   "head": {
     "home_title": "Agilts Home",
     "home_description": "Home page of Agilts",

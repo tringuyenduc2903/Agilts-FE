@@ -100,5 +100,7 @@
   "update": "Update",
   "user_information": "User information",
   "last_updated_at": "Last updated",
-  "verified_at": "Verified at"
+  "verified_at": "Verified at",
+  "mess_change_password": "Changed password successfully!",
+  "mess_change_profile": "Updated profile successfully!"
 }

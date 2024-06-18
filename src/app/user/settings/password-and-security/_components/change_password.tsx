@@ -23,8 +23,7 @@ type Props = {
   closePopup: () => void;
 };
 const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
-  const { register, handleSubmit, watch } = useForm<Form>();
-  const watchValues = watch();
+  const { register, handleSubmit } = useForm<Form>();
   const { handleGetCSRFCookie, isLoadingCSRF } = useContext(FetchDataContext);
   const { t } = useTranslation('common');
   const { setVisibleModal } = useContext(ModalContext);
@@ -60,26 +59,27 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
       setVisibleModal({
         visibleToastModal: {
           type: 'success',
-          message: 'Đổi mật khẩu thành công!',
+          message: `${t('mess_change_password')}`,
         },
       });
       closePopup();
     }
-    if (isErrorChangePassword && errorChangePassword) {
-      const error = errorChangePassword as any;
-      setVisibleModal({
-        visibleToastModal: {
-          type: 'error',
-          message: error?.data?.message,
-        },
-      });
-    }
+    // if (isErrorChangePassword && errorChangePassword) {
+    //   const error = errorChangePassword as any;
+    //   setVisibleModal({
+    //     visibleToastModal: {
+    //       type: 'error',
+    //       message: error?.data?.message,
+    //     },
+    //   });
+    // }
   }, [
     isSuccessChangePassword,
-    isErrorChangePassword,
-    errorChangePassword,
+    // isErrorChangePassword,
+    // errorChangePassword,
     setVisibleModal,
     closePopup,
+    t,
   ]);
   return (
     <section
@@ -210,13 +210,7 @@ const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
           <button
             type='submit'
             className='font-bold bg-neutral-800 text-white py-3 md:py-4 rounded-sm'
-            disabled={
-              isLoadingChangePassword ||
-              isLoadingCSRF ||
-              !watchValues.current_password ||
-              !watchValues.password ||
-              !watchValues.password_confirmation
-            }
+            disabled={isLoadingChangePassword || isLoadingCSRF}
           >
             {isLoadingChangePassword || isLoadingCSRF
               ? `...${t('loading')}`

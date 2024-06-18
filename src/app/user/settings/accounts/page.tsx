@@ -123,7 +123,7 @@ function AccountsPage() {
       setVisibleModal({
         visibleToastModal: {
           type: 'success',
-          message: 'Cập nhật thông tin người dùng thành công!',
+          message: `${t('mess_change_profile')}`,
         },
       });
     }
@@ -136,7 +136,7 @@ function AccountsPage() {
         },
       });
     }
-  }, [isSuccessUpdate, isErrorUpdate, errorUpdate, setVisibleModal]);
+  }, [isSuccessUpdate, isErrorUpdate, errorUpdate, setVisibleModal, t]);
 
   return (
     <div className='flex flex-col gap-6'>
@@ -283,7 +283,9 @@ function AccountsPage() {
             type='submit'
             disabled={isLoadingUpdate || isLoadingCSRF}
           >
-            {t('update')}
+            {isLoadingUpdate || isLoadingCSRF
+              ? `...${t('loading')}`
+              : t('update')}
           </button>
         </div>
       </form>

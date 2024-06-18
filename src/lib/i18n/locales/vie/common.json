@@ -104,5 +104,7 @@
   "update": "Cập nhật",
   "user_information": "Thông tin người dùng",
   "last_updated_at": "Cập nhật lần cuối",
-  "verified_at": "Đã xác thực"
+  "verified_at": "Đã xác thực",
+  "mess_change_password": "Đổi mật khẩu thành công!",
+  "mess_change_profile": "Cập nhật thông tin thành công!"
 }

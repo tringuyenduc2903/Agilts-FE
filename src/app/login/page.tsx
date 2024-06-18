@@ -75,13 +75,22 @@ function LoginPage() {
     }
   }, []);
   useEffect(() => {
-    if (isLoadingLogin) {
+    if (isLoadingCSRF) {
+      setVisibleModal({ visibleLoadingModal: isLoadingCSRF });
+    }
+    if (isLoadingLogin && !isLoadingCSRF) {
       setVisibleModal({ visibleLoadingModal: isLoadingLogin });
     }
     if (isErrorLogin || isSuccessLogin) {
       setVisibleModal({ visibleLoadingModal: false });
     }
-  }, [isLoadingLogin, isErrorLogin, isSuccessLogin, setVisibleModal]);
+  }, [
+    isLoadingCSRF,
+    isLoadingLogin,
+    isErrorLogin,
+    isSuccessLogin,
+    setVisibleModal,
+  ]);
   useEffect(() => {
     if (isSuccessLogin && loginData) {
       dispatch(setIsLoggedIn(true));

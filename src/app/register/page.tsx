@@ -73,13 +73,22 @@ function RegisterPage() {
     }
   }, []);
   useEffect(() => {
-    if (isLoadingRegister) {
+    if (isLoadingCSRF) {
+      setVisibleModal({ visibleLoadingModal: isLoadingCSRF });
+    }
+    if (isLoadingRegister && !isLoadingCSRF) {
       setVisibleModal({ visibleLoadingModal: isLoadingRegister });
     }
     if (isErrorRegister || isSuccessRegister) {
       setVisibleModal({ visibleLoadingModal: false });
     }
-  }, [isLoadingRegister, isErrorRegister, isSuccessRegister, setVisibleModal]);
+  }, [
+    isLoadingCSRF,
+    isLoadingRegister,
+    isErrorRegister,
+    isSuccessRegister,
+    setVisibleModal,
+  ]);
   useEffect(() => {
     if (isSuccessRegister) {
       setVisibleModal({

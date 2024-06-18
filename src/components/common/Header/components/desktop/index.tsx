@@ -226,7 +226,10 @@ function DesktopNavigation() {
                   } transition-colors`}
                   onMouseOver={() => setHoverSubRoute('english')}
                   onMouseOut={() => setHoverSubRoute(null)}
-                  onClick={() => i18n.changeLanguage('en')}
+                  onClick={() => {
+                    i18n.changeLanguage('en');
+                    localStorage.setItem('agilts-customer', 'en');
+                  }}
                 >
                   {t('english')}
                 </button>
@@ -240,7 +243,10 @@ function DesktopNavigation() {
                   } transition-colors`}
                   onMouseOver={() => setHoverSubRoute('vietnamese')}
                   onMouseOut={() => setHoverSubRoute(null)}
-                  onClick={() => i18n.changeLanguage('vie')}
+                  onClick={() => {
+                    i18n.changeLanguage('vie');
+                    localStorage.setItem('agilts-customer', 'vie');
+                  }}
                 >
                   {t('vietnamese')}
                 </button>

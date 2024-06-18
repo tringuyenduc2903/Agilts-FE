@@ -1,10 +1,16 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from '../config/axios';
-
+const curLang =
+  typeof window !== 'undefined'
+    ? window.localStorage.getItem('agilts-customer') || 'vie'
+    : 'vie';
+console.log(curLang);
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: axiosBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL as string,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL as string}${
+      curLang === 'en' ? '/en' : ''
+    }`,
   }),
   tagTypes: ['users', 'recover_codes'],
   endpoints: (builder) => {

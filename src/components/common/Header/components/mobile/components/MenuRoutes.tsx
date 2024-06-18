@@ -56,6 +56,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
   const handleChangeLang = useCallback(
     (lang: string) => {
       i18n.changeLanguage(lang);
+      localStorage.setItem('agilts-customer', lang);
       closeMenu();
     },
     [i18n, closeMenu]

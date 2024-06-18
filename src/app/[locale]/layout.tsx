@@ -1,6 +1,3 @@
-import Script from 'next/script';
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
 import { Metadata } from 'next';
 import { Open_Sans } from 'next/font/google';
 import { SpeedInsights } from '@vercel/speed-insights/next';
@@ -8,8 +5,9 @@ import { ModalProvider } from '@/contexts/ModalProvider';
 import { FetchDataProvider } from '@/contexts/FetchDataProvider';
 import StoreProvider from '@/contexts/StoreProvider';
 import dynamic from 'next/dynamic';
-import { getTranslations } from 'next-intl/server';
+import { getMessages, getTranslations } from 'next-intl/server';
 import './globals.css';
+import { NextIntlClientProvider } from 'next-intl';
 const DynamicHeader = dynamic(
   () => import('@/components/common/Header/Header'),
   { ssr: false }
@@ -51,10 +49,6 @@ export default async function HomeLayout({
   const messages = await getMessages();
   return (
     <html lang={locale}>
-      <Script
-        defer
-        src='https://code.iconify.design/3/3.1.0/iconify.min.js'
-      ></Script>
       <body className={`${inter.className} flex flex-col justify-between`}>
         <NextIntlClientProvider messages={messages}>
           <StoreProvider>

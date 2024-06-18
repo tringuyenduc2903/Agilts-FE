@@ -1,5 +1,7 @@
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import { cookies } from 'next/headers';
-
+import Script from 'next/script';
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -8,10 +10,18 @@ export default async function RootLayout({
   const cookieStore = cookies();
   const localeCookie = cookieStore.get('NEXT_LOCALE');
   const lang = localeCookie ? localeCookie.value : 'vi';
-
+  const messages = await getMessages();
   return (
     <html lang={lang}>
-      <body>{children}</body>
+      <Script
+        defer
+        src='https://code.iconify.design/3/3.1.0/iconify.min.js'
+      ></Script>
+      <body>
+        <NextIntlClientProvider messages={messages}>
+          {children}
+        </NextIntlClientProvider>
+      </body>
     </html>
   );
 }

@@ -53,6 +53,8 @@
     "view-more": "View More",
     "contact-us": "Contact us",
     "back-home": "Back to home",
+    "error-page": "Error page",
+    "page-not-found": "Page not found",
     "error-page-mess1": "Oops! The page you are looking for does not exist.",
     "error-page-mess2": "It might have been moved or deleted.",
     "login": "Login",

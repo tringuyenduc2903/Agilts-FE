@@ -13,5 +13,5 @@ export default async function RegisterLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <>{children}</>;
+  return children;
 }

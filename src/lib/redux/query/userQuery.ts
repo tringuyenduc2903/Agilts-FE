@@ -6,7 +6,6 @@ const getLangRoute = () => {
   const curLang = cookies?.NEXT_LOCALE || 'vi';
   return curLang === 'en' ? '/en' : '';
 };
-console.log(getLangRoute());
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: axiosBaseQuery({

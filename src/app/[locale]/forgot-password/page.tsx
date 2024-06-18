@@ -8,7 +8,7 @@ import { useForgotPasswordMutation } from '@/lib/redux/query/userQuery';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { notFound } from 'next/navigation';
-import Loading from '../../loading';
+import Loading from '../loading';
 
 type Form = {
   email: string;

@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { notFound, useRouter } from 'next/navigation';
-import Loading from '../../loading';
+import Loading from '../loading';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';

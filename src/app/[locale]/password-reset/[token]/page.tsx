@@ -14,7 +14,7 @@ import { useResetPasswordMutation } from '@/lib/redux/query/userQuery';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { notFound, useParams, useSearchParams } from 'next/navigation';
-import Loading from '../../../loading';
+import Loading from '../../loading';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
 
 type Form = {

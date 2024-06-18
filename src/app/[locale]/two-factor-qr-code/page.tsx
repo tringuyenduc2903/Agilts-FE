@@ -7,7 +7,7 @@ import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import bgImg from '@/assets/port-title-area.jpg';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import Loading from '../../loading';
+import Loading from '../loading';
 import { useSelector } from 'react-redux';
 import { isLoggedInState } from '@/lib/redux/slice/userSlice';
 import { ModalContext } from '@/contexts/ModalProvider';

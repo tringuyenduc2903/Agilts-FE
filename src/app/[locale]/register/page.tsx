@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { notFound, useRouter } from 'next/navigation';
-import Loading from '../../loading';
+import Loading from '../loading';
 import bgLogo from '@/assets/h4-slider-img-1.jpg';
 import Image from 'next/image';
 import { useForm, SubmitHandler } from 'react-hook-form';

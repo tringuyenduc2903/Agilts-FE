@@ -1,5 +1,5 @@
 'user client';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { setCookie } from 'cookies-next';
 import Image from 'next/image';
 import logo from '@/assets/borko-logo-black.png';
@@ -11,6 +11,9 @@ import gsap from 'gsap';
 import MenuIcon from './components/MenuIcon';
 function DesktopNavigation() {
   const { locale } = useParams();
+  const curLang = useMemo(() => {
+    return locale || 'vi';
+  }, [locale]);
   const t = useTranslations('header');
   const headerRef = useRef<HTMLElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -78,7 +81,7 @@ function DesktopNavigation() {
             className={`h-full uppercase flex justify-center items-center px-4 ${
               hoverRoute === 'home' ? 'bg-white' : ''
             }`}
-            href={`/${locale}`}
+            href={`/${curLang}`}
             onMouseEnter={() => setHoverRoute('home')}
             onMouseLeave={() => setHoverRoute(null)}
           >
@@ -125,7 +128,7 @@ function DesktopNavigation() {
               <li className='w-full px-4 pt-12'>
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={`/${locale}/about-us`}
+                  href={`/${curLang}/about-us`}
                   onMouseOver={() => setHoverSubRoute('about-us')}
                   onMouseOut={() => setHoverSubRoute(null)}
                 >
@@ -144,7 +147,7 @@ function DesktopNavigation() {
               <li className='w-full px-4'>
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={`/${locale}/our-services`}
+                  href={`/${curLang}/our-services`}
                   onMouseOver={() => setHoverSubRoute('our-services')}
                   onMouseOut={() => setHoverSubRoute(null)}
                 >
@@ -164,7 +167,7 @@ function DesktopNavigation() {
               <li className='w-full pb-8 px-4'>
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={`/${locale}/contact`}
+                  href={`/${curLang}/contact`}
                   onMouseOver={() => setHoverSubRoute('contact')}
                   onMouseOut={() => setHoverSubRoute(null)}
                 >
@@ -230,7 +233,7 @@ function DesktopNavigation() {
               <li className='w-full px-4 pt-12'>
                 <button
                   className={`relative w-full h-[48px] flex items-center gap-2 px-4 uppercase ${
-                    hoverSubRoute === 'english' || locale === 'en'
+                    hoverSubRoute === 'english' || curLang === 'en'
                       ? 'text-red-500'
                       : ''
                   } transition-colors`}
@@ -244,7 +247,7 @@ function DesktopNavigation() {
               <li className='w-full px-4'>
                 <button
                   className={`relative w-full h-[48px] flex items-center gap-2 px-4 uppercase ${
-                    hoverSubRoute === 'vietnamese' || locale === 'vi'
+                    hoverSubRoute === 'vietnamese' || curLang === 'vi'
                       ? 'text-red-500'
                       : ''
                   } transition-colors`}

@@ -192,7 +192,7 @@ function DesktopNavigation() {
             className={`h-full uppercase flex justify-center items-center px-4 ${
               hoverRoute === 'products' ? 'bg-white' : ''
             }`}
-            href={`/products`}
+            href={`/${curLang}/products`}
             onMouseEnter={() => setHoverRoute('products')}
             onMouseLeave={() => setHoverRoute(null)}
           >

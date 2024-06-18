@@ -11,7 +11,7 @@ import React, {
   useState,
 } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from 'next-intl';
 import { FaXmark } from 'react-icons/fa6';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
 type Form = {
@@ -25,7 +25,7 @@ type Props = {
 const ChangePasswordPopup: React.FC<Props> = ({ closePopup }) => {
   const { register, handleSubmit } = useForm<Form>();
   const { handleGetCSRFCookie, isLoadingCSRF } = useContext(FetchDataContext);
-  const { t } = useTranslation('common');
+  const t = useTranslations('common');
   const { setVisibleModal } = useContext(ModalContext);
   const [isShowCurPwd, setIsShowCurPwd] = useState(false);
   const [isShowNewPwd, setIsShowNewPwd] = useState(false);

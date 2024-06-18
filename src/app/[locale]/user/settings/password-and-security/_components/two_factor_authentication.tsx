@@ -20,7 +20,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from 'next-intl';
 import { FaAngleLeft, FaXmark } from 'react-icons/fa6';
 import { SubmitHandler, useForm } from 'react-hook-form';
 type Props = {
@@ -31,7 +31,7 @@ type Form = {
 };
 const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
   const { user, refetchUser } = useContext(FetchDataContext);
-  const { t } = useTranslation('common');
+  const t = useTranslations('common');
   const { setVisibleModal } = useContext(ModalContext);
   const [curStep, setCurStep] = useState(1);
   const containerRef = useRef<HTMLElement | null>(null);

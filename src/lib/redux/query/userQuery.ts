@@ -1,9 +1,7 @@
+import { getCookies } from 'cookies-next';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from '../config/axios';
-const curLang =
-  typeof window !== 'undefined'
-    ? window.localStorage.getItem('agilts-customer') || 'vie'
-    : 'vie';
+const curLang = getCookies()?.NEXT_LOCALE || 'vi';
 const langRoute = curLang === 'en' ? '/en' : '';
 
 console.log(curLang);

@@ -1,14 +1,13 @@
 import { Metadata } from 'next';
-// export async function generateMetadata(): Promise<Metadata> {
-//   return {
-//     title: 'Đăng ký',
-//     description: 'Đăng ký tài khoản',
-//   };
-// }
-export const metadata: Metadata = {
-  title: 'Đăng ký',
-  description: 'Đăng ký tài khoản',
-};
+import { getTranslations } from 'next-intl/server';
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('head');
+
+  return {
+    title: t('register_title'),
+    description: t('register_description'),
+  };
+}
 export default async function RegisterLayout({
   children,
 }: Readonly<{

@@ -1,10 +1,10 @@
 'use client';
 import withAuth from '@/protected-page/withAuth';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from 'next-intl';
 
 function SettingsPage() {
-  const { t } = useTranslation('common');
+  const t = useTranslations('common');
   return (
     <div>
       <section>

@@ -1,8 +1,13 @@
 import { Metadata } from 'next';
-export const metadata: Metadata = {
-  title: 'Đặt lại mật khẩu',
-  description: 'Đặt lại mật khẩu của bạn',
-};
+import { getTranslations } from 'next-intl/server';
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('head');
+
+  return {
+    title: t('reset_password_title'),
+    description: t('reset_password_description'),
+  };
+}
 export default async function ResetPasswordLayout({
   children,
 }: Readonly<{

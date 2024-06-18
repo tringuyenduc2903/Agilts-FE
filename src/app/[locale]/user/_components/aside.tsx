@@ -1,13 +1,13 @@
 'use client';
 import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from 'next-intl';
 import { IoShieldOutline, IoPersonCircleOutline } from 'react-icons/io5';
 
 function Aside() {
   const pathname = usePathname();
   const router = useRouter();
-  const { t } = useTranslation('common');
+  const t = useTranslations('common');
   return (
     <aside className='lg:max-w-[360px] p-4 flex flex-col gap-8 lg:border-r lg:border-neutral-300'>
       <section>

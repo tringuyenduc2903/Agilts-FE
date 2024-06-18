@@ -1,9 +1,12 @@
 import { Metadata } from 'next';
 import Aside from './_components/aside';
+import { getTranslations } from 'next-intl/server';
 export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('head');
+
   return {
-    title: 'Cài đặt',
-    description: 'Cài đặt thông tin người dùng',
+    title: t('settings_title'),
+    description: t('settings_description'),
   };
 }
 export default async function UserLayout({

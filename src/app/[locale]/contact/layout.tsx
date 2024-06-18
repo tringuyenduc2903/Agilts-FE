@@ -1,8 +1,13 @@
 import { Metadata } from 'next';
-export const metadata: Metadata = {
-  title: 'Liên hệ',
-  description: 'Liên hệ với Agilts',
-};
+import { getTranslations } from 'next-intl/server';
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('head');
+
+  return {
+    title: t('contact_title'),
+    description: t('contact_description'),
+  };
+}
 export default async function ContactLayout({
   children,
 }: Readonly<{

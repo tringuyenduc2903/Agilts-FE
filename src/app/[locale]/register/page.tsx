@@ -119,6 +119,7 @@ function RegisterPage() {
     router,
     refetchUser,
   ]);
+  if (user) return router.replace('/');
   if (user && !isLoadingUser) {
     return notFound();
   }

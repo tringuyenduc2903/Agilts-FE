@@ -18,7 +18,7 @@ export default async function RootLayout({
         src='https://code.iconify.design/3/3.1.0/iconify.min.js'
       ></Script>
       <body>
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider locale={lang} messages={messages}>
           {children}
         </NextIntlClientProvider>
       </body>

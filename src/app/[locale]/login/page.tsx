@@ -79,10 +79,10 @@ function LoginPage() {
     if (isLoadingCSRF) {
       setVisibleModal({ visibleLoadingModal: isLoadingCSRF });
     }
-    if (isLoadingLogin && !isLoadingCSRF) {
+    if (isLoadingLogin && !!isLoadingCSRF) {
       setVisibleModal({ visibleLoadingModal: isLoadingLogin });
     }
-    if (isErrorLogin || isSuccessLogin) {
+    if ((isErrorLogin || isSuccessLogin) && !isLoadingCSRF) {
       setVisibleModal({ visibleLoadingModal: false });
     }
   }, [

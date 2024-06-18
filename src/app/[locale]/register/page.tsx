@@ -77,10 +77,10 @@ function RegisterPage() {
     if (isLoadingCSRF) {
       setVisibleModal({ visibleLoadingModal: isLoadingCSRF });
     }
-    if (isLoadingRegister && !isLoadingCSRF) {
+    if (isLoadingRegister && !!isLoadingCSRF) {
       setVisibleModal({ visibleLoadingModal: isLoadingRegister });
     }
-    if (isErrorRegister || isSuccessRegister) {
+    if ((isErrorRegister || isSuccessRegister) && !isLoadingCSRF) {
       setVisibleModal({ visibleLoadingModal: false });
     }
   }, [

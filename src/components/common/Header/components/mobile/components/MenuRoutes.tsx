@@ -2,7 +2,7 @@
 import useClickOutside from '@/lib/hooks/useClickOutside';
 import { useLogoutMutation } from '@/lib/redux/query/userQuery';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import React, {
   LegacyRef,
   useCallback,
@@ -10,7 +10,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from 'next-intl';
 import { FaXmark, FaAngleRight } from 'react-icons/fa6';
 import {
   IoPersonCircleOutline,
@@ -26,9 +26,10 @@ type Props = {
   closeMenu: () => void;
 };
 const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
+  const { locale } = useParams();
   const { user, handleGetCSRFCookie, isLoadingCSRF } =
     useContext(FetchDataContext);
-  const { t, i18n } = useTranslation('header');
+  const t = useTranslations('header');
   const dispatch = useDispatch();
   const { setVisibleModal } = useContext(ModalContext);
   const router = useRouter();
@@ -55,11 +56,11 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
   );
   const handleChangeLang = useCallback(
     (lang: string) => {
-      i18n.changeLanguage(lang);
+      router.replace(`/${lang}`);
       localStorage.setItem('agilts-customer', lang);
       closeMenu();
     },
-    [i18n, closeMenu]
+    [closeMenu, router]
   );
   const handleLogout = useCallback(async () => {
     await handleGetCSRFCookie();
@@ -316,7 +317,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
               <li className='w-full px-2 text-sm'>
                 <button
                   className={`relative w-full h-[48px] flex items-center gap-2 px-4 uppercase ${
-                    hoverSubRoute === 'english' || i18n.language === 'en'
+                    hoverSubRoute === 'english' || locale === 'en'
                       ? 'text-red-500'
                       : ''
                   } transition-colors`}
@@ -331,11 +332,11 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
               <li className='w-full px-2 text-sm'>
                 <button
                   className={`relative w-full h-[48px] flex items-center gap-2 px-4 uppercase ${
-                    hoverSubRoute === 'vietnamese' || i18n.language === 'vie'
+                    hoverSubRoute === 'vietnamese' || locale === 'vi'
                       ? 'text-red-500'
                       : ''
                   } transition-colors`}
-                  onClick={() => handleChangeLang('vie')}
+                  onClick={() => handleChangeLang('vi')}
                   onMouseOver={() => setHoverSubRoute('vietnamese')}
                   onMouseOut={() => setHoverSubRoute(null)}
                   disabled={isLoadingLogout || isLoadingCSRF}

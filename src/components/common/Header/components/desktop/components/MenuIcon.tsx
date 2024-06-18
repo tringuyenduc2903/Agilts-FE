@@ -9,7 +9,7 @@ import React, {
   useEffect,
   useRef,
 } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from 'next-intl';
 import {
   IoPersonCircleOutline,
   IoSettingsOutline,
@@ -28,7 +28,7 @@ type Props = {
 
 const MenuIcon: React.FC<Props> = React.memo(
   ({ isOpenMenu, closeMenu, openMenu }) => {
-    const { t } = useTranslation('header');
+    const t = useTranslations('common');
     const dispatch = useDispatch();
     const { setVisibleModal } = useContext(ModalContext);
     const { user, handleGetCSRFCookie, isLoadingCSRF } =
@@ -198,10 +198,6 @@ const MenuIcon: React.FC<Props> = React.memo(
                 </div>
                 <button
                   className='mt-auto ml-auto bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
-                  // onClick={() => {
-                  //   router.push('/login');
-                  //   closeMenu();
-                  // }}
                   onClick={handleLogout}
                   disabled={isLoadingLogout || isLoadingCSRF}
                 >

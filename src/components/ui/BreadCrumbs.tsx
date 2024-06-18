@@ -2,9 +2,9 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from 'next-intl';
 const BreadCrumbs = React.memo(() => {
-  const { t } = useTranslation('common');
+  const t = useTranslations('common');
   const pathname = usePathname();
   const renderedBreadcrumbs = pathname
     .replace('/', '')

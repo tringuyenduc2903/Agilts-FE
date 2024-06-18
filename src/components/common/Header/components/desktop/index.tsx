@@ -1,15 +1,16 @@
 'user client';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import Image from 'next/image';
 import logo from '@/assets/borko-logo-black.png';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
+import { useParams, usePathname, useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import MenuIcon from './components/MenuIcon';
 function DesktopNavigation() {
-  const { t, i18n } = useTranslation('header');
+  const { locale } = useParams();
+  const t = useTranslations('header');
   const headerRef = useRef<HTMLElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
@@ -36,6 +37,13 @@ function DesktopNavigation() {
   const [isFocusInput, setIsFocusInput] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const handleChangeLang = useCallback(
+    (lang: string) => {
+      router.replace(`/${lang}`);
+      setIsOpenMenu(false);
+    },
+    [router]
+  );
   return (
     <>
       <div
@@ -68,7 +76,7 @@ function DesktopNavigation() {
             className={`h-full uppercase flex justify-center items-center px-4 ${
               hoverRoute === 'home' ? 'bg-white' : ''
             }`}
-            href={'/'}
+            href={`/`}
             onMouseEnter={() => setHoverRoute('home')}
             onMouseLeave={() => setHoverRoute(null)}
           >
@@ -115,7 +123,7 @@ function DesktopNavigation() {
               <li className='w-full px-4 pt-12'>
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={'/about-us'}
+                  href={`/about-us`}
                   onMouseOver={() => setHoverSubRoute('about-us')}
                   onMouseOut={() => setHoverSubRoute(null)}
                 >
@@ -134,7 +142,7 @@ function DesktopNavigation() {
               <li className='w-full px-4'>
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={'/our-services'}
+                  href={`/our-services`}
                   onMouseOver={() => setHoverSubRoute('our-services')}
                   onMouseOut={() => setHoverSubRoute(null)}
                 >
@@ -154,7 +162,7 @@ function DesktopNavigation() {
               <li className='w-full pb-8 px-4'>
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={'/contact'}
+                  href={`/contact`}
                   onMouseOver={() => setHoverSubRoute('contact')}
                   onMouseOut={() => setHoverSubRoute(null)}
                 >
@@ -176,7 +184,7 @@ function DesktopNavigation() {
             className={`h-full uppercase flex justify-center items-center px-4 ${
               hoverRoute === 'products' ? 'bg-white' : ''
             }`}
-            href={'/products'}
+            href={`/products`}
             onMouseEnter={() => setHoverRoute('products')}
             onMouseLeave={() => setHoverRoute(null)}
           >
@@ -220,16 +228,13 @@ function DesktopNavigation() {
               <li className='w-full px-4 pt-12'>
                 <button
                   className={`relative w-full h-[48px] flex items-center gap-2 px-4 uppercase ${
-                    hoverSubRoute === 'english' || i18n.language === 'en'
+                    hoverSubRoute === 'english' || locale === 'en'
                       ? 'text-red-500'
                       : ''
                   } transition-colors`}
                   onMouseOver={() => setHoverSubRoute('english')}
                   onMouseOut={() => setHoverSubRoute(null)}
-                  onClick={() => {
-                    i18n.changeLanguage('en');
-                    localStorage.setItem('agilts-customer', 'en');
-                  }}
+                  onClick={() => handleChangeLang('en')}
                 >
                   {t('english')}
                 </button>
@@ -237,16 +242,13 @@ function DesktopNavigation() {
               <li className='w-full px-4'>
                 <button
                   className={`relative w-full h-[48px] flex items-center gap-2 px-4 uppercase ${
-                    hoverSubRoute === 'vietnamese' || i18n.language === 'vie'
+                    hoverSubRoute === 'vietnamese' || locale === 'vi'
                       ? 'text-red-500'
                       : ''
                   } transition-colors`}
                   onMouseOver={() => setHoverSubRoute('vietnamese')}
                   onMouseOut={() => setHoverSubRoute(null)}
-                  onClick={() => {
-                    i18n.changeLanguage('vie');
-                    localStorage.setItem('agilts-customer', 'vie');
-                  }}
+                  onClick={() => handleChangeLang('vi')}
                 >
                   {t('vietnamese')}
                 </button>

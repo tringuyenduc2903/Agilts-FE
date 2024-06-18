@@ -1,11 +1,11 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from 'next-intl';
 import notfound from '@/assets/error-img-1.png';
 import Image from 'next/image';
 function NotFound() {
-  const { t } = useTranslation('common');
+  const t = useTranslations('common');
   const [isHoverButton, setIsHoverButton] = useState(false);
   const router = useRouter();
   return (

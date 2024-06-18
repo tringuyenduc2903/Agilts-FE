@@ -1,14 +1,13 @@
 import { ModalContext } from '@/contexts/ModalProvider';
 import useClickOutside from '@/lib/hooks/useClickOutside';
 import React, { LegacyRef, useContext } from 'react';
-import { useTranslation } from 'react-i18next';
-
+import { useTranslations } from 'next-intl';
 function ConfirmModal() {
   const { state, setVisibleModal } = useContext(ModalContext);
   const { sectionRef, clickOutside } = useClickOutside(() =>
     setVisibleModal('visibleConfirmModal')
   );
-  const { t } = useTranslation('common');
+  const t = useTranslations('common');
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'

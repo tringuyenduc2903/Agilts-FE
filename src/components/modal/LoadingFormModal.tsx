@@ -1,9 +1,9 @@
 import { ModalContext } from '@/contexts/ModalProvider';
 import React, { useContext } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from 'next-intl';
 
 function LoadingFormModal() {
-  const { t } = useTranslation('common');
+  const t = useTranslations('common');
   const { state } = useContext(ModalContext);
   return (
     <section

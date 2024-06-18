@@ -13,7 +13,7 @@ import React, {
   useState,
 } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { useTranslations } from 'next-intl';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
 type Form = {
   password: string;
@@ -21,7 +21,7 @@ type Form = {
 function ConfirmPasswordModal() {
   const { setVisibleModal } = useContext(ModalContext);
   const { handleGetCSRFCookie, isLoadingCSRF } = useContext(FetchDataContext);
-  const { t } = useTranslation('common');
+  const t = useTranslations('common');
   const [isShowCurPwd, setIsShowCurPwd] = useState(false);
   const { sectionRef } = useClickOutside(() => {
     setVisibleModal({

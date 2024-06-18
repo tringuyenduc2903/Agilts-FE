@@ -251,7 +251,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
                   href={'/contact'}
-                  onClick={() => handleRedirect('contact')}
+                  onClick={() => handleRedirect('/contact')}
                   onMouseOver={() => setHoverSubRoute('contact')}
                   onMouseOut={() => setHoverSubRoute(null)}
                   aria-disabled={isLoadingLogout || isLoadingCSRF}
@@ -277,7 +277,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                 : ''
             } transition-colors`}
             href={'/products'}
-            onClick={() => handleRedirect('products')}
+            onClick={() => handleRedirect('/products')}
             onMouseEnter={() => setHoverRoute('products')}
             onMouseLeave={() => setHoverRoute(null)}
             aria-disabled={isLoadingLogout || isLoadingCSRF}

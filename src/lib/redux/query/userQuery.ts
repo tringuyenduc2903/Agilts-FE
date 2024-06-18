@@ -1,10 +1,12 @@
 import { getCookies } from 'cookies-next';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from '../config/axios';
-const curLang = getCookies()?.NEXT_LOCALE || 'vi';
-const langRoute = curLang === 'en' ? '/en' : '';
-
-console.log(curLang);
+const getLangRoute = () => {
+  const cookies = getCookies();
+  const curLang = cookies?.NEXT_LOCALE || 'vi';
+  return curLang === 'en' ? '/en' : '';
+};
+console.log(getLangRoute());
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: axiosBaseQuery({
@@ -22,28 +24,28 @@ export const userApi = createApi({
       }),
       login: builder.mutation({
         query: (body) => ({
-          url: `${langRoute}/login`,
+          url: `${getLangRoute()}/login`,
           method: 'POST',
           data: body,
         }),
       }),
       register: builder.mutation({
         query: (body) => ({
-          url: `${langRoute}/register`,
+          url: `${getLangRoute()}/register`,
           method: 'POST',
           data: body,
         }),
       }),
       logout: builder.mutation({
         query: () => ({
-          url: `${langRoute}/logout`,
+          url: `${getLangRoute()}/logout`,
           method: 'POST',
         }),
         invalidatesTags: ['users'],
       }),
       updateUser: builder.mutation({
         query: (body) => ({
-          url: `${langRoute}/user/profile-information`,
+          url: `${getLangRoute()}/user/profile-information`,
           method: 'PUT',
           data: body,
         }),
@@ -51,7 +53,7 @@ export const userApi = createApi({
       }),
       confirmPassword: builder.mutation({
         query: (password) => ({
-          url: `${langRoute}/user/confirm-password`,
+          url: `${getLangRoute()}/user/confirm-password`,
           method: 'POST',
           data: {
             password: password,
@@ -60,12 +62,12 @@ export const userApi = createApi({
       }),
       confirmPasswordStatus: builder.query({
         query: () => ({
-          url: `${langRoute}/user/confirmed-password-status`,
+          url: `${getLangRoute()}/user/confirmed-password-status`,
         }),
       }),
       forgotPassword: builder.mutation({
         query: (email) => ({
-          url: `${langRoute}/forgot-password`,
+          url: `${getLangRoute()}/forgot-password`,
           method: 'POST',
           data: {
             email: email,
@@ -74,21 +76,21 @@ export const userApi = createApi({
       }),
       resetPassword: builder.mutation({
         query: (body) => ({
-          url: `${langRoute}/reset-password`,
+          url: `${getLangRoute()}/reset-password`,
           method: 'POST',
           data: body,
         }),
       }),
       changePassword: builder.mutation({
         query: (body) => ({
-          url: `${langRoute}/user/password`,
+          url: `${getLangRoute()}/user/password`,
           method: 'PUT',
           data: body,
         }),
       }),
       turnOn2FA: builder.mutation({
         query: () => ({
-          url: `${langRoute}/user/two-factor-authentication`,
+          url: `${getLangRoute()}/user/two-factor-authentication`,
           method: 'POST',
           body: {
             force: true,
@@ -97,17 +99,17 @@ export const userApi = createApi({
       }),
       twoFactorQrCode: builder.query({
         query: () => ({
-          url: `${langRoute}/user/two-factor-qr-code`,
+          url: `${getLangRoute()}/user/two-factor-qr-code`,
         }),
       }),
       twoFactorSecretKey: builder.query({
         query: () => ({
-          url: `${langRoute}/user/two-factor-secret-key`,
+          url: `${getLangRoute()}/user/two-factor-secret-key`,
         }),
       }),
       confirm2FA: builder.mutation({
         query: (code) => ({
-          url: `${langRoute}/user/confirmed-two-factor-authentication`,
+          url: `${getLangRoute()}/user/confirmed-two-factor-authentication`,
           method: 'POST',
           data: {
             code: code,
@@ -117,27 +119,27 @@ export const userApi = createApi({
       }),
       getRecoveryCodes: builder.query({
         query: () => ({
-          url: `${langRoute}/user/two-factor-recovery-codes`,
+          url: `${getLangRoute()}/user/two-factor-recovery-codes`,
         }),
         providesTags: ['recover_codes'],
       }),
       postRecoveryCodes: builder.mutation({
         query: () => ({
-          url: `${langRoute}/user/two-factor-recovery-codes`,
+          url: `${getLangRoute()}/user/two-factor-recovery-codes`,
           method: 'POST',
         }),
         invalidatesTags: ['recover_codes'],
       }),
       verifyTwoFactor: builder.mutation({
         query: (body) => ({
-          url: `${langRoute}/two-factor-challenge`,
+          url: `${getLangRoute()}/two-factor-challenge`,
           method: 'POST',
           data: body,
         }),
       }),
       deleteTwoFactor: builder.mutation({
         query: () => ({
-          url: `${langRoute}/user/two-factor-authentication`,
+          url: `${getLangRoute()}/user/two-factor-authentication`,
           method: 'DELETE',
         }),
       }),

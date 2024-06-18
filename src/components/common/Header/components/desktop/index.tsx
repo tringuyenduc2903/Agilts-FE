@@ -1,6 +1,6 @@
 'user client';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { getCookies, setCookie } from 'cookies-next';
+import React, { useCallback, useRef, useState } from 'react';
+import { setCookie } from 'cookies-next';
 import Image from 'next/image';
 import logo from '@/assets/borko-logo-black.png';
 import Link from 'next/link';

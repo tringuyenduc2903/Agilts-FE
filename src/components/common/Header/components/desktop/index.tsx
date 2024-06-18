@@ -78,7 +78,7 @@ function DesktopNavigation() {
             className={`h-full uppercase flex justify-center items-center px-4 ${
               hoverRoute === 'home' ? 'bg-white' : ''
             }`}
-            href={`/`}
+            href={`/${locale}`}
             onMouseEnter={() => setHoverRoute('home')}
             onMouseLeave={() => setHoverRoute(null)}
           >
@@ -125,7 +125,7 @@ function DesktopNavigation() {
               <li className='w-full px-4 pt-12'>
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={`/about-us`}
+                  href={`/${locale}/about-us`}
                   onMouseOver={() => setHoverSubRoute('about-us')}
                   onMouseOut={() => setHoverSubRoute(null)}
                 >
@@ -144,7 +144,7 @@ function DesktopNavigation() {
               <li className='w-full px-4'>
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={`/our-services`}
+                  href={`/${locale}/our-services`}
                   onMouseOver={() => setHoverSubRoute('our-services')}
                   onMouseOut={() => setHoverSubRoute(null)}
                 >
@@ -164,7 +164,7 @@ function DesktopNavigation() {
               <li className='w-full pb-8 px-4'>
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={`/contact`}
+                  href={`/${locale}/contact`}
                   onMouseOver={() => setHoverSubRoute('contact')}
                   onMouseOut={() => setHoverSubRoute(null)}
                 >

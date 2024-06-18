@@ -164,7 +164,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
             className={`h-full uppercase ${
               hoverRoute === 'home' || pathname === '/' ? 'text-red-500' : ''
             } transition-colors`}
-            href={'/'}
+            href={`/${locale}`}
             onClick={() => handleRedirect('')}
             onMouseEnter={() => setHoverRoute('home')}
             onMouseLeave={() => setHoverRoute(null)}
@@ -207,7 +207,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
               <li className='w-full px-2 text-sm'>
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={'/about-us'}
+                  href={`/${locale}/about-us`}
                   onClick={() => handleRedirect('about-us')}
                   onMouseOver={() => setHoverSubRoute('about-us')}
                   onMouseOut={() => setHoverSubRoute(null)}
@@ -228,7 +228,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
               <li className='w-full px-2 text-sm'>
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={'/our-services'}
+                  href={`/${locale}/our-services`}
                   onClick={() => handleRedirect('our-services')}
                   onMouseOver={() => setHoverSubRoute('our-services')}
                   onMouseOut={() => setHoverSubRoute(null)}
@@ -250,7 +250,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
               <li className='w-full px-2 text-sm'>
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={'/contact'}
+                  href={`/${locale}/contact`}
                   onClick={() => handleRedirect('/contact')}
                   onMouseOver={() => setHoverSubRoute('contact')}
                   onMouseOut={() => setHoverSubRoute(null)}
@@ -276,7 +276,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                 ? 'text-red-500'
                 : ''
             } transition-colors`}
-            href={'/products'}
+            href={`/${locale}/products`}
             onClick={() => handleRedirect('/products')}
             onMouseEnter={() => setHoverRoute('products')}
             onMouseLeave={() => setHoverRoute(null)}

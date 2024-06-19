@@ -2,8 +2,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 type LazyLoadImageProps = {
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   src: string;
   alt: string;
   className?: string;
@@ -52,7 +52,7 @@ function LazyLoadImage(props: LazyLoadImageProps) {
       <img
         ref={imgRef}
         className={`${props.className ? props.className : ''} w-full h-[${
-          props.height
+          props.height ? props?.height : '100%'
         }px] object-cover`}
         width={props.width}
         height={props.height}

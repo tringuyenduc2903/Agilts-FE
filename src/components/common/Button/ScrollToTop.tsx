@@ -34,7 +34,7 @@ function ScrollToTop() {
       <span className='w-0 h-0 border-b-[8px] border-l-transparent border-l-[6px] border-r-transparent border-r-[6px] border-white'></span>
       <span
         className={`w-[2px] ${
-          isHover ? 'h-[32px]' : 'h-0'
+          isHover ? 'h-[24px] sm:h-[32px]' : 'h-0'
         } transition-[height] duration-300 bg-white`}
       ></span>
     </button>

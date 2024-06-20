@@ -14,6 +14,7 @@ function Intro() {
   useGSAP(
     () => {
       if (
+        isDisplay &&
         imgRef.current &&
         lineRef.current &&
         keyword1Ref.current &&
@@ -82,20 +83,20 @@ function Intro() {
     { dependencies: [], scope: containerRef }
   );
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsDisplay(false);
-    }, 3000);
+    if (isDisplay) {
+      const timeout = setTimeout(() => {
+        setIsDisplay(false);
+      }, 3000);
 
-    return () => {
-      clearTimeout(timeout);
-    };
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
   }, []);
-  return (
+  return isDisplay ? (
     <div
       ref={containerRef}
-      className={`fixed top-0 left-0 w-full h-full z-[99999999] bg-white justify-center items-center ${
-        isDisplay ? 'flex' : 'hidden'
-      } overflow-hidden`}
+      className='fixed top-0 left-0 w-full h-full z-[99999999] bg-white justify-center items-center flex overflow-hidden'
     >
       <div className='w-[512px] h-[58px] flex justify-center items-center gap-4 overflow-hidden'>
         <div className='relative opacityAnimation'>
@@ -123,6 +124,8 @@ function Intro() {
         </div>
       </div>
     </div>
+  ) : (
+    <></>
   );
 }
 

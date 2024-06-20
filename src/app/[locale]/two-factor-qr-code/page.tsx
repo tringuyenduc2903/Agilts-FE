@@ -3,7 +3,13 @@ import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { useVerifyTwoFactorMutation } from '@/lib/redux/query/userQuery';
 import Image from 'next/image';
 import { notFound, useRouter } from 'next/navigation';
-import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useTranslations } from 'next-intl';
 import bgImg from '@/assets/port-title-area.jpg';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -18,6 +24,7 @@ type Form = {
 function TwoFactorQrCodePage() {
   const t = useTranslations('common');
   const isLoggedIn = useSelector(isLoggedInState);
+  const [curInput, setCurInput] = useState('code');
   const router = useRouter();
   const {
     user,
@@ -48,9 +55,13 @@ function TwoFactorQrCodePage() {
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {
       await handleGetCSRFCookie();
-      await verifyTwoFactor(data);
+      await verifyTwoFactor(
+        curInput === 'code'
+          ? { code: data.code }
+          : { recovery_code: data.recovery_code }
+      );
     },
-    [handleGetCSRFCookie, verifyTwoFactor]
+    [handleGetCSRFCookie, verifyTwoFactor, curInput]
   );
   useEffect(() => {
     if (isSuccessVerify) {
@@ -92,50 +103,72 @@ function TwoFactorQrCodePage() {
             method='POST'
             className='flex flex-col gap-4'
           >
-            <div className='flex flex-col gap-2'>
-              <label
-                className='lg:text-neutral-800 text-white text-center lg:text-start'
-                htmlFor='code'
-              >
-                {t('enter_key')}
-              </label>
-              <div className='relative w-full'>
-                <input
-                  className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
-                  type='text'
-                  placeholder={`${t('mess_enter_code')}`}
-                  {...register('code')}
-                  disabled={isLoadingVerify || isLoadingCSRF}
-                />
-                {errors?.code && (
-                  <p className='text-red-500 font-bold text-sm md:text-base'>
-                    {errors.code[0]}
-                  </p>
-                )}
+            {curInput === 'code' && (
+              <div className='flex flex-col gap-2'>
+                <label
+                  className='lg:text-neutral-800 text-white text-center lg:text-start'
+                  htmlFor='code'
+                >
+                  {t('enter_key')}
+                </label>
+                <div className='relative w-full'>
+                  <input
+                    className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+                    type='text'
+                    placeholder={`${t('mess_enter_code')}`}
+                    {...register('code')}
+                    disabled={isLoadingVerify || isLoadingCSRF}
+                  />
+                  {errors?.code && (
+                    <p className='text-red-500 font-bold text-sm md:text-base'>
+                      {errors.code[0]}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className='flex flex-col gap-2'>
-              <label
-                className='lg:text-neutral-800 text-white text-center lg:text-start'
-                htmlFor='recovery_code'
-              >
-                {t('enter_recovery_code')}
-              </label>
-              <div className='relative w-full'>
-                <input
-                  className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
-                  type='text'
-                  placeholder={`${t('recovery_code')}`}
-                  {...register('recovery_code')}
-                  disabled={isLoadingVerify || isLoadingCSRF}
-                />
-                {errors?.recovery_code && (
-                  <p className='text-red-500 font-bold text-sm md:text-base'>
-                    {errors.recovery_code[0]}
-                  </p>
-                )}
+            )}
+            {curInput === 'recovery' && (
+              <div className='flex flex-col gap-2'>
+                <label
+                  className='lg:text-neutral-800 text-white text-center lg:text-start'
+                  htmlFor='recovery_code'
+                >
+                  {t('enter_recovery_code')}
+                </label>
+                <div className='relative w-full'>
+                  <input
+                    className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+                    type='text'
+                    placeholder={`${t('recovery_code')}`}
+                    {...register('recovery_code')}
+                    disabled={isLoadingVerify || isLoadingCSRF}
+                  />
+                  {errors?.recovery_code && (
+                    <p className='text-red-500 font-bold text-sm md:text-base'>
+                      {errors.recovery_code[0]}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
+            {curInput === 'recovery' && (
+              <button
+                className='w-max text-sm font-bold text-blue-700'
+                type='button'
+                onClick={() => setCurInput('code')}
+              >
+                {t('using_code')}
+              </button>
+            )}
+            {curInput === 'code' && (
+              <button
+                className='w-max text-sm font-bold text-blue-700'
+                type='button'
+                onClick={() => setCurInput('recovery')}
+              >
+                {t('using_recovery')}
+              </button>
+            )}
             <button
               className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
               type='submit'

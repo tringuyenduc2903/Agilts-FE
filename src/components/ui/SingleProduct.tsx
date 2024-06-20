@@ -1,13 +1,16 @@
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
-import React, { useContext, createContext, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import React, { useContext, createContext, useState, useMemo } from 'react';
 import { IoCartOutline } from 'react-icons/io5';
 export type Product = {
+  id: string | number;
   category: string;
   title: string;
   price: string;
   salePrice: string | null;
   img: string | null;
+  description: string;
 };
 type PropsProductContext = {
   product: Product;
@@ -33,6 +36,11 @@ export function SingleProduct({
   articleClass,
 }: PropsSingleProduct) {
   const [isHover, setIsHover] = useState<Product | null>(null);
+  const { locale } = useParams();
+  const router = useRouter();
+  const curLang = useMemo(() => {
+    return locale || 'vi';
+  }, [locale]);
   return (
     <ProductContext.Provider value={{ product, isHover }}>
       <article
@@ -43,6 +51,7 @@ export function SingleProduct({
         }`}
         onMouseEnter={() => setIsHover(product)}
         onMouseLeave={() => setIsHover(null)}
+        onClick={() => router.push(`/${curLang}/products/${product.id}`)}
       >
         {children}
       </article>

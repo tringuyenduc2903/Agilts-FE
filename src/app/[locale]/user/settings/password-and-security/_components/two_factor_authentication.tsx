@@ -163,6 +163,17 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
       closePopup();
     }
   }, [isSuccessDelete, refetchUser, setVisibleModal, closePopup]);
+  const handleDownload = useCallback(() => {
+    if (isSuccessListCodes && listCodes) {
+      const element = document.createElement('a');
+      const file = new Blob([listCodes.join('\n')], { type: 'text/plain' });
+      element.href = URL.createObjectURL(file);
+      element.download = 'recovery_codes.txt';
+      document.body.appendChild(element); // Required for this to work in FireFox
+      element.click();
+      document.body.removeChild(element);
+    }
+  }, [listCodes, isSuccessListCodes]);
   return (
     <section
       ref={containerRef}
@@ -251,7 +262,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
                         title: `${t('title_del_2fa')}`,
                         description: `${t('des_del_2fa')}`,
                         isLoading: isLoadingDelete,
-                        cb: async () => await deleteTwoFactor(null),
+                        cb: () => deleteTwoFactor(null),
                       },
                     })
                   }
@@ -357,7 +368,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
                   disabled={isLoadingConfirm}
                   className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                   type='text'
-                  placeholder='Code'
+                  placeholder={t('code')}
                   {...register('code')}
                 />
                 {errors?.code && (
@@ -401,6 +412,20 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
               {t('recovery_title')}
             </p>
             <p>{t('recovery_mess')}</p>
+            <div className='flex items-center gap-4'>
+              <button
+                className='w-max text-sm font-bold text-blue-700'
+                onClick={handleDownload}
+              >
+                {t('download_recovery')}
+              </button>
+              <button
+                className='w-max text-sm font-bold text-blue-700'
+                onClick={async () => await postRecoveryCodes(null)}
+              >
+                {t('refresh_recovery')}
+              </button>
+            </div>
             {isLoadingListCodes && curStep === 4 && (
               <div className='relative w-full h-[250px] flex justify-center items-center'>
                 <div className='loader'></div>

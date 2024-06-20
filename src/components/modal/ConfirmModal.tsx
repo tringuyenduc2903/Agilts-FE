@@ -40,7 +40,7 @@ function ConfirmModal() {
           >
             {state?.visibleConfirmModal?.isLoading
               ? `...${t('loading')}`
-              : t('submit')}
+              : t('confirm')}
           </button>
         </div>
       </div>

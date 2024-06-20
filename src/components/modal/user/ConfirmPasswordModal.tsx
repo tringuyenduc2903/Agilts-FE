@@ -124,7 +124,7 @@ function ConfirmPasswordModal() {
         >
           {isLoadingConfirm || isLoadingStatus || isLoadingCSRF
             ? `...${t('loading')}`
-            : t('submit')}
+            : t('confirm')}
         </button>
       </form>
     </section>

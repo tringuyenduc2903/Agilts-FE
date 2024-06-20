@@ -1,14 +1,16 @@
 'use client';
-import { CountryPhone, countries_phone } from '@/config/phone';
+import 'react-phone-number-input/style.css';
+// import { CountryPhone, countries_phone } from '@/config/phone';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
 import {
   useResendVerifyAccountMutation,
   useUpdateUserMutation,
 } from '@/lib/redux/query/userQuery';
-import { formatPhoneNumberToVietnam } from '@/lib/utils/format';
+// import { formatPhoneNumberToVietnam } from '@/lib/utils/format';
+import PhoneInputWithCountry from 'react-phone-number-input/react-hook-form';
 import withAuth from '@/protected-page/withAuth';
-import Image from 'next/image';
+// import Image from 'next/image';
 import React, {
   useCallback,
   useContext,
@@ -43,20 +45,20 @@ function AccountsPage() {
     },
   ] = useResendVerifyAccountMutation();
   const [openSelectPhone, setOpenSelectPhone] = useState(false);
-  const [selectedPhone, setSelectedPhone] = useState<CountryPhone | null>(null);
-  const { register, handleSubmit, reset, watch } = useForm<Form>({
+  // const [selectedPhone, setSelectedPhone] = useState<CountryPhone | null>(null);
+  const { register, handleSubmit, reset, watch, control } = useForm<Form>({
     defaultValues: { ...user },
   });
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedPhone = localStorage.getItem('country_phone');
-      if (savedPhone) {
-        setSelectedPhone(JSON.parse(savedPhone));
-      } else {
-        setSelectedPhone(countries_phone[0]);
-      }
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (typeof window !== 'undefined') {
+  //     const savedPhone = localStorage.getItem('country_phone');
+  //     if (savedPhone) {
+  //       setSelectedPhone(JSON.parse(savedPhone));
+  //     } else {
+  //       setSelectedPhone(countries_phone[0]);
+  //     }
+  //   }
+  // }, []);
 
   const watchedValues = watch();
   const isChangeUser = useMemo(() => {
@@ -88,51 +90,47 @@ function AccountsPage() {
     await handleGetCSRFCookie();
     await resendVerifyAccount(null);
   }, [handleGetCSRFCookie, resendVerifyAccount, sendVerify]);
-  const handleSelectedPhone = useCallback(
-    (p: CountryPhone) => {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('country_phone', JSON.stringify(p));
-      }
-      setSelectedPhone(p);
-      setOpenSelectPhone(false);
-    },
-    [selectedPhone, openSelectPhone]
-  );
+  // const handleSelectedPhone = useCallback(
+  //   (p: CountryPhone) => {
+  //     if (typeof window !== 'undefined') {
+  //       localStorage.setItem('country_phone', JSON.stringify(p));
+  //     }
+  //     setSelectedPhone(p);
+  //     setOpenSelectPhone(false);
+  //   },
+  //   [selectedPhone, openSelectPhone]
+  // );
 
-  const renderedSelectedPhone = useMemo(() => {
-    return (
-      <button
-        type='button'
-        className='flex items-center gap-2 px-2 border-r border-neutral-300'
-        onClick={() => setOpenSelectPhone(!openSelectPhone)}
-      >
-        <div className='w-6 h-6'>
-          <Image
-            width={6}
-            height={6}
-            src={`https://flagcdn.com/${selectedPhone?.code?.toLowerCase()}.svg`}
-            alt={`${selectedPhone?.name} flag`}
-            className='w-full h-full object-cover'
-            fetchPriority='low'
-          />
-        </div>
-        <strong>+{selectedPhone?.phone}</strong>
-      </button>
-    );
-  }, [selectedPhone, openSelectPhone]);
+  // const renderedSelectedPhone = useMemo(() => {
+  //   return (
+  //     <button
+  //       type='button'
+  //       className='flex items-center gap-2 px-2 border-r border-neutral-300'
+  //       onClick={() => setOpenSelectPhone(!openSelectPhone)}
+  //     >
+  //       <div className='w-6 h-6'>
+  //         <Image
+  //           width={6}
+  //           height={6}
+  //           src={`https://flagcdn.com/${selectedPhone?.code?.toLowerCase()}.svg`}
+  //           alt={`${selectedPhone?.name} flag`}
+  //           className='w-full h-full object-cover'
+  //           fetchPriority='low'
+  //         />
+  //       </div>
+  //       <strong>+{selectedPhone?.phone}</strong>
+  //     </button>
+  //   );
+  // }, [selectedPhone, openSelectPhone]);
 
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {
       await handleGetCSRFCookie();
       await updateUser({
         ...data,
-        phone_number: formatPhoneNumberToVietnam(
-          selectedPhone?.phone ? selectedPhone.phone : 84,
-          data.phone_number as string
-        ),
       });
     },
-    [handleGetCSRFCookie, updateUser, selectedPhone]
+    [handleGetCSRFCookie, updateUser]
   );
 
   useEffect(() => {
@@ -140,7 +138,6 @@ function AccountsPage() {
       reset({ ...user });
     }
   }, [user, reset]);
-  console.log(sendVerify);
   useEffect(() => {
     if (isLoadingCSRF && sendVerify) {
       setVisibleModal({ visibleLoadingModal: isLoadingCSRF });
@@ -275,7 +272,7 @@ function AccountsPage() {
             </p>
           )}
         </div>
-        <div className='flex flex-col gap-2'>
+        {/* <div className='flex flex-col gap-2'>
           <label htmlFor='phone'>{t('phone')}</label>
           <div className='flex relative border border-neutral-300 rounded-sm'>
             {renderedSelectedPhone}
@@ -319,6 +316,23 @@ function AccountsPage() {
               })}
             </ul>
           </div>
+          {errors?.phone_number && (
+            <p className='text-red-500 font-bold text-sm md:text-base'>
+              {errors.phone_number[0]}
+            </p>
+          )}
+        </div> */}
+
+        <div className='flex flex-col gap-2'>
+          <label htmlFor='phone'>{t('phone')}</label>
+          <PhoneInputWithCountry
+            className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base focus:outline-none'
+            name='phone_number'
+            control={control}
+            rules={{ required: true }}
+            defaultCountry='VN'
+            defaultValue={watchedValues.phone_number as string}
+          />
           {errors?.phone_number && (
             <p className='text-red-500 font-bold text-sm md:text-base'>
               {errors.phone_number[0]}

@@ -1,12 +1,13 @@
 import useClickOutside from '@/lib/hooks/useClickOutside';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, {
   LegacyRef,
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useRef,
 } from 'react';
 import { useTranslations } from 'next-intl';
@@ -29,6 +30,10 @@ type Props = {
 
 const MenuIcon: React.FC<Props> = React.memo(
   ({ isOpenMenu, closeMenu, openMenu }) => {
+    const { locale } = useParams();
+    const curLang = useMemo(() => {
+      return locale || 'vi';
+    }, [locale]);
     const t = useTranslations('header');
     const dispatch = useDispatch();
     const { setVisibleModal } = useContext(ModalContext);
@@ -119,6 +124,7 @@ const MenuIcon: React.FC<Props> = React.memo(
           },
         });
         dispatch(setIsLoggedIn(false));
+        router.replace(`/${curLang}`);
       }
       if (isErrorLogout && errorLogout) {
         const error = errorLogout as any;
@@ -136,6 +142,8 @@ const MenuIcon: React.FC<Props> = React.memo(
       setVisibleModal,
       t,
       dispatch,
+      router,
+      curLang,
     ]);
     return (
       <div className='relative'>

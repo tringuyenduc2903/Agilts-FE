@@ -98,9 +98,9 @@ function LoginPage() {
       if (loginData?.two_factor) {
         router.replace('/two-factor-qr-code');
       } else {
+        refetchUser();
         router.replace('/');
       }
-      refetchUser();
     }
     if (isErrorLogin && errorLogin) {
       const error = errorLogin as any;

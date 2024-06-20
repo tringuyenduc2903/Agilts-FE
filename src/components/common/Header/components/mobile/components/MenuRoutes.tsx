@@ -78,6 +78,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
         },
       });
       dispatch(setIsLoggedIn(false));
+      router.replace(`/${locale}`);
     }
     if (isErrorLogout && errorLogout) {
       const error = errorLogout as any;
@@ -95,6 +96,8 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
     setVisibleModal,
     t,
     dispatch,
+    router,
+    locale,
   ]);
   return (
     <aside

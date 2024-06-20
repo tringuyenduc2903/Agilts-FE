@@ -137,7 +137,7 @@
     "enter_key": "Nhập mã",
     "mess_enter_code": "Nhập mã gồm 6 chữ số do ứng dụng xác thực tạo",
     "recovery_title": "Danh sách mã khôi phục",
-    "recovery_mess": " Xin vui lòng không chia sẽ các mã khôi phục cho những người dùng khác.",
+    "recovery_mess": "Bạn có thể dùng mỗi mã khôi phục một lần. Hãy lưu mã khôi phục ở nơi an toàn. Nếu không có các mã này thì trong trường hợp không thể dùng điện thoại hoặc không thể đăng nhập bằng phương thức bảo mật, có khả năng bạn sẽ không đăng nhập được vào tài khoản của mình.",
     "copy_list": "Sao chép danh sách",
     "enter_recovery_code": "Nhập mã khôi phục",
     "recovery_code": "Nhập mã khôi phục",
@@ -166,6 +166,11 @@
     "all": "Tất cả",
     "not_verified": "Tài khoản chưa xác thực",
     "verify": "Xác thực",
-    "mess_success_send_verify": "Vui lòng kiểm tra lại email!"
+    "mess_success_send_verify": "Vui lòng kiểm tra lại email!",
+    "code": "Mã",
+    "download_recovery": "Tải mã xuống",
+    "refresh_recovery": "Nhận mã mới",
+    "using_code": "Sử dụng mã xác thực ứng dụng",
+    "using_recovery": "Sử dụng mã khôi phục"
   }
 }

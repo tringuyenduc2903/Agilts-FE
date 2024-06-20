@@ -142,12 +142,12 @@ export const userApi = createApi({
           method: 'DELETE',
         }),
       }),
-      verifyAccount: builder.query({
-        query: ({ id, hash, expires, signature }) => ({
-          url: `${getLangRoute()}/email/verify/${id}/${hash}?expires=${expires}&signature=${signature}`,
-          method: 'GET',
-        }),
-      }),
+      // verifyAccount: builder.query({
+      //   query: ({ id, hash, expires, signature }) => ({
+      //     url: `${getLangRoute()}/email/verify/${id}/${hash}?expires=${expires}&signature=${signature}`,
+      //     method: 'GET',
+      //   }),
+      // }),
       resendVerifyAccount: builder.mutation({
         query: () => ({
           url: `/email/verification-notification`,
@@ -177,6 +177,6 @@ export const {
   usePostRecoveryCodesMutation,
   useVerifyTwoFactorMutation,
   useDeleteTwoFactorMutation,
-  useVerifyAccountQuery,
+  // useVerifyAccountQuery,
   useResendVerifyAccountMutation,
 } = userApi;

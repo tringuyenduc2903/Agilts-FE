@@ -19,6 +19,7 @@ export default async function RootLayout({
       ></Script>
       <head>
         <link rel='icon' href='/favicon-32x32.png' sizes='any' />
+        <link rel='manifest' href='/site.webmanifest' />
       </head>
       <body>
         <NextIntlClientProvider locale={lang} messages={messages}>

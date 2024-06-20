@@ -140,8 +140,6 @@ function AccountsPage() {
   }, [user, reset]);
   useEffect(() => {
     if (isSuccessUpdate) {
-      setSendVerify(false);
-      setVisibleModal({ visibleLoadingModal: false });
       setVisibleModal({
         visibleToastModal: {
           type: 'success',
@@ -150,8 +148,6 @@ function AccountsPage() {
       });
     }
     if (isErrorUpdate && errorUpdate) {
-      setSendVerify(false);
-      setVisibleModal({ visibleLoadingModal: false });
       const error = errorUpdate as any;
       setVisibleModal({
         visibleToastModal: {
@@ -160,14 +156,7 @@ function AccountsPage() {
         },
       });
     }
-  }, [
-    isSuccessUpdate,
-    isLoadingPostData,
-    isErrorUpdate,
-    errorUpdate,
-    setVisibleModal,
-    t,
-  ]);
+  }, [isSuccessUpdate, isErrorUpdate, errorUpdate, setVisibleModal, t]);
   useEffect(() => {
     if (isLoadingCSRF && sendVerify) {
       setVisibleModal({ visibleLoadingModal: isLoadingCSRF });
@@ -176,6 +165,7 @@ function AccountsPage() {
       setVisibleModal({ visibleLoadingModal: isLoadingPostData });
     }
     if (isSuccessPostData) {
+      setSendVerify(false);
       setVisibleModal({
         visibleToastModal: {
           type: 'success',
@@ -184,6 +174,7 @@ function AccountsPage() {
       });
     }
     if (isErrorPostData && errorPostData) {
+      setSendVerify(false);
       const error = errorPostData as any;
       setVisibleModal({
         visibleToastModal: {
@@ -194,6 +185,8 @@ function AccountsPage() {
     }
   }, [
     sendVerify,
+    isLoadingCSRF,
+    isLoadingPostData,
     isSuccessPostData,
     isErrorPostData,
     errorPostData,

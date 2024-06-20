@@ -3,11 +3,12 @@ import { Open_Sans } from 'next/font/google';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ModalProvider } from '@/contexts/ModalProvider';
 import { FetchDataProvider } from '@/contexts/FetchDataProvider';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, getTranslations } from 'next-intl/server';
+import { Analytics } from '@vercel/analytics/react';
 import StoreProvider from '@/contexts/StoreProvider';
 import dynamic from 'next/dynamic';
-import { getMessages, getTranslations } from 'next-intl/server';
 import './globals.css';
-import { NextIntlClientProvider } from 'next-intl';
 const DynamicIntro = dynamic(() => import('./_components/Intro'), {
   ssr: true,
 });
@@ -66,6 +67,7 @@ export default async function HomeLayout({
               </ModalProvider>
             </FetchDataProvider>
           </StoreProvider>
+          <Analytics />
           <SpeedInsights />
         </NextIntlClientProvider>
       </body>

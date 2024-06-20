@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import logo from '@/assets/svgviewer-output-test.jpg';
+import logo from '../../../../public/logo.jpg';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 function Intro() {
@@ -102,23 +102,25 @@ function Intro() {
         <div className='relative opacityAnimation'>
           <Image
             ref={imgRef}
-            className='none object-cover relative z-0'
+            className='object-cover relative z-0'
             src={logo}
             alt='logo'
+            width={128}
+            height={58}
             fetchPriority='high'
           />
         </div>
         <div className='w-[6px] h-[72px] relative rotate-[15deg]'>
           <span
             ref={lineRef}
-            className='none absolute top-0 left-0 w-full h-full bg-red-500'
+            className='absolute top-0 left-0 w-full h-full bg-red-500'
           ></span>
         </div>
         <div>
-          <p ref={keyword1Ref} className='none text-3xl font-extrabold italic'>
+          <p ref={keyword1Ref} className='text-3xl font-extrabold italic'>
             Grand
           </p>
-          <p ref={keyword2Ref} className='none text-3xl font-extrabold italic'>
+          <p ref={keyword2Ref} className='text-3xl font-extrabold italic'>
             Prix
           </p>
         </div>

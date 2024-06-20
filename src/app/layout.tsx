@@ -17,6 +17,9 @@ export default async function RootLayout({
         defer
         src='https://code.iconify.design/3/3.1.0/iconify.min.js'
       ></Script>
+      <head>
+        <link rel='icon' href='/favicon-32x32.png' sizes='any' />
+      </head>
       <body>
         <NextIntlClientProvider locale={lang} messages={messages}>
           {children}

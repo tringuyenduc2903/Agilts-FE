@@ -8,6 +8,7 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import { Analytics } from '@vercel/analytics/react';
 import StoreProvider from '@/contexts/StoreProvider';
 import dynamic from 'next/dynamic';
+import logo from '@/assets/svgviewer-output-test.jpg';
 import './globals.css';
 const DynamicIntro = dynamic(() => import('./_components/Intro'), {
   ssr: true,

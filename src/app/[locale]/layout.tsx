@@ -8,6 +8,9 @@ import dynamic from 'next/dynamic';
 import { getMessages, getTranslations } from 'next-intl/server';
 import './globals.css';
 import { NextIntlClientProvider } from 'next-intl';
+const DynamicIntro = dynamic(() => import('./_components/Intro'), {
+  ssr: true,
+});
 const DynamicHeader = dynamic(
   () => import('@/components/common/Header/Header'),
   { ssr: false }
@@ -54,6 +57,7 @@ export default async function HomeLayout({
           <StoreProvider>
             <FetchDataProvider>
               <ModalProvider>
+                <DynamicIntro />
                 <DynamicHeader />
                 {children}
                 <DynamicScrollToTop />

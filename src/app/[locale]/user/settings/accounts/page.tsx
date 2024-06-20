@@ -139,12 +139,6 @@ function AccountsPage() {
     }
   }, [user, reset]);
   useEffect(() => {
-    if (isLoadingCSRF && sendVerify) {
-      setVisibleModal({ visibleLoadingModal: isLoadingCSRF });
-    }
-    if (isLoadingPostData && sendVerify) {
-      setVisibleModal({ visibleLoadingModal: isLoadingPostData });
-    }
     if (isSuccessUpdate) {
       setSendVerify(false);
       setVisibleModal({ visibleLoadingModal: false });
@@ -167,9 +161,7 @@ function AccountsPage() {
       });
     }
   }, [
-    sendVerify,
     isSuccessUpdate,
-    isLoadingCSRF,
     isLoadingPostData,
     isErrorUpdate,
     errorUpdate,
@@ -177,6 +169,12 @@ function AccountsPage() {
     t,
   ]);
   useEffect(() => {
+    if (isLoadingCSRF && sendVerify) {
+      setVisibleModal({ visibleLoadingModal: isLoadingCSRF });
+    }
+    if (isLoadingPostData && sendVerify) {
+      setVisibleModal({ visibleLoadingModal: isLoadingPostData });
+    }
     if (isSuccessPostData) {
       setVisibleModal({
         visibleToastModal: {
@@ -194,7 +192,14 @@ function AccountsPage() {
         },
       });
     }
-  }, [isSuccessPostData, isErrorPostData, errorPostData, setVisibleModal, t]);
+  }, [
+    sendVerify,
+    isSuccessPostData,
+    isErrorPostData,
+    errorPostData,
+    setVisibleModal,
+    t,
+  ]);
   return (
     <div className='flex flex-col gap-6'>
       <div>
@@ -234,10 +239,10 @@ function AccountsPage() {
               <>
                 <span className='font-bold'>({t('not_verified')})</span>
                 <button
+                  type='button'
                   className='w-max sm:ml-auto text-red-500 font-bold'
                   onClick={handleResendVerify}
                   disabled={isLoadingCSRF || isLoadingPostData}
-                  type='button'
                 >
                   {t('verify')}
                 </button>

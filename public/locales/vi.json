@@ -163,6 +163,9 @@
     "price": "Giá",
     "categories": "Danh mục",
     "tags": "Nhãn",
-    "all": "Tất cả"
+    "all": "Tất cả",
+    "not_verified": "Tài khoản chưa xác thực",
+    "verify": "Xác thực",
+    "mess_success_send_verify": "Vui lòng kiểm tra lại email!"
   }
 }

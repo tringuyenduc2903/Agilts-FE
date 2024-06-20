@@ -2,7 +2,10 @@
 import { CountryPhone, countries_phone } from '@/config/phone';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
-import { useUpdateUserMutation } from '@/lib/redux/query/userQuery';
+import {
+  useResendVerifyAccountMutation,
+  useUpdateUserMutation,
+} from '@/lib/redux/query/userQuery';
 import { formatPhoneNumberToVietnam } from '@/lib/utils/format';
 import withAuth from '@/protected-page/withAuth';
 import Image from 'next/image';
@@ -29,6 +32,16 @@ function AccountsPage() {
   const { user, handleGetCSRFCookie, isLoadingCSRF } =
     useContext(FetchDataContext);
   const { setVisibleModal } = useContext(ModalContext);
+  const [sendVerify, setSendVerify] = useState(false);
+  const [
+    resendVerifyAccount,
+    {
+      isLoading: isLoadingPostData,
+      isSuccess: isSuccessPostData,
+      isError: isErrorPostData,
+      error: errorPostData,
+    },
+  ] = useResendVerifyAccountMutation();
   const [openSelectPhone, setOpenSelectPhone] = useState(false);
   const [selectedPhone, setSelectedPhone] = useState<CountryPhone | null>(null);
   const { register, handleSubmit, reset, watch } = useForm<Form>({
@@ -70,14 +83,21 @@ function AccountsPage() {
     }
     return null;
   }, [isErrorUpdate, errorUpdate]);
-
-  const handleSelectedPhone = useCallback((p: CountryPhone) => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('country_phone', JSON.stringify(p));
-    }
-    setSelectedPhone(p);
-    setOpenSelectPhone(false);
-  }, []);
+  const handleResendVerify = useCallback(async () => {
+    setSendVerify(true);
+    await handleGetCSRFCookie();
+    await resendVerifyAccount(null);
+  }, [handleGetCSRFCookie, resendVerifyAccount, sendVerify]);
+  const handleSelectedPhone = useCallback(
+    (p: CountryPhone) => {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('country_phone', JSON.stringify(p));
+      }
+      setSelectedPhone(p);
+      setOpenSelectPhone(false);
+    },
+    [selectedPhone, openSelectPhone]
+  );
 
   const renderedSelectedPhone = useMemo(() => {
     return (
@@ -101,25 +121,36 @@ function AccountsPage() {
     );
   }, [selectedPhone, openSelectPhone]);
 
-  const onSubmit: SubmitHandler<Form> = async (data) => {
-    await handleGetCSRFCookie();
-    await updateUser({
-      ...data,
-      phone_number: formatPhoneNumberToVietnam(
-        selectedPhone?.phone ? selectedPhone.phone : 84,
-        data.phone_number as string
-      ),
-    });
-  };
+  const onSubmit: SubmitHandler<Form> = useCallback(
+    async (data) => {
+      await handleGetCSRFCookie();
+      await updateUser({
+        ...data,
+        phone_number: formatPhoneNumberToVietnam(
+          selectedPhone?.phone ? selectedPhone.phone : 84,
+          data.phone_number as string
+        ),
+      });
+    },
+    [handleGetCSRFCookie, updateUser, selectedPhone]
+  );
 
   useEffect(() => {
     if (user) {
       reset({ ...user });
     }
   }, [user, reset]);
-
+  console.log(sendVerify);
   useEffect(() => {
+    if (isLoadingCSRF && sendVerify) {
+      setVisibleModal({ visibleLoadingModal: isLoadingCSRF });
+    }
+    if (isLoadingPostData && sendVerify) {
+      setVisibleModal({ visibleLoadingModal: isLoadingPostData });
+    }
     if (isSuccessUpdate) {
+      setSendVerify(false);
+      setVisibleModal({ visibleLoadingModal: false });
       setVisibleModal({
         visibleToastModal: {
           type: 'success',
@@ -128,6 +159,8 @@ function AccountsPage() {
       });
     }
     if (isErrorUpdate && errorUpdate) {
+      setSendVerify(false);
+      setVisibleModal({ visibleLoadingModal: false });
       const error = errorUpdate as any;
       setVisibleModal({
         visibleToastModal: {
@@ -136,8 +169,35 @@ function AccountsPage() {
         },
       });
     }
-  }, [isSuccessUpdate, isErrorUpdate, errorUpdate, setVisibleModal, t]);
-
+  }, [
+    sendVerify,
+    isSuccessUpdate,
+    isLoadingCSRF,
+    isLoadingPostData,
+    isErrorUpdate,
+    errorUpdate,
+    setVisibleModal,
+    t,
+  ]);
+  useEffect(() => {
+    if (isSuccessPostData) {
+      setVisibleModal({
+        visibleToastModal: {
+          type: 'success',
+          message: `${t('mess_success_send_verify')}`,
+        },
+      });
+    }
+    if (isErrorPostData && errorPostData) {
+      const error = errorPostData as any;
+      setVisibleModal({
+        visibleToastModal: {
+          type: 'error',
+          message: error?.data?.message,
+        },
+      });
+    }
+  }, [isSuccessPostData, isErrorPostData, errorPostData, setVisibleModal, t]);
   return (
     <div className='flex flex-col gap-6'>
       <div>
@@ -167,11 +227,25 @@ function AccountsPage() {
           )}
         </div>
         <div className='flex flex-col gap-2'>
-          <label htmlFor='email'>
-            Email{' '}
-            {user?.email_verified_at
-              ? `(${t('verified_at')} ${user?.email_verified_at})`
-              : ''}
+          <label className='flex flex-col sm:flex-row gap-2' htmlFor='email'>
+            <span>Email</span>
+            {user?.email_verified_at ? (
+              <span className='font-bold'>
+                ({t('verified_at')} {user?.email_verified_at})
+              </span>
+            ) : (
+              <>
+                <span className='font-bold'>({t('not_verified')})</span>
+                <button
+                  className='w-max sm:ml-auto text-red-500 font-bold'
+                  onClick={handleResendVerify}
+                  disabled={isLoadingCSRF || isLoadingPostData}
+                  type='button'
+                >
+                  {t('verify')}
+                </button>
+              </>
+            )}
           </label>
           <input
             className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base'
@@ -193,7 +267,7 @@ function AccountsPage() {
             type='date'
             id='birthday'
             {...register('birthday')}
-            disabled={isLoadingUpdate || isLoadingCSRF}
+            disabled={isLoadingUpdate || isLoadingCSRF || isLoadingPostData}
           />
           {errors?.birthday && (
             <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -210,7 +284,7 @@ function AccountsPage() {
               type='text'
               id='phone'
               {...register('phone_number')}
-              disabled={isLoadingUpdate || isLoadingCSRF}
+              disabled={isLoadingUpdate || isLoadingCSRF || isLoadingPostData}
             />
             <ul
               className={`absolute left-0 top-[150%] bg-white max-h-[30vh] ${
@@ -227,6 +301,9 @@ function AccountsPage() {
                       type='button'
                       className='w-full flex items-center gap-4 px-2 py-3 border-b border-neutral-300'
                       onClick={() => handleSelectedPhone(p)}
+                      disabled={
+                        isLoadingUpdate || isLoadingCSRF || isLoadingPostData
+                      }
                     >
                       <div className='flex items-center gap-2'>
                         <span
@@ -254,7 +331,7 @@ function AccountsPage() {
             id='gender'
             className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base focus:outline-none'
             {...register('gender')}
-            disabled={isLoadingUpdate || isLoadingCSRF}
+            disabled={isLoadingUpdate || isLoadingCSRF || isLoadingPostData}
           >
             <option value=''>{t('select_gender')}</option>
             <option value={0}>{t('male')}</option>
@@ -273,7 +350,7 @@ function AccountsPage() {
               className='font-bold bg-red-500 hover:bg-red-600 transition-colors text-white px-6 py-3 rounded-sm'
               type='button'
               onClick={() => reset({ ...user })}
-              disabled={isLoadingUpdate || isLoadingCSRF}
+              disabled={isLoadingUpdate || isLoadingCSRF || isLoadingPostData}
             >
               {t('cancel')}
             </button>
@@ -281,9 +358,9 @@ function AccountsPage() {
           <button
             className='font-bold bg-neutral-800 text-white px-4 py-3 rounded-sm'
             type='submit'
-            disabled={isLoadingUpdate || isLoadingCSRF}
+            disabled={isLoadingUpdate || isLoadingCSRF || isLoadingPostData}
           >
-            {isLoadingUpdate || isLoadingCSRF
+            {isLoadingUpdate || (isLoadingCSRF && !sendVerify)
               ? `...${t('loading')}`
               : t('update')}
           </button>

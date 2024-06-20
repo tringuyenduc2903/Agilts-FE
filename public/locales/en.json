@@ -162,6 +162,9 @@
     "price": "Price",
     "categories": "Categories",
     "tags": "Tags",
-    "all": "All"
+    "all": "All",
+    "not_verified": "Unverified account",
+    "verify": "Verify",
+    "mess_success_send_verify": "Please check your email again!"
   }
 }

@@ -157,12 +157,12 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
       setVisibleModal({
         visibleToastModal: {
           type: 'success',
-          message: 'Đã gỡ xác thực 2 bước thành công!',
+          message: t('turn_of_2fa'),
         },
       });
       closePopup();
     }
-  }, [isSuccessDelete, refetchUser, setVisibleModal, closePopup]);
+  }, [isSuccessDelete, refetchUser, setVisibleModal, closePopup, t]);
   const handleDownload = useCallback(() => {
     if (isSuccessListCodes && listCodes) {
       const element = document.createElement('a');
@@ -208,7 +208,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
                 disabled={isLoadingRecoveryCodes}
                 onClick={async () => await postRecoveryCodes(null)}
               >
-                Tạo danh sách dự phòng mới
+                {t('create_new_codes')}
               </button>
             )}
             {user?.two_factor_confirmed_at &&
@@ -300,7 +300,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
               <h2 className='font-bold'>{t('thing_2_setup_2fa')}</h2>
               <p>{t('message_2_setup_2fa')}</p>
             </div>
-            <div className='grid grid-cols-2 place-items-center'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 place-items-center gap-4'>
               {isSuccessQrCode && (
                 <div
                   className='col-span-1'

@@ -171,6 +171,8 @@
     "download_recovery": "Tải mã xuống",
     "refresh_recovery": "Nhận mã mới",
     "using_code": "Sử dụng mã xác thực ứng dụng",
-    "using_recovery": "Sử dụng mã khôi phục"
+    "using_recovery": "Sử dụng mã khôi phục",
+    "turn_of_2fa": "Đã gỡ xác thực 2 bước thành công!",
+    "create_new_codes": "Tạo danh sách dự phòng mới"
   }
 }

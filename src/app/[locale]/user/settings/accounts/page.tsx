@@ -20,6 +20,7 @@ import React, {
 } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
+import { defaultTimezone } from '@/config/timezone';
 
 type Form = {
   name: string;
@@ -27,6 +28,7 @@ type Form = {
   phone_number: string | null;
   birthday: string | null;
   gender: string | number | null;
+  timezone: string;
 };
 
 function AccountsPage() {
@@ -44,10 +46,10 @@ function AccountsPage() {
       error: errorPostData,
     },
   ] = useResendVerifyAccountMutation();
-  const [openSelectPhone, setOpenSelectPhone] = useState(false);
+  // const [openSelectPhone, setOpenSelectPhone] = useState(false);
   // const [selectedPhone, setSelectedPhone] = useState<CountryPhone | null>(null);
   const { register, handleSubmit, reset, watch, control } = useForm<Form>({
-    defaultValues: { ...user },
+    defaultValues: { ...user, timezone: defaultTimezone },
   });
   // useEffect(() => {
   //   if (typeof window !== 'undefined') {

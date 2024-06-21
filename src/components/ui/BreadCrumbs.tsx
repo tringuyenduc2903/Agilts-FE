@@ -1,13 +1,10 @@
 'use client';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useTranslations } from 'next-intl';
 const BreadCrumbs = React.memo(() => {
   const { locale } = useParams();
-  const curLang = useMemo(() => {
-    return locale || 'vi';
-  }, [locale]);
   const t = useTranslations('common');
   const pathname = usePathname();
   const renderedBreadcrumbs = pathname
@@ -32,7 +29,7 @@ const BreadCrumbs = React.memo(() => {
       <div className='container m-auto px-4 py-6 flex items-center gap-4 text-sm'>
         <Link
           className='font-bold uppercase tracking-[2px] hover:text-red-500 transition-colors'
-          href={`/${curLang}`}
+          href={`/${locale}`}
         >
           {t('home')}
         </Link>

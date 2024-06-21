@@ -1,11 +1,6 @@
-import { getCookies } from 'cookies-next';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from '../config/axios';
-const getLangRoute = () => {
-  const cookies = getCookies();
-  const curLang = cookies?.NEXT_LOCALE || 'vi';
-  return curLang === 'en' ? '/en' : '';
-};
+import { getLangRoute } from '../config/getLangRoute';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: axiosBaseQuery({

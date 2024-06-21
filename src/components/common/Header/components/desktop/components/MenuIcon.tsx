@@ -7,7 +7,6 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useRef,
 } from 'react';
 import { useTranslations } from 'next-intl';
@@ -21,7 +20,6 @@ import { ModalContext } from '@/contexts/ModalProvider';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
-import { getCookies } from 'cookies-next';
 type Props = {
   isOpenMenu: boolean;
   openMenu: () => void;
@@ -31,9 +29,6 @@ type Props = {
 const MenuIcon: React.FC<Props> = React.memo(
   ({ isOpenMenu, closeMenu, openMenu }) => {
     const { locale } = useParams();
-    const curLang = useMemo(() => {
-      return locale || 'vi';
-    }, [locale]);
     const t = useTranslations('header');
     const dispatch = useDispatch();
     const { setVisibleModal } = useContext(ModalContext);
@@ -104,11 +99,10 @@ const MenuIcon: React.FC<Props> = React.memo(
     }
     const handleRedirect = useCallback(
       (url: string) => {
-        const curLang = getCookies().NEXT_LOCALE || 'vi';
-        router.push(`/${curLang}/${url}`);
+        router.push(`/${locale}/${url}`);
         closeMenu();
       },
-      [router, closeMenu, getCookies]
+      [router, closeMenu, locale]
     );
     const handleLogout = useCallback(async () => {
       await handleGetCSRFCookie();
@@ -124,7 +118,7 @@ const MenuIcon: React.FC<Props> = React.memo(
           },
         });
         dispatch(setIsLoggedIn(false));
-        router.replace(`/${curLang}`);
+        router.replace(`/${locale}`);
       }
       if (isErrorLogout && errorLogout) {
         const error = errorLogout as any;
@@ -143,7 +137,7 @@ const MenuIcon: React.FC<Props> = React.memo(
       t,
       dispatch,
       router,
-      curLang,
+      locale,
     ]);
     return (
       <div className='relative'>

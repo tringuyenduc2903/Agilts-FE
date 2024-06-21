@@ -38,9 +38,6 @@ export function SingleProduct({
   const [isHover, setIsHover] = useState<Product | null>(null);
   const { locale } = useParams();
   const router = useRouter();
-  const curLang = useMemo(() => {
-    return locale || 'vi';
-  }, [locale]);
   return (
     <ProductContext.Provider value={{ product, isHover }}>
       <article
@@ -51,7 +48,7 @@ export function SingleProduct({
         }`}
         onMouseEnter={() => setIsHover(product)}
         onMouseLeave={() => setIsHover(null)}
-        onClick={() => router.push(`/${curLang}/products/${product.id}`)}
+        onClick={() => router.push(`/${locale}/products/${product.id}`)}
       >
         {children}
       </article>

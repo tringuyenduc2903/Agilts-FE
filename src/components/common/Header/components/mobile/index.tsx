@@ -1,5 +1,5 @@
 'use client';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Image from 'next/image';
 import logo from '@/assets/borko-logo-black.png';
 import { useParams, useRouter } from 'next/navigation';
@@ -10,9 +10,6 @@ import gsap from 'gsap';
 function MobileNavigation() {
   const router = useRouter();
   const { locale } = useParams();
-  const curLang = useMemo(() => {
-    return locale || 'vi';
-  }, [locale]);
   const headerRef = useRef<HTMLElement | null>(null);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   useGSAP(
@@ -40,7 +37,7 @@ function MobileNavigation() {
       >
         <button
           aria-label='btn-back-home'
-          onClick={() => router.push(`/${curLang}`)}
+          onClick={() => router.push(`/${locale}`)}
         >
           <Image width={170} height={70} src={logo} alt='logo' />
         </button>

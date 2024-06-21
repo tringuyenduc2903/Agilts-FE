@@ -21,7 +21,7 @@ import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
-import { getCookies, setCookie } from 'cookies-next';
+import { setCookie } from 'cookies-next';
 type Props = {
   isOpenMenu: boolean;
   closeMenu: () => void;
@@ -50,11 +50,10 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
   ] = useLogoutMutation();
   const handleRedirect = useCallback(
     (url: string) => {
-      const curLang = getCookies().NEXT_LOCALE || 'vi';
-      router.push(`/${curLang}/${url}`);
+      router.push(`/${locale}/${url}`);
       closeMenu();
     },
-    [router, closeMenu, getCookies]
+    [router, closeMenu, locale]
   );
   const handleChangeLang = useCallback(
     (lang: string) => {

@@ -1,5 +1,5 @@
 'user client';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { setCookie } from 'cookies-next';
 import Image from 'next/image';
 import logo from '@/assets/borko-logo-black.png';
@@ -11,9 +11,6 @@ import gsap from 'gsap';
 import MenuIcon from './components/MenuIcon';
 function DesktopNavigation() {
   const { locale } = useParams();
-  const curLang = useMemo(() => {
-    return locale || 'vi';
-  }, [locale]);
   const t = useTranslations('header');
   const headerRef = useRef<HTMLElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -75,7 +72,7 @@ function DesktopNavigation() {
         ></div>
         <button
           aria-label='btn-back-home'
-          onClick={() => router.push(`/${curLang}`)}
+          onClick={() => router.push(`/${locale}`)}
         >
           <Image width={170} height={70} src={logo} alt='logo' />
         </button>
@@ -84,7 +81,7 @@ function DesktopNavigation() {
             className={`h-full uppercase flex justify-center items-center px-4 ${
               hoverRoute === 'home' ? 'bg-white' : ''
             }`}
-            href={`/${curLang}`}
+            href={`/${locale}`}
             onMouseEnter={() => setHoverRoute('home')}
             onMouseLeave={() => setHoverRoute(null)}
           >
@@ -131,7 +128,7 @@ function DesktopNavigation() {
               <li className='w-full px-4 pt-12'>
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={`/${curLang}/about-us`}
+                  href={`/${locale}/about-us`}
                   onMouseOver={() => setHoverSubRoute('about-us')}
                   onMouseOut={() => setHoverSubRoute(null)}
                 >
@@ -150,7 +147,7 @@ function DesktopNavigation() {
               <li className='w-full px-4'>
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={`/${curLang}/our-services`}
+                  href={`/${locale}/our-services`}
                   onMouseOver={() => setHoverSubRoute('our-services')}
                   onMouseOut={() => setHoverSubRoute(null)}
                 >
@@ -170,7 +167,7 @@ function DesktopNavigation() {
               <li className='w-full pb-8 px-4'>
                 <Link
                   className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={`/${curLang}/contact`}
+                  href={`/${locale}/contact`}
                   onMouseOver={() => setHoverSubRoute('contact')}
                   onMouseOut={() => setHoverSubRoute(null)}
                 >
@@ -192,7 +189,7 @@ function DesktopNavigation() {
             className={`h-full uppercase flex justify-center items-center px-4 ${
               hoverRoute === 'products' ? 'bg-white' : ''
             }`}
-            href={`/${curLang}/products`}
+            href={`/${locale}/products`}
             onMouseEnter={() => setHoverRoute('products')}
             onMouseLeave={() => setHoverRoute(null)}
           >
@@ -236,7 +233,7 @@ function DesktopNavigation() {
               <li className='w-full px-4 pt-12'>
                 <button
                   className={`relative w-full h-[48px] flex items-center gap-2 px-4 uppercase ${
-                    hoverSubRoute === 'english' || curLang === 'en'
+                    hoverSubRoute === 'english' || locale === 'en'
                       ? 'text-red-500'
                       : ''
                   } transition-colors`}
@@ -250,7 +247,7 @@ function DesktopNavigation() {
               <li className='w-full px-4'>
                 <button
                   className={`relative w-full h-[48px] flex items-center gap-2 px-4 uppercase ${
-                    hoverSubRoute === 'vietnamese' || curLang === 'vi'
+                    hoverSubRoute === 'vietnamese' || locale === 'vi'
                       ? 'text-red-500'
                       : ''
                   } transition-colors`}

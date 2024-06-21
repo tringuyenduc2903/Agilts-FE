@@ -41,7 +41,11 @@ function LoginPage() {
   const t = useTranslations('common');
   const dispatch = useDispatch();
   const { setVisibleModal } = useContext(ModalContext);
-  const { register, handleSubmit } = useForm<Form>();
+  const { register, handleSubmit } = useForm<Form>({
+    defaultValues: {
+      remember: true,
+    },
+  });
   const [isShowPwd, setIsShowPwd] = useState(false);
   const [
     login,
@@ -63,7 +67,7 @@ function LoginPage() {
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {
       await handleGetCSRFCookie();
-      await login({ ...data, remember: true });
+      await login({ ...data });
     },
     [handleGetCSRFCookie, login]
   );
@@ -79,10 +83,10 @@ function LoginPage() {
     if (isLoadingCSRF) {
       setVisibleModal({ visibleLoadingModal: isLoadingCSRF });
     }
-    if (isLoadingLogin && !!isLoadingCSRF) {
+    if (isLoadingLogin) {
       setVisibleModal({ visibleLoadingModal: isLoadingLogin });
     }
-    if ((isErrorLogin || isSuccessLogin) && !isLoadingCSRF) {
+    if ((isErrorLogin || isSuccessLogin) && !isLoadingCSRF && !isLoadingLogin) {
       setVisibleModal({ visibleLoadingModal: false });
     }
   }, [

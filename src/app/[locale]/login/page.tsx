@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
-import { notFound, useRouter } from 'next/navigation';
+import { notFound, useParams, useRouter } from 'next/navigation';
 import Loading from '../loading';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -30,6 +30,7 @@ type Form = {
   remember: boolean;
 };
 function LoginPage() {
+  const { locale } = useParams();
   const router = useRouter();
   const {
     user,
@@ -100,10 +101,10 @@ function LoginPage() {
     if (isSuccessLogin && loginData) {
       dispatch(setIsLoggedIn(true));
       if (loginData?.two_factor) {
-        router.replace('/two-factor-qr-code');
+        router.replace(`/${locale}/two-factor-qr-code`);
       } else {
         refetchUser();
-        router.replace('/');
+        router.replace(`/${locale}`);
       }
     }
     if (isErrorLogin && errorLogin) {
@@ -124,8 +125,9 @@ function LoginPage() {
     router,
     refetchUser,
     dispatch,
+    locale,
   ]);
-  if (user) return router.replace('/');
+  if (user) return router.replace(`/${locale}`);
   if (user && !isLoadingUser) {
     return notFound();
   }

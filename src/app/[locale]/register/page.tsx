@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
-import { notFound, useRouter } from 'next/navigation';
+import { notFound, useParams, useRouter } from 'next/navigation';
 import Loading from '../loading';
 import bgLogo from '@/assets/h4-slider-img-1.jpg';
 import Image from 'next/image';
@@ -29,6 +29,7 @@ type Form = {
   password_confirmation: string;
 };
 function RegisterPage() {
+  const { locale } = useParams();
   const router = useRouter();
   const {
     user,
@@ -102,7 +103,7 @@ function RegisterPage() {
           message: `${t('register_message')}`,
         },
       });
-      router.replace('/');
+      router.replace(`/${locale}`);
       refetchUser();
     }
     if (isErrorRegister && errorRegister) {
@@ -122,8 +123,9 @@ function RegisterPage() {
     t,
     router,
     refetchUser,
+    locale,
   ]);
-  if (user) return router.replace('/');
+  if (user) return router.replace(`/${locale}`);
   if (user && !isLoadingUser) {
     return notFound();
   }

@@ -1,16 +1,13 @@
 'use client';
 import 'react-phone-number-input/style.css';
-// import { CountryPhone, countries_phone } from '@/config/phone';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
 import {
   useResendVerifyAccountMutation,
   useUpdateUserMutation,
 } from '@/lib/redux/query/userQuery';
-// import { formatPhoneNumberToVietnam } from '@/lib/utils/format';
 import PhoneInputWithCountry from 'react-phone-number-input/react-hook-form';
 import withAuth from '@/protected-page/withAuth';
-// import Image from 'next/image';
 import React, {
   useCallback,
   useContext,
@@ -46,21 +43,9 @@ function AccountsPage() {
       error: errorPostData,
     },
   ] = useResendVerifyAccountMutation();
-  // const [openSelectPhone, setOpenSelectPhone] = useState(false);
-  // const [selectedPhone, setSelectedPhone] = useState<CountryPhone | null>(null);
   const { register, handleSubmit, reset, watch, control } = useForm<Form>({
     defaultValues: { ...user, timezone: defaultTimezone },
   });
-  // useEffect(() => {
-  //   if (typeof window !== 'undefined') {
-  //     const savedPhone = localStorage.getItem('country_phone');
-  //     if (savedPhone) {
-  //       setSelectedPhone(JSON.parse(savedPhone));
-  //     } else {
-  //       setSelectedPhone(countries_phone[0]);
-  //     }
-  //   }
-  // }, []);
 
   const watchedValues = watch();
   const isChangeUser = useMemo(() => {
@@ -72,7 +57,6 @@ function AccountsPage() {
   const [
     updateUser,
     {
-      // data: updateData,
       isLoading: isLoadingUpdate,
       isSuccess: isSuccessUpdate,
       isError: isErrorUpdate,
@@ -92,38 +76,6 @@ function AccountsPage() {
     await handleGetCSRFCookie();
     await resendVerifyAccount(null);
   }, [handleGetCSRFCookie, resendVerifyAccount, sendVerify]);
-  // const handleSelectedPhone = useCallback(
-  //   (p: CountryPhone) => {
-  //     if (typeof window !== 'undefined') {
-  //       localStorage.setItem('country_phone', JSON.stringify(p));
-  //     }
-  //     setSelectedPhone(p);
-  //     setOpenSelectPhone(false);
-  //   },
-  //   [selectedPhone, openSelectPhone]
-  // );
-
-  // const renderedSelectedPhone = useMemo(() => {
-  //   return (
-  //     <button
-  //       type='button'
-  //       className='flex items-center gap-2 px-2 border-r border-neutral-300'
-  //       onClick={() => setOpenSelectPhone(!openSelectPhone)}
-  //     >
-  //       <div className='w-6 h-6'>
-  //         <Image
-  //           width={6}
-  //           height={6}
-  //           src={`https://flagcdn.com/${selectedPhone?.code?.toLowerCase()}.svg`}
-  //           alt={`${selectedPhone?.name} flag`}
-  //           className='w-full h-full object-cover'
-  //           fetchPriority='low'
-  //         />
-  //       </div>
-  //       <strong>+{selectedPhone?.phone}</strong>
-  //     </button>
-  //   );
-  // }, [selectedPhone, openSelectPhone]);
 
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {
@@ -272,57 +224,6 @@ function AccountsPage() {
             </p>
           )}
         </div>
-        {/* <div className='flex flex-col gap-2'>
-          <label htmlFor='phone'>{t('phone')}</label>
-          <div className='flex relative border border-neutral-300 rounded-sm'>
-            {renderedSelectedPhone}
-            <input
-              className='w-full h-full px-4 py-3 text-sm md:text-base'
-              type='text'
-              id='phone'
-              {...register('phone_number')}
-              disabled={isLoadingUpdate || isLoadingCSRF || isLoadingPostData}
-            />
-            <ul
-              className={`absolute left-0 top-[150%] bg-white max-h-[30vh] ${
-                openSelectPhone ? 'h-[30vh] border border-neutral-300' : 'h-0'
-              } transition-[height] duration-150 overflow-y-auto z-50 rounded-sm`}
-            >
-              {countries_phone?.map((p: CountryPhone) => {
-                return (
-                  <li
-                    className='w-full hover:bg-neutral-100 transition-colors'
-                    key={p?.name}
-                  >
-                    <button
-                      type='button'
-                      className='w-full flex items-center gap-4 px-2 py-3 border-b border-neutral-300'
-                      onClick={() => handleSelectedPhone(p)}
-                      disabled={
-                        isLoadingUpdate || isLoadingCSRF || isLoadingPostData
-                      }
-                    >
-                      <div className='flex items-center gap-2'>
-                        <span
-                          className='iconify'
-                          data-icon={`flag:${p?.code?.toLowerCase()}-4x3`}
-                        ></span>
-                        <span className='country-name'>{p?.name}</span>
-                      </div>
-                      <strong>+{p?.phone}</strong>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-          {errors?.phone_number && (
-            <p className='text-red-500 font-bold text-sm md:text-base'>
-              {errors.phone_number[0]}
-            </p>
-          )}
-        </div> */}
-
         <div className='flex flex-col gap-2'>
           <label htmlFor='phone'>{t('phone')}</label>
           <PhoneInputWithCountry

@@ -1,7 +1,16 @@
+import { Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { cookies } from 'next/headers';
-import Script from 'next/script';
+// import Script from 'next/script';
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  // Also supported by less commonly used
+  // interactiveWidget: 'resizes-visual',
+};
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -13,10 +22,6 @@ export default async function RootLayout({
   const messages = await getMessages();
   return (
     <html lang={lang}>
-      <Script
-        defer
-        src='https://code.iconify.design/3/3.1.0/iconify.min.js'
-      ></Script>
       <head>
         <link
           rel='apple-touch-icon'
@@ -42,6 +47,10 @@ export default async function RootLayout({
         <NextIntlClientProvider locale={lang} messages={messages}>
           {children}
         </NextIntlClientProvider>
+        {/* <Script
+          defer
+          src='https://code.iconify.design/3/3.1.0/iconify.min.js'
+        ></Script> */}
       </body>
     </html>
   );

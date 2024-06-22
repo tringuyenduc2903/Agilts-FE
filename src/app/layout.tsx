@@ -6,6 +6,8 @@ import { cookies } from 'next/headers';
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  themeColor: '#fff',
+  colorScheme: 'normal',
   // maximumScale: 1,
   // userScalable: false,
   // Also supported by less commonly used

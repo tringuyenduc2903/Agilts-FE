@@ -41,7 +41,7 @@ function MobileNavigation() {
           aria-label='btn-back-home'
           onClick={() => router.push(`/${locale}`)}
         >
-          <div className='h-[64px] overflow-hidden'>
+          <div className='h-[42px] overflow-hidden'>
             <Image
               className='w-full h-full object-cover'
               src={logo}

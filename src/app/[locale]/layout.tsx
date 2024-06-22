@@ -8,6 +8,7 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import { Analytics } from '@vercel/analytics/react';
 import StoreProvider from '@/contexts/StoreProvider';
 import dynamic from 'next/dynamic';
+import { title } from '@/config/title';
 import './globals.css';
 const DynamicIntro = dynamic(
   () => import('../../components/common/Intro/Intro'),
@@ -37,7 +38,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: {
-      template: `%s | Agilts`,
+      template: `%s | ${title}`,
       default: t('home_title'),
     },
     description: t('home_description'),

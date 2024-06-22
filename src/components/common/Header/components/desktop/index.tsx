@@ -2,13 +2,14 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { setCookie } from 'cookies-next';
 import Image from 'next/image';
-import logo from '@/assets/borko-logo-black.png';
+import logo from '../.././../../../../public/logo.png';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import MenuIcon from './components/MenuIcon';
+import { title } from '@/config/title';
 function DesktopNavigation() {
   const { locale } = useParams();
   const t = useTranslations('header');
@@ -71,10 +72,20 @@ function DesktopNavigation() {
           onClick={() => setIsOpenMenu(false)}
         ></div>
         <button
+          className='flex items-center overflow-hidden'
           aria-label='btn-back-home'
           onClick={() => router.push(`/${locale}`)}
         >
-          <Image width={170} height={70} src={logo} alt='logo' />
+          <div className='h-[64px] overflow-hidden'>
+            <Image
+              className='w-full h-full object-cover'
+              src={logo}
+              alt='logo'
+            />
+          </div>
+          <p className='text-4xl font-bold uppercase'>
+            {title.replace('A', '')}
+          </p>
         </button>
         <section className='relative z-[999] h-full flex items-center font-bold tracking-[1px]'>
           <Link

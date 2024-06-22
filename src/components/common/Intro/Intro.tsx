@@ -1,25 +1,33 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import logo from '../../../../public/logo.jpg';
+import logo from '../../../../public/logo.png';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { title } from '@/config/title';
 function Intro() {
   const [isDisplay, setIsDisplay] = useState(true);
   const containerRef = useRef(null);
   const imgRef = useRef(null);
-  const lineRef = useRef(null);
-  const keyword1Ref = useRef(null);
-  const keyword2Ref = useRef(null);
   useGSAP(
     () => {
-      if (
-        isDisplay &&
-        imgRef.current &&
-        lineRef.current &&
-        keyword1Ref.current &&
-        keyword2Ref.current
-      ) {
+      if (isDisplay && imgRef.current) {
+        gsap.fromTo(
+          '.title-word',
+          {
+            x: 500,
+            opacity: 0,
+          },
+          {
+            delay: 0.5,
+            x: 0,
+            rotate: 360,
+            opacity: 1,
+            yoyo: true,
+            stagger: 0.25,
+            ease: 'circ.inOut',
+          }
+        );
         gsap.fromTo(
           imgRef.current,
           {
@@ -28,54 +36,11 @@ function Intro() {
             x: 500,
           },
           {
+            rotate: 360,
             display: 'block',
             opacity: 1,
             x: 0,
             duration: 0.5,
-          }
-        );
-        gsap.fromTo(
-          lineRef.current,
-          {
-            display: 'none',
-            y: -100,
-          },
-          {
-            display: 'block',
-            y: 100,
-            repeat: -1,
-            duration: 3,
-            delay: 1,
-          }
-        );
-        gsap.fromTo(
-          keyword1Ref.current,
-          {
-            display: 'none',
-            opacity: 0,
-            x: 500,
-          },
-          {
-            display: 'block',
-            opacity: 1,
-            x: 0,
-            duration: 0.5,
-            delay: 0.2,
-          }
-        );
-        gsap.fromTo(
-          keyword2Ref.current,
-          {
-            display: 'none',
-            opacity: 0,
-            x: 500,
-          },
-          {
-            display: 'block',
-            opacity: 1,
-            x: 0,
-            duration: 0.5,
-            delay: 0.4,
           }
         );
       }
@@ -98,31 +63,31 @@ function Intro() {
       ref={containerRef}
       className='fixed top-0 left-0 w-full h-full z-[99999999] bg-white justify-center items-center flex overflow-hidden'
     >
-      <div className='w-[512px] h-[58px] flex justify-center items-center gap-4 overflow-hidden'>
+      <div className='w-[512px] flex justify-center items-center overflow-hidden'>
         <div className='relative opacityAnimation'>
-          <Image
-            ref={imgRef}
-            className='object-cover relative z-0'
-            src={logo}
-            alt='logo'
-            width={128}
-            height={58}
-            fetchPriority='high'
-          />
+          <div ref={imgRef} className='h-[64px]'>
+            <Image
+              className='w-full h-full object-cover relative z-0'
+              src={logo}
+              alt='logo'
+              fetchPriority='high'
+            />
+          </div>
         </div>
-        <div className='w-[6px] h-[72px] relative rotate-[15deg]'>
-          <span
-            ref={lineRef}
-            className='absolute top-0 left-0 w-full h-full bg-red-500'
-          ></span>
-        </div>
-        <div>
-          <p ref={keyword1Ref} className='text-3xl font-extrabold italic'>
-            Grand
-          </p>
-          <p ref={keyword2Ref} className='text-3xl font-extrabold italic'>
-            Prix
-          </p>
+        <div className='flex items-center gap-2'>
+          {title
+            .replace('A', '')
+            .split('')
+            .map((w: string, index: number) => {
+              return (
+                <p
+                  className='text-[56px] uppercase font-extrabold title-word'
+                  key={index}
+                >
+                  {w}
+                </p>
+              );
+            })}
         </div>
       </div>
     </div>

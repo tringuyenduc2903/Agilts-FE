@@ -1,12 +1,13 @@
 'use client';
 import React, { useRef, useState } from 'react';
 import Image from 'next/image';
-import logo from '@/assets/borko-logo-black.png';
+import logo from '../.././../../../../public/logo.png';
 import { useParams, useRouter } from 'next/navigation';
 import { FaAlignRight } from 'react-icons/fa6';
 import MenuRoutes from './components/MenuRoutes';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import { title } from '@/config/title';
 function MobileNavigation() {
   const router = useRouter();
   const { locale } = useParams();
@@ -36,10 +37,20 @@ function MobileNavigation() {
         className='fixed h-[72px] w-full top-0 left-0 px-4 flex justify-between items-center z-50 bg-white'
       >
         <button
+          className='flex items-center overflow-hidden'
           aria-label='btn-back-home'
           onClick={() => router.push(`/${locale}`)}
         >
-          <Image width={170} height={70} src={logo} alt='logo' />
+          <div className='h-[64px] overflow-hidden'>
+            <Image
+              className='w-full h-full object-cover'
+              src={logo}
+              alt='logo'
+            />
+          </div>
+          <p className='text-4xl font-bold uppercase'>
+            {title.replace('A', '')}
+          </p>
         </button>
         <button
           onClick={() => setIsOpenMenu(true)}

@@ -20,6 +20,7 @@ import { ModalContext } from '@/contexts/ModalProvider';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
+import { title } from '@/config/title';
 type Props = {
   isOpenMenu: boolean;
   openMenu: () => void;
@@ -168,7 +169,9 @@ const MenuIcon: React.FC<Props> = React.memo(
           } transition-[height] duration-200 bg-white overflow-hidden`}
         >
           <div className='h-full px-8 py-16 flex flex-col items-start gap-6'>
-            <h1 className='text-4xl font-bold'>GRANDPRIX</h1>
+            <h1 className='text-4xl font-bold uppercase tracking-[2px]'>
+              {title}
+            </h1>
             <p className='text-neutral-500'>
               Lorem ipsum dolor sit amet, qui aperiam vituperatoribus at.
               Aliquip percipit ei vix, ceteros mentitum reprehendunt eu est.

@@ -2,7 +2,7 @@ import { Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { cookies } from 'next/headers';
-// import Script from 'next/script';
+import Script from 'next/script';
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -53,6 +53,7 @@ export default async function RootLayout({
           defer
           src='https://code.iconify.design/3/3.1.0/iconify.min.js'
         ></Script> */}
+        <Script src='/service-worker.js' />
       </body>
     </html>
   );

@@ -18,27 +18,6 @@ body {
 * {
   box-sizing: border-box;
 }
-.opacityAnimation {
-  animation: opacityAnimation 5s ease infinite;
-  animation-delay: 1s;
-}
-@keyframes opacityAnimation {
-  0% {
-    opacity: 1;
-  }
-  25% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-  75% {
-    opacity: 0.6;
-  }
-  100% {
-    opacity: 1;
-  }
-}
 input::-webkit-inner-spin-button,
 input::-webkit-outer-spin-button {
   -webkit-appearance: none;

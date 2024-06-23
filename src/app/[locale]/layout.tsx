@@ -13,7 +13,7 @@ import './globals.css';
 const DynamicIntro = dynamic(
   () => import('../../components/common/Intro/Intro'),
   {
-    ssr: true,
+    ssr: false,
   }
 );
 const DynamicHeader = dynamic(
@@ -43,6 +43,20 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: t('home_description'),
     keywords: t('home_keywords'),
+    referrer: 'origin-when-cross-origin',
+    metadataBase: new URL('https://next.agilts.com'),
+    alternates: {
+      canonical: '/',
+      languages: {
+        'en-US': '/en',
+        'vi-VN': '/vi',
+      },
+    },
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
+    },
   };
 }
 export default async function HomeLayout({

@@ -7,7 +7,6 @@ import { FaAlignRight } from 'react-icons/fa6';
 import MenuRoutes from './components/MenuRoutes';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { title } from '@/config/title';
 function MobileNavigation() {
   const router = useRouter();
   const { locale } = useParams();
@@ -48,9 +47,9 @@ function MobileNavigation() {
               alt='logo'
             />
           </div>
-          <p className='text-4xl font-bold uppercase'>
+          {/* <p className='text-4xl font-bold uppercase'>
             {title.replace('A', '')}
-          </p>
+          </p> */}
         </button>
         <button
           onClick={() => setIsOpenMenu(true)}

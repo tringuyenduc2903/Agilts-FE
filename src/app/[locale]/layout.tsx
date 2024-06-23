@@ -44,13 +44,6 @@ export async function generateMetadata(): Promise<Metadata> {
     description: t('home_description'),
     keywords: t('home_keywords'),
     referrer: 'origin-when-cross-origin',
-    alternates: {
-      canonical: '/',
-      languages: {
-        'en-US': '/en',
-        'vi-VN': '/vi',
-      },
-    },
     formatDetection: {
       email: false,
       address: false,

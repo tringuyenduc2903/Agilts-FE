@@ -28,7 +28,7 @@ const useQueryString = (): [
         scroll: false,
       });
     },
-    [router, searchQuery, pathname, scrollToTop]
+    [router, searchQuery, pathname]
   );
   const removeValueQueryString = useCallback(
     (name: string) => {
@@ -43,7 +43,7 @@ const useQueryString = (): [
   const deleteQueryString = useCallback(() => {
     router.push(pathname + '?' + 'page=1', { scroll: false });
     scrollToTop();
-  }, [router, pathname, scrollToTop]);
+  }, [router, pathname]);
 
   return [createQueryString, removeValueQueryString, deleteQueryString];
 };

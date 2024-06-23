@@ -21,7 +21,7 @@ function CustomPagination({ curPage, totalPage }: Props) {
         return (prevValue = Number(value));
       });
     },
-    [pageValue, totalPage]
+    [totalPage]
   );
   const handlePrev = useCallback(() => {
     if (Number(pageValue) <= 1) {
@@ -40,7 +40,7 @@ function CustomPagination({ curPage, totalPage }: Props) {
       setPageValue((prevValue) => Number(prevValue) + 1);
       createQueryString('page', (Number(pageValue) + 1).toString());
     }
-  }, [pageValue, createQueryString]);
+  }, [pageValue, createQueryString, totalPage]);
   const handleKeypress = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter' && !e.shiftKey) {

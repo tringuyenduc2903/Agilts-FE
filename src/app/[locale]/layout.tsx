@@ -44,7 +44,6 @@ export async function generateMetadata(): Promise<Metadata> {
     description: t('home_description'),
     keywords: t('home_keywords'),
     referrer: 'origin-when-cross-origin',
-    metadataBase: new URL('https://next.agilts.com'),
     alternates: {
       canonical: '/',
       languages: {

@@ -75,7 +75,7 @@ function AccountsPage() {
     setSendVerify(true);
     await handleGetCSRFCookie();
     await resendVerifyAccount(null);
-  }, [handleGetCSRFCookie, resendVerifyAccount, sendVerify]);
+  }, [handleGetCSRFCookie, resendVerifyAccount]);
 
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {

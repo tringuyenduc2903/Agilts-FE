@@ -65,7 +65,7 @@ function ResetPasswordPage() {
       await handleGetCSRFCookie();
       await resetPassword({ ...data, token: token });
     },
-    [handleGetCSRFCookie, resetPassword]
+    [handleGetCSRFCookie, resetPassword, token]
   );
   useEffect(() => {
     if (isSuccessPost && postData) {

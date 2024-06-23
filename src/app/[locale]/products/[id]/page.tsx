@@ -9,7 +9,7 @@ function ProductDetailsPage() {
   const { id } = useParams();
   const curProduct = useMemo(() => {
     return productsData.find((product) => product.id == id);
-  }, [productsData]);
+  }, [productsData, id]);
   console.log(curProduct);
   return (
     <main className='w-full min-h-screen pt-[72px] flex flex-col gap-8'>

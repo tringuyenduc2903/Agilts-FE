@@ -45,7 +45,7 @@ function Intro() {
         );
       }
     },
-    { dependencies: [], scope: containerRef }
+    { dependencies: [isDisplay], scope: containerRef }
   );
   useEffect(() => {
     if (isDisplay) {

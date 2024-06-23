@@ -21,7 +21,7 @@ function SortSection() {
       }
       setIsSortDropdown(false);
     },
-    [curSort, isSortDropdown, createQueryString, removeValueQueryString]
+    [createQueryString, removeValueQueryString]
   );
   return (
     <div className='relative w-full lg:w-[360px] flex-col items-center'>

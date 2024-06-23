@@ -1,7 +1,7 @@
 import { Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { cookies, headers } from 'next/headers';
+import { cookies } from 'next/headers';
 import Script from 'next/script';
 export const viewport: Viewport = {
   width: 'device-width',
@@ -18,7 +18,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const nonce = headers().get('x-nonce');
   const cookieStore = cookies();
   const localeCookie = cookieStore.get('NEXT_LOCALE');
   const lang = localeCookie ? localeCookie.value : 'vi';
@@ -51,11 +50,6 @@ export default async function RootLayout({
           {children}
         </NextIntlClientProvider>
         <Script src='/service-worker.js' />
-        <Script
-          src='https://www.googletagmanager.com/gtag/js'
-          strategy='afterInteractive'
-          nonce={nonce as string}
-        />
       </body>
     </html>
   );

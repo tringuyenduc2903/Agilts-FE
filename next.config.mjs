@@ -1,10 +1,11 @@
 /** @type {import('next').NextConfig} */
 import createNextIntlPlugin from 'next-intl/plugin';
-
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+console.log(backendUrl);
 const withNextIntl = createNextIntlPlugin();
 const cspHeader = `
     default-src 'self';
-    script-src 'self' ${process.env.NEXT_PUBLIC_BACKEND_URL} https://www.googletagmanager.com/gtag/js;
+    script-src 'self' ${backendUrl} 'unsafe-eval' 'unsafe-inline';
     style-src 'self' 'unsafe-inline';
     img-src 'self' blob: data:;
     font-src 'self';

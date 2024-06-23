@@ -1,6 +1,5 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest } from 'next/server';
-import { v4 as uuidv4 } from 'uuid';
 
 export function middleware(request: NextRequest) {
   const handleI18nRouting = createMiddleware({
@@ -9,9 +8,7 @@ export function middleware(request: NextRequest) {
     // Used when no locale matches
     defaultLocale: 'vi',
   });
-  const nonce = Buffer.from(uuidv4()).toString('base64');
   const response = handleI18nRouting(request);
-  response.headers.set('x-nonce', nonce);
 
   return response;
 }

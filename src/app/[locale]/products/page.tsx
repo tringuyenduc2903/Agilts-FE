@@ -8,10 +8,14 @@ const DynamicBreadCrumbs = dynamic(
   }
 );
 const DynamicProducts = dynamic(() => import('./_components/ProductsList'));
-function ProductsLayout() {
+function ProductsLayout({
+  params: { locale },
+}: {
+  params: { locale: string };
+}) {
   return (
     <main className='w-full min-h-screen pt-[72px] flex flex-col'>
-      <DynamicBreadCrumbs />
+      <DynamicBreadCrumbs path={`/${locale}/products`} />
       <DynamicProducts />
     </main>
   );

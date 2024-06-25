@@ -1,53 +1,21 @@
-'use client';
-import { useParams } from 'next/navigation';
-import React, { useMemo } from 'react';
-import { productsData } from '../_components/data';
+import React from 'react';
 import BreadCrumbs from '@/components/ui/BreadCrumbs';
-import Image from 'next/image';
+import Specifications from './_components/specifications';
+import ProductDetails from './_components/productDetails';
 
-function ProductDetailsPage() {
-  const { id } = useParams();
-  const curProduct = useMemo(() => {
-    return productsData.find((product) => product.id == id);
-  }, [productsData, id]);
-  console.log(curProduct);
+function ProductDetailsPage({
+  params: { id, locale },
+}: {
+  params: {
+    id: string;
+    locale: string;
+  };
+}) {
   return (
-    <main className='w-full min-h-screen pt-[72px] flex flex-col gap-8'>
-      <BreadCrumbs />
-      <section className='container m-auto grid grid-cols-1 lg:grid-cols-2 gap-8'>
-        <div className='col-span-1 flex flex-col gap-6'>
-          <Image
-            className='max-h-[600px] w-full h-full object-cover border border-neutral-300 rounded-sm'
-            src={curProduct?.img as string}
-            alt={curProduct?.title as string}
-          />
-          <div className='flex justify-between items-center gap-6'>
-            <Image
-              className='max-w-[180px] max-h-[180px] w-full h-full object-cover border border-neutral-300 rounded-sm'
-              src={curProduct?.img as string}
-              alt={curProduct?.title as string}
-            />
-            <Image
-              className='max-w-[180px] max-h-[180px] w-full h-full object-cover border border-neutral-300 rounded-sm'
-              src={curProduct?.img as string}
-              alt={curProduct?.title as string}
-            />
-            <Image
-              className='max-w-[180px] max-h-[180px] w-full h-full object-cover border border-neutral-300 rounded-sm'
-              src={curProduct?.img as string}
-              alt={curProduct?.title as string}
-            />
-          </div>
-        </div>
-        <div className='col-span-1'>
-          <h1 className='text-2xl md:text-4xl font-bold'>
-            {curProduct?.title}
-          </h1>
-          <div>
-            <p>{curProduct?.salePrice}</p>
-          </div>
-        </div>
-      </section>
+    <main className='w-full min-h-screen py-[72px] flex flex-col gap-8 text-sm md:text-base'>
+      <BreadCrumbs path={`/${locale}/products`} details={id as string} />
+      <ProductDetails />
+      <Specifications />
     </main>
   );
 }

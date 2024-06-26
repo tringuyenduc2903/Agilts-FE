@@ -187,6 +187,7 @@ const MenuIcon: React.FC<Props> = React.memo(
                   <button
                     className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
                     disabled={isLoadingLogout || isLoadingCSRF}
+                    onClick={() => handleRedirect('user/account')}
                   >
                     <IoPersonCircleOutline className='text-2xl' />
                     <p>{t('my_account')}</p>

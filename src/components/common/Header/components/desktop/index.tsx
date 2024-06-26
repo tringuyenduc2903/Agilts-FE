@@ -10,6 +10,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import MenuIcon from './components/MenuIcon';
 import { title } from '@/config/title';
+import { subRoutes } from '../../hearderData';
 function DesktopNavigation() {
   const { locale } = useParams();
   const t = useTranslations('header');
@@ -122,9 +123,7 @@ function DesktopNavigation() {
                 <span
                   className={`absolute left-1/2 -translate-x-1/2 -bottom-1 ${
                     hoverRoute === 'pages' ||
-                    ['/about-us', '/our-services', '/contact-us'].includes(
-                      pathname
-                    )
+                    subRoutes.includes(pathname.replace('/', ''))
                       ? 'w-8'
                       : 'w-0'
                   } h-[2px] bg-red-500 transition-all duration-300`}
@@ -132,68 +131,42 @@ function DesktopNavigation() {
               </p>
             </button>
             <ul
-              className={`absolute left-0 w-[240px] ${
-                hoverRoute === 'pages' ? 'h-[240px]' : 'h-0'
-              } transition-[height] duration-300 bg-white text-neutral-500 uppercase overflow-hidden`}
+              style={{
+                height:
+                  hoverRoute === 'pages'
+                    ? `${subRoutes.length * 48 + 64}px`
+                    : '0px',
+              }}
+              className='absolute left-0 w-[240px] transition-[height] duration-300 bg-white text-neutral-500 uppercase overflow-hidden'
             >
-              <li className='w-full px-4 pt-12'>
-                <Link
-                  className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={`/${locale}/about-us`}
-                  onMouseOver={() => setHoverSubRoute('about-us')}
-                  onMouseOut={() => setHoverSubRoute(null)}
-                >
-                  <span className='w-6 h-[2px] bg-red-600'></span>
-                  <span
-                    className={`absolute w-[180px] px-4 left-0 top-1/2 -translate-y-1/2 ${
-                      hoverSubRoute === 'about-us' || pathname === '/about-us'
-                        ? 'translate-x-[20%]'
-                        : 'translate-x-0'
-                    } bg-white transition-all duration-300`}
+              {subRoutes?.map((r, index) => {
+                return (
+                  <li
+                    key={r}
+                    className={`w-full px-4 ${index === 0 ? 'pt-8' : ''} ${
+                      index === subRoutes.length - 1 ? 'pb-8' : ''
+                    }`}
                   >
-                    {t('about-us')}
-                  </span>
-                </Link>
-              </li>
-              <li className='w-full px-4'>
-                <Link
-                  className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={`/${locale}/our-services`}
-                  onMouseOver={() => setHoverSubRoute('our-services')}
-                  onMouseOut={() => setHoverSubRoute(null)}
-                >
-                  <span className='w-6 h-[2px] bg-red-600'></span>
-                  <span
-                    className={`absolute w-[180px] px-4 left-0 top-1/2 -translate-y-1/2 ${
-                      hoverSubRoute === 'our-services' ||
-                      pathname === '/our-services'
-                        ? 'translate-x-[20%]'
-                        : 'translate-x-0'
-                    } bg-white transition-all duration-300`}
-                  >
-                    {t('our-services')}
-                  </span>
-                </Link>
-              </li>
-              <li className='w-full pb-8 px-4'>
-                <Link
-                  className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={`/${locale}/contact`}
-                  onMouseOver={() => setHoverSubRoute('contact')}
-                  onMouseOut={() => setHoverSubRoute(null)}
-                >
-                  <span className='w-6 h-[2px] bg-red-600'></span>
-                  <span
-                    className={`absolute w-[180px] px-4 left-0 top-1/2 -translate-y-1/2 ${
-                      hoverSubRoute === 'contact' || pathname === '/contact'
-                        ? 'translate-x-[20%]'
-                        : 'translate-x-0'
-                    } bg-white transition-all duration-300`}
-                  >
-                    {t('contact-us')}
-                  </span>
-                </Link>
-              </li>
+                    <Link
+                      className='relative w-full h-[48px] flex items-center gap-2 px-4'
+                      href={`/${locale}/${r}`}
+                      onMouseOver={() => setHoverSubRoute(r)}
+                      onMouseOut={() => setHoverSubRoute(null)}
+                    >
+                      <span className='w-6 h-[2px] bg-red-600'></span>
+                      <span
+                        className={`absolute w-[180px] px-4 left-0 top-1/2 -translate-y-1/2 ${
+                          hoverSubRoute === r || pathname === `/${r}`
+                            ? 'translate-x-[20%]'
+                            : 'translate-x-0'
+                        } bg-white transition-all duration-300`}
+                      >
+                        {t(r)}
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
           <Link

@@ -5,7 +5,7 @@ type Props = {
   curPage?: number | string;
   totalPage: number;
 };
-function CustomPagination({ curPage, totalPage }: Props) {
+function CustomPagination({ totalPage }: Props) {
   const [isHoverButton, setIsHoverButton] = useState<String | null>(null);
   const searchParams = useSearchParams();
   const [createQueryString] = useQueryString();

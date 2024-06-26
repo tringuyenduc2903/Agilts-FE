@@ -2,6 +2,7 @@ import React from 'react';
 import BreadCrumbs from '@/components/ui/BreadCrumbs';
 import Specifications from './_components/specifications';
 import ProductDetails from './_components/productDetails';
+import Reviews from './_components/reviews';
 
 function ProductDetailsPage({
   params: { id, locale },
@@ -16,6 +17,7 @@ function ProductDetailsPage({
       <BreadCrumbs path={`/${locale}/products`} details={id as string} />
       <ProductDetails />
       <Specifications />
+      <Reviews />
     </main>
   );
 }

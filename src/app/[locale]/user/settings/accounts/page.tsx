@@ -150,7 +150,9 @@ function AccountsPage() {
   return (
     <div className='flex flex-col gap-6'>
       <div>
-        <h1 className='text-2xl py-2 font-bold'>{t('user_information')}</h1>
+        <h1 className='text-xl md:text-2xl py-2 font-bold'>
+          {t('user_information')}
+        </h1>
         <p>
           ({t('last_updated_at')} {user?.updated_at})
         </p>

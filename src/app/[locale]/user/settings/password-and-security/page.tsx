@@ -18,7 +18,9 @@ function PasswordAndSecurityPage() {
   return (
     <div className='flex flex-col gap-8'>
       <section>
-        <h1 className='text-2xl font-bold py-2'>{t('password_security')}</h1>
+        <h1 className='text-xl md:text-2xl font-bold py-2'>
+          {t('password_security')}
+        </h1>
         <div>
           <h2 className='text-lg font-bold'>{t('login_recovery')}</h2>
           <p className='text-neutral-600'>{t('mess_login_recovery')}</p>

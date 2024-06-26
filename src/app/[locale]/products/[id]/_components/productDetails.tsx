@@ -1,14 +1,19 @@
 'use client';
 import { useParams } from 'next/navigation';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 import { productsData, tagsData } from '../../_components/data';
 import Image from 'next/image';
 import Stars from '@/components/ui/Stars';
 import { useTranslations } from 'next-intl';
 import { scrollToElement } from '@/lib/utils/scrollElement';
 import { FaAngleUp, FaAngleDown } from 'react-icons/fa';
+import { ModalContext } from '@/contexts/ModalProvider';
+import testImg1 from '@/assets/test1.jpg';
+import testImg2 from '@/assets/h4-slider-img-1.jpg';
+
 function ProductDetails() {
   const { id } = useParams();
+  const { setVisibleModal } = useContext(ModalContext);
   const t = useTranslations('common');
   const [isHoverAddToCart, setIsHoverAddToCart] = useState(false);
   const [quantity, setQuantity] = useState(1);
@@ -27,7 +32,6 @@ function ProductDetails() {
   const curProduct = useMemo(() => {
     return productsData.find((product) => product.id == id);
   }, [productsData, id]);
-  const reviewRef = useRef(null);
   const renderedTags = useMemo(() => {
     return tagsData?.splice(0, 3).map((t, index) => {
       return (
@@ -51,22 +55,58 @@ function ProductDetails() {
           className='w-full max-h-[600px] object-cover border border-neutral-300 rounded-sm cursor-pointer'
           src={curProduct?.img as string}
           alt={curProduct?.title as string}
+          onClick={() =>
+            setVisibleModal({
+              visibleImageModal: {
+                curImage: 1,
+                totalImages: 2,
+                images: [testImg1, testImg2],
+              },
+            })
+          }
         />
         <div className='w-full grid grid-cols-3 gap-6'>
           <Image
             className='col-span-1 w-full max-h-[180px] object-cover border border-neutral-300 rounded-sm cursor-pointer'
             src={curProduct?.img as string}
             alt={curProduct?.title as string}
+            onClick={() =>
+              setVisibleModal({
+                visibleImageModal: {
+                  curImage: 2,
+                  totalImages: 2,
+                  images: [testImg1, testImg2],
+                },
+              })
+            }
           />
           <Image
             className='col-span-1 w-full max-h-[180px] object-cover border border-neutral-300 rounded-sm cursor-pointer'
             src={curProduct?.img as string}
             alt={curProduct?.title as string}
+            onClick={() =>
+              setVisibleModal({
+                visibleImageModal: {
+                  curImage: 2,
+                  totalImages: 2,
+                  images: [testImg1, testImg2],
+                },
+              })
+            }
           />
           <Image
             className='col-span-1 w-full max-h-[180px] object-cover border border-neutral-300 rounded-sm cursor-pointer'
             src={curProduct?.img as string}
             alt={curProduct?.title as string}
+            onClick={() =>
+              setVisibleModal({
+                visibleImageModal: {
+                  curImage: 2,
+                  totalImages: 2,
+                  images: [testImg1, testImg2],
+                },
+              })
+            }
           />
         </div>
       </div>
@@ -103,7 +143,7 @@ function ProductDetails() {
           <button
             type='button'
             className='text-[10px] sm:text-[12px] md:text-sm font-medium text-neutral-500 hover:text-neutral-800 transition-colors uppercase'
-            onClick={() => scrollToElement(reviewRef)}
+            onClick={() => scrollToElement('reviews')}
           >
             (1 {t('customers_review')})
           </button>

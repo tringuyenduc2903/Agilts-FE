@@ -3,15 +3,19 @@ import { useCallback } from 'react';
 import { scrollToTop } from '../utils/scrollElement';
 
 const useQueryString = (): [
-  (name: string | string[], value: string | string[]) => void,
+  (
+    name: string | string[],
+    value: string | string[],
+    isBoolean?: boolean
+  ) => void,
   (name: string) => void,
-  () => void
+  (isBoolean?: boolean) => void
 ] => {
   const searchQuery = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const createQueryString = useCallback(
-    (name: string | string[], value: string | string[]) => {
+    (name: string | string[], value: string | string[], isBoolean = true) => {
       const newQuery = new URLSearchParams(searchQuery.toString());
       if (Array.isArray(name) && Array.isArray(value)) {
         name.forEach((query, index) => {
@@ -23,7 +27,7 @@ const useQueryString = (): [
           newQuery.set(name as string, value as string);
         }
       }
-      scrollToTop();
+      isBoolean && scrollToTop();
       return router.push(`${pathname}?${newQuery.toString()}`, {
         scroll: false,
       });
@@ -40,10 +44,13 @@ const useQueryString = (): [
     },
     [searchQuery, pathname, router]
   );
-  const deleteQueryString = useCallback(() => {
-    router.push(pathname + '?' + 'page=1', { scroll: false });
-    scrollToTop();
-  }, [router, pathname]);
+  const deleteQueryString = useCallback(
+    (isBoolean = true) => {
+      router.push(pathname + '?' + 'page=1', { scroll: false });
+      isBoolean && scrollToTop();
+    },
+    [router, pathname]
+  );
 
   return [createQueryString, removeValueQueryString, deleteQueryString];
 };

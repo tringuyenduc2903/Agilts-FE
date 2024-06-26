@@ -22,6 +22,7 @@ import { ModalContext } from '@/contexts/ModalProvider';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
 import { setCookie } from 'cookies-next';
+import { subRoutes } from '../../../hearderData';
 type Props = {
   isOpenMenu: boolean;
   closeMenu: () => void;
@@ -103,7 +104,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       className={`fixed top-0 left-0 h-full w-full z-[100] ${
         isOpenMenu ? 'translate-x-0' : '-translate-x-[100%]'
-      } transition-transform duration-200`}
+      } transition-transform duration-200 overflow-y-auto`}
       // onClick={closeMenu}
     >
       <div
@@ -179,7 +180,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
           <div
             className={`cursor-pointer ${
               hoverRoute === 'pages' ||
-              ['/about-us', '/our-services', '/contact-us'].includes(pathname)
+              subRoutes.includes(pathname.replace('/', ''))
                 ? 'text-red-500'
                 : ''
             } transition-colors`}
@@ -202,74 +203,37 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
               />
             </button>
             <ul
-              className={` ${
-                subRoute === 'pages' ? 'h-[144px]' : 'h-0'
-              } transition-[height] duration-200 bg-white text-neutral-500 uppercase overflow-hidden`}
+              style={{
+                height:
+                  subRoute === 'pages' ? `${subRoutes.length * 48}px` : '0px',
+              }}
+              className='transition-[height] duration-200 bg-white text-neutral-500 uppercase overflow-hidden'
             >
-              <li className='w-full px-2 text-sm'>
-                <Link
-                  className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={`/${locale}/about-us`}
-                  onClick={() => handleRedirect('about-us')}
-                  onMouseOver={() => setHoverSubRoute('about-us')}
-                  onMouseOut={() => setHoverSubRoute(null)}
-                  aria-disabled={isLoadingLogout || isLoadingCSRF}
-                >
-                  <span className='w-6 h-[2px] bg-red-600'></span>
-                  <span
-                    className={`absolute w-[180px] px-4 left-0 top-1/2 -translate-y-1/2 ${
-                      hoverSubRoute === 'about-us' || pathname === '/about-us'
-                        ? 'translate-x-[20%]'
-                        : 'translate-x-0'
-                    } bg-white transition-all duration-300`}
-                  >
-                    {t('about-us')}
-                  </span>
-                </Link>
-              </li>
-              <li className='w-full px-2 text-sm'>
-                <Link
-                  className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={`/${locale}/our-services`}
-                  onClick={() => handleRedirect('our-services')}
-                  onMouseOver={() => setHoverSubRoute('our-services')}
-                  onMouseOut={() => setHoverSubRoute(null)}
-                  aria-disabled={isLoadingLogout || isLoadingCSRF}
-                >
-                  <span className='w-6 h-[2px] bg-red-600'></span>
-                  <span
-                    className={`absolute w-[180px] px-4 left-0 top-1/2 -translate-y-1/2 ${
-                      hoverSubRoute === 'our-services' ||
-                      pathname === '/our-services'
-                        ? 'translate-x-[20%]'
-                        : 'translate-x-0'
-                    } bg-white transition-all duration-300`}
-                  >
-                    {t('our-services')}
-                  </span>
-                </Link>
-              </li>
-              <li className='w-full px-2 text-sm'>
-                <Link
-                  className='relative w-full h-[48px] flex items-center gap-2 px-4'
-                  href={`/${locale}/contact`}
-                  onClick={() => handleRedirect('/contact')}
-                  onMouseOver={() => setHoverSubRoute('contact')}
-                  onMouseOut={() => setHoverSubRoute(null)}
-                  aria-disabled={isLoadingLogout || isLoadingCSRF}
-                >
-                  <span className='w-6 h-[2px] bg-red-600'></span>
-                  <span
-                    className={`absolute w-[180px] px-4 left-0 top-1/2 -translate-y-1/2 ${
-                      hoverSubRoute === 'contact' || pathname === '/contact'
-                        ? 'translate-x-[20%]'
-                        : 'translate-x-0'
-                    } bg-white transition-all duration-300`}
-                  >
-                    {t('contact-us')}
-                  </span>
-                </Link>
-              </li>
+              {subRoutes.map((r) => {
+                return (
+                  <li key={r} className='w-full px-2 text-sm'>
+                    <Link
+                      className='relative w-full h-[48px] flex items-center gap-2 px-4'
+                      href={`/${locale}/${r}`}
+                      onClick={() => handleRedirect(r)}
+                      onMouseOver={() => setHoverSubRoute(r)}
+                      onMouseOut={() => setHoverSubRoute(null)}
+                      aria-disabled={isLoadingLogout || isLoadingCSRF}
+                    >
+                      <span className='w-6 h-[2px] bg-red-600'></span>
+                      <span
+                        className={`absolute w-[180px] px-4 left-0 top-1/2 -translate-y-1/2 ${
+                          hoverSubRoute === r || pathname === `/${r}`
+                            ? 'translate-x-[20%]'
+                            : 'translate-x-0'
+                        } bg-white transition-all duration-300`}
+                      >
+                        {t(r)}
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </div>
           <Link

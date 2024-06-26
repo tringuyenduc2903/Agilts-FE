@@ -9,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
     description: t('settings_description'),
   };
 }
-export default async function UserLayout({
+export default async function SettingsLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

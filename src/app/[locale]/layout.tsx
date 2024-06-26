@@ -9,7 +9,6 @@ import { Analytics } from '@vercel/analytics/react';
 import StoreProvider from '@/contexts/StoreProvider';
 import dynamic from 'next/dynamic';
 import { title } from '@/config/title';
-import './globals.css';
 const DynamicIntro = dynamic(
   () => import('../../components/common/Intro/Intro'),
   {

@@ -11,6 +11,8 @@
     "settings_description": "User information settings",
     "2fa_title": "2FA",
     "2fa_description": "Two-factor authentication",
+    "stores_title": "Stores",
+    "stores_description": "Agilts store system",
     "register_title": "Register",
     "register_description": "Register an account",
     "login_title": "Login",
@@ -26,7 +28,9 @@
     "contact_title": "Contact",
     "contact_description": "Contact Agilts",
     "about_title": "About Us",
-    "about_description": "Information about Agilts"
+    "about_description": "Information about Agilts",
+    "account_title": "Account",
+    "account_description": "Manage purchase orders and addresses"
   },
   "header": {
     "home": "Home",
@@ -35,6 +39,7 @@
     "about-us": "About us",
     "our-services": "Our services",
     "contact-us": "Contact us",
+    "stores": "Stores",
     "cart": "Cart",
     "search": "Search",
     "login": "Login",
@@ -179,6 +184,13 @@
     "customer_review": "Customer review",
     "quick_info": "Quick info",
     "description": "Description",
-    "specifications": "Specifications"
+    "specifications": "Specifications",
+    "reviews": "Reviews",
+    "edit_profile": "Edit profile",
+    "purchase_order": "Purchase order",
+    "address": "Address",
+    "cart": "Cart",
+    "add_address": "Add address",
+    "stores": "Store system"
   }
 }

@@ -18,7 +18,7 @@ function OurServices() {
         <h1 className='text-red-600 font-bold tracking-[8px]'>
           {t('performance')}
         </h1>
-        <p className='text-4xl md:text-[70px] font-bold text-white tracking-[4px]'>
+        <p className='text-2xl sm:text-4xl md:text-[70px] font-bold text-white tracking-[4px]'>
           {t('our-services')}
         </p>
       </section>

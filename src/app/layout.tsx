@@ -3,6 +3,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { cookies } from 'next/headers';
 import Script from 'next/script';
+import './globals.css';
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,

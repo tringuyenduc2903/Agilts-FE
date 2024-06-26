@@ -18,6 +18,11 @@ type InitialState = {
     isLoading: boolean;
     cb: () => void;
   };
+  visibleImageModal: {
+    curImage: number;
+    totalImages: number;
+    images: string[];
+  };
 };
 const SET_VISIBLE_MODAL = 'SET_VISIBLE_MODAL';
 const CLOSE_ALL_MODAL = 'CLOSE_ALL_MODAL';

@@ -11,6 +11,8 @@
     "settings_description": "Cài đặt thông tin người dùng",
     "2fa_title": "2FA",
     "2fa_description": "Xác thực 2 bước",
+    "stores_title": "Cửa hàng",
+    "stores_description": "Hệ thống cửa hàng Agilts",
     "register_title": "Đăng ký",
     "register_description": "Đăng ký tài khoản",
     "login_title": "Đăng nhập",
@@ -26,7 +28,9 @@
     "contact_title": "Liên hệ",
     "contact_description": "Liên hệ với Agilts",
     "about_title": "Về chúng tôi",
-    "about_description": "Thông tin về Agilts"
+    "about_description": "Thông tin về Agilts",
+    "account_title": "Tài khoản",
+    "account_description": "Quản lý đơn mua và địa chỉ"
   },
   "header": {
     "home": "Trang chủ",
@@ -35,6 +39,7 @@
     "about-us": "Về chúng tôi",
     "our-services": "Dịch vụ",
     "contact-us": "Liên hệ",
+    "stores": "Cửa hàng",
     "cart": "Giỏ hàng",
     "search": "Tìm kiếm",
     "login": "Đăng nhập",
@@ -178,6 +183,13 @@
     "customer_review": "Người dùng đánh giá",
     "quick_info": "Thông tin nhanh",
     "description": "Mô tả",
-    "specifications": "Thông số kỹ thuật"
+    "specifications": "Thông số kỹ thuật",
+    "reviews": "Đánh giá",
+    "edit_profile": "Sửa hồ sơ",
+    "purchase_order": "Đơn mua",
+    "address": "Địa chỉ",
+    "cart": "Giỏ hàng",
+    "add_address": "Thêm địa chỉ",
+    "stores": "Hệ thống cửa hàng"
   }
 }

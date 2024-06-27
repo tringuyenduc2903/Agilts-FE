@@ -6,11 +6,13 @@ import {
 } from '@nextui-org/react';
 import useQueryString from '@/lib/hooks/useQueryString';
 import { useSearchParams } from 'next/navigation';
+import { scrollToTop } from '@/lib/utils/scrollElement';
 type Props = {
   totalPage: number;
+  scroll?: boolean;
 };
 
-const CustomPaginationV2: React.FC<Props> = ({ totalPage }) => {
+const CustomPaginationV2: React.FC<Props> = ({ totalPage, scroll = false }) => {
   const [createQueryString] = useQueryString();
   const searchQuery = useSearchParams();
   const curPage = Number(searchQuery.get('page')) || 1;
@@ -19,9 +21,10 @@ const CustomPaginationV2: React.FC<Props> = ({ totalPage }) => {
       if (page === 'next') {
         const nextPage = curPage >= totalPage ? totalPage : curPage + 1;
         createQueryString('page', nextPage.toString(), false);
+        scroll && scrollToTop();
       }
     },
-    [createQueryString, totalPage, curPage]
+    [createQueryString, totalPage, curPage, scrollToTop, scroll]
   );
 
   const handlePrevious = useCallback(
@@ -29,15 +32,17 @@ const CustomPaginationV2: React.FC<Props> = ({ totalPage }) => {
       if (page === 'prev') {
         const prev = curPage <= 1 ? 1 : curPage - 1;
         createQueryString('page', prev.toString(), false);
+        scroll && scrollToTop();
       }
     },
-    [createQueryString, curPage]
+    [createQueryString, curPage, scrollToTop, scroll]
   );
   const handleSetPage = useCallback(
     (page: number) => {
       createQueryString('page', page.toString(), false);
+      scroll && scrollToTop();
     },
-    [createQueryString]
+    [createQueryString, scrollToTop, scroll]
   );
 
   const renderItems = ({ key, value }: PaginationItemRenderProps) => {

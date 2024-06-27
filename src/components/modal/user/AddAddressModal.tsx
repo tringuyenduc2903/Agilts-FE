@@ -15,6 +15,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useState,
 } from 'react';
@@ -85,7 +86,6 @@ function AddAddressModal() {
   const [
     postAddress,
     {
-      data: postData,
       isLoading: isLoadingPost,
       isSuccess: isSuccessPost,
       isError: isErrorPost,
@@ -211,6 +211,25 @@ function AddAddressModal() {
       });
     }
   }, [state.visibleAddAddressModal]);
+  useLayoutEffect(() => {
+    if (country.province.code) {
+      setCountry((prevCountry) => {
+        return {
+          ...prevCountry,
+          district: {
+            code: '',
+            name: '',
+            name_en: '',
+          },
+          ward: {
+            code: '',
+            name: '',
+            name_en: '',
+          },
+        };
+      });
+    }
+  }, [country.province.code]);
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();

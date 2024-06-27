@@ -211,6 +211,10 @@
     "title_del_address": "Are you sure you want to delete this address?",
     "des_del_address": "You won't be able to restore the record after deleting the address. Be sure of your actions.",
     "delete_success_address": "Address deleted successfully!",
-    "mess_no_address": "You don't have any address yet!"
+    "mess_no_address": "You don't have any address yet!",
+    "branch": "Branch",
+    "search_store": "Search for a store",
+    "search": "Search",
+    "no_store": "There are currently no branches!"
   }
 }

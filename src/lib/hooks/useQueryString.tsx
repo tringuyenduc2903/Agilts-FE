@@ -18,8 +18,11 @@ const useQueryString = (): [
     (name: string | string[], value: string | string[], isBoolean = true) => {
       const newQuery = new URLSearchParams(searchQuery.toString());
       if (Array.isArray(name) && Array.isArray(value)) {
-        name.forEach((query, index) => {
-          newQuery.set(query, value[index]);
+        newQuery.set('page', '1');
+        value.forEach((value, index) => {
+          if (value[index]) {
+            newQuery.set(name[index], value);
+          }
         });
       } else {
         if (value) {

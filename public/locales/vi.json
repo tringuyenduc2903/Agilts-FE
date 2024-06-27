@@ -210,6 +210,10 @@
     "title_del_address": "Bạn chắc chắn rằng mình muốn xóa địa chỉ này?",
     "des_del_address": "Bạn sẽ không thể khôi phục lại bản ghi sau khi xóa địa chỉ. Hãy chắc chắn về hành động của mình.",
     "delete_success_address": "Xóa địa chỉ thành công!",
-    "mess_no_address": "Bạn đang chưa có địa chỉ nào!"
+    "mess_no_address": "Bạn đang chưa có địa chỉ nào!",
+    "branch": "Chi nhánh",
+    "search_store": "Tìm kiếm cửa hàng",
+    "search": "Tìm kiếm",
+    "no_store": "Hiện chưa có chi nhánh nào!"
   }
 }

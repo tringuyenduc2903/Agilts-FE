@@ -29,3 +29,13 @@ export type Address = {
   created_at: string;
   updated_at: string;
 };
+
+export type Branch = {
+  id: number | string;
+  name: string;
+  phone_number: number | string;
+  addresses: Address[];
+  deleted_at: string;
+  created_at: string;
+  updated_at: string;
+};

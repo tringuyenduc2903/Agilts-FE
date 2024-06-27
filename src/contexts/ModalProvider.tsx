@@ -1,4 +1,5 @@
 'use client';
+import { Address } from '@/types/types';
 import { createContext, useCallback, useReducer } from 'react';
 type InitialState = {
   visibleToastModal: {
@@ -23,7 +24,8 @@ type InitialState = {
     totalImages: number;
     images: string[];
   };
-  visibleAddAddressModal: boolean
+  visibleAddAddressModal: boolean;
+  visibleUpdateAddressModal: Address;
 };
 const SET_VISIBLE_MODAL = 'SET_VISIBLE_MODAL';
 const CLOSE_ALL_MODAL = 'CLOSE_ALL_MODAL';

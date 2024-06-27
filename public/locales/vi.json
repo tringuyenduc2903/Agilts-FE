@@ -203,6 +203,13 @@
     "complete": "Hoàn thành",
     "mess_add_address": "Thêm địa chỉ thành công!",
     "set_default": "Thiết lập mặc định",
-    "default": "Mặc định"
+    "default": "Mặc định",
+    "delete": "Xóa",
+    "update_address": "Cập nhật địa chỉ",
+    "mess_update_address": "Cập nhật địa chỉ thành công!",
+    "title_del_address": "Bạn chắc chắn rằng mình muốn xóa địa chỉ này?",
+    "des_del_address": "Bạn sẽ không thể khôi phục lại bản ghi sau khi xóa địa chỉ. Hãy chắc chắn về hành động của mình.",
+    "delete_success_address": "Xóa địa chỉ thành công!",
+    "mess_no_address": "Bạn đang chưa có địa chỉ nào!"
   }
 }

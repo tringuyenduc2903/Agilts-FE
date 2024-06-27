@@ -19,6 +19,7 @@ import { useGetCSRFCookieMutation } from '@/lib/redux/query/csrfQuery';
 type FetchData = {
   user: User | null;
   addresses: Address[];
+  defaultAddress: Address | null;
   setAddresses: Dispatch<SetStateAction<Address[] | []>>;
   isLoadingUser: boolean;
   isSuccessUser: boolean;
@@ -36,6 +37,7 @@ export const FetchDataProvider = ({
 }) => {
   const dispatch = useDispatch();
   const user = useSelector(userInfo);
+  const [defaultAddress, setDefaultAddress] = useState<Address | null>(null);
   const [addresses, setAddresses] = useState<Address[] | []>([]);
   const [getCSRFCookie, { isLoading: isLoadingCSRF }] =
     useGetCSRFCookieMutation();
@@ -63,7 +65,18 @@ export const FetchDataProvider = ({
   }, [dispatch, isSuccessUser, isErrorUser, userData]);
   useEffect(() => {
     if (isSuccessAddress && addressData) {
-      setAddresses([...addressData]);
+      setAddresses(
+        [...addressData].sort((a: Address, b: Address) => {
+          if (a.default && !b.default) {
+            return -1;
+          }
+          if (!a.default && b.default) {
+            return 1;
+          }
+          return 0;
+        })
+      );
+      setDefaultAddress(addressData?.find((a: Address) => a.default));
     }
   }, [isSuccessAddress, addressData]);
   const contextValue = {
@@ -76,6 +89,7 @@ export const FetchDataProvider = ({
     isLoadingCSRF,
     addresses,
     setAddresses,
+    defaultAddress,
   };
   return (
     <FetchDataContext.Provider value={contextValue}>

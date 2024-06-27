@@ -33,7 +33,7 @@ function MobileNavigation() {
     <>
       <header
         ref={headerRef}
-        className='fixed h-[72px] w-full top-0 left-0 px-4 flex justify-between items-center z-50 bg-white'
+        className='fixed h-[72px] w-full top-0 left-0 px-4 flex justify-between items-center z-50 bg-white shadow'
       >
         <button
           className='flex items-center overflow-hidden'

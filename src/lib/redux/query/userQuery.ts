@@ -156,6 +156,22 @@ export const userApi = createApi({
           method: 'POST',
           data: body,
         }),
+        invalidatesTags: ['address'],
+      }),
+      updateAddress: builder.mutation({
+        query: ({ body, address_id }) => ({
+          url: `/api${getLangRoute()}/address/${address_id}`,
+          method: 'PUT',
+          data: body,
+        }),
+        invalidatesTags: ['address'],
+      }),
+      deleteAddress: builder.mutation({
+        query: (id) => ({
+          url: `/api${getLangRoute()}/address/${id}`,
+          method: 'DELETE',
+        }),
+        invalidatesTags: ['address'],
       }),
     };
   },
@@ -183,4 +199,6 @@ export const {
   useResendVerifyAccountMutation,
   useGetAddressQuery,
   usePostAddressMutation,
+  useUpdateAddressMutation,
+  useDeleteAddressMutation,
 } = userApi;

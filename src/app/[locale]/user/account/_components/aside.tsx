@@ -3,7 +3,7 @@ import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import React, { useContext } from 'react';
-import { FaPen } from 'react-icons/fa6';
+import { FaPen, FaRegCircleUser } from 'react-icons/fa6';
 import { TiLocationOutline, TiShoppingCart, TiClipboard } from 'react-icons/ti';
 
 function Aside() {
@@ -14,20 +14,25 @@ function Aside() {
   const router = useRouter();
   return (
     <aside className='lg:max-w-[360px] w-full p-4 flex flex-col lg:border-r lg:border-neutral-300'>
-      <section className='border-b border-neutral-300 pb-4 overflow-hidden'>
+      <section className='border-b border-neutral-300 pb-4 overflow-hidden flex flex-col gap-4'>
         <h1 className='text-xl md:text-2xl font-bold py-2'>
           {t('accounts_center')}
         </h1>
-        <h2 title={user?.email} className='max-w font-bold py-2'>
-          {user?.email}
-        </h2>
-        <button
-          className='w-max text-sm md:text-base flex items-center gap-2 text-neutral-500'
-          onClick={() => router.push(`/${locale}/user/settings/accounts`)}
-        >
-          <FaPen />
-          <p>{t('edit_profile')}</p>
-        </button>
+        <div className='flex items-center gap-4'>
+          <FaRegCircleUser className='text-5xl text-neutral-600' />
+          <div className='flex flex-col gap-1'>
+            <h2 title={user?.email} className='max-w font-bold'>
+              {user?.email}
+            </h2>
+            <button
+              className='w-max text-sm md:text-base flex items-center gap-2 text-neutral-500'
+              onClick={() => router.push(`/${locale}/user/settings/accounts`)}
+            >
+              <FaPen />
+              <p>{t('edit_profile')}</p>
+            </button>
+          </div>
+        </div>
       </section>
       <section>
         <ul className='flex flex-col'>

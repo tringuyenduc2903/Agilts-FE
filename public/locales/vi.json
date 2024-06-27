@@ -190,6 +190,19 @@
     "address": "Địa chỉ",
     "cart": "Giỏ hàng",
     "add_address": "Thêm địa chỉ",
-    "stores": "Hệ thống cửa hàng"
+    "stores": "Hệ thống cửa hàng",
+    "select_province": "Tỉnh/Thành phố",
+    "select_district": "Quận/Huyện",
+    "select_ward": "Phường/Xã",
+    "set_default_address": "Đặt làm địa chỉ mặc định",
+    "address_details": "Địa chỉ chi tiết",
+    "type_of_address": "Loại địa chỉ",
+    "type_home": "Nhà riêng",
+    "type_office": "Văn phòng",
+    "return": "Trở lại",
+    "complete": "Hoàn thành",
+    "mess_add_address": "Thêm địa chỉ thành công!",
+    "set_default": "Thiết lập mặc định",
+    "default": "Mặc định"
   }
 }

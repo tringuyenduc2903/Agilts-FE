@@ -191,6 +191,19 @@
     "address": "Address",
     "cart": "Cart",
     "add_address": "Add address",
-    "stores": "Store system"
+    "stores": "Store system",
+    "select_province": "Province",
+    "select_district": "District",
+    "select_ward": "Ward",
+    "set_default_address": "Set as default address",
+    "address_details": "Address details",
+    "type_of_address": "Address type",
+    "type_home": "Home",
+    "type_office": "Office",
+    "return": "Return",
+    "complete": "Complete",
+    "mess_add_address": "Address added successfully!",
+    "set_default": "Default setting",
+    "default": "Default"
   }
 }

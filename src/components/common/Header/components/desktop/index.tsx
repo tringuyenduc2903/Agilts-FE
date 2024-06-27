@@ -9,7 +9,7 @@ import { useTranslations } from 'next-intl';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import MenuIcon from './components/MenuIcon';
-import { title } from '@/config/title';
+import { title } from '@/config/config';
 import { subRoutes } from '../../hearderData';
 function DesktopNavigation() {
   const { locale } = useParams();

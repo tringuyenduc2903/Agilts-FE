@@ -4,7 +4,7 @@ import Image from 'next/image';
 import logo from '../../../../public/logo.png';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { title } from '@/config/title';
+import { title } from '@/config/config';
 function Intro() {
   const [isDisplay, setIsDisplay] = useState(true);
   const containerRef = useRef(null);

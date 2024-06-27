@@ -17,7 +17,7 @@ import React, {
 } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
-import { defaultTimezone } from '@/config/timezone';
+import { defaultTimezone } from '@/config/config';
 
 type Form = {
   name: string;

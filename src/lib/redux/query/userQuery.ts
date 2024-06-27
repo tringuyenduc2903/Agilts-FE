@@ -6,7 +6,7 @@ export const userApi = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL as string}`,
   }),
-  tagTypes: ['users', 'recover_codes'],
+  tagTypes: ['users', 'recover_codes', 'address'],
   endpoints: (builder) => {
     return {
       getUser: builder.query({
@@ -137,16 +137,24 @@ export const userApi = createApi({
           method: 'DELETE',
         }),
       }),
-      // verifyAccount: builder.query({
-      //   query: ({ id, hash, expires, signature }) => ({
-      //     url: `${getLangRoute()}/email/verify/${id}/${hash}?expires=${expires}&signature=${signature}`,
-      //     method: 'GET',
-      //   }),
-      // }),
       resendVerifyAccount: builder.mutation({
         query: () => ({
           url: `/email/verification-notification`,
           method: 'POST',
+        }),
+      }),
+      getAddress: builder.query({
+        query: () => ({
+          url: `/api${getLangRoute()}/address`,
+          method: 'GET',
+        }),
+        providesTags: ['address'],
+      }),
+      postAddress: builder.mutation({
+        query: (body) => ({
+          url: `/api${getLangRoute()}/address`,
+          method: 'POST',
+          data: body,
         }),
       }),
     };
@@ -172,6 +180,7 @@ export const {
   usePostRecoveryCodesMutation,
   useVerifyTwoFactorMutation,
   useDeleteTwoFactorMutation,
-  // useVerifyAccountQuery,
   useResendVerifyAccountMutation,
+  useGetAddressQuery,
+  usePostAddressMutation,
 } = userApi;

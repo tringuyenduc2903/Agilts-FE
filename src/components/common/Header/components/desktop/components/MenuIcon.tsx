@@ -20,7 +20,7 @@ import { ModalContext } from '@/contexts/ModalProvider';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
-import { title } from '@/config/title';
+import { title } from '@/config/config';
 type Props = {
   isOpenMenu: boolean;
   openMenu: () => void;

@@ -14,3 +14,18 @@ export type User = {
   updated_at: string;
   two_factor?: boolean;
 };
+
+export type Address = {
+  id: number;
+  country: string;
+  province: string;
+  district: string;
+  ward: string;
+  address_detail: string;
+  address_preview: string;
+  type: number;
+  type_preview: string;
+  default: boolean;
+  created_at: string;
+  updated_at: string;
+};

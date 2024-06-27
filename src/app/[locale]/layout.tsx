@@ -8,7 +8,7 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import { Analytics } from '@vercel/analytics/react';
 import StoreProvider from '@/contexts/StoreProvider';
 import dynamic from 'next/dynamic';
-import { title } from '@/config/title';
+import { title } from '@/config/config';
 const DynamicIntro = dynamic(
   () => import('../../components/common/Intro/Intro'),
   {

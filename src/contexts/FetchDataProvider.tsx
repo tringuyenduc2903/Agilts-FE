@@ -1,13 +1,25 @@
 'use client';
 
-import React, { createContext, useCallback, useEffect } from 'react';
+import React, {
+  Dispatch,
+  SetStateAction,
+  createContext,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useGetUserQuery } from '@/lib/redux/query/userQuery';
+import {
+  useGetAddressQuery,
+  useGetUserQuery,
+} from '@/lib/redux/query/userQuery';
 import { setIsLoggedIn, setUser, userInfo } from '@/lib/redux/slice/userSlice';
-import { User } from '@/types/types';
+import { Address, User } from '@/types/types';
 import { useGetCSRFCookieMutation } from '@/lib/redux/query/csrfQuery';
 type FetchData = {
   user: User | null;
+  addresses: Address[];
+  setAddresses: Dispatch<SetStateAction<Address[] | []>>;
   isLoadingUser: boolean;
   isSuccessUser: boolean;
   isErrorUser: boolean;
@@ -24,6 +36,7 @@ export const FetchDataProvider = ({
 }) => {
   const dispatch = useDispatch();
   const user = useSelector(userInfo);
+  const [addresses, setAddresses] = useState<Address[] | []>([]);
   const [getCSRFCookie, { isLoading: isLoadingCSRF }] =
     useGetCSRFCookieMutation();
   const {
@@ -33,6 +46,10 @@ export const FetchDataProvider = ({
     isError: isErrorUser,
     refetch: refetchUser,
   } = useGetUserQuery(null);
+  const { data: addressData, isSuccess: isSuccessAddress } = useGetAddressQuery(
+    null,
+    { skip: !userData }
+  );
   const handleGetCSRFCookie = useCallback(async () => {
     await getCSRFCookie(null);
   }, [getCSRFCookie]);
@@ -44,6 +61,11 @@ export const FetchDataProvider = ({
       dispatch(setUser(null));
     }
   }, [dispatch, isSuccessUser, isErrorUser, userData]);
+  useEffect(() => {
+    if (isSuccessAddress && addressData) {
+      setAddresses([...addressData]);
+    }
+  }, [isSuccessAddress, addressData]);
   const contextValue = {
     user,
     isLoadingUser,
@@ -52,6 +74,8 @@ export const FetchDataProvider = ({
     refetchUser,
     handleGetCSRFCookie,
     isLoadingCSRF,
+    addresses,
+    setAddresses,
   };
   return (
     <FetchDataContext.Provider value={contextValue}>

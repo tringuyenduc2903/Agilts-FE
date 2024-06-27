@@ -1,7 +1,9 @@
+'use client';
+import withAuth from '@/protected-page/withAuth';
 import React from 'react';
 
 function OrdersPage() {
   return <div>OrdersPage</div>;
 }
 
-export default OrdersPage;
+export default withAuth(OrdersPage);

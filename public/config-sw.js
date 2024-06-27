@@ -1,4 +1,4 @@
-const CACHE_NAME = 'next-agilts-staging-v2.0';
+const CACHE_NAME = 'next-agilts-staging-v2.1';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

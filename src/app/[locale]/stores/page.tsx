@@ -215,7 +215,7 @@ function StoresPage() {
         <h1 className='text-red-600 font-bold tracking-[8px]'>
           {t('performance')}
         </h1>
-        <p className='text-2xl md:text-4xl md:text-[70px] font-bold text-white lg:text-neutral-800 tracking-[4px]'>
+        <p className='text-center md:text-start text-2xl sm:text-4xl md:text-[70px] md:leading-[70px] font-bold text-white lg:text-neutral-800 tracking-[4px]'>
           {t('stores')}
         </p>
       </section>
@@ -308,7 +308,7 @@ function StoresPage() {
             <NotFoundItem message={t('no_store')} />
           )}
         </div>
-        <div>
+        <div className='flex justify-center lg:justify-start'>
           {isSuccessBranch && branchData?.total > 1 && (
             <CustomPaginationV2
               scroll={true}

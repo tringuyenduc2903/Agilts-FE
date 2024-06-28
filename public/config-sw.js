@@ -1,23 +1,22 @@
 const CACHE_NAME = 'next-agilts-staging-v2.2';
 
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(['/vi/', '/en/']);
-    })
-  );
-});
+const cacheClone = async (e) => {
+  const res = await fetch(e.request);
+  const resClone = res.clone();
 
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      return (
-        response ||
-        fetch(event.request).catch((error) => {
-          console.error('Fetch failed:', error);
-          throw error;
-        })
-      );
-    })
-  );
-});
+  const cache = await caches.open(CACHE_NAME);
+  await cache.put(e.request, resClone);
+  return res;
+};
+
+const fetchEvent = () => {
+  self.addEventListener('fetch', (e) => {
+    e.respondWith(
+      cacheClone(e)
+        .catch(() => caches.match(e.request))
+        .then((res) => res)
+    );
+  });
+};
+
+fetchEvent();

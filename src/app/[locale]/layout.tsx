@@ -5,6 +5,7 @@ import { ModalProvider } from '@/contexts/ModalProvider';
 import { FetchDataProvider } from '@/contexts/FetchDataProvider';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
+import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/react';
 import StoreProvider from '@/contexts/StoreProvider';
 import dynamic from 'next/dynamic';
@@ -63,6 +64,7 @@ export default async function HomeLayout({
   return (
     <html lang={locale}>
       <body className={`${inter.className} flex flex-col justify-between`}>
+        <Script defer src='/service-worker.js' />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <StoreProvider>
             <FetchDataProvider>

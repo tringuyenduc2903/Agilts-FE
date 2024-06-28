@@ -2,7 +2,6 @@ import { Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { cookies } from 'next/headers';
-import Script from 'next/script';
 import './globals.css';
 export const viewport: Viewport = {
   width: 'device-width',
@@ -50,7 +49,6 @@ export default async function RootLayout({
         <NextIntlClientProvider locale={lang} messages={messages}>
           {children}
         </NextIntlClientProvider>
-        <Script src='/service-worker.js' />
       </body>
     </html>
   );

@@ -10,8 +10,14 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event?.request).then((response) => {
-      return response || fetch(event?.request);
+    caches.match(event.request).then((response) => {
+      return (
+        response ||
+        fetch(event.request).catch((error) => {
+          console.error('Fetch failed:', error);
+          throw error;
+        })
+      );
     })
   );
 });

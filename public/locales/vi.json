@@ -214,6 +214,9 @@
     "branch": "Chi nhánh",
     "search_store": "Tìm kiếm cửa hàng",
     "search": "Tìm kiếm",
-    "no_store": "Hiện chưa có chi nhánh nào!"
+    "no_store": "Hiện chưa có chi nhánh nào!",
+    "documents": "Hồ sơ",
+    "document_list": "Danh sách hồ sơ",
+    "add_document": "Thêm hồ sơ"
   }
 }

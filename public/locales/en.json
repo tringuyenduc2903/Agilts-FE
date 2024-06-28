@@ -215,6 +215,9 @@
     "branch": "Branch",
     "search_store": "Search for a store",
     "search": "Search",
-    "no_store": "There are currently no branches!"
+    "no_store": "There are currently no branches!",
+    "documents": "Documents",
+    "document_list": "Document list",
+    "add_document": "Add document"
   }
 }

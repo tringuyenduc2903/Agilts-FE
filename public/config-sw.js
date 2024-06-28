@@ -1,7 +1,4 @@
 const CACHE_NAME = 'next-agilts-staging-v2.3';
-
-const API_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
-console.log(API_URL);
 const cacheClone = async (event) => {
   try {
     const response = await fetch(event.request);
@@ -21,17 +18,6 @@ const cacheClone = async (event) => {
 
 const fetchEvent = () => {
   self.addEventListener('fetch', (event) => {
-    const url = new URL(event.request.url);
-    if (url.origin !== location.origin && url.origin === API_URL) {
-      event.respondWith(
-        fetch(event.request).catch((error) => {
-          console.error('API fetch failed:', error);
-          return new Response('API fetch failed', { status: 500 });
-        })
-      );
-      return;
-    }
-
     event.respondWith(
       cacheClone(event).catch(() => caches.match(event.request))
     );

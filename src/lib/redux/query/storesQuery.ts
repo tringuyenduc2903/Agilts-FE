@@ -1,4 +1,3 @@
-import { providesList } from '@/lib/utils/providesList';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const storesApi = createApi({
@@ -11,10 +10,10 @@ export const storesApi = createApi({
     return {
       getStores: builder.query({
         query: (search) => ({
-          url: `/api/branch?${search}`,
+          url: `/api/branch${search ? `?${search}` : ''}`,
           method: 'GET',
         }),
-        providesTags: (result) => providesList(result, 'stores'),
+        providesTags: ['stores'],
       }),
     };
   },

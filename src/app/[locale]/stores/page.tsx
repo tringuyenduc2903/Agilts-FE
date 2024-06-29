@@ -147,56 +147,41 @@ function StoresPage() {
       })
     );
   }, [isSuccessDistricts, districtsData]);
+  console.log(branchData);
   const renderedBranch = useMemo(() => {
     return (
       isSuccessBranch &&
       branchData?.data?.length > 0 &&
       branchData?.data?.map((b: Branch) => {
         return (
-          <div
-            className='w-full flex flex-col gap-6 text-sm md:text-base'
-            key={b.id}
-          >
-            <h2 className='text-lg md:text-xl font-bold'>
-              {t('branch')}: {b?.name}
-            </h2>
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-16'>
-              {b?.addresses?.map((a: Address) => {
-                return (
-                  <article
-                    className='col-span-1 flex flex-col gap-2'
-                    key={a.id}
-                  >
-                    <div className='max-h-[380px] h-full'>
-                      <Image
-                        className='w-full h-full object-cover'
-                        src={demoimg}
-                        alt='demoimg'
-                      />
-                    </div>
-                    <div className='flex items-center gap-2'>
-                      <TiLocationOutline className='text-2xl text-red-500' />
-                      <p
-                        title={a?.address_preview}
-                        className='line-clamp-1 font-medium'
-                      >
-                        {a?.address_preview}
-                      </p>
-                    </div>
-                    <div className='flex items-center gap-2'>
-                      <TiPhoneOutline className='text-2xl text-red-500' />
-                      <p
-                        title={b?.phone_number as string}
-                        className='line-clamp-1 font-medium'
-                      >
-                        {b?.phone_number}
-                      </p>
-                    </div>
-                  </article>
-                );
-              })}
+          <article className='col-span-1 flex flex-col gap-2' key={b.id}>
+            <div className='max-h-[380px] h-full'>
+              <Image
+                className='w-full h-full object-cover'
+                src={demoimg}
+                alt='demoimg'
+              />
             </div>
-          </div>
+            <h2 className='text-lg md:text-xl font-bold'>{b?.name}</h2>
+            <div className='flex items-center gap-2'>
+              <TiLocationOutline className='text-2xl text-red-500' />
+              <p
+                title={b?.address?.address_preview}
+                className='line-clamp-1 font-medium'
+              >
+                {b?.address?.address_preview}
+              </p>
+            </div>
+            <div className='flex items-center gap-2'>
+              <TiPhoneOutline className='text-2xl text-red-500' />
+              <p
+                title={b?.phone_number as string}
+                className='line-clamp-1 font-medium'
+              >
+                {b?.phone_number}
+              </p>
+            </div>
+          </article>
         );
       })
     );
@@ -300,14 +285,16 @@ function StoresPage() {
           </button>
         </div>
       </section>
-      <section className='px-4 md:px-16 flex flex-col gap-16'>
-        <div className='flex flex-col gap-12'>
-          {renderedBranch ? (
-            renderedBranch
-          ) : (
+      <section className='w-full px-4 md:px-16 flex flex-col gap-16'>
+        {renderedBranch ? (
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16'>
+            {renderedBranch}
+          </div>
+        ) : (
+          <div className='w-full flex justify-center items-center'>
             <NotFoundItem message={t('no_store')} />
-          )}
-        </div>
+          </div>
+        )}
         <div className='flex justify-center lg:justify-start'>
           {isSuccessBranch && branchData?.total > 1 && (
             <CustomPaginationV2

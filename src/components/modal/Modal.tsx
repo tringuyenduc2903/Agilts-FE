@@ -8,6 +8,8 @@ const ConfirmModal = lazy(() => import('./ConfirmModal'));
 const ImageModal = lazy(() => import('./ImageModal'));
 const AddAddressModal = lazy(() => import('./user/AddAddressModal'));
 const UpdateAddressModal = lazy(() => import('./user/UpdateAddressModal'));
+const AddDocumentModal = lazy(() => import('./user/AddDocumentModal'));
+const UpdateDocumentModal = lazy(() => import('./user/UpdateDocumentModal'));
 const Modal = () => {
   const { state } = useContext(ModalContext);
   return (
@@ -19,6 +21,8 @@ const Modal = () => {
       {state.visibleImageModal && <ImageModal />}
       {state.visibleAddAddressModal && <AddAddressModal />}
       {state.visibleUpdateAddressModal && <UpdateAddressModal />}
+      {state.visibleAddDocumentModal && <AddDocumentModal />}
+      {state.visibleUpdateDocumentModal && <UpdateDocumentModal />}
     </Suspense>
   );
 };

@@ -1,3 +1,4 @@
+import { providesList } from '@/lib/utils/providesList';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const storesApi = createApi({
@@ -5,6 +6,7 @@ export const storesApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL as string,
   }),
+  tagTypes: ['stores'],
   endpoints: (builder) => {
     return {
       getStores: builder.query({
@@ -12,6 +14,7 @@ export const storesApi = createApi({
           url: `/api/branch?${search}`,
           method: 'GET',
         }),
+        providesTags: (result) => providesList(result, 'stores'),
       }),
     };
   },

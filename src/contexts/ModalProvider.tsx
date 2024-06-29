@@ -1,5 +1,5 @@
 'use client';
-import { Address } from '@/types/types';
+import { Address, Document } from '@/types/types';
 import { createContext, useCallback, useReducer } from 'react';
 type InitialState = {
   visibleToastModal: {
@@ -26,6 +26,8 @@ type InitialState = {
   };
   visibleAddAddressModal: boolean;
   visibleUpdateAddressModal: Address;
+  visibleAddDocumentModal: boolean;
+  visibleUpdateDocumentModal: Document;
 };
 const SET_VISIBLE_MODAL = 'SET_VISIBLE_MODAL';
 const CLOSE_ALL_MODAL = 'CLOSE_ALL_MODAL';

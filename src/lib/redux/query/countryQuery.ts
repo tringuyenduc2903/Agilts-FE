@@ -1,3 +1,4 @@
+import { providesList } from '@/lib/utils/providesList';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const countryApi = createApi({
   reducerPath: 'countryApi',
@@ -12,21 +13,21 @@ export const countryApi = createApi({
           url: `/1/0.htm`,
           method: 'GET',
         }),
-        providesTags: ['provinces'],
+        providesTags: (result) => providesList(result, 'provinces'),
       }),
       getDistricts: builder.query({
         query: (provinceCode) => ({
           url: `/2/${provinceCode}.htm`,
           method: 'GET',
         }),
-        providesTags: ['districts'],
+        providesTags: (result) => providesList(result, 'districts'),
       }),
       getWards: builder.query({
         query: (districtCode) => ({
           url: `/3/${districtCode}.htm`,
           method: 'GET',
         }),
-        providesTags: ['wards'],
+        providesTags: (result) => providesList(result, 'wards'),
       }),
     };
   },

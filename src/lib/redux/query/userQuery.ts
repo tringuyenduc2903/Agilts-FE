@@ -1,12 +1,13 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from '../config/axios';
 import { getLangRoute } from '../config/getLangRoute';
+import { providesList } from '@/lib/utils/providesList';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: axiosBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL as string}`,
   }),
-  tagTypes: ['users', 'recover_codes', 'address'],
+  tagTypes: ['users', 'recover_codes', 'address', 'documents'],
   endpoints: (builder) => {
     return {
       getUser: builder.query({
@@ -115,7 +116,7 @@ export const userApi = createApi({
         query: () => ({
           url: `${getLangRoute()}/user/two-factor-recovery-codes`,
         }),
-        providesTags: ['recover_codes'],
+        providesTags: (result) => providesList(result, 'recover_codes'),
       }),
       postRecoveryCodes: builder.mutation({
         query: () => ({
@@ -148,7 +149,7 @@ export const userApi = createApi({
           url: `/api${getLangRoute()}/address`,
           method: 'GET',
         }),
-        providesTags: ['address'],
+        providesTags: (result) => providesList(result, 'address'),
       }),
       postAddress: builder.mutation({
         query: (body) => ({
@@ -156,6 +157,15 @@ export const userApi = createApi({
           method: 'POST',
           data: body,
         }),
+        // async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+        //   try {
+        //     const { data: createdPost } = await queryFulfilled;
+        //     dispatch(
+        //       userApi.util.upsertQueryData('getAddress', id, createdPost)
+        //     );
+        //     await queryFulfilled;
+        //   } catch {}
+        // },
         invalidatesTags: ['address'],
       }),
       updateAddress: builder.mutation({
@@ -164,6 +174,19 @@ export const userApi = createApi({
           method: 'PUT',
           data: body,
         }),
+        // async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
+        //   const { data: updatedPost } = await queryFulfilled;
+        //   const patchResult = dispatch(
+        //     userApi.util.updateQueryData('getAddress', id, (draft) => {
+        //       Object.assign(draft, updatedPost);
+        //     })
+        //   );
+        //   try {
+        //     await queryFulfilled;
+        //   } catch {
+        //     patchResult.undo();
+        //   }
+        // },
         invalidatesTags: ['address'],
       }),
       deleteAddress: builder.mutation({
@@ -172,6 +195,36 @@ export const userApi = createApi({
           method: 'DELETE',
         }),
         invalidatesTags: ['address'],
+      }),
+      getDocuments: builder.query({
+        query: () => ({
+          url: `/api${getLangRoute()}/identification`,
+          method: 'GET',
+        }),
+        providesTags: (result) => providesList(result, 'documents'),
+      }),
+      postDocument: builder.mutation({
+        query: (body) => ({
+          url: `/api${getLangRoute()}/identification`,
+          method: 'POST',
+          data: body,
+        }),
+        invalidatesTags: ['documents'],
+      }),
+      updateDocument: builder.mutation({
+        query: ({ body, id }) => ({
+          url: `/api${getLangRoute()}/identification/${id}`,
+          method: 'PUT',
+          data: body,
+        }),
+        invalidatesTags: ['documents'],
+      }),
+      deleteDocument: builder.mutation({
+        query: (id) => ({
+          url: `/api${getLangRoute()}/identification/${id}`,
+          method: 'DELETE',
+        }),
+        invalidatesTags: ['documents'],
       }),
     };
   },
@@ -201,4 +254,8 @@ export const {
   usePostAddressMutation,
   useUpdateAddressMutation,
   useDeleteAddressMutation,
+  useGetDocumentsQuery,
+  usePostDocumentMutation,
+  useUpdateDocumentMutation,
+  useDeleteDocumentMutation,
 } = userApi;

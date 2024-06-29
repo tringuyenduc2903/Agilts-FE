@@ -39,3 +39,17 @@ export type Branch = {
   created_at: string;
   updated_at: string;
 };
+
+export type Document = {
+  id: number;
+  type: number;
+  type_preview: string;
+  number: number;
+  issued_name: string;
+  issuance_date: string;
+  expiry_date: string;
+  default: boolean;
+  customer_id: number;
+  created_at: string;
+  updated_at: string;
+};

@@ -50,7 +50,6 @@ function UpdateAddressModal() {
   const { locale } = useParams();
   const t = useTranslations('common');
   const { defaultAddress } = useContext(FetchDataContext);
-  console.log(defaultAddress);
   const { state, setVisibleModal } = useContext(ModalContext);
   const { sectionRef, clickOutside } = useClickOutside(() =>
     setVisibleModal('visibleUpdateAddressModal')

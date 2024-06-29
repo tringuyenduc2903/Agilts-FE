@@ -147,7 +147,6 @@ function StoresPage() {
       })
     );
   }, [isSuccessDistricts, districtsData]);
-  console.log(branchData);
   const renderedBranch = useMemo(() => {
     return (
       isSuccessBranch &&

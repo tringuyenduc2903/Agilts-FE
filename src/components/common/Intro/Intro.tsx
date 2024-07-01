@@ -76,7 +76,7 @@ function Intro() {
         </div>
         <div className='flex items-center gap-2'>
           {title
-            .replace('A', '')
+            ?.replace('A', '')
             .split('')
             .map((w: string, index: number) => {
               return (

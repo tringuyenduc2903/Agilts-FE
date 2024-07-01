@@ -1,4 +1,4 @@
-export const title = 'Agilts';
+export const title = process.env.NEXT_PUBLIC_WEBSITE_NAME;
 export const defaultCountry = 'Việt Nam';
 export const defaultTimezone = 'Asia/Ho_Chi_Minh';
 export const documents = [

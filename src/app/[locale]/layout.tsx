@@ -39,9 +39,9 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: {
       template: `%s | ${title}`,
-      default: t('home_title'),
+      default: t('home_title', { name: title }),
     },
-    description: t('home_description'),
+    description: t('home_description', { name: title }),
     keywords: t('home_keywords'),
     referrer: 'origin-when-cross-origin',
     formatDetection: {

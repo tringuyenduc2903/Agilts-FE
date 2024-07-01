@@ -1,3 +1,4 @@
+import { title } from '@/config/config';
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 export async function generateMetadata(): Promise<Metadata> {
@@ -5,7 +6,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return {
     title: t('contact_title'),
-    description: t('contact_description'),
+    description: t('contact_description', { name: title }),
   };
 }
 export default async function ContactLayout({

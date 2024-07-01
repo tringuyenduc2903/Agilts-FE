@@ -85,7 +85,7 @@ function DesktopNavigation() {
             />
           </div>
           <p className='text-4xl font-bold uppercase'>
-            {title.replace('A', '')}
+            {title?.replace('A', '')}
           </p>
         </button>
         <section className='relative z-[999] h-full flex items-center font-bold tracking-[1px]'>

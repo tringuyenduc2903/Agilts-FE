@@ -1,3 +1,6 @@
+import { ReactElement } from 'react';
+import { IconType } from 'react-icons/lib';
+
 export type User = {
   id: string | number;
   name: string;
@@ -50,6 +53,21 @@ export type Document = {
   expiry_date: string;
   default: boolean;
   customer_id: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export type Social = {
+  [key: string]: {
+    name: string;
+    element: ReactElement;
+  };
+};
+export type SocialProvider = {
+  id: number;
+  customer_id: number;
+  provider_id: number;
+  provider_name: string;
   created_at: string;
   updated_at: string;
 };

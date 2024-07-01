@@ -243,6 +243,12 @@
     "created_at_record": "Created at",
     "updated_at_record": "Updated at",
     "update_document": "Update document",
-    "no_document": "Document not found!"
+    "no_document": "Document not found!",
+    "socials": "Socials",
+    "unlink": "Unlink",
+    "title_del_social": "Are you sure you want to delete this social?",
+    "des_del_social": "You won't be able to restore the record after deleting the social. Be sure of your actions.",
+    "delete_success_social": "Successfully removed the social network!",
+    "no_social": "No social networks have been linked yet"
   }
 }

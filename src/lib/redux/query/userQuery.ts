@@ -7,7 +7,7 @@ export const userApi = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL as string}`,
   }),
-  tagTypes: ['users', 'recover_codes', 'address', 'documents'],
+  tagTypes: ['users', 'recover_codes', 'address', 'documents', 'social'],
   endpoints: (builder) => {
     return {
       getUser: builder.query({
@@ -226,6 +226,20 @@ export const userApi = createApi({
         }),
         invalidatesTags: ['documents'],
       }),
+      getSocials: builder.query({
+        query: () => ({
+          url: `/api/social`,
+          method: 'GET',
+        }),
+        providesTags: (result) => providesList(result, 'social'),
+      }),
+      deleteSocial: builder.mutation({
+        query: (id) => ({
+          url: `/api${getLangRoute()}/social/${id}`,
+          method: 'DELETE',
+        }),
+        invalidatesTags: ['social'],
+      }),
     };
   },
 });
@@ -258,4 +272,6 @@ export const {
   usePostDocumentMutation,
   useUpdateDocumentMutation,
   useDeleteDocumentMutation,
+  useGetSocialsQuery,
+  useDeleteSocialMutation,
 } = userApi;

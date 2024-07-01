@@ -3,6 +3,8 @@ import 'react-phone-number-input/style.css';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
 import {
+  useDeleteSocialMutation,
+  useGetSocialsQuery,
   useResendVerifyAccountMutation,
   useUpdateUserMutation,
 } from '@/lib/redux/query/userQuery';
@@ -18,6 +20,9 @@ import React, {
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
 import { defaultTimezone } from '@/config/config';
+import { SocialProvider } from '@/types/types';
+import { Social } from '@/types/types';
+import { FaFacebook, FaGoogle, FaGithub } from 'react-icons/fa6';
 
 type Form = {
   name: string;
@@ -27,7 +32,20 @@ type Form = {
   gender: string | number | null;
   timezone: string;
 };
-
+const socials: Social = {
+  facebook: {
+    name: 'facebook',
+    element: <FaFacebook className='text-blue-500 text-2xl' />,
+  },
+  google: {
+    name: 'google',
+    element: <FaGoogle className='text-red-500 text-2xl' />,
+  },
+  github: {
+    name: 'github',
+    element: <FaGithub className='text-neutral-800 text-2xl' />,
+  },
+};
 function AccountsPage() {
   const t = useTranslations('common');
   const { user, handleGetCSRFCookie, isLoadingCSRF } =
@@ -43,6 +61,17 @@ function AccountsPage() {
       error: errorPostData,
     },
   ] = useResendVerifyAccountMutation();
+  const { data: socialData, isSuccess: isSuccessSocial } =
+    useGetSocialsQuery(null);
+  const [
+    deleteSocial,
+    {
+      isSuccess: isSuccessDelete,
+      isLoading: isLoadingDelete,
+      isError: isErrorDelete,
+      error: errorDelete,
+    },
+  ] = useDeleteSocialMutation();
   const { register, handleSubmit, reset, watch, control } = useForm<Form>({
     defaultValues: { ...user, timezone: defaultTimezone },
   });
@@ -147,6 +176,25 @@ function AccountsPage() {
     setVisibleModal,
     t,
   ]);
+  useEffect(() => {
+    if (isSuccessDelete) {
+      setVisibleModal({
+        visibleToastModal: {
+          type: 'success',
+          message: `${t('delete_success_social')}`,
+        },
+      });
+    }
+    if (isErrorDelete && errorDelete) {
+      const error = errorDelete as any;
+      setVisibleModal({
+        visibleToastModal: {
+          type: 'error',
+          message: error?.data?.message,
+        },
+      });
+    }
+  }, [isSuccessDelete, isErrorDelete, errorDelete, setVisibleModal, t]);
   return (
     <div className='flex flex-col gap-6'>
       <div>
@@ -169,7 +217,12 @@ function AccountsPage() {
             type='text'
             id='name'
             {...register('name')}
-            disabled={isLoadingUpdate || isLoadingCSRF}
+            disabled={
+              isLoadingUpdate ||
+              isLoadingCSRF ||
+              isLoadingPostData ||
+              isLoadingDelete
+            }
           />
           {errors?.name && (
             <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -191,7 +244,12 @@ function AccountsPage() {
                   type='button'
                   className='w-max sm:ml-auto text-red-500 font-bold'
                   onClick={handleResendVerify}
-                  disabled={isLoadingCSRF || isLoadingPostData}
+                  disabled={
+                    isLoadingUpdate ||
+                    isLoadingCSRF ||
+                    isLoadingPostData ||
+                    isLoadingDelete
+                  }
                 >
                   {t('verify')}
                 </button>
@@ -212,13 +270,59 @@ function AccountsPage() {
           )}
         </div>
         <div className='flex flex-col gap-2'>
+          <p>
+            {t('socials')}{' '}
+            {isSuccessSocial && socialData?.length === 0 && (
+              <span className='font-bold'>({t('no_social')})</span>
+            )}
+          </p>
+          {isSuccessSocial &&
+            socialData?.length > 0 &&
+            socialData?.map((s: SocialProvider) => {
+              return (
+                <div
+                  className='flex justify-between items-center gap-6'
+                  key={s.id}
+                >
+                  <div className='flex items-center gap-2'>
+                    <p className='text-sm md:text-base capitalize font-bold'>
+                      {socials[s.provider_name].name}:
+                    </p>
+                    {socials[s.provider_name].element}
+                  </div>
+                  <button
+                    className='text-sm text-blue-500'
+                    type='button'
+                    onClick={() =>
+                      setVisibleModal({
+                        visibleConfirmModal: {
+                          title: `${t('title_del_social')}`,
+                          description: `${t('des_del_social')}`,
+                          isLoading: isLoadingDelete,
+                          cb: () => deleteSocial(s.id),
+                        },
+                      })
+                    }
+                  >
+                    {t('unlink')}
+                  </button>
+                </div>
+              );
+            })}
+        </div>
+        <div className='flex flex-col gap-2'>
           <label htmlFor='birthday'>{t('birthday')}</label>
           <input
             className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base'
             type='date'
             id='birthday'
             {...register('birthday')}
-            disabled={isLoadingUpdate || isLoadingCSRF || isLoadingPostData}
+            disabled={
+              isLoadingUpdate ||
+              isLoadingCSRF ||
+              isLoadingPostData ||
+              isLoadingDelete
+            }
           />
           {errors?.birthday && (
             <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -235,6 +339,12 @@ function AccountsPage() {
             rules={{ required: true }}
             defaultCountry='VN'
             defaultValue={watchedValues.phone_number as string}
+            disabled={
+              isLoadingUpdate ||
+              isLoadingCSRF ||
+              isLoadingPostData ||
+              isLoadingDelete
+            }
           />
           {errors?.phone_number && (
             <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -248,7 +358,12 @@ function AccountsPage() {
             id='gender'
             className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base focus:outline-none'
             {...register('gender')}
-            disabled={isLoadingUpdate || isLoadingCSRF || isLoadingPostData}
+            disabled={
+              isLoadingUpdate ||
+              isLoadingCSRF ||
+              isLoadingPostData ||
+              isLoadingDelete
+            }
           >
             <option value=''>{t('select_gender')}</option>
             <option value={0}>{t('male')}</option>
@@ -267,7 +382,12 @@ function AccountsPage() {
               className='font-bold bg-red-500 hover:bg-red-600 transition-colors text-white px-6 py-3 rounded-sm'
               type='button'
               onClick={() => reset({ ...user })}
-              disabled={isLoadingUpdate || isLoadingCSRF || isLoadingPostData}
+              disabled={
+                isLoadingUpdate ||
+                isLoadingCSRF ||
+                isLoadingPostData ||
+                isLoadingDelete
+              }
             >
               {t('cancel')}
             </button>
@@ -275,7 +395,12 @@ function AccountsPage() {
           <button
             className='font-bold bg-neutral-800 text-white px-4 py-3 rounded-sm'
             type='submit'
-            disabled={isLoadingUpdate || isLoadingCSRF || isLoadingPostData}
+            disabled={
+              isLoadingUpdate ||
+              isLoadingCSRF ||
+              isLoadingPostData ||
+              isLoadingDelete
+            }
           >
             {isLoadingUpdate || (isLoadingCSRF && !sendVerify)
               ? `...${t('loading')}`

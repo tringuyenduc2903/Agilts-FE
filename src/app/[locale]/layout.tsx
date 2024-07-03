@@ -32,6 +32,7 @@ const DynamicModal = dynamic(() => import('@/components/modal/Modal'));
 const inter = Open_Sans({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
+  preload: true,
 });
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('head');

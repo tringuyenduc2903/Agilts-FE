@@ -250,6 +250,7 @@
     "title_del_social": "Bạn chắc chắn rằng mình muốn xóa mạng xã hội này?",
     "des_del_social": "Bạn sẽ không thể khôi phục lại bản ghi sau khi xóa mạng xã hội. Hãy chắc chắn về hành động của mình.",
     "delete_success_social": "Đã gỡ mạng xã hội thành công!",
-    "no_social": "Chưa có mạng xã hội nào được liên kết"
+    "no_social": "Chưa có mạng xã hội nào được liên kết",
+    "support_phone_vn": "Chỉ hỗ trợ số điện thoại Việt Nam"
   }
 }

@@ -4,7 +4,6 @@ import { ModalContext } from '@/contexts/ModalProvider';
 import useClickOutside from '@/lib/hooks/useClickOutside';
 import { useUpdateDocumentMutation } from '@/lib/redux/query/userQuery';
 import { CustomFormatDate } from '@/lib/utils/format';
-import { format, parse } from 'date-fns';
 import { useTranslations } from 'next-intl';
 import React, {
   LegacyRef,

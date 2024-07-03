@@ -1,4 +1,4 @@
-const CACHE_NAME = 'next-agilts-staging-v2.5';
+const CACHE_NAME = 'next-agilts-staging-v2.6';
 const cacheClone = async (event) => {
   try {
     const response = await fetch(event.request);

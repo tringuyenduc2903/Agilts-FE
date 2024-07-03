@@ -331,12 +331,14 @@ function AccountsPage() {
           )}
         </div>
         <div className='flex flex-col gap-2'>
-          <label htmlFor='phone'>{t('phone')}</label>
+          <label htmlFor='phone'>
+            {t('phone')}{' '}
+            <span className='font-bold'>({t('support_phone_vn')})</span>
+          </label>
           <PhoneInputWithCountry
             className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base focus:outline-none'
             name='phone_number'
             control={control}
-            rules={{ required: true }}
             defaultCountry='VN'
             defaultValue={watchedValues.phone_number as string}
             disabled={

@@ -1,7 +1,6 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 import { scrollToTop } from '../utils/scrollElement';
-
 const useQueryString = (): [
   (
     name: string | string[],
@@ -25,7 +24,7 @@ const useQueryString = (): [
           }
         });
       } else {
-        if (value) {
+        if (!['null', null, undefined, 'undefined'].includes(value as string)) {
           name !== 'page' && newQuery.set('page', '1');
           newQuery.set(name as string, value as string);
         }

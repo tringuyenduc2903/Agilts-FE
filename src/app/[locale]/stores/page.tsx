@@ -5,9 +5,8 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { FaAngleDown } from 'react-icons/fa6';
 import { useGetStoresQuery } from '@/lib/redux/query/storesQuery';
-import { Address, Branch } from '@/types/types';
+import { Branch } from '@/types/types';
 import { TiLocationOutline, TiPhoneOutline } from 'react-icons/ti';
-
 import demoimg from '@/assets/demo-branch.jpg';
 import CustomPaginationV2 from '@/components/ui/CustomPaginationV2';
 import { useParams, useSearchParams } from 'next/navigation';
@@ -295,10 +294,10 @@ function StoresPage() {
           </div>
         )}
         <div className='flex justify-center lg:justify-start'>
-          {isSuccessBranch && branchData?.total > 1 && (
+          {isSuccessBranch && Number(branchData?.total_pages) > 1 && (
             <CustomPaginationV2
               scroll={true}
-              totalPage={Number(branchData?.total)}
+              totalPage={Number(branchData?.total_pages)}
             />
           )}
         </div>

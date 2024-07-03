@@ -17,6 +17,17 @@ function ProductDetails() {
   const t = useTranslations('common');
   const [isHoverAddToCart, setIsHoverAddToCart] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const handleEnterQuantity = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.target;
+      setQuantity((_) => {
+        if (Number(value) <= 1) return 1;
+        if (Number(value) >= 100) return 100;
+        return Number(value);
+      });
+    },
+    []
+  );
   const handleDecrease = useCallback(() => {
     setQuantity((prevQuantity) => {
       if (prevQuantity <= 1) return 1;
@@ -160,7 +171,7 @@ function ProductDetails() {
               className='w-[54px] h-full text-center p-2 bg-red-600 text-white rounded-sm'
               type='number'
               value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
+              onChange={handleEnterQuantity}
             />
             <div className='h-full flex flex-col'>
               <button className='w-full h-full px-4' onClick={handleIncrease}>

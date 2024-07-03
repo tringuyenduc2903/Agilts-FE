@@ -3,6 +3,8 @@ import { Product, SingleProduct } from '@/components/ui/SingleProduct';
 import CustomPagination from '@/components/ui/CustomPagination';
 type Props = {
   products: Product[];
+  // total_pages: string | number;
+  // current_page: string | number;
 };
 function ProductsSection({ products }: Props) {
   const renderedProducts = useMemo(() => {
@@ -29,7 +31,7 @@ function ProductsSection({ products }: Props) {
         {renderedProducts}
       </div>
       <div className='w-full'>
-        <CustomPagination curPage={1} totalPage={100} />
+        <CustomPagination curPage={Number(1)} totalPage={Number(100)} />
       </div>
     </div>
   );

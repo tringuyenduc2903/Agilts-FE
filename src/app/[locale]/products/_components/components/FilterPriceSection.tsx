@@ -24,12 +24,13 @@ function FilterPriceSection() {
       />
       <button
         className='relative w-max sm:w-[156px] h-[36px] sm:h-[46px] md:h-[55px] uppercase bg-red-500 text-white px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center text-sm'
+        type='button'
         onMouseEnter={() => setIsHoverFilterPrice(true)}
         onMouseLeave={() => setIsHoverFilterPrice(false)}
         onClick={() =>
           createQueryString(
             ['priceMin', 'priceMax'],
-            [priceMin as string, priceMax as string]
+            [priceMin.toString(), priceMax.toString()]
           )
         }
       >

@@ -82,6 +82,7 @@ function DesktopNavigation() {
               className='w-full h-full object-cover'
               src={logo}
               alt='logo'
+              fetchPriority='high'
             />
           </div>
           <p className='text-4xl font-bold uppercase'>

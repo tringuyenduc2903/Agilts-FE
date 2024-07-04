@@ -48,7 +48,6 @@ function MobileNavigation() {
               src={logo}
               alt='logo'
               fetchPriority='high'
-              loading='eager'
             />
           </div>
           {/* <p className='text-4xl font-bold uppercase'>

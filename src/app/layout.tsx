@@ -44,7 +44,7 @@ export default async function RootLayout({
         />
         <link rel='icon' href='/favicon-32x32.png' sizes='any' />
         <link rel='manifest' href='/site.webmanifest' />
-        <link rel='preconnect' href={process.env.NEXT_PUBLIC_BACKEND_URL} />
+        <link rel='dns-prefetch' href={process.env.NEXT_PUBLIC_BACKEND_URL} />
       </head>
       <body>
         <NextIntlClientProvider locale={lang} messages={messages}>

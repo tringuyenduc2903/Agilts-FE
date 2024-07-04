@@ -163,7 +163,7 @@ function Banner() {
                 className='w-full h-full object-cover'
                 src={b.img}
                 alt={b.sku}
-                fetchPriority='high'
+                fetchPriority={index === 0 ? 'high' : 'low'}
                 placeholder='blur'
               />
             </div>

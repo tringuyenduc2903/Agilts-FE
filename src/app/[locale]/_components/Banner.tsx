@@ -164,6 +164,7 @@ function Banner() {
                 src={b.img}
                 alt={b.sku}
                 fetchPriority='high'
+                placeholder='blur'
               />
             </div>
             <div className='absolute top-0 left-0 w-full h-full z-10 flex justify-between items-center'>

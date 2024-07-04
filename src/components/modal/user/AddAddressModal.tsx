@@ -22,24 +22,24 @@ import React, {
 import { FaCheck } from 'react-icons/fa6';
 type PartOfCountry = {
   id: string;
-  name: string;
-  name_en: string;
+  full_name: string;
+  full_name_en: string;
 };
 type Form = {
   province: {
     code: string;
-    name: string;
-    name_en: string;
+    full_name: string;
+    full_name_en: string;
   };
   district: {
     code: string;
-    name: string;
-    name_en: string;
+    full_name: string;
+    full_name_en: string;
   };
   ward: {
     code: string;
-    name: string;
-    name_en: string;
+    full_name: string;
+    full_name_en: string;
   };
   address_detail: string;
   default: boolean;
@@ -55,18 +55,18 @@ function AddAddressModal() {
   const [country, setCountry] = useState<Form>({
     province: {
       code: '',
-      name: '',
-      name_en: '',
+      full_name: '',
+      full_name_en: '',
     },
     district: {
       code: '',
-      name: '',
-      name_en: '',
+      full_name: '',
+      full_name_en: '',
     },
     ward: {
       code: '',
-      name: '',
-      name_en: '',
+      full_name: '',
+      full_name_en: '',
     },
     address_detail: '',
     default: false,
@@ -109,13 +109,13 @@ function AddAddressModal() {
     [curTab]
   );
   const handleSelectCountry = useCallback(
-    (name: string, name_en: string, value: string, code: string) => {
+    (full_name: string, full_name_en: string, value: string, code: string) => {
       setCountry((prevCountry) => {
         return {
           ...prevCountry,
-          [name]: {
-            name: value,
-            name_en: name_en,
+          [full_name]: {
+            full_name: value,
+            full_name_en: full_name_en,
             code: code,
           },
         };
@@ -134,17 +134,22 @@ function AddAddressModal() {
               className='text-sm md:text-base w-full px-4 py-2 hover:bg-neutral-100 transition-colors text-start'
               type='button'
               onClick={() =>
-                handleSelectCountry('province', p?.name_en, p?.name, p?.id)
+                handleSelectCountry(
+                  'province',
+                  p?.full_name_en,
+                  p?.full_name,
+                  p?.id
+                )
               }
               disabled={isLoadingPost}
             >
-              {p?.name}
+              {locale === 'vi' ? p?.full_name : p?.full_name_en}
             </button>
           </li>
         );
       })
     );
-  }, [isSuccessProvinces, provincesData, isLoadingPost]);
+  }, [isSuccessProvinces, provincesData, isLoadingPost, locale]);
   const renderedDistricts = useMemo(() => {
     return (
       isSuccessDistricts &&
@@ -155,17 +160,22 @@ function AddAddressModal() {
               className='text-sm md:text-base w-full px-4 py-2 hover:bg-neutral-100 transition-colors text-start'
               type='button'
               onClick={() =>
-                handleSelectCountry('district', d?.name_en, d?.name, d?.id)
+                handleSelectCountry(
+                  'district',
+                  d?.full_name_en,
+                  d?.full_name,
+                  d?.id
+                )
               }
               disabled={isLoadingPost}
             >
-              {d?.name}
+              {locale === 'vi' ? d?.full_name : d?.full_name_en}
             </button>
           </li>
         );
       })
     );
-  }, [isSuccessDistricts, districtsData, isLoadingPost]);
+  }, [isSuccessDistricts, districtsData, isLoadingPost, locale]);
   const renderedWards = useMemo(() => {
     return (
       isSuccessWards &&
@@ -176,34 +186,39 @@ function AddAddressModal() {
               className='text-sm md:text-base w-full px-4 py-2 hover:bg-neutral-100 transition-colors text-start'
               type='button'
               onClick={() =>
-                handleSelectCountry('ward', w?.name_en, w?.name, w?.id)
+                handleSelectCountry(
+                  'ward',
+                  w?.full_name_en,
+                  w?.full_name,
+                  w?.id
+                )
               }
               disabled={isLoadingPost}
             >
-              {w?.name}
+              {locale === 'vi' ? w?.full_name : w?.full_name_en}
             </button>
           </li>
         );
       })
     );
-  }, [isSuccessWards, wardsData, isLoadingPost]);
+  }, [isSuccessWards, wardsData, isLoadingPost, locale]);
   useEffect(() => {
     if (!state.visibleAddAddressModal) {
       setCountry({
         province: {
           code: '',
-          name: '',
-          name_en: '',
+          full_name: '',
+          full_name_en: '',
         },
         district: {
           code: '',
-          name: '',
-          name_en: '',
+          full_name: '',
+          full_name_en: '',
         },
         ward: {
           code: '',
-          name: '',
-          name_en: '',
+          full_name: '',
+          full_name_en: '',
         },
         address_detail: '',
         default: false,
@@ -218,13 +233,13 @@ function AddAddressModal() {
           ...prevCountry,
           district: {
             code: '',
-            name: '',
-            name_en: '',
+            full_name: '',
+            full_name_en: '',
           },
           ward: {
             code: '',
-            name: '',
-            name_en: '',
+            full_name: '',
+            full_name_en: '',
           },
         };
       });
@@ -237,9 +252,9 @@ function AddAddressModal() {
         default: country.default,
         type: country.type,
         country: defaultCountry,
-        province: country.province.name,
-        district: country.district.name,
-        ward: country.ward.name,
+        province: country.province.full_name,
+        district: country.district.full_name,
+        ward: country.ward.full_name,
         address_detail: country.address_detail,
       });
     },
@@ -278,10 +293,10 @@ function AddAddressModal() {
               onClick={() => handleChangeTab('provinces')}
               disabled={isLoadingPost}
             >
-              {country?.province?.name
+              {country?.province?.full_name
                 ? locale === 'vi'
-                  ? country.province.name
-                  : country.province.name_en
+                  ? country.province.full_name
+                  : country.province.full_name_en
                 : t('select_province')}
             </button>
             <ul
@@ -313,10 +328,10 @@ function AddAddressModal() {
               onClick={() => handleChangeTab('districts')}
               disabled={isLoadingPost}
             >
-              {country?.district?.name
+              {country?.district?.full_name
                 ? locale === 'vi'
-                  ? country.district.name
-                  : country.district.name_en
+                  ? country.district.full_name
+                  : country.district.full_name_en
                 : t('select_district')}
             </button>
             <ul
@@ -352,10 +367,10 @@ function AddAddressModal() {
               onClick={() => handleChangeTab('wards')}
               disabled={isLoadingPost}
             >
-              {country?.ward?.name
+              {country?.ward?.full_name
                 ? locale === 'vi'
-                  ? country.ward.name
-                  : country.ward.name_en
+                  ? country.ward.full_name
+                  : country.ward.full_name_en
                 : t('select_ward')}
             </button>
             <ul

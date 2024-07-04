@@ -148,6 +148,7 @@ const MenuIcon: React.FC<Props> = React.memo(
             onClick={openMenu}
             ref={container}
             className='relative circles-menu bg-red-500 p-6 w-full h-full grid grid-cols-4 gap-1'
+            aria-label='menu-btn'
           >
             {circles}
           </button>
@@ -158,6 +159,7 @@ const MenuIcon: React.FC<Props> = React.memo(
             onClick={() => clickOutside}
             ref={container}
             className='relative circles-menu bg-red-500 p-6 w-full h-full grid grid-cols-4 gap-1'
+            aria-label='menu-btn'
           >
             {circles}
           </button>

@@ -57,7 +57,7 @@ function Intro() {
         clearTimeout(timeout);
       };
     }
-  }, []);
+  }, [isDisplay]);
   return isDisplay ? (
     <div
       ref={containerRef}

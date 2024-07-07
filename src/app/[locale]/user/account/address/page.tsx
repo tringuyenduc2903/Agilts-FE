@@ -113,7 +113,15 @@ function AddressPage() {
         );
       }) || null
     );
-  }, [addresses, t]);
+  }, [
+    addresses,
+    t,
+    deleteAddress,
+    handleSetDefaultAddress,
+    isLoadingDelete,
+    isLoadingUpdate,
+    setVisibleModal,
+  ]);
   useEffect(() => {
     if (isSuccessDelete) {
       setVisibleModal({

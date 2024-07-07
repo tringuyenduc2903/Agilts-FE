@@ -62,7 +62,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
       router.replace(`/${lang}`);
       closeMenu();
     },
-    [closeMenu, router, setCookie]
+    [closeMenu, router]
   );
   const handleLogout = useCallback(async () => {
     await handleGetCSRFCookie();

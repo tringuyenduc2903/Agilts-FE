@@ -24,7 +24,7 @@ const CustomPaginationV2: React.FC<Props> = ({ totalPage, scroll = false }) => {
         scroll && scrollToTop();
       }
     },
-    [createQueryString, totalPage, curPage, scrollToTop, scroll]
+    [createQueryString, totalPage, curPage, scroll]
   );
 
   const handlePrevious = useCallback(
@@ -35,14 +35,14 @@ const CustomPaginationV2: React.FC<Props> = ({ totalPage, scroll = false }) => {
         scroll && scrollToTop();
       }
     },
-    [createQueryString, curPage, scrollToTop, scroll]
+    [createQueryString, curPage, scroll]
   );
   const handleSetPage = useCallback(
     (page: number) => {
       createQueryString('page', page.toString(), false);
       scroll && scrollToTop();
     },
-    [createQueryString, scrollToTop, scroll]
+    [createQueryString, scroll]
   );
 
   const renderItems = ({ key, value }: PaginationItemRenderProps) => {

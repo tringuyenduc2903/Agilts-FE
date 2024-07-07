@@ -89,17 +89,14 @@ function StoresPage() {
       });
       setCurTab(null);
     },
-    [country, curTab]
+    []
   );
-  const handleChangeTab = useCallback(
-    (tab: string) => {
-      setCurTab((prevTab) => {
-        if (tab === prevTab) return null;
-        return tab;
-      });
-    },
-    [curTab]
-  );
+  const handleChangeTab = useCallback((tab: string) => {
+    setCurTab((prevTab) => {
+      if (tab === prevTab) return null;
+      return tab;
+    });
+  }, []);
   const handleSearch = useCallback(() => {
     createQueryString(
       ['country', 'province', 'district'],
@@ -125,7 +122,7 @@ function StoresPage() {
         );
       })
     );
-  }, [isSuccessProvinces, provincesData]);
+  }, [isSuccessProvinces, provincesData, handleSelectCountry]);
   const renderedDistricts = useMemo(() => {
     return (
       isSuccessDistricts &&
@@ -145,7 +142,7 @@ function StoresPage() {
         );
       })
     );
-  }, [isSuccessDistricts, districtsData]);
+  }, [isSuccessDistricts, districtsData, handleSelectCountry]);
   const renderedBranch = useMemo(() => {
     return (
       isSuccessBranch &&

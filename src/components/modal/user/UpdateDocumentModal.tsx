@@ -33,7 +33,7 @@ function UpdateDocumentModal() {
     const valid = documents.find((d) => d.code === type);
     if (valid) return valid;
     return null;
-  }, [type, documents]);
+  }, [type]);
   const [form, setForm] = useState<Form>({
     number: '',
     issued_name: '',
@@ -82,22 +82,16 @@ function UpdateDocumentModal() {
       });
     }
   }, [state.visibleUpdateDocumentModal]);
-  const handleSelectedType = useCallback(
-    (code: number) => {
-      setType(code);
-      setOpenType(false);
-    },
-    [type]
-  );
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = e.target;
-      setForm((prevForm) => {
-        return { ...prevForm, [name]: value };
-      });
-    },
-    [form]
-  );
+  const handleSelectedType = useCallback((code: number) => {
+    setType(code);
+    setOpenType(false);
+  }, []);
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm((prevForm) => {
+      return { ...prevForm, [name]: value };
+    });
+  }, []);
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();

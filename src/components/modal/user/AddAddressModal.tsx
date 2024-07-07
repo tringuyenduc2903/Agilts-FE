@@ -99,15 +99,12 @@ function AddAddressModal() {
     }
     return null;
   }, [isErrorPost, errorPost]);
-  const handleChangeTab = useCallback(
-    (tab: string) => {
-      setCurTab((prevTab) => {
-        if (tab === prevTab) return null;
-        return tab;
-      });
-    },
-    [curTab]
-  );
+  const handleChangeTab = useCallback((tab: string) => {
+    setCurTab((prevTab) => {
+      if (tab === prevTab) return null;
+      return tab;
+    });
+  }, []);
   const handleSelectCountry = useCallback(
     (full_name: string, full_name_en: string, value: string, code: string) => {
       setCountry((prevCountry) => {
@@ -122,7 +119,7 @@ function AddAddressModal() {
       });
       setCurTab(null);
     },
-    [country, curTab]
+    []
   );
   const renderedProvinces = useMemo(() => {
     return (
@@ -149,7 +146,13 @@ function AddAddressModal() {
         );
       })
     );
-  }, [isSuccessProvinces, provincesData, isLoadingPost, locale]);
+  }, [
+    isSuccessProvinces,
+    provincesData,
+    isLoadingPost,
+    locale,
+    handleSelectCountry,
+  ]);
   const renderedDistricts = useMemo(() => {
     return (
       isSuccessDistricts &&
@@ -175,7 +178,13 @@ function AddAddressModal() {
         );
       })
     );
-  }, [isSuccessDistricts, districtsData, isLoadingPost, locale]);
+  }, [
+    isSuccessDistricts,
+    districtsData,
+    isLoadingPost,
+    locale,
+    handleSelectCountry,
+  ]);
   const renderedWards = useMemo(() => {
     return (
       isSuccessWards &&
@@ -201,7 +210,7 @@ function AddAddressModal() {
         );
       })
     );
-  }, [isSuccessWards, wardsData, isLoadingPost, locale]);
+  }, [isSuccessWards, wardsData, isLoadingPost, locale, handleSelectCountry]);
   useEffect(() => {
     if (!state.visibleAddAddressModal) {
       setCountry({
@@ -258,7 +267,7 @@ function AddAddressModal() {
         address_detail: country.address_detail,
       });
     },
-    [postAddress, country, defaultCountry]
+    [postAddress, country]
   );
   useEffect(() => {
     if (isSuccessPost) {

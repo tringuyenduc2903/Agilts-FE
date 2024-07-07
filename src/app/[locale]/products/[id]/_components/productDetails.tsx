@@ -25,6 +25,7 @@ function ProductDetails({ product }: Props) {
     return product.options.map((o) => {
       return (
         <button
+          key={o.id}
           onClick={() => setCurOption(o)}
           className={`border ${
             curOption.id === o.id
@@ -90,6 +91,7 @@ function ProductDetails({ product }: Props) {
 
             return (
               <Image
+                key={index}
                 className='col-span-1 w-full object-cover border border-neutral-300 rounded-sm cursor-pointer'
                 src={isError ? errorImage : img.image}
                 alt={img?.alt as string}

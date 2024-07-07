@@ -101,15 +101,12 @@ function UpdateAddressModal() {
     }
     return null;
   }, [isErrorUpdate, errorUpdate]);
-  const handleChangeTab = useCallback(
-    (tab: string) => {
-      setCurTab((prevTab) => {
-        if (tab === prevTab) return null;
-        return tab;
-      });
-    },
-    [curTab]
-  );
+  const handleChangeTab = useCallback((tab: string) => {
+    setCurTab((prevTab) => {
+      if (tab === prevTab) return null;
+      return tab;
+    });
+  }, []);
   const handleSelectCountry = useCallback(
     (full_name: string, full_name_en: string, value: string, code: string) => {
       setCountry((prevCountry) => {
@@ -124,7 +121,7 @@ function UpdateAddressModal() {
       });
       setCurTab(null);
     },
-    [country, curTab]
+    []
   );
   const renderedProvinces = useMemo(() => {
     return (
@@ -151,7 +148,13 @@ function UpdateAddressModal() {
         );
       })
     );
-  }, [isSuccessProvinces, provincesData, isLoadingUpdate, locale]);
+  }, [
+    isSuccessProvinces,
+    provincesData,
+    isLoadingUpdate,
+    locale,
+    handleSelectCountry,
+  ]);
   const renderedDistricts = useMemo(() => {
     return (
       isSuccessDistricts &&
@@ -177,7 +180,13 @@ function UpdateAddressModal() {
         );
       })
     );
-  }, [isSuccessDistricts, districtsData, isLoadingUpdate, locale]);
+  }, [
+    isSuccessDistricts,
+    districtsData,
+    isLoadingUpdate,
+    locale,
+    handleSelectCountry,
+  ]);
   const renderedWards = useMemo(() => {
     return (
       isSuccessWards &&
@@ -203,7 +212,7 @@ function UpdateAddressModal() {
         );
       })
     );
-  }, [isSuccessWards, wardsData, isLoadingUpdate, locale]);
+  }, [isSuccessWards, wardsData, isLoadingUpdate, locale, handleSelectCountry]);
   useEffect(() => {
     if (state.visibleUpdateAddressModal) {
       setCountry({
@@ -289,13 +298,7 @@ function UpdateAddressModal() {
         });
       }
     },
-    [
-      updateAddress,
-      country,
-      defaultCountry,
-      state.visibleUpdateAddressModal,
-      defaultAddress,
-    ]
+    [updateAddress, country, state.visibleUpdateAddressModal, defaultAddress]
   );
   useEffect(() => {
     if (isSuccessUpdate) {

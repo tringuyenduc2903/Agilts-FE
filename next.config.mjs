@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 import createNextIntlPlugin from 'next-intl/plugin';
-console.log(process.env.NEXT_PUBLIC_HOST_IMAGES);
 const withNextIntl = createNextIntlPlugin();
 const nextConfig = {
   images: {

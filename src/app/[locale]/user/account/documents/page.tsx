@@ -66,7 +66,7 @@ function DocumentsPage() {
         );
       }) || null
     );
-  }, [allDocuments, documents, t, router, locale]);
+  }, [allDocuments, t, router, locale]);
   if (isLoadingDocuments) return <Loading />;
   return (
     <div className='w-full h-full flex flex-col gap-6'>

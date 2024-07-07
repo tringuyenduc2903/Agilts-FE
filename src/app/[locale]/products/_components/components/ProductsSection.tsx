@@ -1,23 +1,24 @@
 import React, { useMemo } from 'react';
-import { Product, SingleProduct } from '@/components/ui/SingleProduct';
+import { SingleProduct } from '@/components/ui/SingleProduct';
 import CustomPagination from '@/components/ui/CustomPagination';
+import { Product } from '@/types/types';
 type Props = {
   products: Product[];
-  // total_pages: string | number;
-  // current_page: string | number;
+  total_pages: string | number;
+  current_page: string | number;
 };
-function ProductsSection({ products }: Props) {
+function ProductsSection({ products, total_pages, current_page }: Props) {
   const renderedProducts = useMemo(() => {
     return products?.map((p: Product) => {
       return (
         <SingleProduct
           articleClass='m-auto md:m-0 w-full max-w-[300px] cursor-pointer flex flex-col gap-4'
-          key={p.title}
+          key={p.id}
           product={p}
         >
           <SingleProduct.Image />
-          <SingleProduct.Category />
-          <div className='flex items-center justify-between gap-4 font-bold'>
+          <SingleProduct.Type />
+          <div className='flex flex-col gap-2 font-bold'>
             <SingleProduct.Title />
             <SingleProduct.Price />
           </div>
@@ -30,9 +31,14 @@ function ProductsSection({ products }: Props) {
       <div className='flex flex-wrap justify-between gap-x-4 gap-y-16'>
         {renderedProducts}
       </div>
-      <div className='w-full'>
-        <CustomPagination curPage={Number(1)} totalPage={Number(100)} />
-      </div>
+      {Number(total_pages) > 1 && (
+        <div className='w-full'>
+          <CustomPagination
+            curPage={Number(current_page)}
+            totalPage={Number(total_pages)}
+          />
+        </div>
+      )}
     </div>
   );
 }

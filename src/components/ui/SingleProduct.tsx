@@ -1,17 +1,10 @@
+import { Product } from '@/types/types';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import React, { useContext, createContext, useState, useMemo } from 'react';
+import React, { useContext, createContext, useState } from 'react';
 import { IoCartOutline } from 'react-icons/io5';
-export type Product = {
-  id: string | number;
-  category: string;
-  title: string;
-  price: string;
-  salePrice: string | null;
-  img: string | null;
-  description: string;
-};
+import errorImage from '@/assets/not-found-img.avif';
 type PropsProductContext = {
   product: Product;
   isHover: Product | null;
@@ -56,37 +49,32 @@ export function SingleProduct({
   );
 }
 
-SingleProduct.Category = function ProductCategory() {
+SingleProduct.Type = function ProductType() {
   const { product } = useProductContext();
   return (
     <p className='font-bold text-red-500 text-[12px] md:text-sm uppercase'>
-      {product.category}
+      {product.type}
     </p>
   );
 };
 
 SingleProduct.Title = function ProductTitle() {
   const { product } = useProductContext();
-  return <p className='uppercase'>{product.title}</p>;
+  return <p className='uppercase line-clamp-2'>{product.name}</p>;
 };
 
 SingleProduct.Price = function ProductPrice() {
   const { product } = useProductContext();
+  const t = useTranslations('common');
   return (
-    <div className='flex items-center gap-2'>
+    <div className='w-full flex items-center gap-2'>
       <p
-        title={product.price}
-        className={`${
-          product.salePrice ? 'line-through' : ''
-        } max-w-[128px] truncate`}
+        title={product.min_price.preview}
+        className={`w-full truncate overflow-hidden flex justify-between items-center gap-4`}
       >
-        {product.price}
+        <span> {t('from')}</span>
+        <span>{product.min_price.preview}</span>
       </p>
-      {product.salePrice && (
-        <p className='max-w-[128px] truncate' title={product.salePrice}>
-          {product.salePrice}
-        </p>
-      )}
     </div>
   );
 };
@@ -98,16 +86,23 @@ SingleProduct.Image = function ProductImage({
 }) {
   const { product, isHover } = useProductContext();
   const t = useTranslations('common');
+  const [fallbackImg, setFallbackImg] = useState(false);
   return (
-    <div className={`${customClass ? customClass : 'max-h-[300px]'} relative`}>
-      {product.img && (
-        <Image
-          className='w-full h-full object-cover'
-          src={product.img}
-          alt={product.title}
-          fetchPriority='low'
-        />
-      )}
+    <div
+      className={`${
+        customClass ? customClass : 'max-h-[280px] w-full h-full'
+      } relative`}
+    >
+      <Image
+        className='w-full h-full object-cover'
+        src={fallbackImg ? errorImage : product.images[0]?.image}
+        alt={product.images[0]?.alt}
+        fetchPriority='low'
+        loading='lazy'
+        onError={() => setFallbackImg(true)}
+        width={300}
+        height={280}
+      />
       <div
         style={{ background: 'rgba(220, 38, 38, 0.9)' }}
         className={`absolute top-0 left-0 w-full h-full z-10 flex justify-center items-center ${

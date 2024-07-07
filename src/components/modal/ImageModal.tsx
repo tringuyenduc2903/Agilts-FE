@@ -12,10 +12,13 @@ import useClickOutside from '@/lib/hooks/useClickOutside';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import errorImage from '@/assets/not-found-img.avif';
 function ImageModal() {
   const containerRef = useRef(null);
   const imgRef = useRef(null);
+  const [fallbackImg, setFallbackImg] = useState(false);
   const { state, setVisibleModal } = useContext(ModalContext);
+  console.log(state?.visibleImageModal?.images);
   const { sectionRef, clickOutside } = useClickOutside(() =>
     setVisibleModal('visibleImageModal')
   );
@@ -86,9 +89,16 @@ function ImageModal() {
           {state.visibleImageModal && (
             <Image
               ref={imgRef}
-              className='w-full h-full object-cover'
-              src={state?.visibleImageModal?.images[curImage - 1]}
-              alt='test-img'
+              className='w-full max-w-[600px] h-full max-h-[600px] object-cover'
+              width={600}
+              height={600}
+              src={
+                fallbackImg
+                  ? errorImage
+                  : state?.visibleImageModal?.images[curImage - 1]
+              }
+              alt={`img-${curImage}`}
+              onError={() => setFallbackImg(true)}
             />
           )}
           <button

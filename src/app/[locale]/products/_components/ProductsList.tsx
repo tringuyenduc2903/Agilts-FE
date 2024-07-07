@@ -1,33 +1,81 @@
 'use client';
 import React from 'react';
 import { useTranslations } from 'next-intl';
-import { categoriesData, productsData, tagsData } from './data';
 import SortSection from './components/SortSection';
 import SearchSection from './components/SearchSection';
 import FilterPriceSection from './components/FilterPriceSection';
 import ProductsSection from './components/ProductsSection';
 import CategoriesSection from './components/CategoriesSection';
-import TagsSection from './components/TagsSection';
+import {
+  useGetFilterQuery,
+  useGetProductsQuery,
+} from '@/lib/redux/query/storesQuery';
+import { useSearchParams } from 'next/navigation';
+import ColorsSection from './components/ColorsSection';
+import ModelSection from './components/ModelSection';
 function ProductsList() {
   const t = useTranslations('common');
+  const searchParams = useSearchParams();
+  const { data: filterData, isSuccess: isSuccessFilter } =
+    useGetFilterQuery(null);
+  const { data: productsData, isSuccess: isSuccessProducts } =
+    useGetProductsQuery(searchParams.toString());
   return (
     <section className='py-16 flex flex-col gap-16'>
       <div className='container m-auto px-4 flex flex-col xl:flex-row justify-between gap-4'>
-        <h3 className='text-start font-bold tracking-[2px]'>
-          {t('showing')} 1–12 {t('of')} 21 {t('results')}
-        </h3>
+        {productsData?.total > 0 ? (
+          <h3 className='text-start font-bold tracking-[2px]'>
+            {t('showing')} {productsData?.from}-{productsData?.to} {t('of')}{' '}
+            {productsData?.total} {t('results')}
+          </h3>
+        ) : (
+          <h3 className='text-start font-bold tracking-[2px]'>
+            {t('showing')} {productsData?.total} {t('result')}
+          </h3>
+        )}
         <div className='flex flex-col md:flex-row xl:items-center xl:justify-center gap-8'>
           <SortSection />
           <SearchSection />
         </div>
       </div>
       <div className='container m-auto px-4 grid grid-cols-1 xl:grid-cols-4 gap-16 overflow-hidden'>
-        <ProductsSection products={productsData} />
-        <div className='col-span-1 xl:order-2 order-1 flex flex-col gap-8'>
-          <FilterPriceSection />
-          <CategoriesSection categories={categoriesData} />
-          <TagsSection tags={tagsData} />
-        </div>
+        {isSuccessProducts && productsData?.data?.length > 0 && (
+          <ProductsSection
+            products={productsData?.data}
+            total_pages={productsData?.total_pages}
+            current_page={productsData?.current_page}
+          />
+        )}
+        {isSuccessProducts && productsData?.data?.length === 0 && (
+          <div className='c ol-span-1 xl:col-span-3 xl:order-1 order-2 flex justify-center'>
+            <p className='my-8 text-xl sm:text-2xl md:text-4xl font-bold'>
+              {t('mess_no_product')}
+            </p>
+          </div>
+        )}
+        {isSuccessFilter && (
+          <div className='col-span-1 xl:order-2 order-1 flex flex-col gap-8'>
+            <FilterPriceSection
+              minPrice={filterData[1]?.data}
+              maxPrice={filterData[2]?.data}
+            />
+            <ModelSection
+              name={filterData[4]?.name as string}
+              label={filterData[4]?.label as string}
+              data={filterData[4]?.data}
+            />
+            <CategoriesSection
+              name={filterData[5]?.name as string}
+              label={filterData[5]?.label as string}
+              data={filterData[5]?.data}
+            />
+            <ColorsSection
+              name={filterData[3]?.name as string}
+              label={filterData[3]?.label as string}
+              data={filterData[3]?.data}
+            />
+          </div>
+        )}
       </div>
     </section>
   );

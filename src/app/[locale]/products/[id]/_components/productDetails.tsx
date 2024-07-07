@@ -1,22 +1,42 @@
 'use client';
-import { useParams } from 'next/navigation';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
-import { productsData, tagsData } from '../../_components/data';
 import Image from 'next/image';
 import Stars from '@/components/ui/Stars';
 import { useTranslations } from 'next-intl';
 import { scrollToElement } from '@/lib/utils/scrollElement';
 import { FaAngleUp, FaAngleDown } from 'react-icons/fa';
 import { ModalContext } from '@/contexts/ModalProvider';
-import testImg1 from '@/assets/test1.jpg';
-import testImg2 from '@/assets/h4-slider-img-1.jpg';
-
-function ProductDetails() {
-  const { id } = useParams();
+import { Product, ProductOption } from '@/types/types';
+import errorImage from '@/assets/not-found-img.avif';
+type Props = {
+  product: Product;
+};
+function ProductDetails({ product }: Props) {
   const { setVisibleModal } = useContext(ModalContext);
   const t = useTranslations('common');
   const [isHoverAddToCart, setIsHoverAddToCart] = useState(false);
+  const [curOption, setCurOption] = useState<ProductOption>(
+    () => product.options[0]
+  );
   const [quantity, setQuantity] = useState(1);
+  const [fallbackImg, setFallbackImg] = useState(false);
+  const [fallBackListImage, setFallBackListImage] = useState<number[]>([]);
+  const renderedOptions = useMemo(() => {
+    return product.options.map((o) => {
+      return (
+        <button
+          onClick={() => setCurOption(o)}
+          className={`border ${
+            curOption.id === o.id
+              ? 'border-red-500 text-red-500'
+              : 'border-neutral-300'
+          } px-4 py-1 font-bold`}
+        >
+          {o.model_name}
+        </button>
+      );
+    });
+  }, [product.options, curOption]);
   const handleEnterQuantity = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
@@ -40,111 +60,77 @@ function ProductDetails() {
       return prevQuantity + 1;
     });
   }, []);
-  const curProduct = useMemo(() => {
-    return productsData.find((product) => product.id == id);
-  }, [productsData, id]);
-  const renderedTags = useMemo(() => {
-    return tagsData?.splice(0, 3).map((t, index) => {
-      return (
-        <li className='w-max flex justify-between gap-3' key={t.slug}>
-          <button className='uppercase text-neutral-500 text-[12px] md:text-sm font-medium hover:text-red-500 transition-colors'>
-            {t?.title}
-          </button>
-          {index !== 2 && (
-            <div className='flex justify-center items-center'>
-              <span className='relative w-4 h-[1px] bg-neutral-800'></span>
-            </div>
-          )}
-        </li>
-      );
-    });
-  }, [tagsData]);
+  console.log(curOption);
   return (
     <section className='container md:m-auto px-6 md:px-0 grid grid-cols-1 lg:grid-cols-2 gap-16 py-8 md:py-16 overflow-hidden'>
       <div className='col-span-1 flex flex-col items-start gap-6'>
         <Image
-          className='w-full max-h-[600px] object-cover border border-neutral-300 rounded-sm cursor-pointer'
-          src={curProduct?.img as string}
-          alt={curProduct?.title as string}
+          className='w-full object-cover border border-neutral-300 rounded-sm cursor-pointer'
+          fetchPriority='high'
+          width={550}
+          height={600}
+          src={
+            fallbackImg ? errorImage : (curOption.images[0]?.image as string)
+          }
+          alt={product.images[0]?.alt as string}
+          onError={() => setFallbackImg(true)}
           onClick={() =>
             setVisibleModal({
               visibleImageModal: {
-                curImage: 1,
-                totalImages: 2,
-                images: [testImg1, testImg2],
+                curImage: 0,
+                totalImages: curOption.images.length,
+                images: curOption.images,
               },
             })
           }
         />
         <div className='w-full grid grid-cols-3 gap-6'>
-          <Image
-            className='col-span-1 w-full max-h-[180px] object-cover border border-neutral-300 rounded-sm cursor-pointer'
-            src={curProduct?.img as string}
-            alt={curProduct?.title as string}
-            onClick={() =>
-              setVisibleModal({
-                visibleImageModal: {
-                  curImage: 2,
-                  totalImages: 2,
-                  images: [testImg1, testImg2],
-                },
-              })
-            }
-          />
-          <Image
-            className='col-span-1 w-full max-h-[180px] object-cover border border-neutral-300 rounded-sm cursor-pointer'
-            src={curProduct?.img as string}
-            alt={curProduct?.title as string}
-            onClick={() =>
-              setVisibleModal({
-                visibleImageModal: {
-                  curImage: 2,
-                  totalImages: 2,
-                  images: [testImg1, testImg2],
-                },
-              })
-            }
-          />
-          <Image
-            className='col-span-1 w-full max-h-[180px] object-cover border border-neutral-300 rounded-sm cursor-pointer'
-            src={curProduct?.img as string}
-            alt={curProduct?.title as string}
-            onClick={() =>
-              setVisibleModal({
-                visibleImageModal: {
-                  curImage: 2,
-                  totalImages: 2,
-                  images: [testImg1, testImg2],
-                },
-              })
-            }
-          />
+          {curOption?.images?.slice(0, 3)?.map((img, index: number) => {
+            const isError = fallBackListImage.includes(index);
+
+            return (
+              <Image
+                className='col-span-1 w-full object-cover border border-neutral-300 rounded-sm cursor-pointer'
+                src={isError ? errorImage : img.image}
+                alt={img?.alt as string}
+                width={250}
+                height={180}
+                onError={() =>
+                  setFallBackListImage([...fallBackListImage, index])
+                }
+                onClick={() =>
+                  setVisibleModal({
+                    visibleImageModal: {
+                      curImage: index,
+                      totalImages: curOption.images.length,
+                      images: curOption.images,
+                    },
+                  })
+                }
+              />
+            );
+          })}
         </div>
       </div>
       <div className='col-span-1 flex flex-col gap-8'>
         <div className='flex flex-col gap-2'>
-          <h1 className='text-2xl md:text-4xl font-bold'>
-            {curProduct?.title}
+          <p className='text-base md:text-lg font-bold flex items-center gap-4'>
+            <span>{t('status')}:</span>
+            <span className='text-red-600'>{product.status}</span>
+          </p>
+          <h1
+            title={product?.name}
+            className='line-clamp-2 text-2xl md:text-4xl font-bold'
+          >
+            {product?.name}
           </h1>
           <div className='flex flex-col sm:flex-row sm:items-center sm:gap-4'>
             <p
-              title={curProduct?.price}
-              className={`max-w-[280px] truncate font-bold ${
-                curProduct?.salePrice
-                  ? 'line-through text-base md:text-lg'
-                  : 'text-lg md:text-xl'
-              }`}
+              title={curOption?.price_preview}
+              className='max-w-[280px] truncate font-bold text-lg md:text-xl'
             >
-              {curProduct?.price}
+              {curOption?.price_preview}
             </p>
-            {curProduct?.salePrice && (
-              <p
-                title={curProduct?.salePrice}
-                className='max-w-[280px] truncate font-bold text-lg md:text-xl'
-              >
-                {curProduct?.salePrice}
-              </p>
-            )}
           </div>
         </div>
         <div className='flex items-center gap-4 sm:gap-6'>
@@ -159,12 +145,41 @@ function ProductDetails() {
             (1 {t('customers_review')})
           </button>
         </div>
-        <p className='text-neutral-500'>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nulla
-          aliquam voluptatibus consequatur delectus, itaque repellendus omnis,
-          vel dolorum dolorem deleniti reprehenderit dolore sint modi ad magni,
-          nam corporis. Quam, temporibus.
-        </p>
+        <div className='flex flex-col gap-4'>
+          <p className='uppercase font-bold text-base md:text-lg'>
+            {t('options')}
+          </p>
+          <div className='w-full flex gap-4'>
+            <ul className='flex flex-wrap gap-4'>{renderedOptions}</ul>
+          </div>
+        </div>
+        <div className='flex flex-col gap-4'>
+          <p className='uppercase font-bold text-base md:text-lg'>
+            {t('quick_info')}
+          </p>
+          <div className='text-[12px] md:text-sm font-medium flex flex-col gap-2'>
+            <p className='flex gap-2'>
+              <span className='text-red-500'>{t('type')}:</span>
+              <span className='text-neutral-500'>{product.type}</span>
+            </p>
+            <p className='flex gap-2'>
+              <span className='text-red-500'>SKU:</span>
+              <span className='text-neutral-500'>{curOption.sku}</span>
+            </p>
+            {curOption.color && (
+              <p className='flex gap-2'>
+                <span className='text-red-500'>{t('color')}:</span>
+                <span className='text-neutral-500'>{curOption.color}</span>
+              </p>
+            )}
+            {curOption.model_name && (
+              <p className='flex gap-2'>
+                <span className='text-red-500'>{t('model_name')}:</span>
+                <span className='text-neutral-500'>{curOption.model_name}</span>
+              </p>
+            )}
+          </div>
+        </div>
         <div className='flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8'>
           <div className='w-max h-[55px] flex items-center border border-neutral-300'>
             <input
@@ -200,40 +215,23 @@ function ProductDetails() {
             </span>
           </button>
         </div>
-        <div className='flex flex-col gap-4'>
-          <p className='uppercase font-bold text-base md:text-lg'>
-            {t('quick_info')}
-          </p>
-          <div className='text-[12px] md:text-sm font-medium flex flex-col gap-2'>
-            <p className='flex gap-2'>
-              <span className='text-red-500'>SKU:</span>
-              <span className='text-neutral-500'>PRO01</span>
+        {curOption.specifications.length > 0 && (
+          <div className='flex flex-col gap-4'>
+            <p className='uppercase font-bold text-base md:text-lg'>
+              {t('special_specification')}
             </p>
-            <p className='flex gap-2'>
-              <span className='text-red-500 uppercase'>{t('categories')}:</span>
-              <span className='text-neutral-500 uppercase'>
-                {curProduct?.category}
-              </span>
-            </p>
-            <div className='flex gap-2'>
-              <p className='text-red-500 uppercase'>{t('tags')}:</p>
-              <ul className={`flex flex-wrap gap-3 overflow-hidden`}>
-                {renderedTags}
-              </ul>
-            </div>
+            <ul className='py-2 sm:py-4 md:py-8 px-4 sm:px-8 bg-neutral-100 flex flex-col gap-4'>
+              {curOption.specifications.map((s) => {
+                return (
+                  <li className='flex flex-col gap-2 text-sm' key={s.key}>
+                    <p className='text-red-500 font-bold'>{s.key}</p>
+                    <p className='font-bold'>{s.value}</p>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-        </div>
-        <div className='flex flex-col gap-4'>
-          <p className='uppercase font-bold text-base md:text-lg'>
-            {t('description')}
-          </p>
-          <p className='text-neutral-500'>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nulla
-            aliquam voluptatibus consequatur delectus, itaque repellendus omnis,
-            vel dolorum dolorem deleniti reprehenderit dolore sint modi ad
-            magni, nam corporis. Quam, temporibus.
-          </p>
-        </div>
+        )}
       </div>
     </section>
   );

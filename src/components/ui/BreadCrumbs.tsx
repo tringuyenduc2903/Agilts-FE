@@ -37,7 +37,10 @@ const BreadCrumbs = React.memo(
           {details && (
             <div className='flex items-center gap-4'>
               <span className='w-[32px] relative before:absolute before:w-[24px] before:h-[1px] before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-neutral-800'></span>
-              <p className='font-bold uppercase tracking-[2px] hover:text-red-500 transition-colors cursor-pointer'>
+              <p
+                title={details}
+                className='max-w-[120px] truncate font-bold uppercase tracking-[2px] hover:text-red-500 transition-colors cursor-pointer'
+              >
                 {details}
               </p>
             </div>

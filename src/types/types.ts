@@ -1,5 +1,4 @@
 import { ReactElement } from 'react';
-import { IconType } from 'react-icons/lib';
 
 export type User = {
   id: string | number;
@@ -68,6 +67,95 @@ export type SocialProvider = {
   customer_id: number;
   provider_id: number;
   provider_name: string;
+  created_at: string;
+  updated_at: string;
+};
+type KeyObject = {
+  [key: string]: string;
+};
+export type ProductFilter = {
+  name: string;
+  label: string;
+  data: string | number | KeyObject;
+};
+export type ProductOption = {
+  id: number;
+  sku: string;
+  price: number;
+  price_preview: string;
+  images: [
+    {
+      image: string;
+      alt: string;
+    }
+  ];
+  color: string;
+  model_name: string;
+  specifications: [
+    {
+      key: string;
+      value: string;
+    }
+  ];
+  product_id: number;
+  created_at: string;
+  updated_at: string;
+};
+export type Product = {
+  id: number;
+  name: string;
+  description: string;
+  min_price: {
+    raw: number;
+    preview: string;
+  };
+  max_price: {
+    raw: number;
+    preview: string;
+  };
+  images: [
+    {
+      image: string;
+      alt: string;
+    }
+  ];
+  videos: [
+    {
+      image: string;
+      title: string;
+      description: string;
+      video: {
+        provider: string;
+        id: string;
+        url: string;
+      };
+    }
+  ];
+  options: ProductOption[];
+  categories: [
+    {
+      id: number;
+      name: string;
+      pivot: {
+        product_id: number;
+        category_id: number;
+      };
+      deleted_at: string;
+      created_at: string;
+      updated_at: string;
+    }
+  ];
+  enabled: boolean;
+  visibility: string;
+  type: string;
+  status: string;
+  specifications: [
+    {
+      key: string;
+      value: string;
+    }
+  ];
+  deleted_at: string;
   created_at: string;
   updated_at: string;
 };

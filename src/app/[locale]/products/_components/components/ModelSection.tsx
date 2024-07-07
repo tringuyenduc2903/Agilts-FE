@@ -10,7 +10,7 @@ type Props = {
     [key: string]: string;
   };
 };
-function CategoriesSection({ name, label, data }: Props) {
+function ModelSection({ name, data }: Props) {
   const t = useTranslations('common');
   const searchParams = useSearchParams();
   const [createQueryString, removeValueQueryString] = useQueryString();
@@ -23,7 +23,7 @@ function CategoriesSection({ name, label, data }: Props) {
       };
     });
   }, [data]);
-  const renderedCategories = useMemo(() => {
+  const renderedModels = useMemo(() => {
     return convertData?.map((d) => {
       return (
         <li className='h-max' key={d.id}>
@@ -41,9 +41,7 @@ function CategoriesSection({ name, label, data }: Props) {
   }, [convertData, createQueryString, searchParams, name]);
   return (
     <div className='flex flex-col gap-4'>
-      <h2 className='text-xl md:text-2xl font-bold uppercase'>
-        {t('categories')}
-      </h2>
+      <h2 className='text-xl md:text-2xl font-bold uppercase'>{t('models')}</h2>
       <ul
         style={{
           height: viewMore ? `${36 * convertData.length + 36}px` : '256px',
@@ -60,7 +58,7 @@ function CategoriesSection({ name, label, data }: Props) {
             {t('all')}
           </button>
         </li>
-        {renderedCategories}
+        {renderedModels}
       </ul>
       <span className='w-full h-[2px] bg-red-500'></span>
       <button
@@ -78,4 +76,4 @@ function CategoriesSection({ name, label, data }: Props) {
   );
 }
 
-export default CategoriesSection;
+export default ModelSection;

@@ -70,7 +70,7 @@ export default async function HomeLayout({
           <StoreProvider>
             <FetchDataProvider>
               <ModalProvider>
-                <DynamicIntro />
+                {/* <DynamicIntro /> */}
                 <DynamicHeader />
                 {children}
                 <DynamicScrollToTop />

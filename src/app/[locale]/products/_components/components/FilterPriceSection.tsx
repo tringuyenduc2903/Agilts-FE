@@ -2,8 +2,11 @@ import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import RangeSlider from '@/components/ui/RangeSlider';
 import useQueryString from '@/lib/hooks/useQueryString';
-
-function FilterPriceSection() {
+type Props = {
+  minPrice: number | string;
+  maxPrice: number | string;
+};
+function FilterPriceSection({ minPrice, maxPrice }: Props) {
   const t = useTranslations('common');
   const [isHoverFilterPrice, setIsHoverFilterPrice] = useState(false);
   const [createQueryString] = useQueryString();
@@ -15,8 +18,8 @@ function FilterPriceSection() {
         {t('filter_title')}
       </h2>
       <RangeSlider
-        min={0}
-        max={100000000}
+        min={Number(minPrice)}
+        max={Number(maxPrice)}
         onChange={({ min, max }) => {
           setPriceMin(min);
           setPriceMax(max);
@@ -29,7 +32,7 @@ function FilterPriceSection() {
         onMouseLeave={() => setIsHoverFilterPrice(false)}
         onClick={() =>
           createQueryString(
-            ['priceMin', 'priceMax'],
+            ['minPrice', 'maxPrice'],
             [priceMin.toString(), priceMax.toString()]
           )
         }

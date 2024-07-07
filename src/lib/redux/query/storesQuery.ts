@@ -24,14 +24,14 @@ export const storesApi = createApi({
       }),
       getProducts: builder.query({
         query: (search) => ({
-          url: `/api/product${search ? `?${search}` : ''}`,
+          url: `/api${getLangRoute()}/product${search ? `?${search}` : ''}`,
           method: 'GET',
         }),
         providesTags: ['products'],
       }),
       getProductDetails: builder.query({
         query: (id) => ({
-          url: `/api/product/${id}`,
+          url: `/api${getLangRoute()}/product/${id}`,
           method: 'GET',
         }),
       }),

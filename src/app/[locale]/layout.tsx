@@ -9,25 +9,23 @@ import StoreProvider from '@/contexts/StoreProvider';
 import dynamic from 'next/dynamic';
 import { title } from '@/config/config';
 import { cookies } from 'next/headers';
-// const DynamicIntro = dynamic(
-//   () => import('../../components/common/Intro/Intro'),
-//   {
-//     ssr: false,
-//   }
-// );
+
 const DynamicHeader = dynamic(
   () => import('@/components/common/Header/Header'),
   { ssr: false }
 );
 const DynamicScrollToTop = dynamic(
   () => import('@/components/common/Button/ScrollToTop'),
-  { ssr: false }
+  { ssr: true }
 );
 const DynamicFooter = dynamic(
   () => import('@/components/common/Footer/Footer'),
   { ssr: false }
 );
-const DynamicModal = dynamic(() => import('@/components/modal/Modal'));
+const DynamicModal = dynamic(() => import('@/components/modal/Modal'), {
+  ssr: true,
+});
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('head');
 
@@ -46,6 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
   };
 }
+
 export default async function HomeLayout({
   children,
 }: Readonly<{
@@ -54,6 +53,7 @@ export default async function HomeLayout({
   const cookieStore = cookies();
   const localeCookie = cookieStore.get('NEXT_LOCALE');
   const lang = localeCookie ? localeCookie.value : 'vi';
+
   return (
     <html lang={lang}>
       <body className='flex flex-col justify-between'>
@@ -61,7 +61,6 @@ export default async function HomeLayout({
         <StoreProvider>
           <FetchDataProvider>
             <ModalProvider>
-              {/* <DynamicIntro /> */}
               <DynamicHeader />
               {children}
               <DynamicScrollToTop />

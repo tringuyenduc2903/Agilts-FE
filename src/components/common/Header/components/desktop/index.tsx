@@ -47,7 +47,7 @@ function DesktopNavigation() {
       router.refresh();
       setIsOpenMenu(false);
     },
-    [router, setCookie]
+    [router, setCookie, pathname]
   );
   return (
     <>

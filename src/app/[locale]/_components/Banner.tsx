@@ -234,7 +234,7 @@ function Banner() {
                         className='relative w-max sm:w-[220px] h-[36px] sm:h-[46px] md:h-[55px] text-sm uppercase bg-neutral-50 text-neutral-800 px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'
                         onMouseEnter={() => setIsHoverButton('contact')}
                         onMouseLeave={() => setIsHoverButton(null)}
-                        onClick={() => router.push('/contact')}
+                        onClick={() => router.push('/contact-us')}
                       >
                         <span
                           className={`w-[142px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${

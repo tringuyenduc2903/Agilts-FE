@@ -1,13 +1,11 @@
-'use client';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import notfound from '@/assets/error-img-1.png';
 import Image from 'next/image';
-function NotFound() {
-  const t = useTranslations('common');
-  const [isHoverButton, setIsHoverButton] = useState(false);
-  const router = useRouter();
+import { cookies } from 'next/headers';
+import Link from 'next/link';
+async function NotFound() {
+  const cookieStore = cookies();
+  const t = await getTranslations('common');
   return (
     <main className='m-auto pt-[72px] container h-screen px-4'>
       <div className='relative w-full h-full flex items-center justify-center'>
@@ -22,16 +20,13 @@ function NotFound() {
             <p className='text-center lg:text-start'>{t('error-page-mess1')}</p>
             <p className='text-center lg:text-start'>{t('error-page-mess2')}</p>
           </div>
-          <button
+          <Link
             className='relative w-max m-auto lg:m-0 sm:w-[230px] h-[36px] sm:h-[46px] md:h-[55px] text-sm md:text-base uppercase bg-red-600 text-white px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'
-            onMouseEnter={() => setIsHoverButton(true)}
-            onMouseLeave={() => setIsHoverButton(false)}
-            onClick={() => router.replace('/')}
+            href={`/${cookieStore.get('NEXT_LOCALE')?.value}`}
           >
             <span
-              className={`w-[164px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${
-                isHoverButton ? 'sm:translate-x-[10%]' : 'sm:translate-x-0'
-              } px-4 z-10 bg-red-600 transition-all duration-200 text-sm`}
+              className={`w-[164px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 hover:sm:translate-x-[10%] sm:translate-x-0'
+               px-4 z-10 bg-red-600 transition-all duration-200 text-sm`}
             >
               {t('back-home')}
             </span>
@@ -39,7 +34,7 @@ function NotFound() {
               <span className='w-full h-[1px] bg-white'></span>
               <span className='w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-l-[10px] border-l-white'></span>
             </span>
-          </button>
+          </Link>
         </section>
         <section className='absolute lg:relative lg:w-1/2'>
           <Image

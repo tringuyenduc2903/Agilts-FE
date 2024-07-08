@@ -36,6 +36,7 @@ const nextConfig = {
   },
   experimental: {
     missingSuspenseWithCSRBailout: false,
+    instrumentationHook: true,
   },
 };
 

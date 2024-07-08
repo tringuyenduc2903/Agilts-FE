@@ -63,7 +63,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
       router.refresh();
       closeMenu();
     },
-    [closeMenu, router]
+    [closeMenu, router, pathname]
   );
   const handleLogout = useCallback(async () => {
     await handleGetCSRFCookie();

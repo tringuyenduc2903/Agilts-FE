@@ -99,7 +99,6 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
     dispatch,
     router,
     locale,
-    closeMenu,
   ]);
   return (
     <aside

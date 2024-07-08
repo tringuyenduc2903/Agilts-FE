@@ -4,6 +4,7 @@ import { getMessages } from 'next-intl/server';
 import { cookies } from 'next/headers';
 import { Open_Sans } from 'next/font/google';
 import './globals.css';
+import Script from 'next/script';
 
 const inter = Open_Sans({
   subsets: ['latin'],
@@ -34,12 +35,8 @@ export default async function RootLayout({
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <meta name='theme-color' content='#fff' />
         <link rel='preconnect' href='https://fonts.googleapis.com' />
+        <link rel='preconnect' href='https://fonts.gstatic.com' />
         <link rel='dns-prefetch' href='https://fonts.googleapis.com' />
-        <link
-          rel='preconnect'
-          href='https://fonts.gstatic.com'
-          crossOrigin='anonymous'
-        />
         <link rel='dns-prefetch' href='https://fonts.gstatic.com' />
         <link
           rel='apple-touch-icon'
@@ -65,6 +62,7 @@ export default async function RootLayout({
         <NextIntlClientProvider locale={lang} messages={messages}>
           {children}
         </NextIntlClientProvider>
+        <Script defer src='/service-worker.js' />
       </body>
     </html>
   );

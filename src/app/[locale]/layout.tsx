@@ -3,7 +3,6 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ModalProvider } from '@/contexts/ModalProvider';
 import { FetchDataProvider } from '@/contexts/FetchDataProvider';
 import { getTranslations } from 'next-intl/server';
-import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/react';
 import StoreProvider from '@/contexts/StoreProvider';
 import dynamic from 'next/dynamic';
@@ -57,7 +56,6 @@ export default async function HomeLayout({
   return (
     <html lang={lang}>
       <body className='flex flex-col justify-between'>
-        <Script defer src='/service-worker.js' />
         <StoreProvider>
           <FetchDataProvider>
             <ModalProvider>

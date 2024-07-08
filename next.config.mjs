@@ -1,7 +1,9 @@
 /** @type {import('next').NextConfig} */
 import createNextIntlPlugin from 'next-intl/plugin';
+import withBundleAnalyzer from '@next/bundle-analyzer';
 const withNextIntl = createNextIntlPlugin();
 const nextConfig = {
+  crossOrigin: 'anonymous',
   images: {
     deviceSizes: [380, 640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     // limit of 25 imageSizes values
@@ -40,4 +42,9 @@ const nextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig);
+export default withBundleAnalyzer(
+  {
+    enabled: process.env.NEXT_ANALYZE === 'true',
+  },
+  withNextIntl(nextConfig)
+);

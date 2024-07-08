@@ -139,6 +139,7 @@ const MenuIcon: React.FC<Props> = React.memo(
       dispatch,
       router,
       locale,
+      closeMenu,
     ]);
     return (
       <div className='relative'>

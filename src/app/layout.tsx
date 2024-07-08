@@ -8,7 +8,9 @@ import Script from 'next/script';
 
 const inter = Open_Sans({
   subsets: ['latin'],
+  style: ['normal', 'italic'],
   weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
   preload: true,
 });
 
@@ -32,12 +34,6 @@ export default async function RootLayout({
   return (
     <html lang={lang}>
       <head>
-        <meta name='viewport' content='width=device-width, initial-scale=1' />
-        <meta name='theme-color' content='#fff' />
-        <link rel='preconnect' href='https://fonts.googleapis.com' />
-        <link rel='preconnect' href='https://fonts.gstatic.com' />
-        <link rel='dns-prefetch' href='https://fonts.googleapis.com' />
-        <link rel='dns-prefetch' href='https://fonts.gstatic.com' />
         <link
           rel='apple-touch-icon'
           sizes='180x180'

@@ -41,7 +41,7 @@ function ProductDetails({ product }: Props) {
   const handleEnterQuantity = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
-      setQuantity((_) => {
+      setQuantity(() => {
         if (Number(value) <= 1) return 1;
         if (Number(value) >= 100) return 100;
         return Number(value);

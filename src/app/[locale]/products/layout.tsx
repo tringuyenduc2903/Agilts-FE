@@ -1,6 +1,7 @@
 import { title } from '@/config/config';
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+import './_css/index.css';
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('head');
 

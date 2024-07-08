@@ -35,7 +35,7 @@ function GoogleMapComponent() {
     googleMapsApiKey: 'YOUR_API_KEY',
   });
 
-  const [map, setMap] = useState(null);
+  const [_, setMap] = useState(null);
   const onLoad = useCallback(
     function callback(map: any) {
       const bounds = new window.google.maps.LatLngBounds(center);

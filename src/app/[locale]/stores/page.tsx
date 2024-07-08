@@ -17,6 +17,7 @@ import {
 } from '@/lib/redux/query/countryQuery';
 import useQueryString from '@/lib/hooks/useQueryString';
 import { defaultCountry } from '@/config/config';
+import LoadingMultiItem from '@/components/ui/LoadingMultiItem';
 type PartOfCountry = {
   id: string;
   name: string;
@@ -52,9 +53,11 @@ function StoresPage() {
     },
   });
   const [curTab, setCurTab] = useState<string | null>(null);
-  const { data: branchData, isSuccess: isSuccessBranch } = useGetStoresQuery(
-    searchPrams.toString()
-  );
+  const {
+    data: branchData,
+    isSuccess: isSuccessBranch,
+    isLoading: isLoadingBranch,
+  } = useGetStoresQuery(searchPrams.toString());
   const { data: provincesData, isSuccess: isSuccessProvinces } =
     useGetProvincesQuery(null);
   const { data: districtsData, isSuccess: isSuccessDistricts } =
@@ -281,13 +284,19 @@ function StoresPage() {
         </div>
       </section>
       <section className='w-full px-4 md:px-16 flex flex-col gap-16'>
-        {renderedBranch ? (
+        {!isLoadingBranch &&
+          (renderedBranch ? (
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16'>
+              {renderedBranch}
+            </div>
+          ) : (
+            <div className='w-full flex justify-center items-center'>
+              <NotFoundItem message={t('no_store')} />
+            </div>
+          ))}
+        {isLoadingBranch && (
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16'>
-            {renderedBranch}
-          </div>
-        ) : (
-          <div className='w-full flex justify-center items-center'>
-            <NotFoundItem message={t('no_store')} />
+            <LoadingMultiItem customClass='col-span-1 h-[400px] skeleton' />
           </div>
         )}
         <div className='flex justify-center lg:justify-start'>

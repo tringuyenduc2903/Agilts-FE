@@ -53,7 +53,10 @@ function UpdateDocumentModal() {
   const errors = useMemo(() => {
     if (isErrorUpdate && errorUpdate) {
       const error = errorUpdate as any;
-      return error?.data?.errors;
+      return {
+        errors: error?.data?.errors,
+        message: error?.data?.message,
+      };
     }
     return null;
   }, [isErrorUpdate, errorUpdate]);
@@ -131,6 +134,9 @@ function UpdateDocumentModal() {
             </h1>
           </div>
           <div className='relative w-full flex flex-col gap-2'>
+            {errors?.message && (
+              <p className='font-bold text-red-500'>{errors.message}</p>
+            )}
             <p>{t('document_type')}</p>
             <button
               className='text-sm md:text-base w-full border border-neutral-300 rounded-sm px-4 py-2 text-start'
@@ -176,9 +182,9 @@ function UpdateDocumentModal() {
                 </button>
               </li>
             </ul>
-            {errors?.type && (
+            {errors?.errors.type && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.type[0]}
+                {errors.errors.type[0]}
               </p>
             )}
           </div>
@@ -194,9 +200,9 @@ function UpdateDocumentModal() {
               onChange={handleChange}
               disabled={isLoadingUpdate}
             />
-            {errors?.number && (
+            {errors?.errors.number && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.number[0]}
+                {errors.errors.number[0]}
               </p>
             )}
           </div>
@@ -212,9 +218,9 @@ function UpdateDocumentModal() {
               onChange={handleChange}
               disabled={isLoadingUpdate}
             />
-            {errors?.issued_name && (
+            {errors?.errors.issued_name && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.issued_name[0]}
+                {errors.errors.issued_name[0]}
               </p>
             )}
           </div>
@@ -229,9 +235,9 @@ function UpdateDocumentModal() {
               onChange={handleChange}
               disabled={isLoadingUpdate}
             />
-            {errors?.issuance_date && (
+            {errors?.errors.issuance_date && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.issuance_date[0]}
+                {errors.errors.issuance_date[0]}
               </p>
             )}
           </div>
@@ -246,9 +252,9 @@ function UpdateDocumentModal() {
               onChange={handleChange}
               disabled={isLoadingUpdate}
             />
-            {errors?.expiry_date && (
+            {errors?.errors.expiry_date && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.expiry_date[0]}
+                {errors.errors.expiry_date[0]}
               </p>
             )}
           </div>

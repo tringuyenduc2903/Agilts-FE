@@ -95,7 +95,10 @@ function AddAddressModal() {
   const errors = useMemo(() => {
     if (isErrorPost && errorPost) {
       const error = errorPost as any;
-      return error?.data?.errors;
+      return {
+        errors: error?.data?.errors,
+        message: error?.data?.message,
+      };
     }
     return null;
   }, [isErrorPost, errorPost]);
@@ -295,6 +298,9 @@ function AddAddressModal() {
           <h1 className='text-lg md:text-xl font-bold'>{t('add_address')}</h1>
         </div>
         <div className='flex flex-col gap-4'>
+          {errors?.message && (
+            <p className='font-bold text-red-500'>{errors.message}</p>
+          )}
           <div className='relative w-full'>
             <button
               className='text-sm md:text-base w-full border border-neutral-400 rounded-sm px-4 py-2 text-start'
@@ -324,9 +330,9 @@ function AddAddressModal() {
               </li>
               {renderedProvinces}
             </ul>
-            {errors?.province && (
+            {errors?.errors.province && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.province[0]}
+                {errors.errors.province[0]}
               </p>
             )}
           </div>
@@ -363,9 +369,9 @@ function AddAddressModal() {
               </li>
               {renderedDistricts}
             </ul>
-            {errors?.district && (
+            {errors?.errors.district && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.district[0]}
+                {errors.errors.district[0]}
               </p>
             )}
           </div>
@@ -402,9 +408,9 @@ function AddAddressModal() {
               </li>
               {renderedWards}
             </ul>
-            {errors?.ward && (
+            {errors?.errors.ward && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.ward[0]}
+                {errors.errors.ward[0]}
               </p>
             )}
           </div>
@@ -419,9 +425,9 @@ function AddAddressModal() {
               }
               disabled={isLoadingPost}
             />
-            {errors?.address_detail && (
+            {errors?.errors.address_detail && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.address_detail[0]}
+                {errors.errors.address_detail[0]}
               </p>
             )}
           </div>
@@ -454,9 +460,9 @@ function AddAddressModal() {
               {t('type_office')}
             </button>
           </div>
-          {errors?.type && (
+          {errors?.errors.type && (
             <p className='text-red-500 font-bold text-sm md:text-base'>
-              {errors.type[0]}
+              {errors.errors.type[0]}
             </p>
           )}
         </div>

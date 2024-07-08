@@ -25,9 +25,11 @@ function DocumentsPage() {
             className='flex flex-col gap-2 text-sm md:text-base pb-4 border-b border-neutral-300'
             key={d.id}
           >
-            <p className='w-max px-2 border border-red-500 text-red-500 rounded-sm text-sm font-medium'>
-              {t('default')}
-            </p>
+            {d.default && (
+              <p className='w-max px-2 border border-red-500 text-red-500 rounded-sm text-sm font-medium'>
+                {t('default')}
+              </p>
+            )}
             <div className='flex flex-col lg:flex-row gap-1 justify-between lg:items-center'>
               <p className=' font-bold'>
                 {t('document_number')}: <span>{d.number}</span>

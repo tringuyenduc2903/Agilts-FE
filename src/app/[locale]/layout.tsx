@@ -41,6 +41,17 @@ export async function generateMetadata(): Promise<Metadata> {
       address: false,
       telephone: false,
     },
+    openGraph: {
+      siteName: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+      type: 'website',
+      url: process.env.NEXT_CLIENT_URL,
+      description: t('home_description', { name: title }),
+      images: [
+        {
+          url: `${process.env.NEXT_CLIENT_URL}/logo.png`,
+        },
+      ],
+    },
   };
 }
 

@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
-import { SpeedInsights } from '@vercel/speed-insights/next';
+// import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ModalProvider } from '@/contexts/ModalProvider';
 import { FetchDataProvider } from '@/contexts/FetchDataProvider';
 import { getTranslations } from 'next-intl/server';
-import { Analytics } from '@vercel/analytics/react';
+// import { Analytics } from '@vercel/analytics/react';
 import StoreProvider from '@/contexts/StoreProvider';
 import dynamic from 'next/dynamic';
 import { title } from '@/config/config';
@@ -67,7 +67,7 @@ export default async function HomeLayout({
             </ModalProvider>
           </FetchDataProvider>
         </StoreProvider>
-        <Analytics
+        {/* <Analytics
           debug={false}
           beforeSend={(event) => {
             if (event.url.includes('/user')) {
@@ -76,7 +76,7 @@ export default async function HomeLayout({
             return event;
           }}
         />
-        <SpeedInsights />
+        <SpeedInsights /> */}
       </body>
     </html>
   );

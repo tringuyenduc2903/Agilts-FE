@@ -61,7 +61,6 @@ function ProductDetails({ product }: Props) {
       return prevQuantity + 1;
     });
   }, []);
-  console.log(curOption);
   return (
     <section className='container md:m-auto px-6 md:px-0 grid grid-cols-1 lg:grid-cols-2 gap-16 py-8 md:py-16 overflow-hidden'>
       <div className='col-span-1 flex flex-col items-start gap-6'>

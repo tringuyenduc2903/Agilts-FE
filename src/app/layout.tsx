@@ -2,8 +2,13 @@ import { Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { cookies } from 'next/headers';
+import { Open_Sans } from 'next/font/google';
 import './globals.css';
-
+const inter = Open_Sans({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  preload: true,
+});
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
@@ -44,7 +49,7 @@ export default async function RootLayout({
         <link rel='icon' href='/favicon-32x32.png' sizes='any' />
         <link rel='manifest' href='/site.webmanifest' />
       </head>
-      <body>
+      <body className={`${inter.className}`}>
         <NextIntlClientProvider locale={lang} messages={messages}>
           {children}
         </NextIntlClientProvider>

@@ -18,7 +18,6 @@ function ImageModal() {
   const imgRef = useRef(null);
   const [fallbackImg, setFallbackImg] = useState(false);
   const { state, setVisibleModal } = useContext(ModalContext);
-  console.log(state?.visibleImageModal?.images);
   const { sectionRef, clickOutside } = useClickOutside(() =>
     setVisibleModal('visibleImageModal')
   );

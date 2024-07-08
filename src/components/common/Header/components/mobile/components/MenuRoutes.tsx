@@ -57,9 +57,10 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
     [router, closeMenu, locale]
   );
   const handleChangeLang = useCallback(
-    (lang: string) => {
-      setCookie('NEXT_LOCALE', lang);
-      router.replace(`/${lang}`);
+    (prevLang: string, curLang: string) => {
+      setCookie('NEXT_LOCALE', curLang);
+      router.replace(pathname.replace(prevLang, curLang));
+      router.refresh();
       closeMenu();
     },
     [closeMenu, router]
@@ -287,7 +288,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                       ? 'text-red-500'
                       : ''
                   } transition-colors`}
-                  onClick={() => handleChangeLang('en')}
+                  onClick={() => handleChangeLang('vi', 'en')}
                   onMouseOver={() => setHoverSubRoute('english')}
                   onMouseOut={() => setHoverSubRoute(null)}
                   disabled={isLoadingLogout || isLoadingCSRF}
@@ -302,7 +303,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                       ? 'text-red-500'
                       : ''
                   } transition-colors`}
-                  onClick={() => handleChangeLang('vi')}
+                  onClick={() => handleChangeLang('en', 'vi')}
                   onMouseOver={() => setHoverSubRoute('vietnamese')}
                   onMouseOut={() => setHoverSubRoute(null)}
                   disabled={isLoadingLogout || isLoadingCSRF}

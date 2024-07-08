@@ -41,9 +41,10 @@ function DesktopNavigation() {
   const pathname = usePathname();
   const router = useRouter();
   const handleChangeLang = useCallback(
-    (lang: string) => {
-      setCookie('NEXT_LOCALE', lang);
-      router.replace(`/${lang}`);
+    (prevLang: string, curLang: string) => {
+      setCookie('NEXT_LOCALE', curLang);
+      router.replace(pathname.replace(prevLang, curLang));
+      router.refresh();
       setIsOpenMenu(false);
     },
     [router, setCookie]
@@ -224,7 +225,7 @@ function DesktopNavigation() {
                   } transition-colors`}
                   onMouseOver={() => setHoverSubRoute('english')}
                   onMouseOut={() => setHoverSubRoute(null)}
-                  onClick={() => handleChangeLang('en')}
+                  onClick={() => handleChangeLang('vi', 'en')}
                 >
                   {t('english')}
                 </button>
@@ -238,7 +239,7 @@ function DesktopNavigation() {
                   } transition-colors`}
                   onMouseOver={() => setHoverSubRoute('vietnamese')}
                   onMouseOut={() => setHoverSubRoute(null)}
-                  onClick={() => handleChangeLang('vi')}
+                  onClick={() => handleChangeLang('en', 'vi')}
                 >
                   {t('vietnamese')}
                 </button>

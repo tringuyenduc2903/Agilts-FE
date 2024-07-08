@@ -8,9 +8,7 @@ import Script from 'next/script';
 
 const inter = Open_Sans({
   subsets: ['latin'],
-  style: ['normal', 'italic'],
-  weight: ['300', '400', '500', '600', '700'],
-  display: 'swap',
+  variable: '--font-sans',
   preload: true,
 });
 
@@ -54,7 +52,7 @@ export default async function RootLayout({
         <link rel='icon' href='/favicon-32x32.png' sizes='any' />
         <link rel='manifest' href='/site.webmanifest' />
       </head>
-      <body className={`${inter.className}`}>
+      <body className={`${inter.variable} font-sans`}>
         <Script defer src='/service-worker.js' strategy='beforeInteractive' />
         <NextIntlClientProvider locale={lang} messages={messages}>
           {children}

@@ -52,7 +52,7 @@ const reducer = (state: InitialState, action: any) => {
 const initialState = {} as InitialState;
 export type InitialModalContext = {
   state: InitialState;
-  setVisibleModal: (modal: any) => void;
+  setVisibleModal: (modal: string | InitialState) => void;
   closeAllModal: () => void;
 };
 export const ModalContext = createContext({} as InitialModalContext);

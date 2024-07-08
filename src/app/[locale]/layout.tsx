@@ -1,13 +1,13 @@
+import dynamic from 'next/dynamic';
+import { getTranslations } from 'next-intl/server';
+import { cookies } from 'next/headers';
 import { Metadata } from 'next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ModalProvider } from '@/contexts/ModalProvider';
 import { FetchDataProvider } from '@/contexts/FetchDataProvider';
-import { getTranslations } from 'next-intl/server';
 import { Analytics } from '@vercel/analytics/react';
 import StoreProvider from '@/contexts/StoreProvider';
-import dynamic from 'next/dynamic';
 import { title } from '@/config/config';
-import { cookies } from 'next/headers';
 
 const DynamicHeader = dynamic(
   () => import('@/components/common/Header/Header'),
@@ -46,9 +46,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function HomeLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   const cookieStore = cookies();
   const localeCookie = cookieStore.get('NEXT_LOCALE');
   const lang = localeCookie ? localeCookie.value : 'vi';

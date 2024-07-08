@@ -5,7 +5,6 @@ export const storesApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL as string,
   }),
-  tagTypes: ['stores', 'filter', 'products'],
   endpoints: (builder) => {
     return {
       getStores: builder.query({
@@ -13,21 +12,18 @@ export const storesApi = createApi({
           url: `/api/branch${search ? `?${search}` : ''}`,
           method: 'GET',
         }),
-        providesTags: ['stores'],
       }),
       getFilter: builder.query({
         query: () => ({
           url: `/api${getLangRoute()}/filter`,
           method: 'GET',
         }),
-        providesTags: ['filter'],
       }),
       getProducts: builder.query({
         query: (search) => ({
           url: `/api${getLangRoute()}/product${search ? `?${search}` : ''}`,
           method: 'GET',
         }),
-        providesTags: ['products'],
       }),
       getProductDetails: builder.query({
         query: (id) => ({

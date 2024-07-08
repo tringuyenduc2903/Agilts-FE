@@ -1,7 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseQuery } from '../config/axios';
 import { getLangRoute } from '../config/getLangRoute';
-import { providesList } from '@/lib/utils/providesList';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: axiosBaseQuery({
@@ -116,7 +115,7 @@ export const userApi = createApi({
         query: () => ({
           url: `${getLangRoute()}/user/two-factor-recovery-codes`,
         }),
-        providesTags: (result) => providesList(result, 'recover_codes'),
+        providesTags: ['recover_codes'],
       }),
       postRecoveryCodes: builder.mutation({
         query: () => ({
@@ -149,7 +148,7 @@ export const userApi = createApi({
           url: `/api${getLangRoute()}/address`,
           method: 'GET',
         }),
-        providesTags: (result) => providesList(result, 'address'),
+        providesTags: ['address'],
       }),
       postAddress: builder.mutation({
         query: (body) => ({
@@ -201,7 +200,7 @@ export const userApi = createApi({
           url: `/api${getLangRoute()}/identification`,
           method: 'GET',
         }),
-        providesTags: (result) => providesList(result, 'documents'),
+        providesTags: ['documents'],
       }),
       postDocument: builder.mutation({
         query: (body) => ({
@@ -231,7 +230,7 @@ export const userApi = createApi({
           url: `/api/social`,
           method: 'GET',
         }),
-        providesTags: (result) => providesList(result, 'social'),
+        providesTags: ['social'],
       }),
       deleteSocial: builder.mutation({
         query: (id) => ({

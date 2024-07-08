@@ -59,11 +59,11 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
   const handleChangeLang = useCallback(
     (prevLang: string, curLang: string) => {
       setCookie('NEXT_LOCALE', curLang);
-      router.replace(pathname.replace(prevLang, curLang));
-      router.refresh();
       closeMenu();
+      typeof window !== 'undefined' &&
+        window.location.replace(pathname.replace(prevLang, curLang));
     },
-    [closeMenu, router, pathname]
+    [closeMenu, pathname]
   );
   const handleLogout = useCallback(async () => {
     await handleGetCSRFCookie();
@@ -174,6 +174,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
             onMouseEnter={() => setHoverRoute('home')}
             onMouseLeave={() => setHoverRoute(null)}
             aria-disabled={isLoadingLogout || isLoadingCSRF}
+            prefetch={true}
           >
             <p className='relative py-1'>
               <span>{t('home')}</span>
@@ -221,6 +222,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                       onMouseOver={() => setHoverSubRoute(r)}
                       onMouseOut={() => setHoverSubRoute(null)}
                       aria-disabled={isLoadingLogout || isLoadingCSRF}
+                      prefetch={true}
                     >
                       <span className='w-6 h-[2px] bg-red-600'></span>
                       <span
@@ -249,6 +251,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
             onMouseEnter={() => setHoverRoute('products')}
             onMouseLeave={() => setHoverRoute(null)}
             aria-disabled={isLoadingLogout || isLoadingCSRF}
+            prefetch={true}
           >
             <p className='relative py-1'>
               <span>{t('products')}</span>

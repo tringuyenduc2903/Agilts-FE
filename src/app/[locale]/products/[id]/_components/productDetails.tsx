@@ -79,7 +79,7 @@ function ProductDetails({ product }: Props) {
               visibleImageModal: {
                 curImage: 0,
                 totalImages: curOption.images.length,
-                images: curOption.images,
+                images: curOption.images as any,
               },
             })
           }
@@ -104,7 +104,7 @@ function ProductDetails({ product }: Props) {
                     visibleImageModal: {
                       curImage: index,
                       totalImages: curOption.images.length,
-                      images: curOption.images,
+                      images: curOption.images as any,
                     },
                   })
                 }

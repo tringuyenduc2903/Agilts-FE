@@ -43,11 +43,11 @@ function DesktopNavigation() {
   const handleChangeLang = useCallback(
     (prevLang: string, curLang: string) => {
       setCookie('NEXT_LOCALE', curLang);
-      router.replace(pathname.replace(prevLang, curLang));
-      router.refresh();
       setIsOpenMenu(false);
+      typeof window !== 'undefined' &&
+        window.location.replace(pathname.replace(prevLang, curLang));
     },
-    [router, pathname]
+    [pathname]
   );
   return (
     <>
@@ -96,8 +96,9 @@ function DesktopNavigation() {
               hoverRoute === 'home' ? 'bg-white' : ''
             }`}
             href={`/${locale}`}
-            onMouseEnter={() => setHoverRoute('home')}
-            onMouseLeave={() => setHoverRoute(null)}
+            onMouseOver={() => setHoverRoute('home')}
+            onMouseOut={() => setHoverRoute(null)}
+            prefetch={true}
           >
             <p className='relative py-1'>
               <span>{t('home')}</span>
@@ -112,8 +113,8 @@ function DesktopNavigation() {
             className={`relative h-full px-4 cursor-pointer ${
               hoverRoute === 'pages' ? 'bg-white' : ''
             }`}
-            onMouseEnter={() => setHoverRoute('pages')}
-            onMouseLeave={() => setHoverRoute(null)}
+            onMouseOver={() => setHoverRoute('pages')}
+            onMouseOut={() => setHoverRoute(null)}
           >
             <button
               className={`w-full h-full uppercase flex justify-center items-center px-4 ${
@@ -154,6 +155,7 @@ function DesktopNavigation() {
                       href={`/${locale}/${r}`}
                       onMouseOver={() => setHoverSubRoute(r)}
                       onMouseOut={() => setHoverSubRoute(null)}
+                      prefetch={true}
                     >
                       <span className='w-6 h-[2px] bg-red-600'></span>
                       <span
@@ -176,8 +178,9 @@ function DesktopNavigation() {
               hoverRoute === 'products' ? 'bg-white' : ''
             }`}
             href={`/${locale}/products`}
-            onMouseEnter={() => setHoverRoute('products')}
-            onMouseLeave={() => setHoverRoute(null)}
+            onMouseOver={() => setHoverRoute('products')}
+            onMouseOut={() => setHoverRoute(null)}
+            prefetch={true}
           >
             <p className='relative py-1'>
               <span>{t('products')}</span>
@@ -194,8 +197,8 @@ function DesktopNavigation() {
             className={`relative h-full px-4 cursor-pointer ${
               hoverRoute === 'languages' ? 'bg-white' : ''
             }`}
-            onMouseEnter={() => setHoverRoute('languages')}
-            onMouseLeave={() => setHoverRoute(null)}
+            onMouseOver={() => setHoverRoute('languages')}
+            onMouseOut={() => setHoverRoute(null)}
           >
             <button
               className={`w-full h-full uppercase flex justify-center items-center px-4 ${

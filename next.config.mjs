@@ -31,7 +31,7 @@ const nextConfig = {
         protocol: 'https',
         hostname: process.env.NEXT_PUBLIC_HOST_IMAGES,
         port: '',
-        pathname: '/storage/product/**',
+        pathname: '/**',
       },
     ],
   },

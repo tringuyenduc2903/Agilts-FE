@@ -2,6 +2,7 @@
 import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin();
 const nextConfig = {
+  nextScriptWorkers: true,
   crossOrigin: 'anonymous',
   images: {
     deviceSizes: [380, 640, 750, 828, 1080, 1200, 1920, 2048, 3840],

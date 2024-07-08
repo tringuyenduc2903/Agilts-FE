@@ -59,10 +59,10 @@ export default async function RootLayout({
         <link rel='manifest' href='/site.webmanifest' />
       </head>
       <body className={`${inter.className}`}>
+        <Script src='/service-worker.js' strategy='beforeInteractive' />
         <NextIntlClientProvider locale={lang} messages={messages}>
           {children}
         </NextIntlClientProvider>
-        <Script defer src='/service-worker.js' />
       </body>
     </html>
   );

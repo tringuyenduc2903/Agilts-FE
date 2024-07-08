@@ -67,7 +67,15 @@ export default async function HomeLayout({
             </ModalProvider>
           </FetchDataProvider>
         </StoreProvider>
-        <Analytics />
+        <Analytics
+          debug={false}
+          beforeSend={(event) => {
+            if (event.url.includes('/user')) {
+              return null;
+            }
+            return event;
+          }}
+        />
         <SpeedInsights />
       </body>
     </html>

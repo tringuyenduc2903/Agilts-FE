@@ -10,12 +10,12 @@ import { Analytics } from '@vercel/analytics/react';
 import StoreProvider from '@/contexts/StoreProvider';
 import dynamic from 'next/dynamic';
 import { title } from '@/config/config';
-const DynamicIntro = dynamic(
-  () => import('../../components/common/Intro/Intro'),
-  {
-    ssr: false,
-  }
-);
+// const DynamicIntro = dynamic(
+//   () => import('../../components/common/Intro/Intro'),
+//   {
+//     ssr: false,
+//   }
+// );
 const DynamicHeader = dynamic(
   () => import('@/components/common/Header/Header'),
   { ssr: false }
@@ -61,7 +61,9 @@ export default async function HomeLayout({
     locale: string;
   };
 }>) {
-  const messages = await getMessages();
+  const messages = await getMessages({
+    locale: locale,
+  });
   return (
     <html lang={locale}>
       <body className={`${inter.className} flex flex-col justify-between`}>

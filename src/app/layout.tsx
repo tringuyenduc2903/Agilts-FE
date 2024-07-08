@@ -3,25 +3,24 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { cookies } from 'next/headers';
 import './globals.css';
+
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   themeColor: '#fff',
   colorScheme: 'normal',
-  // maximumScale: 1,
-  // userScalable: false,
-  // Also supported by less commonly used
-  // interactiveWidget: 'resizes-visual',
 };
+
 export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   const cookieStore = cookies();
   const localeCookie = cookieStore.get('NEXT_LOCALE');
   const lang = localeCookie ? localeCookie.value : 'vi';
-  const messages = await getMessages();
+  const messages = await getMessages({
+    locale: lang,
+  });
+
   return (
     <html lang={lang}>
       <head>

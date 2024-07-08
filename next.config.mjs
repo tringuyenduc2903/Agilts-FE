@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 import createNextIntlPlugin from 'next-intl/plugin';
-import withBundleAnalyzer from '@next/bundle-analyzer';
 const withNextIntl = createNextIntlPlugin();
 const nextConfig = {
   crossOrigin: 'anonymous',
@@ -42,9 +41,4 @@ const nextConfig = {
   },
 };
 
-export default withBundleAnalyzer(
-  {
-    enabled: process.env.NEXT_ANALYZE === 'true',
-  },
-  withNextIntl(nextConfig)
-);
+export default withNextIntl(nextConfig);

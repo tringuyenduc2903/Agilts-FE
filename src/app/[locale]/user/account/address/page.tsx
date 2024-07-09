@@ -123,6 +123,7 @@ function AddressPage() {
     isLoadingDelete,
     isLoadingUpdate,
     setVisiblePopup,
+    setVisibleModal,
   ]);
   useEffect(() => {
     if (isSuccessDelete) {

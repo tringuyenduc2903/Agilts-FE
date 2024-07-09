@@ -20,6 +20,7 @@ export const viewport: Viewport = {
   themeColor: '#fff',
   colorScheme: 'normal',
   maximumScale: 1,
+  userScalable: false,
 };
 
 export default async function RootLayout({
@@ -35,7 +36,6 @@ export default async function RootLayout({
   return (
     <html lang={lang}>
       <head>
-        <meta charSet='UTF-8'></meta>
         <link
           rel='apple-touch-icon'
           sizes='180x180'

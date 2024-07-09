@@ -20,19 +20,19 @@ import { defaultCountry } from '@/config/config';
 import LoadingMultiItem from '@/components/ui/LoadingMultiItem';
 type PartOfCountry = {
   id: string;
-  name: string;
-  name_en: string;
+  full_name: string;
+  full_name_en: string;
 };
 type Form = {
   province: {
     code: string;
-    name: string;
-    name_en: string;
+    full_name: string;
+    full_name_en: string;
   };
   district: {
     code: string;
-    name: string;
-    name_en: string;
+    full_name: string;
+    full_name_en: string;
   };
 };
 function StoresPage() {
@@ -43,13 +43,13 @@ function StoresPage() {
   const [country, setCountry] = useState<Form>({
     province: {
       code: '',
-      name: '',
-      name_en: '',
+      full_name: '',
+      full_name_en: '',
     },
     district: {
       code: '',
-      name: '',
-      name_en: '',
+      full_name: '',
+      full_name_en: '',
     },
   });
   const [curTab, setCurTab] = useState<string | null>(null);
@@ -71,8 +71,8 @@ function StoresPage() {
           ...prevCountry,
           district: {
             code: '',
-            name: '',
-            name_en: '',
+            full_name: '',
+            full_name_en: '',
           },
         };
       });
@@ -103,7 +103,7 @@ function StoresPage() {
   const handleSearch = useCallback(() => {
     createQueryString(
       ['country', 'province', 'district'],
-      [defaultCountry, country.province.name, country.district.name]
+      [defaultCountry, country.province.full_name, country.district.full_name]
     );
   }, [createQueryString, country]);
   const renderedProvinces = useMemo(() => {
@@ -116,10 +116,15 @@ function StoresPage() {
               className='text-sm md:text-base w-full px-4 py-2 hover:bg-neutral-100 transition-colors text-start'
               type='button'
               onClick={() =>
-                handleSelectCountry('province', p?.name_en, p?.name, p?.id)
+                handleSelectCountry(
+                  'province',
+                  p?.full_name_en,
+                  p?.full_name,
+                  p?.id
+                )
               }
             >
-              {p?.name}
+              {p?.full_name}
             </button>
           </li>
         );
@@ -136,10 +141,15 @@ function StoresPage() {
               className='text-sm md:text-base w-full px-4 py-2 hover:bg-neutral-100 transition-colors text-start'
               type='button'
               onClick={() =>
-                handleSelectCountry('district', d?.name_en, d?.name, d?.id)
+                handleSelectCountry(
+                  'district',
+                  d?.full_name_en,
+                  d?.full_name,
+                  d?.id
+                )
               }
             >
-              {d?.name}
+              {d?.full_name}
             </button>
           </li>
         );
@@ -215,10 +225,10 @@ function StoresPage() {
               onClick={() => handleChangeTab('provinces')}
             >
               <p>
-                {country?.province?.name
+                {country?.province?.full_name
                   ? locale === 'vi'
-                    ? country.province.name
-                    : country.province.name_en
+                    ? country.province.full_name
+                    : country.province.full_name_en
                   : t('select_province')}
               </p>
               <FaAngleDown />
@@ -247,10 +257,10 @@ function StoresPage() {
               onClick={() => handleChangeTab('districts')}
             >
               <p>
-                {country?.district?.name
+                {country?.district?.full_name
                   ? locale === 'vi'
-                    ? country.district.name
-                    : country.district.name_en
+                    ? country.district.full_name
+                    : country.district.full_name_en
                   : t('select_district')}
               </p>
               <FaAngleDown />

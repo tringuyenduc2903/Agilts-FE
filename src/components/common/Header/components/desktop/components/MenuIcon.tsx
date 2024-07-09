@@ -168,7 +168,7 @@ const MenuIcon: React.FC<Props> = React.memo(
           ref={sectionRef as LegacyRef<HTMLDivElement>}
           className={`absolute right-0 w-[520px] ${
             isOpenMenu ? 'h-[80vh]' : 'h-0'
-          } transition-[height] duration-200 bg-white overflow-hidden`}
+          } transition-[height] duration-200 bg-white overflow-x-hidden overflow-y-auto`}
         >
           <div className='h-full px-8 py-16 flex flex-col items-start gap-6'>
             <h1 className='text-4xl font-bold uppercase tracking-[2px]'>

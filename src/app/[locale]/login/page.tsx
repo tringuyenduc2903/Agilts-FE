@@ -83,17 +83,10 @@ function LoginPage() {
   useEffect(() => {
     if (isLoadingCSRF || isLoadingLogin) {
       setVisiblePopup({ visibleLoadingPopup: true });
-    }
-    if ((isErrorLogin || isSuccessLogin) && !isLoadingCSRF && !isLoadingLogin) {
+    } else {
       setVisiblePopup({ visibleLoadingPopup: false });
     }
-  }, [
-    isLoadingCSRF,
-    isLoadingLogin,
-    isErrorLogin,
-    isSuccessLogin,
-    setVisiblePopup,
-  ]);
+  }, [isLoadingCSRF, isLoadingLogin, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessLogin && loginData) {
       dispatch(setIsLoggedIn(true));
@@ -130,7 +123,7 @@ function LoginPage() {
   }
   if (isLoadingUser) return <Loading />;
   return (
-    <main className='relative w-full h-screen flex justify-center items-center font-medium text-sm sm:text-base overflow-y-auto'>
+    <main className='relative w-full h-full min-h-[100vh] flex justify-center items-center font-medium text-sm sm:text-base overflow-y-auto'>
       <section
         className='absolute top-0 left-0 w-full h-full z-[5]'
         style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
@@ -143,7 +136,7 @@ function LoginPage() {
           alt='bg-logo'
         />
       </section>
-      <section className='relative z-10 w-full h-full px-4 py-32 md:px-0 md:w-4/5 lg:w-2/3 2xl:w-1/2 rounded-sm grid lg:grid-cols-2 overflow-hidden'>
+      <section className='relative md:absolute z-10 w-full h-full px-4 py-32 md:px-0 md:w-4/5 lg:w-2/3 2xl:w-1/2 rounded-sm grid lg:grid-cols-2 overflow-hidden'>
         <div className='hidden col-span-1 bg-neutral-800 text-white lg:flex flex-col justify-center items-center gap-8 px-16'>
           <h1 className='uppercase text-[56px] leading-[56px] font-bold tracking-[4px]'>
             The black & white form
@@ -170,7 +163,7 @@ function LoginPage() {
         <form
           onSubmit={handleSubmit(onSubmit)}
           method='POST'
-          className='col-span-1 px-8 py-4 sm:p-8 bg-neutral-50 flex flex-col justify-center items-center gap-4'
+          className='col-span-1 px-8 py-16 bg-neutral-50 flex flex-col justify-center items-center gap-4 overflow-y-auto'
         >
           <h1 className='font-bold text-2xl md:text-4xl uppercase tracking-[4px] md:tracking-[8px]'>
             {t('login')}

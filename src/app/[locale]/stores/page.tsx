@@ -84,8 +84,8 @@ function StoresPage() {
         return {
           ...prevCountry,
           [name]: {
-            name: value,
-            name_en: name_en,
+            full_name: value,
+            full_name_en: name_en,
             code: code,
           },
         };
@@ -163,7 +163,7 @@ function StoresPage() {
       branchData?.data?.map((b: Branch) => {
         return (
           <article className='col-span-1 flex flex-col gap-2' key={b.id}>
-            <div className='max-h-[250px] h-full'>
+            <div className='max-h-[350px] h-full'>
               <Image
                 className='w-full h-full object-cover'
                 src={demoimg}
@@ -197,7 +197,7 @@ function StoresPage() {
   }, [branchData, isSuccessBranch]);
   return (
     <main className='w-full py-[72px] flex flex-col gap-16'>
-      <section className='absolute h-[500px] w-full -z-10 hidden lg:block'>
+      <section className='absolute h-[380px] w-full -z-10 hidden lg:block'>
         <Image
           className='w-full h-full object-cover'
           src={bgImg}
@@ -205,7 +205,7 @@ function StoresPage() {
           fetchPriority='high'
         />
       </section>
-      <section className='lg:container m-auto py-8 w-full h-auto lg:h-[500px] flex flex-col justify-center items-center gap-4 lg:items-start bg-neutral-800 lg:bg-transparent'>
+      <section className='lg:container m-auto py-8 w-full h-auto lg:h-[380px] flex flex-col justify-center items-center gap-4 lg:items-start bg-neutral-800 lg:bg-transparent'>
         <h1 className='text-red-600 font-bold tracking-[8px]'>
           {t('performance')}
         </h1>

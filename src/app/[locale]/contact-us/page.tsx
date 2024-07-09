@@ -23,7 +23,7 @@ function Contact() {
   };
   return (
     <main className='w-full pt-[72px] flex flex-col gap-8'>
-      <section className='absolute h-[500px] w-full -z-10 hidden lg:block'>
+      <section className='absolute h-[380px] w-full -z-10 hidden lg:block'>
         <Image
           className='w-full h-full object-cover'
           src={bgImg}
@@ -31,7 +31,7 @@ function Contact() {
           fetchPriority='high'
         />
       </section>
-      <section className='lg:container m-auto py-8 w-full h-auto lg:h-[500px] flex flex-col justify-center items-center gap-4 lg:items-start bg-neutral-800 lg:bg-transparent'>
+      <section className='lg:container m-auto py-8 w-full h-auto lg:h-[380px] flex flex-col justify-center items-center gap-4 lg:items-start bg-neutral-800 lg:bg-transparent'>
         <h1 className='text-red-600 font-bold tracking-[8px]'>
           {t('performance')}
         </h1>
@@ -39,11 +39,8 @@ function Contact() {
           {t('get-in-touch')}
         </p>
       </section>
-      <section className='bg-white py-8'>
-        <div className='container m-auto px-4 grid grid-col-1 lg:grid-cols-2 gap-8'>
-          <div className='col-span-1'>
-            <GoogleMap />
-          </div>
+      <section className='bg-white pt-8 pb-16 md:pb-32'>
+        <div className='container m-auto px-4 grid grid-col-1'>
           <div className='col-span-1'>
             <form
               className='flex flex-col gap-12'

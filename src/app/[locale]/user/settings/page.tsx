@@ -1,18 +1,12 @@
-'use client';
-import withAuth from '@/protected-page/withAuth';
-import React from 'react';
-import { useTranslations } from 'next-intl';
-
+import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 function SettingsPage() {
-  const t = useTranslations('common');
-  return (
-    <div>
-      <section>
-        <h1 className='text-2xl font-bold py-2'>{t('profiles')}</h1>
-        <p className='text-neutral-600'>{t('mess_profiles')}</p>
-      </section>
-    </div>
+  const cookieStore = cookies();
+  redirect(
+    `/${
+      cookieStore.get('NEXT_LOCALE')?.value
+    }/user/settings/password-and-security`
   );
 }
 
-export default withAuth(SettingsPage);
+export default SettingsPage;

@@ -35,7 +35,7 @@ function DocumentsPage() {
                 {t('document_number')}: <span>{d.number}</span>
               </p>
               <p>
-                ({t('created_at')} {d.created_at})
+                ({t('last_updated_at')} {d.updated_at})
               </p>
             </div>
             <p>

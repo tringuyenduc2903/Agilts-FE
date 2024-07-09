@@ -21,6 +21,8 @@ const useQueryString = (): [
         value.forEach((value, index) => {
           if (value[index]) {
             newQuery.set(name[index], value);
+          } else {
+            newQuery.delete(name[index]);
           }
         });
       } else {

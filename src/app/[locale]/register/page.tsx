@@ -20,8 +20,8 @@ import {
 } from 'react-icons/fa6';
 import { useTranslations } from 'next-intl';
 import { useRegisterMutation } from '@/lib/redux/query/userQuery';
-import { ModalContext } from '@/contexts/ModalProvider';
 import { getCookies } from 'cookies-next';
+import { PopupContext } from '@/contexts/PopupProvider';
 type Form = {
   name: string;
   email: string;
@@ -42,7 +42,7 @@ function RegisterPage() {
   const { register, handleSubmit } = useForm<Form>();
   const [isShowPwd, setIsShowPwd] = useState(false);
   const [isShowConfirmPwd, setIsShowConfirmPwd] = useState(false);
-  const { setVisibleModal } = useContext(ModalContext);
+  const { setVisiblePopup } = useContext(PopupContext);
   const [
     registerUser,
     {
@@ -75,30 +75,27 @@ function RegisterPage() {
     }
   }, []);
   useEffect(() => {
-    if (isLoadingCSRF) {
-      setVisibleModal({ visibleLoadingModal: isLoadingCSRF });
-    }
-    if (isLoadingRegister) {
-      setVisibleModal({ visibleLoadingModal: isLoadingRegister });
+    if (isLoadingCSRF || isLoadingRegister) {
+      setVisiblePopup({ visibleLoadingPopup: true });
     }
     if (
       (isErrorRegister || isSuccessRegister) &&
       !isLoadingCSRF &&
       !isLoadingRegister
     ) {
-      setVisibleModal({ visibleLoadingModal: false });
+      setVisiblePopup({ visibleLoadingPopup: false });
     }
   }, [
     isLoadingCSRF,
     isLoadingRegister,
     isErrorRegister,
     isSuccessRegister,
-    setVisibleModal,
+    setVisiblePopup,
   ]);
   useEffect(() => {
     if (isSuccessRegister) {
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'success',
           message: `${t('register_message')}`,
         },
@@ -108,8 +105,8 @@ function RegisterPage() {
     }
     if (isErrorRegister && errorRegister) {
       const err = errorRegister as any;
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'error',
           message: err?.data?.message,
         },
@@ -119,7 +116,7 @@ function RegisterPage() {
     isSuccessRegister,
     isErrorRegister,
     errorRegister,
-    setVisibleModal,
+    setVisiblePopup,
     t,
     router,
     refetchUser,
@@ -131,7 +128,7 @@ function RegisterPage() {
   }
   if (isLoadingUser) return <Loading />;
   return (
-    <main className='relative w-full h-screen flex justify-center items-center font-medium text-sm sm:text-base'>
+    <main className='relative w-full h-screen flex justify-center items-center font-medium text-sm sm:text-base overflow-y-auto'>
       <section
         className='absolute top-0 left-0 w-full h-full z-[5]'
         style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}

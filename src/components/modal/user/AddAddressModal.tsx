@@ -1,7 +1,7 @@
 'use client';
 import { defaultCountry } from '@/config/config';
 import { ModalContext } from '@/contexts/ModalProvider';
-import useClickOutside from '@/lib/hooks/useClickOutside';
+import { PopupContext } from '@/contexts/PopupProvider';
 import {
   useGetDistrictsQuery,
   useGetProvincesQuery,
@@ -11,7 +11,6 @@ import { usePostAddressMutation } from '@/lib/redux/query/userQuery';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React, {
-  LegacyRef,
   useCallback,
   useContext,
   useEffect,
@@ -49,9 +48,7 @@ function AddAddressModal() {
   const { locale } = useParams();
   const t = useTranslations('common');
   const { state, setVisibleModal } = useContext(ModalContext);
-  const { sectionRef, clickOutside } = useClickOutside(() =>
-    setVisibleModal('visibleAddAddressModal')
-  );
+  const { setVisiblePopup } = useContext(PopupContext);
   const [country, setCountry] = useState<Form>({
     province: {
       code: '',
@@ -273,34 +270,45 @@ function AddAddressModal() {
     [postAddress, country]
   );
   useEffect(() => {
+    if (isLoadingPost) {
+      setVisiblePopup({ visibleLoadingPopup: true });
+    } else {
+      setVisiblePopup({ visibleLoadingPopup: false });
+    }
+  }, [isLoadingPost, setVisiblePopup]);
+  useEffect(() => {
     if (isSuccessPost) {
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'success',
           message: t('mess_add_address'),
         },
       });
     }
-  }, [isSuccessPost, setVisibleModal, t]);
+    if (isErrorPost && errorPost) {
+      const error = errorPost as any;
+      setVisiblePopup({
+        visibleToastPopup: {
+          type: 'error',
+          message: error?.data?.message,
+        },
+      });
+    }
+  }, [isSuccessPost, isErrorPost, errorPost, setVisiblePopup, t]);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
-      onClick={() => clickOutside}
     >
       <form
         method='POST'
-        className='bg-white text-neutral-800 text-sm md:text-base px-4 py-8 rounded-sm flex flex-col gap-6 min-h-[40vh] max-w-[500px] w-full'
-        ref={sectionRef as LegacyRef<HTMLFormElement>}
+        className='bg-white text-neutral-800 text-sm md:text-base px-4 py-8 rounded-sm flex flex-col gap-6 min-h-[40vh] max-h-[80vh] max-w-[500px] w-full overflow-y-auto'
         onSubmit={handleSubmit}
       >
         <div className='flex justify-between gap-4'>
           <h1 className='text-lg md:text-xl font-bold'>{t('add_address')}</h1>
         </div>
         <div className='flex flex-col gap-4'>
-          {errors?.message && (
-            <p className='font-bold text-red-500'>{errors.message}</p>
-          )}
           <div className='relative w-full'>
             <button
               className='text-sm md:text-base w-full border border-neutral-400 rounded-sm px-4 py-2 text-start'
@@ -501,7 +509,7 @@ function AddAddressModal() {
             className='px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition-colors'
             disabled={isLoadingPost}
           >
-            {isLoadingPost ? `${t('loading')}...` : t('complete')}
+            {t('complete')}
           </button>
         </div>
       </form>

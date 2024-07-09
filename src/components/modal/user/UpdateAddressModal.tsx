@@ -2,7 +2,7 @@
 import { defaultCountry } from '@/config/config';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
-import useClickOutside from '@/lib/hooks/useClickOutside';
+import { PopupContext } from '@/contexts/PopupProvider';
 import {
   useGetDistrictsQuery,
   useGetProvincesQuery,
@@ -51,9 +51,7 @@ function UpdateAddressModal() {
   const t = useTranslations('common');
   const { defaultAddress } = useContext(FetchDataContext);
   const { state, setVisibleModal } = useContext(ModalContext);
-  const { sectionRef, clickOutside } = useClickOutside(() =>
-    setVisibleModal('visibleUpdateAddressModal')
-  );
+  const { setVisiblePopup } = useContext(PopupContext);
   const [country, setCountry] = useState<Form>({
     province: {
       code: '',
@@ -304,15 +302,31 @@ function UpdateAddressModal() {
     [updateAddress, country, state.visibleUpdateAddressModal, defaultAddress]
   );
   useEffect(() => {
+    if (isLoadingUpdate) {
+      setVisiblePopup({ visibleLoadingPopup: true });
+    } else {
+      setVisiblePopup({ visibleLoadingPopup: false });
+    }
+  }, [isLoadingUpdate, setVisiblePopup]);
+  useEffect(() => {
     if (isSuccessUpdate) {
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'success',
           message: t('mess_update_address'),
         },
       });
     }
-  }, [isSuccessUpdate, setVisibleModal, t]);
+    if (isErrorUpdate && errorUpdate) {
+      const error = errorUpdate as any;
+      setVisiblePopup({
+        visibleToastPopup: {
+          type: 'error',
+          message: error?.data?.message,
+        },
+      });
+    }
+  }, [isSuccessUpdate, isErrorUpdate, errorUpdate, setVisiblePopup, t]);
   useLayoutEffect(() => {
     if (country.province.code) {
       setCountry((prevCountry) => {
@@ -336,12 +350,10 @@ function UpdateAddressModal() {
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
-      onClick={() => clickOutside}
     >
       <form
         method='POST'
-        className='bg-white text-neutral-800 text-sm md:text-base px-4 py-8 rounded-sm flex flex-col gap-6 min-h-[40vh] max-w-[500px] w-full'
-        ref={sectionRef as LegacyRef<HTMLFormElement>}
+        className='bg-white text-neutral-800 text-sm md:text-base px-4 py-8 rounded-sm flex flex-col gap-6 min-h-[40vh] max-h-[80vh] max-w-[500px] w-full overflow-y-auto'
         onSubmit={handleSubmit}
       >
         <div className='flex justify-between gap-4'>
@@ -350,9 +362,6 @@ function UpdateAddressModal() {
           </h1>
         </div>
         <div className='flex flex-col gap-4'>
-          {errors?.message && (
-            <p className='font-bold text-red-500'>{errors.message}</p>
-          )}
           <div className='relative w-full'>
             <button
               className='text-sm md:text-base w-full border border-neutral-400 rounded-sm px-4 py-2 text-start'
@@ -553,7 +562,7 @@ function UpdateAddressModal() {
             className='px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition-colors'
             disabled={isLoadingUpdate}
           >
-            {isLoadingUpdate ? `${t('loading')}...` : t('complete')}
+            {t('complete')}
           </button>
         </div>
       </form>

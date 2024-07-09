@@ -2,6 +2,7 @@
 import NotFoundItem from '@/components/ui/NotFoundItem';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
+import { PopupContext } from '@/contexts/PopupProvider';
 import {
   useDeleteAddressMutation,
   useUpdateAddressMutation,
@@ -15,6 +16,7 @@ function AddressPage() {
   const { addresses, defaultAddress } = useContext(FetchDataContext);
   const t = useTranslations('common');
   const { setVisibleModal } = useContext(ModalContext);
+  const { setVisiblePopup } = useContext(PopupContext);
   const [updateAddress, { isLoading: isLoadingUpdate }] =
     useUpdateAddressMutation();
   const [
@@ -120,12 +122,12 @@ function AddressPage() {
     handleSetDefaultAddress,
     isLoadingDelete,
     isLoadingUpdate,
-    setVisibleModal,
+    setVisiblePopup,
   ]);
   useEffect(() => {
     if (isSuccessDelete) {
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'success',
           message: t('delete_success_address'),
         },
@@ -133,14 +135,14 @@ function AddressPage() {
     }
     if (isErrorDelete && errorDelete) {
       const error = errorDelete as any;
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'error',
           message: error?.data?.message,
         },
       });
     }
-  }, [isSuccessDelete, isErrorDelete, errorDelete, t, setVisibleModal]);
+  }, [isSuccessDelete, isErrorDelete, errorDelete, t, setVisiblePopup]);
   return (
     <div className='w-full h-full flex flex-col gap-6'>
       <section className='pb-4 flex justify-between items-center border-b border-neutral-300'>

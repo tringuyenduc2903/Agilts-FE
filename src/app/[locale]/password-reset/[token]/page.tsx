@@ -11,11 +11,11 @@ import bgImg from '@/assets/port-title-area.jpg';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useResetPasswordMutation } from '@/lib/redux/query/userQuery';
-import { ModalContext } from '@/contexts/ModalProvider';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { notFound, useParams, useSearchParams } from 'next/navigation';
 import Loading from '../../loading';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
+import { PopupContext } from '@/contexts/PopupProvider';
 
 type Form = {
   email: string;
@@ -33,7 +33,7 @@ function ResetPasswordPage() {
     handleGetCSRFCookie,
     isLoadingCSRF,
   } = useContext(FetchDataContext);
-  const { setVisibleModal } = useContext(ModalContext);
+  const { setVisiblePopup } = useContext(PopupContext);
   const [isShowPwd, setIsShowPwd] = useState(false);
   const [isShowConfirmPwd, setIsShowConfirmPwd] = useState(false);
   const { register, handleSubmit, formState } = useForm<Form>({
@@ -68,9 +68,12 @@ function ResetPasswordPage() {
     [handleGetCSRFCookie, resetPassword, token]
   );
   useEffect(() => {
+    if (isLoadingPost || isLoadingCSRF) {
+      setVisiblePopup({ visibleLoadingPopup: true });
+    }
     if (isSuccessPost && postData) {
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'success',
           message: postData?.message,
         },
@@ -83,19 +86,21 @@ function ResetPasswordPage() {
     }
     if (isErrorPost && errorPost) {
       const error = errorPost as any;
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'error',
           message: error?.data?.message,
         },
       });
     }
   }, [
+    isLoadingPost,
+    isLoadingCSRF,
     isSuccessPost,
     postData,
     isErrorPost,
     errorPost,
-    setVisibleModal,
+    setVisiblePopup,
     formState,
   ]);
   if (isLoadingUser) return <Loading />;
@@ -150,7 +155,6 @@ function ResetPasswordPage() {
                   className='absolute top-1/2 -translate-y-1/2 right-2'
                   aria-label='show-pwd-btn'
                   onClick={() => setIsShowPwd(false)}
-                  disabled={isLoadingPost || isLoadingCSRF}
                 >
                   {isShowPwd ? (
                     <FaRegEye className='text-xl' />
@@ -190,11 +194,8 @@ function ResetPasswordPage() {
             <button
               className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
               type='submit'
-              disabled={isLoadingPost || isLoadingCSRF}
             >
-              {isLoadingPost || isLoadingCSRF
-                ? `...${t('loading')}`
-                : t('submit')}
+              {t('submit')}
             </button>
           </form>
         </div>

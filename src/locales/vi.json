@@ -243,7 +243,7 @@
     "expired": "Hết hạn",
     "created_at_record": "Ngày tạo",
     "updated_at_record": "Ngày cập nhật",
-    "update_document": "Cập nhật tài liệu",
+    "update_document": "Cập nhật hồ sơ",
     "no_document": "Không tìm thấy hồ sơ!",
     "socials": "Mạng xã hội",
     "unlink": "Gỡ liên kết",
@@ -263,6 +263,8 @@
     "options": "Phiên bản",
     "select_option": "Chọn phiên bản",
     "mess_no_specifications": "Sản phẩm chưa có thông số kỹ thuật!",
-    "special_specification": "Thông số đặc biệt"
+    "special_specification": "Thông số đặc biệt",
+    "done": "Hoàn tất",
+    "mess_success_verify": "Xác thực tài khoản thành công!"
   }
 }

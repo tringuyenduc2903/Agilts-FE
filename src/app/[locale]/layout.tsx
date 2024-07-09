@@ -8,6 +8,7 @@ import { FetchDataProvider } from '@/contexts/FetchDataProvider';
 import { Analytics } from '@vercel/analytics/react';
 import StoreProvider from '@/contexts/StoreProvider';
 import { title } from '@/config/config';
+import { PopupProvider } from '@/contexts/PopupProvider';
 
 const DynamicHeader = dynamic(
   () => import('@/components/common/Header/Header'),
@@ -22,6 +23,9 @@ const DynamicFooter = dynamic(
   { ssr: false }
 );
 const DynamicModal = dynamic(() => import('@/components/modal/Modal'), {
+  ssr: true,
+});
+const DynamicPopup = dynamic(() => import('@/components/popup/Popup'), {
   ssr: true,
 });
 
@@ -67,13 +71,16 @@ export default async function HomeLayout({
       <body className='flex flex-col justify-between'>
         <StoreProvider>
           <FetchDataProvider>
-            <ModalProvider>
-              <DynamicHeader />
-              {children}
-              <DynamicScrollToTop />
-              <DynamicFooter />
-              <DynamicModal />
-            </ModalProvider>
+            <PopupProvider>
+              <ModalProvider>
+                <DynamicHeader />
+                {children}
+                <DynamicScrollToTop />
+                <DynamicFooter />
+                <DynamicModal />
+                <DynamicPopup />
+              </ModalProvider>
+            </PopupProvider>
           </FetchDataProvider>
         </StoreProvider>
         <Analytics debug={false} />

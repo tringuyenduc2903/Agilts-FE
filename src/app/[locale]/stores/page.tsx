@@ -153,11 +153,12 @@ function StoresPage() {
       branchData?.data?.map((b: Branch) => {
         return (
           <article className='col-span-1 flex flex-col gap-2' key={b.id}>
-            <div className='max-h-[380px] h-full'>
+            <div className='max-h-[250px] h-full'>
               <Image
                 className='w-full h-full object-cover'
                 src={demoimg}
                 alt='demoimg'
+                fetchPriority='high'
               />
             </div>
             <h2 className='text-lg md:text-xl font-bold'>{b?.name}</h2>

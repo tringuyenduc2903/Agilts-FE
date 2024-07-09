@@ -76,7 +76,10 @@ function ImageModal() {
       className='fixed top-0 left-0 w-full h-full z-[999] flex justify-center items-center px-6'
       onClick={() => clickOutside}
     >
-      <div ref={sectionRef as LegacyRef<HTMLDivElement>} className='bg-white'>
+      <div
+        ref={sectionRef as LegacyRef<HTMLDivElement>}
+        className='bg-white max-h-[80vh] overflow-y-auto'
+      >
         <div className='relative max-w-[600px] max-h-[600px] w-full h-full'>
           <button
             className='absolute top-[4%] right-[4%] z-50'

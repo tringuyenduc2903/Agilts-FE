@@ -50,10 +50,10 @@ function PasswordAndSecurityPage() {
         </button>
       </section>
       {curPopup === 'change_password' && (
-        <ChangePasswordPopup closePopup={() => setCurPopup(null)} />
+        <ChangePasswordPopup closeForm={() => setCurPopup(null)} />
       )}
       {curPopup === 'two_factor_authentication' && (
-        <TwoFactorAuthenticationPopup closePopup={() => setCurPopup(null)} />
+        <TwoFactorAuthenticationPopup closeForm={() => setCurPopup(null)} />
       )}
     </div>
   );

@@ -11,11 +11,13 @@ import { FaPenToSquare, FaRegTrashCan } from 'react-icons/fa6';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { useDeleteDocumentMutation } from '@/lib/redux/query/userQuery';
 import NotFoundItem from '@/components/ui/NotFoundItem';
+import { PopupContext } from '@/contexts/PopupProvider';
 function DocumentDetailsPage() {
   const { locale, id } = useParams();
   const router = useRouter();
   const t = useTranslations('common');
   const { setVisibleModal } = useContext(ModalContext);
+  const { setVisiblePopup } = useContext(PopupContext);
   const { allDocuments, isLoadingDocuments, isLoadingUser } =
     useContext(FetchDataContext);
   const [
@@ -45,8 +47,8 @@ function DocumentDetailsPage() {
   }, [curDocument]);
   useEffect(() => {
     if (isSuccessDelete) {
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'success',
           message: t('mess_delete_document'),
         },
@@ -55,8 +57,8 @@ function DocumentDetailsPage() {
     }
     if (isErrorDelete && errorDelete) {
       const error = errorDelete as any;
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'error',
           message: error?.data?.message,
         },
@@ -67,7 +69,7 @@ function DocumentDetailsPage() {
     isErrorDelete,
     errorDelete,
     t,
-    setVisibleModal,
+    setVisiblePopup,
     router,
     locale,
   ]);

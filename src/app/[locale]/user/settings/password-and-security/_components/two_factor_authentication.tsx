@@ -23,16 +23,18 @@ import React, {
 import { useTranslations } from 'next-intl';
 import { FaAngleLeft, FaXmark } from 'react-icons/fa6';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { PopupContext } from '@/contexts/PopupProvider';
 type Props = {
-  closePopup: () => void;
+  closeForm: () => void;
 };
 type Form = {
   code: string;
 };
-const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
+const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
   const { user, refetchUser } = useContext(FetchDataContext);
   const t = useTranslations('common');
   const { setVisibleModal } = useContext(ModalContext);
+  const { setVisiblePopup, closeAllPopup } = useContext(PopupContext);
   const [curStep, setCurStep] = useState(1);
   const containerRef = useRef<HTMLElement | null>(null);
   const firstStepRef = useRef<HTMLDivElement | null>(null);
@@ -79,7 +81,12 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
   });
   const [
     deleteTwoFactor,
-    { isSuccess: isSuccessDelete, isLoading: isLoadingDelete },
+    {
+      isSuccess: isSuccessDelete,
+      isLoading: isLoadingDelete,
+      isError: isErrorDelete,
+      error: errorDelete,
+    },
   ] = useDeleteTwoFactorMutation();
   const errors = useMemo(() => {
     if (isErrorConfirm && errorConfirm) {
@@ -115,6 +122,13 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
     { dependencies: [curStep], scope: containerRef }
   );
   useEffect(() => {
+    if (isLoadingConfirm) {
+      setVisiblePopup({ visibleLoadingPopup: true });
+    } else {
+      setVisiblePopup({ visibleLoadingPopup: false });
+    }
+  }, [isLoadingConfirm, setVisiblePopup]);
+  useEffect(() => {
     if (isSuccessTurnOn) {
       setCurStep(2);
     }
@@ -122,8 +136,8 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
   useEffect(() => {
     if (isErrQrCode && errorQrCode) {
       const error = errorQrCode as any;
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'error',
           message: error?.data?.message,
         },
@@ -131,8 +145,8 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
     }
     if (isErrSecretKey && errorSecretKey) {
       const error = errorSecretKey as any;
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'error',
           message: error?.data?.message,
         },
@@ -143,26 +157,43 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
     errorQrCode,
     isErrSecretKey,
     errorSecretKey,
-    setVisibleModal,
+    setVisiblePopup,
   ]);
   useEffect(() => {
     if (isSuccessConfirm) {
       setCurStep(4);
     }
   }, [isSuccessConfirm]);
+
   useEffect(() => {
     if (isSuccessDelete) {
       refetchUser();
-      setVisibleModal('visibleConfirmModal');
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'success',
           message: t('turn_of_2fa'),
         },
       });
-      closePopup();
+      closeForm();
     }
-  }, [isSuccessDelete, refetchUser, setVisibleModal, closePopup, t]);
+    if (isErrorDelete && errorDelete) {
+      const error = errorDelete as any;
+      setVisiblePopup({
+        visibleToastPopup: {
+          type: 'error',
+          message: error?.data?.message,
+        },
+      });
+    }
+  }, [
+    isSuccessDelete,
+    isErrorDelete,
+    errorDelete,
+    refetchUser,
+    setVisiblePopup,
+    closeForm,
+    t,
+  ]);
   const handleDownload = useCallback(() => {
     if (isSuccessListCodes && listCodes) {
       const element = document.createElement('a');
@@ -181,7 +212,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
       className='fixed top-0 left-0 w-full h-full z-[999] py-16 px-4 flex justify-center items-center'
       // aria-disabled={isLoadingChangePassword}
     >
-      <div className='max-w-[540px] w-full bg-white rounded-sm overflow-hidden px-4 py-6 flex flex-col gap-6'>
+      <div className='max-w-[540px] w-full max-h-[80vh] bg-white rounded-sm overflow-y-auto px-4 py-6 flex flex-col gap-6'>
         {curStep === 1 && (
           <div
             ref={curStep === 1 ? firstStepRef : null}
@@ -190,8 +221,8 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
             <div className='w-full flex justify-end'>
               <button
                 aria-label='close'
-                disabled={isLoadingTurnOn}
-                onClick={closePopup}
+                disabled={isLoadingTurnOn || isLoadingConfirm}
+                onClick={closeForm}
               >
                 <FaXmark className='text-2xl' />
               </button>
@@ -248,6 +279,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
                 <button
                   className='w-max font-bold bg-neutral-800 text-white py-2 px-4 md:py-3 md:px-6 rounded-sm'
                   onClick={async () => await turnOn2FA(null)}
+                  disabled={isLoadingTurnOn}
                 >
                   {t('turn_on')}
                 </button>
@@ -286,7 +318,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
               <button
                 aria-label='close'
                 disabled={isLoadingQrCode || isLoadingSecretKey}
-                onClick={closePopup}
+                onClick={closeForm}
               >
                 <FaXmark className='text-2xl' />
               </button>
@@ -351,7 +383,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
               <button
                 aria-label='close'
                 disabled={isLoadingConfirm}
-                onClick={closePopup}
+                onClick={closeForm}
               >
                 <FaXmark className='text-2xl' />
               </button>
@@ -382,7 +414,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
                 className='font-bold bg-neutral-800 text-white py-2 px-4 md:py-3 md:px-6 rounded-sm'
                 disabled={isLoadingConfirm}
               >
-                {isLoadingConfirm ? `...${t('loading')}` : t('confirm')}
+                {t('confirm')}
               </button>
             </form>
           </div>
@@ -403,7 +435,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
               <button
                 aria-label='close'
                 disabled={isLoadingListCodes}
-                onClick={closePopup}
+                onClick={closeForm}
               >
                 <FaXmark className='text-2xl' />
               </button>
@@ -453,6 +485,14 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closePopup }) => {
                 </div>
               </div>
             )}
+            <button
+              type='submit'
+              className='font-bold bg-neutral-800 text-white py-2 px-4 md:py-3 md:px-6 rounded-sm'
+              onClick={closeForm}
+              disabled={isLoadingListCodes}
+            >
+              {t('done')}
+            </button>
           </div>
         )}
       </div>

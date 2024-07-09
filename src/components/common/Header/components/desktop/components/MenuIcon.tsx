@@ -16,11 +16,11 @@ import {
   IoHelpCircleOutline,
 } from 'react-icons/io5';
 import { useLogoutMutation } from '@/lib/redux/query/userQuery';
-import { ModalContext } from '@/contexts/ModalProvider';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
 import { title } from '@/config/config';
+import { PopupContext } from '@/contexts/PopupProvider';
 type Props = {
   isOpenMenu: boolean;
   openMenu: () => void;
@@ -32,7 +32,7 @@ const MenuIcon: React.FC<Props> = React.memo(
     const { locale } = useParams();
     const t = useTranslations('header');
     const dispatch = useDispatch();
-    const { setVisibleModal } = useContext(ModalContext);
+    const { setVisiblePopup } = useContext(PopupContext);
     const { user, handleGetCSRFCookie, isLoadingCSRF } =
       useContext(FetchDataContext);
     const router = useRouter();
@@ -113,8 +113,8 @@ const MenuIcon: React.FC<Props> = React.memo(
       closeMenu();
       if (isSuccessLogout) {
         router.replace(`/${locale}`);
-        setVisibleModal({
-          visibleToastModal: {
+        setVisiblePopup({
+          visibleToastPopup: {
             type: 'success',
             message: `${t('success_logout')}`,
           },
@@ -123,8 +123,8 @@ const MenuIcon: React.FC<Props> = React.memo(
       }
       if (isErrorLogout && errorLogout) {
         const error = errorLogout as any;
-        setVisibleModal({
-          visibleToastModal: {
+        setVisiblePopup({
+          visibleToastPopup: {
             type: 'error',
             message: error?.data?.message,
           },
@@ -134,7 +134,7 @@ const MenuIcon: React.FC<Props> = React.memo(
       isSuccessLogout,
       isErrorLogout,
       errorLogout,
-      setVisibleModal,
+      setVisiblePopup,
       t,
       dispatch,
       router,

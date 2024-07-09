@@ -18,11 +18,11 @@ import {
   IoHelpCircleOutline,
 } from 'react-icons/io5';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
-import { ModalContext } from '@/contexts/ModalProvider';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
 import { setCookie } from 'cookies-next';
 import { subRoutes } from '../../../hearderData';
+import { PopupContext } from '@/contexts/PopupProvider';
 type Props = {
   isOpenMenu: boolean;
   closeMenu: () => void;
@@ -33,7 +33,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
     useContext(FetchDataContext);
   const t = useTranslations('header');
   const dispatch = useDispatch();
-  const { setVisibleModal } = useContext(ModalContext);
+  const { setVisiblePopup } = useContext(PopupContext);
   const router = useRouter();
   const pathname = usePathname();
   const [hoverRoute, setHoverRoute] = useState<null | String>(null);
@@ -72,8 +72,8 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
   useEffect(() => {
     closeMenu();
     if (isSuccessLogout) {
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'success',
           message: `${t('success_logout')}`,
         },
@@ -83,8 +83,8 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
     }
     if (isErrorLogout && errorLogout) {
       const error = errorLogout as any;
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'error',
           message: error?.data?.message,
         },
@@ -94,7 +94,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
     isSuccessLogout,
     isErrorLogout,
     errorLogout,
-    setVisibleModal,
+    setVisiblePopup,
     t,
     dispatch,
     router,

@@ -23,6 +23,7 @@ import { defaultTimezone } from '@/config/config';
 import { SocialProvider } from '@/types/types';
 import { Social } from '@/types/types';
 import { FaFacebook, FaGoogle, FaGithub } from 'react-icons/fa6';
+import { PopupContext } from '@/contexts/PopupProvider';
 
 type Form = {
   name: string;
@@ -51,6 +52,7 @@ function AccountsPage() {
   const { user, handleGetCSRFCookie, isLoadingCSRF } =
     useContext(FetchDataContext);
   const { setVisibleModal } = useContext(ModalContext);
+  const { setVisiblePopup, closeAllPopup } = useContext(PopupContext);
   const [sendVerify, setSendVerify] = useState(false);
   const [
     resendVerifyAccount,
@@ -122,9 +124,27 @@ function AccountsPage() {
     }
   }, [user, reset]);
   useEffect(() => {
+    if (
+      isLoadingCSRF ||
+      isLoadingUpdate ||
+      isLoadingPostData ||
+      isLoadingDelete
+    ) {
+      closeAllPopup();
+      setVisiblePopup({ visibleLoadingPopup: true });
+    }
+  }, [
+    isLoadingCSRF,
+    isLoadingUpdate,
+    isLoadingPostData,
+    isLoadingDelete,
+    setVisiblePopup,
+    closeAllPopup,
+  ]);
+  useEffect(() => {
     if (isSuccessUpdate) {
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'success',
           message: `${t('mess_change_profile')}`,
         },
@@ -132,25 +152,19 @@ function AccountsPage() {
     }
     if (isErrorUpdate && errorUpdate) {
       const error = errorUpdate as any;
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'error',
           message: error?.data?.message,
         },
       });
     }
-  }, [isSuccessUpdate, isErrorUpdate, errorUpdate, setVisibleModal, t]);
+  }, [isSuccessUpdate, isErrorUpdate, errorUpdate, setVisiblePopup, t]);
   useEffect(() => {
-    if (isLoadingCSRF && sendVerify) {
-      setVisibleModal({ visibleLoadingModal: isLoadingCSRF });
-    }
-    if (isLoadingPostData && sendVerify) {
-      setVisibleModal({ visibleLoadingModal: isLoadingPostData });
-    }
     if (isSuccessPostData) {
       setSendVerify(false);
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'success',
           message: `${t('mess_success_send_verify')}`,
         },
@@ -159,8 +173,8 @@ function AccountsPage() {
     if (isErrorPostData && errorPostData) {
       setSendVerify(false);
       const error = errorPostData as any;
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'error',
           message: error?.data?.message,
         },
@@ -168,18 +182,16 @@ function AccountsPage() {
     }
   }, [
     sendVerify,
-    isLoadingCSRF,
-    isLoadingPostData,
     isSuccessPostData,
     isErrorPostData,
     errorPostData,
-    setVisibleModal,
+    setVisiblePopup,
     t,
   ]);
   useEffect(() => {
     if (isSuccessDelete) {
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'success',
           message: `${t('delete_success_social')}`,
         },
@@ -187,14 +199,14 @@ function AccountsPage() {
     }
     if (isErrorDelete && errorDelete) {
       const error = errorDelete as any;
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'error',
           message: error?.data?.message,
         },
       });
     }
-  }, [isSuccessDelete, isErrorDelete, errorDelete, setVisibleModal, t]);
+  }, [isSuccessDelete, isErrorDelete, errorDelete, setVisiblePopup, t]);
   return (
     <div className='flex flex-col gap-6'>
       <div>
@@ -303,6 +315,12 @@ function AccountsPage() {
                         },
                       })
                     }
+                    disabled={
+                      isLoadingUpdate ||
+                      isLoadingCSRF ||
+                      isLoadingPostData ||
+                      isLoadingDelete
+                    }
                   >
                     {t('unlink')}
                   </button>
@@ -404,9 +422,7 @@ function AccountsPage() {
               isLoadingDelete
             }
           >
-            {isLoadingUpdate || (isLoadingCSRF && !sendVerify)
-              ? `...${t('loading')}`
-              : t('update')}
+            {t('update')}
           </button>
         </div>
       </form>

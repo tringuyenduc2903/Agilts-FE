@@ -189,7 +189,7 @@
     "specifications": "Specifications",
     "reviews": "Reviews",
     "edit_profile": "Edit profile",
-    "purchase_order": "Purchase order",
+    "purchase_order": "Purchase orders",
     "address": "Addresses",
     "cart": "Cart",
     "add_address": "Add address",
@@ -264,6 +264,8 @@
     "options": "Options",
     "select_option": "Select option",
     "mess_no_specifications": "The product does not have technical specifications yet!",
-    "special_specification": "Special specifications"
+    "special_specification": "Special specifications",
+    "done": "Completed",
+    "mess_success_verify": "Account authentication successful!"
   }
 }

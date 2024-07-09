@@ -1,19 +1,25 @@
 import { ModalContext } from '@/contexts/ModalProvider';
 import useClickOutside from '@/lib/hooks/useClickOutside';
-import React, { LegacyRef, useContext } from 'react';
+import React, { LegacyRef, useCallback, useContext } from 'react';
 import { useTranslations } from 'next-intl';
+import { PopupContext } from '@/contexts/PopupProvider';
 function ConfirmModal() {
   const { state, setVisibleModal } = useContext(ModalContext);
+  const { setVisiblePopup } = useContext(PopupContext);
   const { sectionRef, clickOutside } = useClickOutside(() =>
     setVisibleModal('visibleConfirmModal')
   );
   const t = useTranslations('common');
+  const handleCallBack = useCallback(() => {
+    state?.visibleConfirmModal?.cb();
+    setVisiblePopup({ visibleLoadingPopup: true });
+    setVisibleModal('visibleConfirmModal');
+  }, [state?.visibleConfirmModal, setVisibleModal, setVisiblePopup]);
   return (
     <section
-      className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'
+      className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center max-h-[50vh] overflow-y-auto'
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       onClick={() => clickOutside}
-      // aria-disabled={isLoadingConfirm || isLoadingStatus}
     >
       <div
         ref={sectionRef as LegacyRef<HTMLDivElement>}
@@ -36,11 +42,9 @@ function ConfirmModal() {
           <button
             disabled={state?.visibleConfirmModal?.isLoading}
             className='text-sm md:text-base border border-neutral-400 hover:bg-neutral-800 hover:text-white transition-colors px-4 py-2 font-bold rounded-sm'
-            onClick={state?.visibleConfirmModal?.cb}
+            onClick={handleCallBack}
           >
-            {state?.visibleConfirmModal?.isLoading
-              ? `...${t('loading')}`
-              : t('confirm')}
+            {t('confirm')}
           </button>
         </div>
       </div>

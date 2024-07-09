@@ -5,10 +5,10 @@ import bgImg from '@/assets/port-title-area.jpg';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useForgotPasswordMutation } from '@/lib/redux/query/userQuery';
-import { ModalContext } from '@/contexts/ModalProvider';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { notFound } from 'next/navigation';
 import Loading from '../loading';
+import { PopupContext } from '@/contexts/PopupProvider';
 
 type Form = {
   email: string;
@@ -22,7 +22,7 @@ function ForgotPasswordPage() {
     handleGetCSRFCookie,
     isLoadingCSRF,
   } = useContext(FetchDataContext);
-  const { setVisibleModal } = useContext(ModalContext);
+  const { setVisiblePopup } = useContext(PopupContext);
   const { register, handleSubmit } = useForm<Form>();
   const [
     forgotPassword,
@@ -42,9 +42,16 @@ function ForgotPasswordPage() {
     [handleGetCSRFCookie, forgotPassword]
   );
   useEffect(() => {
+    if (isLoadingCSRF || isLoadingPost) {
+      setVisiblePopup({ visibleLoadingPopup: true });
+    } else {
+      setVisiblePopup({ visibleLoadingPopup: false });
+    }
+  }, [isLoadingCSRF, isLoadingPost, setVisiblePopup]);
+  useEffect(() => {
     if (isSuccessPost && postData) {
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'success',
           message: postData?.message,
         },
@@ -52,14 +59,14 @@ function ForgotPasswordPage() {
     }
     if (isErrorPost && errorPost) {
       const error = errorPost as any;
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'error',
           message: error?.data?.message,
         },
       });
     }
-  }, [isSuccessPost, postData, isErrorPost, errorPost, setVisibleModal]);
+  }, [isSuccessPost, postData, isErrorPost, errorPost, setVisiblePopup]);
   if (isLoadingUser) return <Loading />;
   if (user && isSuccessUser && !isLoadingUser) return notFound();
   return (
@@ -105,9 +112,7 @@ function ForgotPasswordPage() {
               className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
               disabled={isLoadingPost || isLoadingCSRF}
             >
-              {isLoadingPost || isLoadingCSRF
-                ? `...${t('loading')}`
-                : t('submit')}
+              {t('submit')}
             </button>
           </form>
         </div>

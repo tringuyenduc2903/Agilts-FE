@@ -16,7 +16,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import Loading from '../loading';
 import { useSelector } from 'react-redux';
 import { isLoggedInState } from '@/lib/redux/slice/userSlice';
-import { ModalContext } from '@/contexts/ModalProvider';
+import { PopupContext } from '@/contexts/PopupProvider';
 type Form = {
   code: string;
   recovery_code: string;
@@ -34,7 +34,7 @@ function TwoFactorQrCodePage() {
     handleGetCSRFCookie,
     isLoadingCSRF,
   } = useContext(FetchDataContext);
-  const { setVisibleModal } = useContext(ModalContext);
+  const { setVisiblePopup } = useContext(PopupContext);
   const [
     verifyTwoFactor,
     {
@@ -64,16 +64,39 @@ function TwoFactorQrCodePage() {
     [handleGetCSRFCookie, verifyTwoFactor, curInput]
   );
   useEffect(() => {
+    if (isLoadingVerify) {
+      setVisiblePopup({ visibleLoadingPopup: true });
+    } else {
+      setVisiblePopup({ visibleLoadingPopup: false });
+    }
+  }, [isLoadingVerify, setVisiblePopup]);
+  useEffect(() => {
     if (isSuccessVerify) {
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'success',
-          message: 'Xác thực tài khoản thành công!',
+          message: t('mess_success_verify'),
         },
       });
       refetchUser();
     }
-  }, [isSuccessVerify, refetchUser, setVisibleModal]);
+    if (isErrorVerify && errorVerify) {
+      const error = errorVerify as any;
+      setVisiblePopup({
+        visibleToastPopup: {
+          type: 'error',
+          message: error?.data?.message,
+        },
+      });
+    }
+  }, [
+    isSuccessVerify,
+    isErrorVerify,
+    errorVerify,
+    refetchUser,
+    setVisiblePopup,
+    t,
+  ]);
   if (user && isSuccessUser && !isLoadingUser) {
     return router.replace('/');
   }
@@ -156,6 +179,7 @@ function TwoFactorQrCodePage() {
                 className='w-max text-sm font-bold text-blue-700'
                 type='button'
                 onClick={() => setCurInput('code')}
+                disabled={isLoadingVerify || isLoadingCSRF}
               >
                 {t('using_code')}
               </button>
@@ -165,6 +189,7 @@ function TwoFactorQrCodePage() {
                 className='w-max text-sm font-bold text-blue-700'
                 type='button'
                 onClick={() => setCurInput('recovery')}
+                disabled={isLoadingVerify || isLoadingCSRF}
               >
                 {t('using_recovery')}
               </button>
@@ -174,9 +199,7 @@ function TwoFactorQrCodePage() {
               type='submit'
               disabled={isLoadingVerify || isLoadingCSRF}
             >
-              {isLoadingVerify || isLoadingCSRF
-                ? `...${t('loading')}`
-                : t('submit')}
+              {t('submit')}
             </button>
           </form>
         </div>

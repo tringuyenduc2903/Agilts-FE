@@ -2,11 +2,6 @@
 import { Address, Document } from '@/types/types';
 import { createContext, useCallback, useReducer } from 'react';
 type InitialState = {
-  visibleToastModal: {
-    type: 'success' | 'error' | 'warning' | 'info';
-    message: string;
-  };
-  visibleLoadingModal: boolean;
   visibleTwoFactorAuthenticationModal: boolean;
   visibleConfirmPasswordModal: {
     // cb: () => Promise<void> | null;

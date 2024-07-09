@@ -9,7 +9,6 @@ import React, {
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { notFound, useParams, useRouter } from 'next/navigation';
 import Loading from '../loading';
-import { ModalContext } from '@/contexts/ModalProvider';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
 import { useLoginMutation } from '@/lib/redux/query/userQuery';
@@ -24,6 +23,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
 import { getCookies } from 'cookies-next';
+import { PopupContext } from '@/contexts/PopupProvider';
 type Form = {
   email: string;
   password: string;
@@ -41,7 +41,7 @@ function LoginPage() {
   } = useContext(FetchDataContext);
   const t = useTranslations('common');
   const dispatch = useDispatch();
-  const { setVisibleModal } = useContext(ModalContext);
+  const { setVisiblePopup } = useContext(PopupContext);
   const { register, handleSubmit } = useForm<Form>({
     defaultValues: {
       remember: true,
@@ -81,21 +81,18 @@ function LoginPage() {
     }
   }, []);
   useEffect(() => {
-    if (isLoadingCSRF) {
-      setVisibleModal({ visibleLoadingModal: isLoadingCSRF });
-    }
-    if (isLoadingLogin) {
-      setVisibleModal({ visibleLoadingModal: isLoadingLogin });
+    if (isLoadingCSRF || isLoadingLogin) {
+      setVisiblePopup({ visibleLoadingPopup: true });
     }
     if ((isErrorLogin || isSuccessLogin) && !isLoadingCSRF && !isLoadingLogin) {
-      setVisibleModal({ visibleLoadingModal: false });
+      setVisiblePopup({ visibleLoadingPopup: false });
     }
   }, [
     isLoadingCSRF,
     isLoadingLogin,
     isErrorLogin,
     isSuccessLogin,
-    setVisibleModal,
+    setVisiblePopup,
   ]);
   useEffect(() => {
     if (isSuccessLogin && loginData) {
@@ -109,8 +106,8 @@ function LoginPage() {
     }
     if (isErrorLogin && errorLogin) {
       const error = errorLogin as any;
-      setVisibleModal({
-        visibleToastModal: {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'error',
           message: error?.data?.message,
         },
@@ -121,7 +118,7 @@ function LoginPage() {
     loginData,
     isErrorLogin,
     errorLogin,
-    setVisibleModal,
+    setVisiblePopup,
     router,
     refetchUser,
     dispatch,
@@ -133,7 +130,7 @@ function LoginPage() {
   }
   if (isLoadingUser) return <Loading />;
   return (
-    <main className='relative w-full h-screen flex justify-center items-center font-medium text-sm sm:text-base'>
+    <main className='relative w-full h-screen flex justify-center items-center font-medium text-sm sm:text-base overflow-y-auto'>
       <section
         className='absolute top-0 left-0 w-full h-full z-[5]'
         style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}

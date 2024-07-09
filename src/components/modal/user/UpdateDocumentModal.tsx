@@ -1,12 +1,11 @@
 'use client';
 import { documents } from '@/config/config';
 import { ModalContext } from '@/contexts/ModalProvider';
-import useClickOutside from '@/lib/hooks/useClickOutside';
+import { PopupContext } from '@/contexts/PopupProvider';
 import { useUpdateDocumentMutation } from '@/lib/redux/query/userQuery';
 import { CustomFormatDate } from '@/lib/utils/format';
 import { useTranslations } from 'next-intl';
 import React, {
-  LegacyRef,
   useCallback,
   useContext,
   useEffect,
@@ -24,9 +23,7 @@ type Form = {
 function UpdateDocumentModal() {
   const t = useTranslations('common');
   const { state, setVisibleModal } = useContext(ModalContext);
-  const { sectionRef, clickOutside } = useClickOutside(() =>
-    setVisibleModal('visibleUpdateDocumentModal')
-  );
+  const { setVisiblePopup } = useContext(PopupContext);
   const [openType, setOpenType] = useState(false);
   const [type, setType] = useState<number | null>(null);
   const curType = useMemo(() => {
@@ -45,7 +42,7 @@ function UpdateDocumentModal() {
     updateDocument,
     {
       isLoading: isLoadingUpdate,
-      isSuccess: isSuccessPost,
+      isSuccess: isSuccessUpdate,
       isError: isErrorUpdate,
       error: errorUpdate,
     },
@@ -106,25 +103,39 @@ function UpdateDocumentModal() {
     [updateDocument, form, curType, state.visibleUpdateDocumentModal]
   );
   useEffect(() => {
-    if (isSuccessPost) {
-      setVisibleModal({
-        visibleToastModal: {
+    if (isLoadingUpdate) {
+      setVisiblePopup({ visibleLoadingPopup: true });
+    } else {
+      setVisiblePopup({ visibleLoadingPopup: false });
+    }
+  }, [isLoadingUpdate, setVisiblePopup]);
+  useEffect(() => {
+    if (isSuccessUpdate) {
+      setVisiblePopup({
+        visibleToastPopup: {
           type: 'success',
           message: t('mess_update_document'),
         },
       });
     }
-  }, [isSuccessPost, setVisibleModal, t]);
+    if (isErrorUpdate && errorUpdate) {
+      const error = errorUpdate as any;
+      setVisiblePopup({
+        visibleToastPopup: {
+          type: 'error',
+          message: error?.data?.message,
+        },
+      });
+    }
+  }, [isSuccessUpdate, isErrorUpdate, errorUpdate, setVisiblePopup, t]);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
-      onClick={() => clickOutside}
     >
       <form
         method='POST'
         className='relative bg-white text-neutral-800 text-sm md:text-base rounded-sm min-h-[40vh] max-h-[60vh] max-w-[500px] w-full overflow-hidden'
-        ref={sectionRef as LegacyRef<HTMLFormElement>}
         onSubmit={handleSubmit}
       >
         <div className='w-full min-h-[40vh] max-h-[60vh] px-4 pt-8 pb-24 overflow-y-auto flex flex-col gap-6'>
@@ -134,9 +145,6 @@ function UpdateDocumentModal() {
             </h1>
           </div>
           <div className='relative w-full flex flex-col gap-2'>
-            {errors?.message && (
-              <p className='font-bold text-red-500'>{errors.message}</p>
-            )}
             <p>{t('document_type')}</p>
             <button
               className='text-sm md:text-base w-full border border-neutral-300 rounded-sm px-4 py-2 text-start'
@@ -292,7 +300,7 @@ function UpdateDocumentModal() {
             className='px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition-colors'
             disabled={isLoadingUpdate}
           >
-            {isLoadingUpdate ? `${t('loading')}...` : t('update')}
+            {t('update')}
           </button>
         </div>
       </form>

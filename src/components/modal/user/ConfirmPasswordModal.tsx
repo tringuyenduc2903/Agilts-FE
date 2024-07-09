@@ -1,20 +1,14 @@
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
-import useClickOutside from '@/lib/hooks/useClickOutside';
 import {
   useConfirmPasswordMutation,
   useConfirmPasswordStatusQuery,
 } from '@/lib/redux/query/userQuery';
-import React, {
-  LegacyRef,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
+import { PopupContext } from '@/contexts/PopupProvider';
 type Form = {
   password: string;
 };
@@ -23,14 +17,7 @@ function ConfirmPasswordModal() {
   const { handleGetCSRFCookie, isLoadingCSRF } = useContext(FetchDataContext);
   const t = useTranslations('common');
   const [isShowCurPwd, setIsShowCurPwd] = useState(false);
-  const { sectionRef } = useClickOutside(() => {
-    setVisibleModal({
-      visibleConfirmPasswordModal: {
-        state: 'idle',
-        display: false,
-      },
-    });
-  });
+  const { setVisiblePopup } = useContext(PopupContext);
   const { register, handleSubmit } = useForm<Form>();
   const [
     confirmPassword,
@@ -66,6 +53,13 @@ function ConfirmPasswordModal() {
     await confirmPassword(data.password);
   };
   useEffect(() => {
+    if (isLoadingCSRF || isLoadingConfirm || isLoadingStatus) {
+      setVisiblePopup({ visibleLoadingPopup: true });
+    } else {
+      setVisiblePopup({ visibleLoadingPopup: false });
+    }
+  }, [isLoadingConfirm, isLoadingStatus, isLoadingCSRF, setVisiblePopup]);
+  useEffect(() => {
     if (isSuccessStatus && statusConfirm) {
       setVisibleModal({
         visibleConfirmPasswordModal: {
@@ -84,7 +78,6 @@ function ConfirmPasswordModal() {
         onSubmit={handleSubmit(onSubmit)}
         method='POST'
         className='max-w-[540px] w-full bg-white rounded-sm overflow-hidden px-4 py-6 flex flex-col gap-6'
-        ref={sectionRef as LegacyRef<HTMLFormElement>}
       >
         <h1 className='text-lg md:text-xl font-bold'>
           {t('title_confirm_password')}
@@ -122,9 +115,7 @@ function ConfirmPasswordModal() {
           className='font-bold bg-neutral-800 text-white py-3 md:py-4 rounded-sm'
           disabled={isLoadingConfirm || isLoadingStatus || isLoadingCSRF}
         >
-          {isLoadingConfirm || isLoadingStatus || isLoadingCSRF
-            ? `...${t('loading')}`
-            : t('confirm')}
+          {t('confirm')}
         </button>
       </form>
     </section>

@@ -50,9 +50,6 @@ function MobileNavigation() {
               fetchPriority='high'
             />
           </div>
-          {/* <p className='text-4xl font-bold uppercase'>
-            {title.replace('A', '')}
-          </p> */}
         </button>
         <button
           onClick={() => setIsOpenMenu(true)}

@@ -37,11 +37,11 @@ function Aside() {
           </button>
           <button
             className={`w-full flex items-center gap-2 p-4 rounded-sm ${
-              pathname.includes('accounts')
+              pathname.includes('account')
                 ? 'bg-red-500 text-white'
                 : 'hover:bg-red-50'
             } transition-colors`}
-            onClick={() => router.push(`/${locale}/user/settings/accounts`)}
+            onClick={() => router.push(`/${locale}/user/settings/account`)}
           >
             <IoPersonCircleOutline className='text-2xl' />
             <span className='font-medium'>{t('accounts')}</span>

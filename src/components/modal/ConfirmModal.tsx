@@ -17,13 +17,13 @@ function ConfirmModal() {
   }, [state?.visibleConfirmModal, setVisibleModal, setVisiblePopup]);
   return (
     <section
-      className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center max-h-[50vh] overflow-y-auto'
+      className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       onClick={() => clickOutside}
     >
       <div
         ref={sectionRef as LegacyRef<HTMLDivElement>}
-        className='max-w-[540px] w-full bg-white rounded-sm overflow-hidden px-4 py-6 flex flex-col gap-4'
+        className='max-w-[540px] w-full max-h-[50vh] overflow-y-auto bg-white rounded-sm px-4 py-6 flex flex-col gap-4'
       >
         <h1 className='text-xl md:text-2xl font-bold text-center'>
           {state?.visibleConfirmModal?.title}

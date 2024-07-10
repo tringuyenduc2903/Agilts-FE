@@ -278,6 +278,7 @@ function AddAddressModal() {
   }, [isLoadingPost, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessPost) {
+      setVisibleModal('visibleAddAddressModal');
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
@@ -294,7 +295,14 @@ function AddAddressModal() {
         },
       });
     }
-  }, [isSuccessPost, isErrorPost, errorPost, setVisiblePopup, t]);
+  }, [
+    isSuccessPost,
+    isErrorPost,
+    errorPost,
+    setVisiblePopup,
+    setVisibleModal,
+    t,
+  ]);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'

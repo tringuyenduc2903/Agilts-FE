@@ -262,42 +262,18 @@ function UpdateAddressModal() {
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if (
-        defaultAddress?.id !== state.visibleUpdateAddressModal?.id &&
-        country.default
-      ) {
-        await Promise.all([
-          updateAddress({
-            body: { ...defaultAddress, default: false },
-            address_id: defaultAddress?.id,
-          }),
-          updateAddress({
-            body: {
-              default: country.default,
-              type: country.type,
-              country: defaultCountry,
-              province: country.province.full_name,
-              district: country.district.full_name,
-              ward: country.ward.full_name,
-              address_detail: country.address_detail,
-            },
-            address_id: state.visibleUpdateAddressModal?.id,
-          }),
-        ]);
-      } else {
-        await updateAddress({
-          body: {
-            default: country.default,
-            type: country.type,
-            country: defaultCountry,
-            province: country.province.full_name,
-            district: country.district.full_name,
-            ward: country.ward.full_name,
-            address_detail: country.address_detail,
-          },
-          address_id: state.visibleUpdateAddressModal?.id,
-        });
-      }
+      await updateAddress({
+        body: {
+          default: country.default,
+          type: country.type,
+          country: defaultCountry,
+          province: country.province.full_name,
+          district: country.district.full_name,
+          ward: country.ward.full_name,
+          address_detail: country.address_detail,
+        },
+        address_id: state.visibleUpdateAddressModal?.id,
+      });
     },
     [updateAddress, country, state.visibleUpdateAddressModal, defaultAddress]
   );
@@ -310,6 +286,7 @@ function UpdateAddressModal() {
   }, [isLoadingUpdate, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessUpdate) {
+      setVisibleModal('visibleUpdateAddressModal');
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
@@ -326,7 +303,14 @@ function UpdateAddressModal() {
         },
       });
     }
-  }, [isSuccessUpdate, isErrorUpdate, errorUpdate, setVisiblePopup, t]);
+  }, [
+    isSuccessUpdate,
+    isErrorUpdate,
+    errorUpdate,
+    setVisiblePopup,
+    setVisibleModal,
+    t,
+  ]);
   useLayoutEffect(() => {
     if (country.province.code) {
       setCountry((prevCountry) => {

@@ -17,8 +17,15 @@ function AddressPage() {
   const t = useTranslations('common');
   const { setVisibleModal } = useContext(ModalContext);
   const { setVisiblePopup } = useContext(PopupContext);
-  const [updateAddress, { isLoading: isLoadingUpdate }] =
-    useUpdateAddressMutation();
+  const [
+    updateAddress,
+    {
+      isLoading: isLoadingUpdate,
+      isSuccess: isSuccessUpdate,
+      isError: isErrorUpdate,
+      error: errorUpdate,
+    },
+  ] = useUpdateAddressMutation();
   const [
     deleteAddress,
     {
@@ -30,23 +37,10 @@ function AddressPage() {
   ] = useDeleteAddressMutation();
   const handleSetDefaultAddress = useCallback(
     async (address: Address) => {
-      if (defaultAddress && defaultAddress?.default) {
-        await Promise.all([
-          updateAddress({
-            body: { ...defaultAddress, default: false },
-            address_id: defaultAddress.id,
-          }),
-          updateAddress({
-            body: { ...address, default: true },
-            address_id: address.id,
-          }),
-        ]);
-      } else {
-        await updateAddress({
-          body: { ...address, default: true },
-          address_id: address.id,
-        });
-      }
+      await updateAddress({
+        body: { ...address, default: true },
+        address_id: address.id,
+      });
     },
     [updateAddress, defaultAddress]
   );
@@ -124,6 +118,43 @@ function AddressPage() {
     isLoadingUpdate,
     setVisiblePopup,
     setVisibleModal,
+  ]);
+  useEffect(() => {
+    if (isLoadingUpdate) {
+      setVisiblePopup({
+        visibleLoadingPopup: true,
+      });
+    } else {
+      setVisiblePopup({
+        visibleLoadingPopup: false,
+      });
+    }
+  }, [isLoadingUpdate, setVisiblePopup]);
+  useEffect(() => {
+    if (isSuccessUpdate) {
+      setVisiblePopup({
+        visibleToastPopup: {
+          type: 'success',
+          message: t('mess_update_address'),
+        },
+      });
+    }
+    if (isErrorUpdate && errorUpdate) {
+      const error = errorUpdate as any;
+      setVisiblePopup({
+        visibleToastPopup: {
+          type: 'error',
+          message: error?.data?.message,
+        },
+      });
+    }
+  }, [
+    isSuccessUpdate,
+    isErrorUpdate,
+    errorUpdate,
+    setVisiblePopup,
+    setVisibleModal,
+    t,
   ]);
   useEffect(() => {
     if (isSuccessDelete) {

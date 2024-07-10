@@ -64,7 +64,7 @@ function UpdateDocumentModal() {
         number: state.visibleUpdateDocumentModal.number,
         issued_name: state.visibleUpdateDocumentModal.issued_name,
         issuance_date: CustomFormatDate(
-          state.visibleUpdateDocumentModal?.expiry_date
+          state.visibleUpdateDocumentModal?.issuance_date
         ),
         expiry_date: CustomFormatDate(
           state.visibleUpdateDocumentModal?.expiry_date
@@ -111,6 +111,7 @@ function UpdateDocumentModal() {
   }, [isLoadingUpdate, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessUpdate) {
+      setVisibleModal('visibleUpdateDocumentModal');
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
@@ -127,7 +128,14 @@ function UpdateDocumentModal() {
         },
       });
     }
-  }, [isSuccessUpdate, isErrorUpdate, errorUpdate, setVisiblePopup, t]);
+  }, [
+    isSuccessUpdate,
+    isErrorUpdate,
+    errorUpdate,
+    setVisiblePopup,
+    setVisibleModal,
+    t,
+  ]);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'

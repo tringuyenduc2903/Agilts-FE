@@ -42,7 +42,7 @@ function AddressPage() {
         address_id: address.id,
       });
     },
-    [updateAddress, defaultAddress]
+    [updateAddress]
   );
   const renderedAddress = useMemo(() => {
     return (
@@ -116,7 +116,6 @@ function AddressPage() {
     handleSetDefaultAddress,
     isLoadingDelete,
     isLoadingUpdate,
-    setVisiblePopup,
     setVisibleModal,
   ]);
   useEffect(() => {

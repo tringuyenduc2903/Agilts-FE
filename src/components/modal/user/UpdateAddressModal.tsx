@@ -275,7 +275,7 @@ function UpdateAddressModal() {
         address_id: state.visibleUpdateAddressModal?.id,
       });
     },
-    [updateAddress, country, state.visibleUpdateAddressModal, defaultAddress]
+    [updateAddress, country, state.visibleUpdateAddressModal]
   );
   useEffect(() => {
     if (isLoadingUpdate) {

@@ -1,5 +1,7 @@
+'use server';
 import dynamic from 'next/dynamic';
-import { getLocale, getTranslations } from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ModalProvider } from '@/contexts/ModalProvider';
@@ -60,27 +62,35 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function HomeLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
-  const locale = await getLocale();
+  params: { locale },
+}: {
+  children: React.ReactNode;
+  params: { locale: string };
+}) {
+  const messages = await getMessages({
+    locale: locale,
+  });
   return (
     <html lang={locale}>
       <body className='flex flex-col justify-between'>
-        <StoreProvider>
-          <FetchDataProvider>
-            <PopupProvider>
-              <ModalProvider>
-                <DynamicHeader />
-                {children}
-                <DynamicScrollToTop />
-                <DynamicFooter />
-                <DynamicModal />
-                <DynamicPopup />
-              </ModalProvider>
-            </PopupProvider>
-          </FetchDataProvider>
-        </StoreProvider>
-        <Analytics debug={false} />
-        <SpeedInsights />
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <StoreProvider>
+            <FetchDataProvider>
+              <PopupProvider>
+                <ModalProvider>
+                  <DynamicHeader />
+                  {children}
+                  <DynamicScrollToTop />
+                  <DynamicFooter />
+                  <DynamicModal />
+                  <DynamicPopup />
+                </ModalProvider>
+              </PopupProvider>
+            </FetchDataProvider>
+          </StoreProvider>
+          <Analytics debug={false} />
+          <SpeedInsights />
+        </NextIntlClientProvider>
       </body>
     </html>
   );

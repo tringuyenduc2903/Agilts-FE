@@ -10,7 +10,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import MenuIcon from './components/MenuIcon';
 import { title } from '@/config/config';
-import { subRoutes } from '../../hearderData';
+import { subRoutes } from '../../headerData';
 function DesktopNavigation() {
   const { locale } = useParams();
   const t = useTranslations('header');

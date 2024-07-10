@@ -1,9 +1,8 @@
 import { Viewport } from 'next';
-import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages } from 'next-intl/server';
 import { Open_Sans } from 'next/font/google';
 import './globals.css';
 import Script from 'next/script';
+import { cookies } from 'next/headers';
 
 const inter = Open_Sans({
   subsets: ['latin'],
@@ -25,10 +24,7 @@ export const viewport: Viewport = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const locale = await getLocale();
-  const messages = await getMessages({
-    locale: locale,
-  });
+  const locale = cookies().get('NEXT_LOCALE')?.value || 'vi';
   return (
     <html lang={locale}>
       <head>
@@ -54,9 +50,7 @@ export default async function RootLayout({
       </head>
       <body className={`${inter.className}`}>
         <Script defer src='/service-worker.js' strategy='beforeInteractive' />
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          {children}
-        </NextIntlClientProvider>
+        {children}
       </body>
     </html>
   );

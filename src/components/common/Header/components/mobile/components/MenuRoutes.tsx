@@ -21,7 +21,7 @@ import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
 import { setCookie } from 'cookies-next';
-import { subRoutes } from '../../../hearderData';
+import { subRoutes } from '../../../headerData';
 import { PopupContext } from '@/contexts/PopupProvider';
 type Props = {
   isOpenMenu: boolean;

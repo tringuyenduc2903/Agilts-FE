@@ -1,10 +1,8 @@
 import { getTranslations } from 'next-intl/server';
 import notfound from '@/assets/error-img-1.png';
 import Image from 'next/image';
-import { cookies } from 'next/headers';
 import Link from 'next/link';
 async function NotFound() {
-  const cookieStore = cookies();
   const t = await getTranslations('common');
   return (
     <main className='m-auto pt-[72px] container h-screen px-4'>
@@ -22,7 +20,7 @@ async function NotFound() {
           </div>
           <Link
             className='relative w-max m-auto lg:m-0 sm:w-[230px] h-[36px] sm:h-[46px] md:h-[55px] text-sm md:text-base uppercase bg-red-600 text-white px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'
-            href={`/${cookieStore.get('NEXT_LOCALE')?.value}`}
+            href={`/`}
           >
             <span
               className={`w-[164px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 hover:sm:translate-x-[10%] sm:translate-x-0'

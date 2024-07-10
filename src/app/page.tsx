@@ -1,7 +1,6 @@
-'use server';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { getLocale } from 'next-intl/server';
 export default async function RootPage() {
-  const locale = await getLocale();
+  const locale = cookies().get('NEXT_LOCALE')?.value || 'vi';
   redirect(`/${locale}`);
 }

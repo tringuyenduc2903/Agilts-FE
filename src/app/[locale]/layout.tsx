@@ -67,6 +67,7 @@ export default async function HomeLayout({
   children: React.ReactNode;
   params: { locale: string };
 }) {
+  locale;
   const messages = await getMessages({
     locale: locale,
   });

@@ -22,7 +22,6 @@ import {
 } from 'react-icons/fa6';
 import { useDispatch } from 'react-redux';
 import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
-import { getCookies } from 'cookies-next';
 import { PopupContext } from '@/contexts/PopupProvider';
 type Form = {
   email: string;
@@ -242,11 +241,7 @@ function LoginPage() {
             <div className='my-2 flex justify-center items-center'>
               <button
                 type='button'
-                onClick={() =>
-                  router.push(
-                    `/${getCookies()?.NEXT_LOCALE || 'vi'}/forgot-password`
-                  )
-                }
+                onClick={() => router.push(`/${locale}/forgot-password`)}
               >
                 {t('forgot-password')}?
               </button>
@@ -256,9 +251,7 @@ function LoginPage() {
               <button
                 type='button'
                 className='font-bold'
-                onClick={() =>
-                  router.push(`/${getCookies()?.NEXT_LOCALE || 'vi'}/register`)
-                }
+                onClick={() => router.push(`/${locale}/register`)}
                 disabled={isLoadingLogin || isLoadingCSRF}
               >
                 {t('sign-up')}

@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic';
-import { getTranslations } from 'next-intl/server';
-import { cookies } from 'next/headers';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ModalProvider } from '@/contexts/ModalProvider';
@@ -62,12 +61,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomeLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const cookieStore = cookies();
-  const localeCookie = cookieStore.get('NEXT_LOCALE');
-  const lang = localeCookie ? localeCookie.value : 'vi';
-
+  const locale = await getLocale();
   return (
-    <html lang={lang}>
+    <html lang={locale}>
       <body className='flex flex-col justify-between'>
         <StoreProvider>
           <FetchDataProvider>

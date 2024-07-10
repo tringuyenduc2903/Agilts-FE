@@ -1,7 +1,6 @@
 import { Viewport } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages } from 'next-intl/server';
-import { cookies } from 'next/headers';
+import { getLocale, getMessages } from 'next-intl/server';
 import { Open_Sans } from 'next/font/google';
 import './globals.css';
 import Script from 'next/script';
@@ -26,15 +25,12 @@ export const viewport: Viewport = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const cookieStore = cookies();
-  const localeCookie = cookieStore.get('NEXT_LOCALE');
-  const lang = localeCookie ? localeCookie.value : 'vi';
+  const locale = await getLocale();
   const messages = await getMessages({
-    locale: lang,
+    locale: locale,
   });
-
   return (
-    <html lang={lang}>
+    <html lang={locale}>
       <head>
         <link
           rel='apple-touch-icon'
@@ -58,7 +54,7 @@ export default async function RootLayout({
       </head>
       <body className={`${inter.className}`}>
         <Script defer src='/service-worker.js' strategy='beforeInteractive' />
-        <NextIntlClientProvider locale={lang} messages={messages}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
           {children}
         </NextIntlClientProvider>
       </body>

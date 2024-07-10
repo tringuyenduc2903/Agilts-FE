@@ -46,7 +46,10 @@ function CategoriesSection({ name, label, data }: Props) {
       </h2>
       <ul
         style={{
-          height: viewMore ? `${36 * convertData.length + 36}px` : '256px',
+          height:
+            convertData.length > 3 && viewMore
+              ? `${36 * convertData.length + 36}px`
+              : `${convertData.length > 3 ? '256px' : '128px'}`,
         }}
         className='flex flex-col gap-3 overflow-hidden transition-all duration-200'
       >

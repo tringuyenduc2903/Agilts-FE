@@ -1,5 +1,5 @@
 'use client';
-import { Address, Document } from '@/types/types';
+import { Address, Document, ProductOption } from '@/types/types';
 import { createContext, useCallback, useReducer } from 'react';
 type InitialState = {
   visibleTwoFactorAuthenticationModal: boolean;

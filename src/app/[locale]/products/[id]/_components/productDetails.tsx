@@ -1,5 +1,11 @@
 'use client';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import Image from 'next/image';
 import Stars from '@/components/ui/Stars';
 import { useTranslations } from 'next-intl';
@@ -8,36 +14,93 @@ import { FaAngleUp, FaAngleDown } from 'react-icons/fa';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { Product, ProductOption } from '@/types/types';
 import errorImage from '@/assets/not-found-img.avif';
+import { useParams, useRouter } from 'next/navigation';
 type Props = {
   product: Product;
 };
 function ProductDetails({ product }: Props) {
+  const { locale } = useParams();
   const { setVisibleModal } = useContext(ModalContext);
+  const router = useRouter();
   const t = useTranslations('common');
   const [isHoverAddToCart, setIsHoverAddToCart] = useState(false);
-  const [curOption, setCurOption] = useState<ProductOption>(
-    () => product.options[0]
+  const [curOption, setCurOption] = useState<ProductOption['version']>('');
+  const [selectedOption, setSelectedOption] = useState<ProductOption[] | null>(
+    null
   );
+  const [selectedOptionDetails, setSelectedOptionDetails] =
+    useState<ProductOption | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [fallbackImg, setFallbackImg] = useState(false);
   const [fallBackListImage, setFallBackListImage] = useState<number[]>([]);
+  const versions = useMemo(() => {
+    const newVersions = new Map<string, ProductOption[]>();
+    product.options.forEach((item) => {
+      const versionOptions = newVersions.get(item.version);
+      if (versionOptions) {
+        versionOptions.push(item);
+      } else {
+        newVersions.set(item.version, [item]);
+      }
+    });
+    return Array.from(newVersions);
+  }, [product]);
+  useEffect(() => {
+    setCurOption(versions[0]?.[0]);
+    setSelectedOption(versions[0]?.[1]);
+    setSelectedOptionDetails(versions[0]?.[1][0]);
+  }, []);
+  const handleSetCurOption = useCallback(
+    (version: string) => {
+      setCurOption(version);
+      const selectedDetails = versions.find((v) => v[0] === version);
+      if (selectedDetails?.[1]) {
+        setSelectedOption(selectedDetails?.[1]);
+      }
+      if (selectedDetails?.[1][0]) {
+        setSelectedOptionDetails(selectedDetails?.[1][0]);
+      }
+    },
+    [versions]
+  );
   const renderedOptions = useMemo(() => {
-    return product.options.map((o) => {
+    return versions.map((v: any, index: number) => {
       return (
         <button
-          key={o.id}
-          onClick={() => setCurOption(o)}
+          key={index}
+          onClick={() => handleSetCurOption(v[0])}
           className={`border ${
-            curOption.id === o.id
+            curOption === v[0]
               ? 'border-red-500 text-red-500'
               : 'border-neutral-300'
           } px-4 py-1 font-bold`}
         >
-          {o.model_name}
+          {v[0]}
         </button>
       );
     });
   }, [product.options, curOption]);
+  const renderedColors = useMemo(() => {
+    return (
+      selectedOptionDetails &&
+      selectedOption?.map((s) => {
+        return (
+          <li key={s.id}>
+            <button
+              className={`border ${
+                selectedOptionDetails.id === s.id
+                  ? 'border-red-500 text-red-500'
+                  : 'border-neutral-300'
+              } px-4 py-1 font-bold`}
+              onClick={() => setSelectedOptionDetails(s)}
+            >
+              {s.color}
+            </button>
+          </li>
+        );
+      })
+    );
+  }, [selectedOption, selectedOptionDetails]);
   const handleEnterQuantity = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { value } = e.target;
@@ -70,7 +133,11 @@ function ProductDetails({ product }: Props) {
           width={550}
           height={600}
           src={
-            fallbackImg ? errorImage : (curOption.images[0]?.image as string)
+            fallbackImg
+              ? errorImage
+              : selectedOptionDetails
+              ? selectedOptionDetails.images[0]
+              : product.images.map((img) => img.image)[0]
           }
           alt={product.images[0]?.alt as string}
           onError={() => setFallbackImg(true)}
@@ -78,47 +145,84 @@ function ProductDetails({ product }: Props) {
             setVisibleModal({
               visibleImageModal: {
                 curImage: 0,
-                totalImages: curOption.images.length,
-                images: curOption.images as any,
+                totalImages: selectedOptionDetails
+                  ? selectedOptionDetails.images.length
+                  : product.images.length,
+                images: selectedOptionDetails
+                  ? selectedOptionDetails.images
+                  : (product.images as any),
               },
             })
           }
         />
         <div className='w-full grid grid-cols-3 gap-6'>
-          {curOption?.images?.slice(0, 3)?.map((img, index: number) => {
-            const isError = fallBackListImage.includes(index);
+          {selectedOption
+            ? selectedOptionDetails?.images
+                ?.slice(0, 3)
+                ?.map((img, index: number) => {
+                  const isError = fallBackListImage.includes(index);
 
-            return (
-              <Image
-                key={index}
-                className='col-span-1 w-full object-cover border border-neutral-300 rounded-sm cursor-pointer'
-                src={isError ? errorImage : img.image}
-                alt={img?.alt as string}
-                width={250}
-                height={180}
-                onError={() =>
-                  setFallBackListImage([...fallBackListImage, index])
-                }
-                onClick={() =>
-                  setVisibleModal({
-                    visibleImageModal: {
-                      curImage: index,
-                      totalImages: curOption.images.length,
-                      images: curOption.images as any,
-                    },
-                  })
-                }
-              />
-            );
-          })}
+                  return (
+                    <Image
+                      key={index}
+                      className='col-span-1 w-full object-cover border border-neutral-300 rounded-sm cursor-pointer'
+                      src={isError ? errorImage : img}
+                      alt={img as string}
+                      width={250}
+                      height={180}
+                      onError={() =>
+                        setFallBackListImage([...fallBackListImage, index])
+                      }
+                      onClick={() =>
+                        setVisibleModal({
+                          visibleImageModal: {
+                            curImage: index,
+                            totalImages: selectedOptionDetails.images.length,
+                            images: selectedOptionDetails.images as any,
+                          },
+                        })
+                      }
+                    />
+                  );
+                })
+            : product?.images?.slice(0, 3)?.map((img, index: number) => {
+                const isError = fallBackListImage.includes(index);
+
+                return (
+                  <Image
+                    key={index}
+                    className='col-span-1 w-full object-cover border border-neutral-300 rounded-sm cursor-pointer'
+                    src={isError ? errorImage : img.image}
+                    alt={img?.alt as string}
+                    width={250}
+                    height={180}
+                    onError={() =>
+                      setFallBackListImage([...fallBackListImage, index])
+                    }
+                    onClick={() =>
+                      setVisibleModal({
+                        visibleImageModal: {
+                          curImage: index,
+                          totalImages: product.images.length,
+                          images: product.images as any,
+                        },
+                      })
+                    }
+                  />
+                );
+              })}
         </div>
       </div>
       <div className='col-span-1 flex flex-col gap-8'>
         <div className='flex flex-col gap-2'>
-          <p className='text-base md:text-lg font-bold flex items-center gap-4'>
-            <span>{t('status')}:</span>
-            <span className='text-red-600'>{product.status}</span>
-          </p>
+          {selectedOptionDetails && (
+            <p className='text-base md:text-lg font-bold flex items-center gap-4'>
+              <span>{t('status')}:</span>
+              <span className='text-red-600'>
+                {selectedOptionDetails.status}
+              </span>
+            </p>
+          )}
           <h1
             title={product?.name}
             className='line-clamp-2 text-2xl md:text-4xl font-bold'
@@ -127,10 +231,10 @@ function ProductDetails({ product }: Props) {
           </h1>
           <div className='flex flex-col sm:flex-row sm:items-center sm:gap-4'>
             <p
-              title={curOption?.price_preview}
+              title={selectedOptionDetails?.price_preview}
               className='max-w-[280px] truncate font-bold text-lg md:text-xl'
             >
-              {curOption?.price_preview}
+              {selectedOptionDetails?.price_preview}
             </p>
           </div>
         </div>
@@ -154,32 +258,73 @@ function ProductDetails({ product }: Props) {
             <ul className='flex flex-wrap gap-4'>{renderedOptions}</ul>
           </div>
         </div>
+        {renderedColors && (
+          <div className='flex flex-col gap-4'>
+            <p className='uppercase font-bold text-base md:text-lg'>
+              {t('colors')}
+            </p>
+            <div className='w-full flex gap-4'>
+              <ul className='flex flex-wrap gap-4'>{renderedColors}</ul>
+            </div>
+          </div>
+        )}
         <div className='flex flex-col gap-4'>
           <p className='uppercase font-bold text-base md:text-lg'>
             {t('quick_info')}
           </p>
-          <div className='text-[12px] md:text-sm font-medium flex flex-col gap-2'>
-            <p className='flex gap-2'>
-              <span className='text-red-500'>{t('type')}:</span>
-              <span className='text-neutral-500'>{product.type}</span>
-            </p>
-            <p className='flex gap-2'>
-              <span className='text-red-500'>SKU:</span>
-              <span className='text-neutral-500'>{curOption.sku}</span>
-            </p>
-            {curOption.color && (
+          {selectedOptionDetails && (
+            <div className='font-medium flex flex-col gap-2'>
+              <div className='flex gap-2'>
+                <p className='text-red-500'>{t('categories')}:</p>
+                {product.categories?.map((c) => {
+                  return (
+                    <button
+                      key={c.id}
+                      className='text-neutral-500'
+                      onClick={() =>
+                        router.push(
+                          `/${locale}/products?page=1&category=${c.id}`,
+                          {
+                            scroll: true,
+                          }
+                        )
+                      }
+                    >
+                      {c.name}
+                    </button>
+                  );
+                })}
+              </div>
               <p className='flex gap-2'>
-                <span className='text-red-500'>{t('color')}:</span>
-                <span className='text-neutral-500'>{curOption.color}</span>
+                <span className='text-red-500'>{t('type')}:</span>
+                <span className='text-neutral-500'>
+                  {selectedOptionDetails.type}
+                </span>
               </p>
-            )}
-            {curOption.model_name && (
               <p className='flex gap-2'>
-                <span className='text-red-500'>{t('model_name')}:</span>
-                <span className='text-neutral-500'>{curOption.model_name}</span>
+                <span className='text-red-500'>SKU:</span>
+                <span className='text-neutral-500'>
+                  {selectedOptionDetails.sku}
+                </span>
               </p>
-            )}
-          </div>
+              {selectedOptionDetails.color && (
+                <p className='flex gap-2'>
+                  <span className='text-red-500'>{t('color')}:</span>
+                  <span className='text-neutral-500'>
+                    {selectedOptionDetails.color}
+                  </span>
+                </p>
+              )}
+              {selectedOptionDetails.version && (
+                <p className='flex gap-2'>
+                  <span className='text-red-500'>{t('model_name')}:</span>
+                  <span className='text-neutral-500'>
+                    {selectedOptionDetails.version}
+                  </span>
+                </p>
+              )}
+            </div>
+          )}
         </div>
         <div className='flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8'>
           <div className='w-max h-[55px] flex items-center border border-neutral-300'>
@@ -216,23 +361,24 @@ function ProductDetails({ product }: Props) {
             </span>
           </button>
         </div>
-        {curOption.specifications.length > 0 && (
-          <div className='flex flex-col gap-4'>
-            <p className='uppercase font-bold text-base md:text-lg'>
-              {t('special_specification')}
-            </p>
-            <ul className='py-2 sm:py-4 md:py-8 px-4 sm:px-8 bg-neutral-100 flex flex-col gap-4'>
-              {curOption.specifications.map((s) => {
-                return (
-                  <li className='flex flex-col gap-2 text-sm' key={s.key}>
-                    <p className='text-red-500 font-bold'>{s.key}</p>
-                    <p className='font-bold'>{s.value}</p>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        )}
+        {selectedOptionDetails &&
+          selectedOptionDetails.specifications.length > 0 && (
+            <div className='flex flex-col gap-4'>
+              <p className='uppercase font-bold text-base md:text-lg'>
+                {t('special_specification')}
+              </p>
+              <ul className='py-2 sm:py-4 md:py-8 px-4 sm:px-8 bg-neutral-100 flex flex-col gap-4'>
+                {selectedOptionDetails.specifications.map((s) => {
+                  return (
+                    <li className='flex flex-col gap-2 text-sm' key={s.key}>
+                      <p className='text-red-500 font-bold'>{s.key}</p>
+                      <p className='font-bold'>{s.value}</p>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
       </div>
     </section>
   );

@@ -79,27 +79,26 @@ export type ProductFilter = {
   data: string | number | KeyObject;
 };
 export type ProductOption = {
-  id: number;
-  sku: string;
-  price: number;
-  price_preview: string;
-  images: [
-    {
-      image: string;
-      alt: string;
-    }
-  ];
   color: string;
-  model_name: string;
+  created_at: string;
+  id: number | string;
+  images: string[];
+  price: string;
+  price_preview: string;
+  product_id: string | number;
+  quantity: number;
+  sku: string;
   specifications: [
     {
       key: string;
       value: string;
     }
   ];
-  product_id: number;
-  created_at: string;
+  status: string;
+  type: string;
   updated_at: string;
+  version: string;
+  weight: string | null;
 };
 export type Product = {
   id: number;

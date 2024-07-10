@@ -1,23 +1,18 @@
-import createMiddleware from 'next-intl/middleware';
 import { NextRequest } from 'next/server';
-
+import createMiddleware from 'next-intl/middleware';
 export function middleware(request: NextRequest) {
   const handleI18nRouting = createMiddleware({
-    // A list of all locales that are supported
     locales: ['vi', 'en'],
-    // Used when no locale matches
     defaultLocale: 'vi',
+    localePrefix: 'as-needed',
   });
   const response = handleI18nRouting(request);
+  const { nextUrl } = request;
+  response.headers.set('x-url', nextUrl.pathname);
 
   return response;
 }
 
 export const config = {
-  // Match only internationalized pathnames
   matcher: ['/((?!api|_next|.*\\..*).*)'],
-  missing: [
-    { type: 'header', key: 'next-router-prefetch' },
-    { type: 'header', key: 'purpose', value: 'prefetch' },
-  ],
 };

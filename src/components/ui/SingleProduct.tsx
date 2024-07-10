@@ -60,7 +60,14 @@ SingleProduct.Type = function ProductType() {
 
 SingleProduct.Title = function ProductTitle() {
   const { product } = useProductContext();
-  return <p className='uppercase line-clamp-2'>{product.name}</p>;
+  return (
+    <p
+      title={product.name}
+      className='uppercase line-clamp-1 text-lg md:text-xl'
+    >
+      {product.name}
+    </p>
+  );
 };
 
 SingleProduct.Price = function ProductPrice() {
@@ -70,7 +77,7 @@ SingleProduct.Price = function ProductPrice() {
     <div className='w-full flex items-center gap-2'>
       <p
         title={product.min_price.preview}
-        className={`w-full truncate overflow-hidden flex justify-between items-center gap-4`}
+        className={`w-full truncate overflow-hidden flex items-center gap-2`}
       >
         <span> {t('from')}</span>
         <span>{product.min_price.preview}</span>
@@ -90,11 +97,11 @@ SingleProduct.Image = function ProductImage({
   return (
     <div
       className={`${
-        customClass ? customClass : 'max-h-[280px] w-full h-full'
+        customClass ? customClass : 'w-full max-h-[280px] h-[350px]'
       } relative`}
     >
       <Image
-        className='w-full h-full object-cover'
+        className='object-cover'
         src={fallbackImg ? errorImage : product.images[0]?.image}
         alt={product.images[0]?.alt}
         fetchPriority='low'

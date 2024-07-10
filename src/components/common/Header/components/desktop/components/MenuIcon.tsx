@@ -215,7 +215,7 @@ const MenuIcon: React.FC<Props> = React.memo(
                   </button>
                 </div>
                 <button
-                  className='mt-auto ml-auto bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
+                  className='mt-auto ml-auto mb-6 bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
                   onClick={handleLogout}
                   disabled={isLoadingLogout || isLoadingCSRF}
                 >
@@ -224,7 +224,7 @@ const MenuIcon: React.FC<Props> = React.memo(
               </div>
             ) : (
               <button
-                className='mt-auto ml-auto bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
+                className='mt-auto ml-auto mb-6 bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
                 disabled={isLoadingLogout || isLoadingCSRF}
                 onClick={() => handleRedirect('login')}
               >

@@ -30,7 +30,8 @@
     "about_title": "Về chúng tôi",
     "about_description": "Thông tin về {name}",
     "account_title": "Tài khoản",
-    "account_description": "Quản lý đơn mua và địa chỉ"
+    "account_description": "Quản lý đơn mua và địa chỉ",
+    "search": "Tìm kiếm"
   },
   "header": {
     "home": "Trang chủ",
@@ -266,6 +267,16 @@
     "mess_no_specifications": "Sản phẩm chưa có thông số kỹ thuật!",
     "special_specification": "Thông số đặc biệt",
     "done": "Hoàn tất",
-    "mess_success_verify": "Xác thực tài khoản thành công!"
+    "mess_success_verify": "Xác thực tài khoản thành công!",
+    "version": "Phiên bản",
+    "quantity": "Số lượng",
+    "search_results": "Tìm kiếm kết quả",
+    "new_search": "Tìm kiếm mới",
+    "enter_search": "Nhập tìm kiếm",
+    "mess_new_search": "Nếu bạn không hài lòng với kết quả bên dưới, vui lòng thực hiện tìm kiếm khác",
+    "category": "Danh mục",
+    "no_search": "Hiện chưa có kết quả tìm kiếm",
+    "mess_found_1": "Đã tìm thấy {number} kết quả",
+    "mess_found_many": "Đã tìm thấy {number} kết quả"
   }
 }

@@ -1,10 +1,10 @@
 import React from 'react';
 
 const LoadingMultiItem = React.memo(
-  ({ customClass }: { customClass: string }) => {
+  ({ customClass, number = 15 }: { customClass: string; number?: number }) => {
     const items = [];
 
-    for (let i = 0; i < 15; i++) {
+    for (let i = 0; i < number; i++) {
       items.push(<div className={customClass} key={i}></div>);
     }
     return <>{items}</>;

@@ -30,7 +30,8 @@
     "about_title": "About Us",
     "about_description": "Information about {name}",
     "account_title": "Account",
-    "account_description": "Manage purchase orders and addresses"
+    "account_description": "Manage purchase orders and addresses",
+    "search": "Search"
   },
   "header": {
     "home": "Home",
@@ -267,6 +268,16 @@
     "mess_no_specifications": "The product does not have technical specifications yet!",
     "special_specification": "Special specifications",
     "done": "Completed",
-    "mess_success_verify": "Account authentication successful!"
+    "mess_success_verify": "Account authentication successful!",
+    "version": "Version",
+    "quantity": "Quantity",
+    "search_results": "Search results for",
+    "new_search": "New Search",
+    "enter_search": "Enter search",
+    "mess_new_search": "If you are not happy with the results below please do another search",
+    "category": "Category",
+    "no_search": "There are currently no search results",
+    "mess_found_1": "{number} result found",
+    "mess_found_many": "{number} results found"
   }
 }

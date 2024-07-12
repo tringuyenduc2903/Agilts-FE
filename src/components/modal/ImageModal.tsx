@@ -80,7 +80,7 @@ function ImageModal() {
         ref={sectionRef as LegacyRef<HTMLDivElement>}
         className='bg-white max-h-[80vh] overflow-y-auto'
       >
-        <div className='relative max-w-[600px] max-h-[600px] w-full h-full'>
+        <div className='relative max-w-[600px] max-h-[600px] w-full h-full pt-12'>
           <button
             className='absolute top-[4%] right-[4%] z-50'
             aria-label='close-image-slider'
@@ -88,35 +88,23 @@ function ImageModal() {
           >
             <FaXmark className='text-2xl text-neutral-600' />
           </button>
-          {state.visibleImageModal && (
-            <Image
-              ref={imgRef}
-              className='w-full max-w-[600px] h-full max-h-[600px] object-cover'
-              width={600}
-              height={600}
-              src={
-                fallbackImg
-                  ? errorImage
-                  : state?.visibleImageModal?.images[curImage - 1]
-              }
-              alt={`img-${curImage}`}
-              onError={() => setFallbackImg(true)}
-            />
-          )}
-          <button
-            className='absolute top-1/2 -translate-y-1/2 left-[5%] z-50'
-            aria-label='left-btn-slider'
-            onClick={handlePrev}
-          >
-            <FaAngleLeft className='text-2xl text-neutral-600' />
-          </button>
-          <button
-            className='absolute top-1/2 -translate-y-1/2 right-[5%] z-50'
-            aria-label='right-btn-slider'
-            onClick={handleNext}
-          >
-            <FaAngleRight className='text-2xl text-neutral-600' />
-          </button>
+          <div className='max-w-[600px] max-h-[600px]'>
+            {state.visibleImageModal && (
+              <Image
+                ref={imgRef}
+                className='w-full h-full object-cover'
+                width={600}
+                height={600}
+                src={
+                  fallbackImg
+                    ? errorImage
+                    : state?.visibleImageModal?.images[curImage - 1]
+                }
+                alt={`img-${curImage}`}
+                onError={() => setFallbackImg(true)}
+              />
+            )}
+          </div>
         </div>
         <div className='p-4 flex items-center'>
           <div className='flex items-center gap-2'>

@@ -14,6 +14,7 @@ import { FaAngleUp, FaAngleDown } from 'react-icons/fa';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { Product, ProductOption } from '@/types/types';
 import errorImage from '@/assets/not-found-img.avif';
+import errorImageLarger from '@/assets/not-found-img-larger.png';
 import { useParams, useRouter } from 'next/navigation';
 type Props = {
   product: Product;
@@ -106,11 +107,12 @@ function ProductDetails({ product }: Props) {
       const { value } = e.target;
       setQuantity(() => {
         if (Number(value) <= 1) return 1;
-        if (Number(value) >= 100) return 100;
+        if (Number(value) >= Number(selectedOptionDetails?.quantity))
+          return Number(selectedOptionDetails?.quantity);
         return Number(value);
       });
     },
-    []
+    [selectedOptionDetails]
   );
   const handleDecrease = useCallback(() => {
     setQuantity((prevQuantity) => {
@@ -120,10 +122,11 @@ function ProductDetails({ product }: Props) {
   }, []);
   const handleIncrease = useCallback(() => {
     setQuantity((prevQuantity) => {
-      if (prevQuantity >= 100) return 100;
+      if (prevQuantity >= Number(selectedOptionDetails?.quantity))
+        return Number(selectedOptionDetails?.quantity);
       return prevQuantity + 1;
     });
-  }, []);
+  }, [selectedOptionDetails]);
   return (
     <section className='container md:m-auto px-6 md:px-0 grid grid-cols-1 lg:grid-cols-2 gap-16 py-8 md:py-16 overflow-hidden'>
       <div className='col-span-1 flex flex-col items-start gap-6'>
@@ -134,7 +137,7 @@ function ProductDetails({ product }: Props) {
           height={600}
           src={
             fallbackImg
-              ? errorImage
+              ? errorImageLarger
               : selectedOptionDetails
               ? selectedOptionDetails.images[0]
               : product.images.map((img) => img.image)[0]
@@ -145,72 +148,38 @@ function ProductDetails({ product }: Props) {
             setVisibleModal({
               visibleImageModal: {
                 curImage: 0,
-                totalImages: selectedOptionDetails
-                  ? selectedOptionDetails.images.length
-                  : product.images.length,
-                images: selectedOptionDetails
-                  ? selectedOptionDetails.images
-                  : (product.images as any),
+                totalImages: product.images.map((img) => img.image).length,
+                images: product.images.map((img) => img.image),
               },
             })
           }
         />
         <div className='w-full grid grid-cols-3 gap-6'>
-          {selectedOption
-            ? selectedOptionDetails?.images
-                ?.slice(0, 3)
-                ?.map((img, index: number) => {
-                  const isError = fallBackListImage.includes(index);
-
-                  return (
-                    <Image
-                      key={index}
-                      className='col-span-1 w-full object-cover border border-neutral-300 rounded-sm cursor-pointer'
-                      src={isError ? errorImage : img}
-                      alt={img as string}
-                      width={250}
-                      height={180}
-                      onError={() =>
-                        setFallBackListImage([...fallBackListImage, index])
-                      }
-                      onClick={() =>
-                        setVisibleModal({
-                          visibleImageModal: {
-                            curImage: index,
-                            totalImages: selectedOptionDetails.images.length,
-                            images: selectedOptionDetails.images as any,
-                          },
-                        })
-                      }
-                    />
-                  );
-                })
-            : product?.images?.slice(0, 3)?.map((img, index: number) => {
-                const isError = fallBackListImage.includes(index);
-
-                return (
-                  <Image
-                    key={index}
-                    className='col-span-1 w-full object-cover border border-neutral-300 rounded-sm cursor-pointer'
-                    src={isError ? errorImage : img.image}
-                    alt={img?.alt as string}
-                    width={250}
-                    height={180}
-                    onError={() =>
-                      setFallBackListImage([...fallBackListImage, index])
-                    }
-                    onClick={() =>
-                      setVisibleModal({
-                        visibleImageModal: {
-                          curImage: index,
-                          totalImages: product.images.length,
-                          images: product.images as any,
-                        },
-                      })
-                    }
-                  />
-                );
-              })}
+          {product?.images?.slice(1, 4)?.map((img, index: number) => {
+            const isError = fallBackListImage.includes(index);
+            return (
+              <Image
+                key={index}
+                className='col-span-1 w-full object-cover border border-neutral-300 rounded-sm cursor-pointer'
+                src={isError ? errorImage : img.image}
+                alt={img?.alt as string}
+                width={250}
+                height={180}
+                onError={() =>
+                  setFallBackListImage([...fallBackListImage, index])
+                }
+                onClick={() =>
+                  setVisibleModal({
+                    visibleImageModal: {
+                      curImage: index,
+                      totalImages: product.images.length,
+                      images: product.images.map((img) => img.image) as any,
+                    },
+                  })
+                }
+              />
+            );
+          })}
         </div>
       </div>
       <div className='col-span-1 flex flex-col gap-8'>
@@ -317,9 +286,17 @@ function ProductDetails({ product }: Props) {
               )}
               {selectedOptionDetails.version && (
                 <p className='flex gap-2'>
-                  <span className='text-red-500'>{t('model_name')}:</span>
+                  <span className='text-red-500'>{t('version')}:</span>
                   <span className='text-neutral-500'>
                     {selectedOptionDetails.version}
+                  </span>
+                </p>
+              )}
+              {selectedOptionDetails.quantity && (
+                <p className='flex gap-2'>
+                  <span className='text-red-500'>{t('quantity')}:</span>
+                  <span className='text-neutral-500'>
+                    {selectedOptionDetails.quantity}
                   </span>
                 </p>
               )}

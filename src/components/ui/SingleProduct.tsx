@@ -48,7 +48,16 @@ export function SingleProduct({
     </ProductContext.Provider>
   );
 }
-
+SingleProduct.Category = function ProductType() {
+  const { product } = useProductContext();
+  const t = useTranslations('common');
+  return (
+    <p className='font-bold text-[12px] md:text-sm flex items-center gap-2'>
+      <span>{t('category')}:</span>
+      <span className='text-red-500'>{product.categories[0].name}</span>
+    </p>
+  );
+};
 SingleProduct.Type = function ProductType() {
   const { product } = useProductContext();
   return (
@@ -63,7 +72,7 @@ SingleProduct.Title = function ProductTitle() {
   return (
     <p
       title={product.name}
-      className='uppercase line-clamp-1 text-lg md:text-xl'
+      className='uppercase line-clamp-1 text-lg md:text-xl font-medium'
     >
       {product.name}
     </p>
@@ -101,7 +110,7 @@ SingleProduct.Image = function ProductImage({
       } relative`}
     >
       <Image
-        className='object-cover'
+        className='object-cover w-auto h-auto'
         src={fallbackImg ? errorImage : product.images[0]?.image}
         alt={product.images[0]?.alt}
         fetchPriority='low'

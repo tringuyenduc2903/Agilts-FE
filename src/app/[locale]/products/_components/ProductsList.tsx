@@ -21,11 +21,13 @@ function ProductsList() {
     data: filterData,
     isSuccess: isSuccessFilter,
     isLoading: isLoadingFilter,
+    isFetching: isFetchingFilter,
   } = useGetFilterQuery(null);
   const {
     data: productsData,
     isSuccess: isSuccessProducts,
     isLoading: isLoadingProducts,
+    isFetching: isFetchingProducts,
   } = useGetProductsQuery(searchParams.toString());
   return (
     <section className='py-16 flex flex-col gap-16'>
@@ -47,6 +49,7 @@ function ProductsList() {
       </div>
       <div className='container m-auto px-4 grid grid-cols-1 xl:grid-cols-4 gap-16 overflow-hidden'>
         {!isLoadingProducts &&
+          !isFetchingProducts &&
           isSuccessProducts &&
           productsData?.data?.length > 0 && (
             <ProductsSection
@@ -64,14 +67,14 @@ function ProductsList() {
               </p>
             </div>
           )}
-        {isLoadingProducts && (
+        {(isLoadingProducts || isFetchingProducts) && (
           <div className='col-span-1 xl:col-span-3 xl:order-1 order-2 flex flex-col items-center gap-16'>
             <div className='w-full flex flex-wrap justify-between gap-x-4 gap-y-16'>
               <LoadingMultiItem customClass='w-full max-w-[300px] h-[350px] skeleton' />
             </div>
           </div>
         )}
-        {!isLoadingFilter && isSuccessFilter && (
+        {!isLoadingFilter && !isFetchingFilter && isSuccessFilter && (
           <div className='col-span-1 xl:order-2 order-1 flex flex-col gap-8'>
             <FilterPriceSection
               minPrice={filterData[1]?.data}
@@ -94,7 +97,7 @@ function ProductsList() {
             />
           </div>
         )}
-        {isLoadingFilter && (
+        {(isLoadingFilter || isFetchingFilter) && (
           <div className='col-span-1 xl:order-2 order-1 h-[620px] skeleton'></div>
         )}
       </div>

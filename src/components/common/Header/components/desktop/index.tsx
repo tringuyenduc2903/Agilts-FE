@@ -49,6 +49,15 @@ function DesktopNavigation() {
     },
     [pathname]
   );
+  const handleSearch = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' && !e.shiftKey && inputRef.current) {
+        e.preventDefault();
+        router.push(`/${locale}/search?q=${inputRef.current?.value}`);
+      }
+    },
+    [router, locale, inputRef]
+  );
   return (
     <>
       <div
@@ -260,6 +269,7 @@ function DesktopNavigation() {
               ref={inputRef}
               onFocus={() => setIsFocusInput(true)}
               onBlur={() => setIsFocusInput(false)}
+              onKeyDown={handleSearch}
             />
             <span className='absolute -bottom-2 left-0 w-full h-[2px] bg-neutral-300'></span>
             <span

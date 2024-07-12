@@ -43,7 +43,7 @@ function SearchPage() {
       (isSuccessData &&
         productsData?.data?.map((p: Product) => {
           return (
-            <SingleProduct product={p}>
+            <SingleProduct product={p} key={p.id}>
               <SingleProduct.Image />
               <div className='flex flex-col gap-1'>
                 <SingleProduct.Category />

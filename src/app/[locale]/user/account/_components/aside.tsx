@@ -26,7 +26,10 @@ function Aside() {
         <div className='flex items-center gap-4'>
           <FaRegCircleUser className='text-5xl text-neutral-600' />
           <div className='flex flex-col gap-1'>
-            <h2 title={user?.email} className='max-w font-bold'>
+            <h2
+              title={user?.email}
+              className='max-w font-bold text-base md:text-lg'
+            >
               {user?.email}
             </h2>
             <button

@@ -266,7 +266,7 @@ function DesktopNavigation() {
         <section className='h-full flex items-center gap-8'>
           <div className='relative w-[220px]'>
             <input
-              className='w-full placeholder:text-neutral-800 text-neutral-800 focus:outline-none font-bold bg-transparent uppercase'
+              className='w-full placeholder:text-neutral-800 text-neutral-800 focus:outline-none font-bold bg-transparent placeholder:uppercase'
               type='text'
               placeholder={t('search')}
               // dir='rtl'

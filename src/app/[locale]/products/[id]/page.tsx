@@ -61,7 +61,7 @@ function ProductDetailsPage({
           <ProductDetails product={productData} />
           <Description description={productData?.description} />
           <Specifications specifications={productData?.specifications} />
-          <Videos videos={productData?.videos} />
+          {/* <Videos videos={productData?.videos} /> */}
           <Reviews />
         </>
       )}

@@ -288,6 +288,8 @@
     "total": "Total",
     "actions": "Actions",
     "empty_cart": "Your cart is currently empty.",
-    "return_shop": "Return to shop"
+    "return_shop": "Return to shop",
+    "prev_btn": "Previous",
+    "next_btn": "Next"
   }
 }

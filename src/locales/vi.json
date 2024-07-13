@@ -287,6 +287,8 @@
     "total": "Tổng tiền",
     "actions": "Hành động",
     "empty_cart": "Giỏ hàng của bạn hiện đang trống.",
-    "return_shop": "Quay lại cửa hàng"
+    "return_shop": "Quay lại cửa hàng",
+    "prev_btn": "Trước",
+    "next_btn": "Sau"
   }
 }

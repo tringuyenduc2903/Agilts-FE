@@ -1,4 +1,6 @@
+'use client';
 import useQueryString from '@/lib/hooks/useQueryString';
+import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import React, { useCallback, useState } from 'react';
 type Props = {
@@ -6,6 +8,7 @@ type Props = {
   totalPage: number;
 };
 function CustomPagination({ totalPage }: Props) {
+  const t = useTranslations('common');
   const [isHoverButton, setIsHoverButton] = useState<String | null>(null);
   const searchParams = useSearchParams();
   const [createQueryString] = useQueryString();
@@ -60,11 +63,11 @@ function CustomPagination({ totalPage }: Props) {
           onClick={handlePrev}
         >
           <span
-            className={`hidden md:block absolute top-1/2 right-4 -translate-y-1/2 ${
-              isHoverButton === 'prev' ? '-translate-x-[100%]' : 'translate-x-0'
+            className={`hidden md:block w-[118px] absolute top-1/2 right-4 -translate-y-1/2 ${
+              isHoverButton === 'prev' ? '-translate-x-[27%]' : 'translate-x-0'
             } px-4 z-10 transition-all duration-200 bg-white text-sm`}
           >
-            Prev
+            {t('prev_btn')}
           </span>
           <span className='w-full flex items-center'>
             <span className='w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-r-[10px] border-r-neutral-700'></span>
@@ -97,11 +100,11 @@ function CustomPagination({ totalPage }: Props) {
           onClick={handleNext}
         >
           <span
-            className={`hidden md:block absolute top-1/2 left-4 -translate-y-1/2 ${
-              isHoverButton === 'next' ? 'translate-x-[95%]' : 'translate-x-0'
+            className={`hidden md:block w-[80px] absolute top-1/2 left-4 -translate-y-1/2 ${
+              isHoverButton === 'next' ? 'translate-x-[88%]' : 'translate-x-0'
             } px-4 z-10 bg-white transition-all duration-200 text-sm`}
           >
-            Next
+            {t('next_btn')}
           </span>
           <span className='w-full flex items-center'>
             <span className='w-full h-[1px] bg-neutral-800'></span>

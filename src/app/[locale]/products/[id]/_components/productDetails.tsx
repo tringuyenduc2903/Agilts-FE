@@ -10,7 +10,6 @@ import Image from 'next/image';
 import Stars from '@/components/ui/Stars';
 import { useTranslations } from 'next-intl';
 import { scrollToElement } from '@/lib/utils/scrollElement';
-import { FaAngleUp, FaAngleDown } from 'react-icons/fa';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { Product, ProductOption } from '@/types/types';
 import errorImage from '@/assets/not-found-img.avif';
@@ -37,7 +36,6 @@ function ProductDetails({ product }: Props) {
   );
   const [selectedOptionDetails, setSelectedOptionDetails] =
     useState<ProductOption | null>(null);
-  const [quantity, setQuantity] = useState(1);
   const [fallbackImg, setFallbackImg] = useState(false);
   const [fallBackListImage, setFallBackListImage] = useState<number[]>([]);
   const versions = useMemo(() => {
@@ -132,31 +130,6 @@ function ProductDetails({ product }: Props) {
       })
     );
   }, [selectedOption, selectedOptionDetails]);
-  const handleEnterQuantity = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { value } = e.target;
-      setQuantity(() => {
-        if (Number(value) <= 1) return 1;
-        if (Number(value) >= Number(selectedOptionDetails?.quantity))
-          return Number(selectedOptionDetails?.quantity);
-        return Number(value);
-      });
-    },
-    [selectedOptionDetails]
-  );
-  const handleDecrease = useCallback(() => {
-    setQuantity((prevQuantity) => {
-      if (prevQuantity <= 1) return 1;
-      return prevQuantity - 1;
-    });
-  }, []);
-  const handleIncrease = useCallback(() => {
-    setQuantity((prevQuantity) => {
-      if (prevQuantity >= Number(selectedOptionDetails?.quantity))
-        return Number(selectedOptionDetails?.quantity);
-      return prevQuantity + 1;
-    });
-  }, [selectedOptionDetails]);
   return (
     <section className='container md:m-auto px-6 md:px-0 grid grid-cols-1 lg:grid-cols-2 gap-16 py-8 md:py-16 overflow-hidden'>
       <div className='col-span-1 flex flex-col items-start gap-6'>
@@ -334,22 +307,6 @@ function ProductDetails({ product }: Props) {
           )}
         </div>
         <div className='flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8'>
-          <div className='w-max h-[55px] flex items-center border border-neutral-300'>
-            <input
-              className='w-[54px] h-full text-center p-2 bg-red-600 text-white rounded-sm'
-              type='number'
-              value={quantity}
-              onChange={handleEnterQuantity}
-            />
-            <div className='h-full flex flex-col'>
-              <button className='w-full h-full px-4' onClick={handleIncrease}>
-                <FaAngleUp />
-              </button>
-              <button className='w-full h-full px-4' onClick={handleDecrease}>
-                <FaAngleDown />
-              </button>
-            </div>
-          </div>
           <button
             className='relative w-max sm:w-[220px] sm:h-[55px] uppercase bg-red-600 text-white px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center text-sm'
             onMouseEnter={() => setIsHoverAddToCart(true)}

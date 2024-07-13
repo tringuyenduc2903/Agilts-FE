@@ -23,13 +23,13 @@ function SearchSection() {
   return (
     <div>
       <div
-        className={`sm:m-0 w-full md:w-[280px] lg:w-[300px] h-[56px] flex items-stretch uppercase font-bold border ${
+        className={`sm:m-0 w-full md:w-[280px] lg:w-[300px] h-[56px] flex items-stretch font-bold border ${
           searchFocus ? 'border-red-500' : 'border-neutral-200'
         } transition-colors rounded overflow-hidden`}
       >
         <input
           type='text'
-          className='w-full h-full px-4 flex justify-start items-center tracking-[2px] uppercase text-sm'
+          className='w-full h-full px-4 flex justify-start items-center tracking-[2px] text-sm placeholder:uppercase'
           placeholder={`${t('your_search')}...`}
           value={searchValue}
           onFocus={() => setSearchFocus(true)}

@@ -286,13 +286,13 @@ function Banner() {
             onClick={handlePrevSlide}
           >
             <span
-              className={`absolute top-1/2 right-4 -translate-y-1/2 ${
+              className={`absolute w-[118px] top-1/2 right-4 -translate-y-1/2 ${
                 isHoverButton === 'prev'
-                  ? '-translate-x-[28%]'
+                  ? '-translate-x-[27%]'
                   : 'translate-x-0'
               } px-4 z-10 transition-all duration-200 bg-white text-sm`}
             >
-              Previous
+              {t('prev_btn')}
             </span>
             <span className='w-full flex items-center'>
               <span className='w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-r-[10px] border-r-neutral-700'></span>
@@ -312,11 +312,11 @@ function Banner() {
             onClick={handleNextSlide}
           >
             <span
-              className={`absolute top-1/2 left-4 -translate-y-1/2 ${
-                isHoverButton === 'next' ? 'translate-x-[95%]' : 'translate-x-0'
+              className={`absolute w-[80px] top-1/2 left-4 -translate-y-1/2 ${
+                isHoverButton === 'next' ? 'translate-x-[88%]' : 'translate-x-0'
               } px-4 z-10 bg-white transition-all duration-200 text-sm`}
             >
-              Next
+              {t('next_btn')}
             </span>
             <span className='w-full flex items-center'>
               <span className='w-full h-[1px] bg-neutral-800'></span>

@@ -176,18 +176,20 @@ function AddressPage() {
   }, [isSuccessDelete, isErrorDelete, errorDelete, t, setVisiblePopup]);
   return (
     <div className='w-full h-full flex flex-col gap-6'>
-      <section className='pb-4 flex justify-between items-center border-b border-neutral-300'>
+      <section className='pb-4 flex flex-col sm:flex-row justify-between sm:items-center border-b border-neutral-300'>
         <h1 className='text-xl md:text-2xl py-2 font-bold'>
           {t('address_list')}
         </h1>
-        <button
-          className='px-4 py-2 sm:py-3 rounded-sm w-max h-max flex justify-center items-center gap-2 bg-red-500 hover:bg-red-600 transition-colors text-sm md:text-base text-white'
-          onClick={() => setVisibleModal('visibleAddAddressModal')}
-          disabled={isLoadingUpdate}
-        >
-          <FaPlus />
-          <p>{t('add_address')}</p>
-        </button>
+        <div className='flex justify-end'>
+          <button
+            className='px-4 py-2 sm:py-3 rounded-sm w-max h-max flex justify-center items-center gap-2 bg-red-500 hover:bg-red-600 transition-colors text-sm md:text-base text-white'
+            onClick={() => setVisibleModal('visibleAddAddressModal')}
+            disabled={isLoadingUpdate}
+          >
+            <FaPlus />
+            <p>{t('add_address')}</p>
+          </button>
+        </div>
       </section>
       <section className='w-full h-full flex flex-col gap-6'>
         {renderedAddress?.length ? (

@@ -3,11 +3,18 @@ import React, {
   LegacyRef,
   useCallback,
   useContext,
+  useEffect,
   useRef,
   useState,
 } from 'react';
 import Image from 'next/image';
-import { FaAngleLeft, FaAngleRight, FaXmark } from 'react-icons/fa6';
+import {
+  FaPlus,
+  FaMinus,
+  FaAngleLeft,
+  FaAngleRight,
+  FaXmark,
+} from 'react-icons/fa6';
 import useClickOutside from '@/lib/hooks/useClickOutside';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { useGSAP } from '@gsap/react';
@@ -15,7 +22,7 @@ import gsap from 'gsap';
 import errorImage from '@/assets/not-found-img.avif';
 function ImageModal() {
   const containerRef = useRef(null);
-  const imgRef = useRef(null);
+  const imgRef = useRef<HTMLImageElement | null>(null);
   const [fallbackImg, setFallbackImg] = useState(false);
   const { state, setVisibleModal } = useContext(ModalContext);
   const { sectionRef, clickOutside } = useClickOutside(() =>
@@ -24,6 +31,8 @@ function ImageModal() {
   const [curImage, setCurImage] = useState(
     () => state?.visibleImageModal?.curImage || 1
   );
+  const [scale, setScale] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const handleNext = useCallback(() => {
     setCurImage((prevImage) => {
       if (prevImage >= state?.visibleImageModal?.totalImages) return 1;
@@ -69,6 +78,47 @@ function ImageModal() {
       scope: containerRef,
     }
   );
+  const handleZoomIn = useCallback(() => {
+    setScale((scale) => scale + 0.1);
+  }, []);
+  const handleZoomOut = useCallback(() => {
+    setScale((scale) => scale - 0.1);
+  }, []);
+  useEffect(() => {
+    const image = imgRef.current;
+    let isDragging = false;
+    let prevPosition = { x: 0, y: 0 };
+
+    const handleMouseDown = (e: MouseEvent) => {
+      isDragging = true;
+      prevPosition = { x: e.clientX, y: e.clientY };
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return;
+      const deltaX = e.clientX - prevPosition.x;
+      const deltaY = e.clientY - prevPosition.y;
+      setPosition((position) => ({
+        x: position.x + deltaX,
+        y: position.y + deltaY,
+      }));
+      prevPosition = { x: e.clientX, y: e.clientY };
+    };
+
+    const handleMouseUp = () => {
+      isDragging = false;
+    };
+
+    image?.addEventListener('mousedown', handleMouseDown);
+    image?.addEventListener('mousemove', handleMouseMove);
+    image?.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      image?.removeEventListener('mousedown', handleMouseDown);
+      image?.removeEventListener('mousemove', handleMouseMove);
+      image?.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [imgRef, scale]);
   return (
     <section
       ref={containerRef}
@@ -78,33 +128,53 @@ function ImageModal() {
     >
       <div
         ref={sectionRef as LegacyRef<HTMLDivElement>}
-        className='bg-white max-h-[80vh] overflow-y-auto'
+        className='bg-white max-h-[80vh] overflow-y-auto flex flex-col gap-4'
       >
-        <div className='relative max-w-[600px] max-h-[600px] w-full h-full pt-12'>
+        <div className='w-full flex justify-end px-4 pt-4'>
           <button
-            className='absolute top-[4%] right-[4%] z-50'
+            className='w-max'
             aria-label='close-image-slider'
             onClick={() => setVisibleModal('visibleImageModal')}
           >
             <FaXmark className='text-2xl text-neutral-600' />
           </button>
-          <div className='max-w-[600px] max-h-[600px]'>
-            {state.visibleImageModal && (
-              <Image
-                ref={imgRef}
-                className='w-full h-full object-cover'
-                width={600}
-                height={600}
-                src={
-                  fallbackImg
-                    ? errorImage
-                    : state?.visibleImageModal?.images[curImage - 1]
-                }
-                alt={`img-${curImage}`}
-                onError={() => setFallbackImg(true)}
-              />
-            )}
+        </div>
+        <div className='relative max-w-[600px] max-h-[600px] border border-neutral-300 overflow-hidden'>
+          <div className='absolute top-0 left-0 z-50 flex flex-col bg-red-500'>
+            <button
+              className='p-4 text-white border-b border-neutral-300'
+              aria-label='zoom-in-img'
+              onClick={handleZoomIn}
+            >
+              <FaPlus />
+            </button>
+            <button
+              className='p-4 text-white'
+              aria-label='zoom-out-img'
+              onClick={handleZoomOut}
+            >
+              <FaMinus />
+            </button>
           </div>
+          {state.visibleImageModal && (
+            <Image
+              ref={imgRef}
+              className='w-full h-full object-cover'
+              style={{
+                transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+              }}
+              width={600}
+              height={600}
+              src={
+                fallbackImg
+                  ? errorImage
+                  : state?.visibleImageModal?.images[curImage - 1]
+              }
+              alt={`img-${curImage}`}
+              onError={() => setFallbackImg(true)}
+              draggable={false}
+            />
+          )}
         </div>
         <div className='p-4 flex items-center'>
           <div className='flex items-center gap-2'>

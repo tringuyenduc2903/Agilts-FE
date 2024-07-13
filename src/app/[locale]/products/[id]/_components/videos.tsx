@@ -20,7 +20,7 @@ function Videos({ videos }: Props) {
   }, [videos]);
   return (
     <section className='container md:m-auto px-6 md:px-0 flex flex-col gap-4'>
-      <h2 className='text-xl md:text-2xl font-bold'>Videos</h2>
+      <h2 className='text-xl md:text-2xl font-bold'>Video</h2>
       <div className='relative py-8 px-4 sm:px-8 md:px-16 bg-neutral-100 flex flex-col gap-6 rounded-sm border-t-4 border-red-600'>
         <iframe
           id={videos[curVideo - 1]?.video.id}

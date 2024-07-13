@@ -31,14 +31,11 @@ function ProductsSection({ products, total_pages, current_page }: Props) {
       <div className='w-full flex flex-wrap justify-between gap-x-4 gap-y-16'>
         {renderedProducts}
       </div>
-      {Number(total_pages) > 1 && (
-        <div className='w-full'>
-          <CustomPagination
-            curPage={Number(current_page)}
-            totalPage={Number(total_pages)}
-          />
-        </div>
-      )}
+      {Number(total_pages) > 1 && <div className='w-full'></div>}
+      <CustomPagination
+        curPage={Number(current_page)}
+        totalPage={Number(total_pages)}
+      />
     </div>
   );
 }

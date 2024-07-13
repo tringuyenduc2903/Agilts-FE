@@ -2,6 +2,7 @@
 import { removeCart, userCart } from '@/lib/redux/slice/userSlice';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { FaXmark } from 'react-icons/fa6';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,6 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 function Cart() {
   const cart = useSelector(userCart);
   const t = useTranslations('header');
+  const { locale } = useParams();
+  const router = useRouter();
   const [isHoverButton, setIsHoverButton] = useState(false);
   const dispatch = useDispatch();
   return cart ? (
@@ -60,6 +63,7 @@ function Cart() {
           className='w-full flex justify-center items-center bg-red-600'
           onMouseEnter={() => setIsHoverButton(true)}
           onMouseLeave={() => setIsHoverButton(false)}
+          onClick={() => router.push(`/${locale}/cart`)}
         >
           <div className='relative w-[240px] h-[55px] uppercase text-white px-8 py-3 font-bold rounded-sm tracking-[2px] flex justify-center items-center text-sm'>
             <span

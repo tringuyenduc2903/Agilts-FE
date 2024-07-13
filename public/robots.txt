@@ -4,3 +4,4 @@ Disallow: /user/*
 Disallow: /forgot-password
 Disallow: /password-reset
 Disallow: /two-factor-qr-code
+Disallow: /cart

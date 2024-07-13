@@ -160,7 +160,7 @@ SingleProduct.Image = function ProductImage({
       />
       <div
         style={{ background: 'rgba(220, 38, 38, 0.9)' }}
-        className={`absolute top-0 left-0 w-full h-full z-50 flex justify-center items-center ${
+        className={`absolute top-0 left-0 w-full h-full z-10 flex justify-center items-center ${
           isHover ? 'opacity-100' : 'opacity-0'
         } transition-opacity`}
       >

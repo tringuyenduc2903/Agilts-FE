@@ -16,6 +16,9 @@ import { Product, ProductOption } from '@/types/types';
 import errorImage from '@/assets/not-found-img.avif';
 import errorImageLarger from '@/assets/not-found-img-larger.png';
 import { useParams, useRouter } from 'next/navigation';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCart, userCart } from '@/lib/redux/slice/userSlice';
+import { PopupContext } from '@/contexts/PopupProvider';
 type Props = {
   product: Product;
 };
@@ -23,7 +26,10 @@ function ProductDetails({ product }: Props) {
   const { locale } = useParams();
   const { setVisibleModal } = useContext(ModalContext);
   const router = useRouter();
+  const cart = useSelector(userCart);
   const t = useTranslations('common');
+  const dispatch = useDispatch();
+  const { setVisiblePopup } = useContext(PopupContext);
   const [isHoverAddToCart, setIsHoverAddToCart] = useState(false);
   const [curOption, setCurOption] = useState<ProductOption['version']>('');
   const [selectedOption, setSelectedOption] = useState<ProductOption[] | null>(
@@ -64,6 +70,30 @@ function ProductDetails({ product }: Props) {
     },
     [versions]
   );
+  const handleAddToCart = useCallback(() => {
+    if (cart && selectedOptionDetails) {
+      setVisiblePopup({
+        visibleToastPopup: {
+          type: 'warning',
+          message: 'Bạn đã có sản phẩm khác trong giỏ hàng!',
+        },
+      });
+    } else {
+      dispatch(
+        setCart({
+          item: selectedOptionDetails,
+          name: product.name,
+          quantity: 1,
+        })
+      );
+      setVisiblePopup({
+        visibleToastPopup: {
+          type: 'success',
+          message: 'Thêm sản phẩm thành công!',
+        },
+      });
+    }
+  }, [dispatch, setVisiblePopup, cart, selectedOptionDetails]);
   const renderedOptions = useMemo(() => {
     return versions.map((v: any, index: number) => {
       return (
@@ -324,6 +354,7 @@ function ProductDetails({ product }: Props) {
             className='relative w-max sm:w-[220px] sm:h-[55px] uppercase bg-red-600 text-white px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center text-sm'
             onMouseEnter={() => setIsHoverAddToCart(true)}
             onMouseLeave={() => setIsHoverAddToCart(false)}
+            onClick={handleAddToCart}
           >
             <span
               className={`w-[142px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${

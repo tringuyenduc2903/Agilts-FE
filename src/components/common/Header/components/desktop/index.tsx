@@ -11,12 +11,16 @@ import gsap from 'gsap';
 import MenuIcon from './components/MenuIcon';
 import { title } from '@/config/config';
 import { subRoutes } from '../../headerData';
+import { useSelector } from 'react-redux';
+import { userCart } from '@/lib/redux/slice/userSlice';
+import Cart from './components/Cart';
 function DesktopNavigation() {
   const { locale } = useParams();
   const t = useTranslations('header');
   const headerRef = useRef<HTMLElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
+  const cart = useSelector(userCart);
   useGSAP(
     () => {
       if (headerRef.current) {
@@ -62,7 +66,7 @@ function DesktopNavigation() {
     <>
       <div
         className={`fixed top-0 left-0 ${
-          hoverRoute || isOpenMenu
+          hoverRoute || isOpenMenu || hoverCart
             ? 'w-full h-full z-[500] opacity-100'
             : 'w-0 h-0 -z-10 opacity-0'
         } transition-opacity duration-300`}
@@ -259,7 +263,7 @@ function DesktopNavigation() {
             </ul>
           </div>
         </section>
-        <section className='flex items-center gap-8'>
+        <section className='h-full flex items-center gap-8'>
           <div className='relative w-[220px]'>
             <input
               className='w-full placeholder:text-neutral-800 text-neutral-800 focus:outline-none font-bold bg-transparent uppercase'
@@ -278,22 +282,40 @@ function DesktopNavigation() {
               } transition-all duration-300`}
             ></span>
           </div>
-          <button
-            className='relative z-50 flex items-center gap-2'
-            onMouseOver={() => setHoverCart(true)}
-            onMouseOut={() => setHoverCart(false)}
+          <div
+            className='relative h-full'
+            onMouseEnter={() => setHoverCart(true)}
+            onMouseLeave={() => setHoverCart(false)}
           >
-            <span className='text-neutral-800 text-sm uppercase font-bold tracking-[2px]'>
-              {t('cart')}
-            </span>
-            <span
-              className={`p-2 size-[24px] text-[12px] flex justify-center items-center font-bold ${
-                hoverCart ? 'text-white bg-red-500' : 'bg-neutral-300'
-              } transition-colors`}
+            <Link
+              href={`/${locale}/cart`}
+              className='h-full relative z-50 flex items-center gap-2'
             >
-              0
-            </span>
-          </button>
+              <span className='text-neutral-800 text-sm uppercase font-bold tracking-[2px]'>
+                {t('cart')}
+              </span>
+              <span
+                className={`p-2 size-[24px] text-[12px] flex justify-center items-center font-bold ${
+                  hoverCart ? 'text-white bg-red-500' : 'bg-neutral-300'
+                } transition-colors`}
+              >
+                {cart ? 1 : 0}
+              </span>
+            </Link>
+            <div
+              className={`bg-white absolute right-0 w-[420px] rounded-sm ${
+                hoverCart ? `${cart ? 'h-[40vh]' : 'h-[6vh]'}` : 'h-0'
+              } transition-[height] duration-150 overflow-y-auto`}
+            >
+              {cart ? (
+                <Cart />
+              ) : (
+                <p className='w-full h-full flex justify-center items-center font-bold uppercase'>
+                  {t('no_product_in_cart')}
+                </p>
+              )}
+            </div>
+          </div>
           <div className='rounded-sm relative z-50'>
             <MenuIcon
               isOpenMenu={isOpenMenu}

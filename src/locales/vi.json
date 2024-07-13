@@ -31,7 +31,8 @@
     "about_description": "Thông tin về {name}",
     "account_title": "Tài khoản",
     "account_description": "Quản lý đơn mua và địa chỉ",
-    "search": "Tìm kiếm"
+    "search": "Tìm kiếm",
+    "cart_title": "Giỏ hàng"
   },
   "header": {
     "home": "Trang chủ",
@@ -54,7 +55,11 @@
     "english": "English",
     "vietnamese": "Tiếng Việt",
     "title_intro": "Chào mừng đến với {name} - Địa chỉ tin cậy để tìm kiếm và mua sắm xe máy!",
-    "des_intro": "Tại {name}, chúng tôi hiểu rằng xe máy không chỉ là phương tiện di chuyển, mà còn là niềm đam mê và phong cách sống. Chúng tôi tự hào cung cấp một loạt các dòng xe đa dạng, từ xe tay ga tiện dụng đến xe mô tô mạnh mẽ, phù hợp với mọi nhu cầu và sở thích của bạn."
+    "des_intro": "Tại {name}, chúng tôi hiểu rằng xe máy không chỉ là phương tiện di chuyển, mà còn là niềm đam mê và phong cách sống. Chúng tôi tự hào cung cấp một loạt các dòng xe đa dạng, từ xe tay ga tiện dụng đến xe mô tô mạnh mẽ, phù hợp với mọi nhu cầu và sở thích của bạn.",
+    "no_product_in_cart": "Không có sản phẩm trong giỏ hàng.",
+    "quantity": "Số lượng",
+    "order_total": "Tổng đơn hàng",
+    "view_cart": "Xem giỏ hàng"
   },
   "common": {
     "view-more": "Xem thêm",
@@ -277,6 +282,11 @@
     "category": "Danh mục",
     "no_search": "Hiện chưa có kết quả tìm kiếm",
     "mess_found_1": "Đã tìm thấy {number} kết quả",
-    "mess_found_many": "Đã tìm thấy {number} kết quả"
+    "mess_found_many": "Đã tìm thấy {number} kết quả",
+    "product": "Sản phẩm",
+    "total": "Tổng tiền",
+    "actions": "Hành động",
+    "empty_cart": "Giỏ hàng của bạn hiện đang trống.",
+    "return_shop": "Quay lại cửa hàng"
   }
 }

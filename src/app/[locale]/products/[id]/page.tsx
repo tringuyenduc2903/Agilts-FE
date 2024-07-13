@@ -22,11 +22,12 @@ function ProductDetailsPage({
     isSuccess: isSuccessProduct,
     isError: isErrorProduct,
     isLoading: isLoadingProduct,
+    isFetching: isFetchingProduct,
   } = useGetProductDetailsQuery(id);
   if (!isLoadingProduct && isErrorProduct) return notFound();
   return (
     <main className='w-full min-h-screen py-[72px] flex flex-col gap-12 text-sm md:text-base'>
-      {isLoadingProduct && (
+      {(isLoadingProduct || isFetchingProduct) && (
         <>
           <section className='w-full h-[68px] skeleton'></section>
           <section className='container md:m-auto px-6 md:px-0 grid grid-cols-1 lg:grid-cols-2 gap-16 py-8 md:py-16 overflow-hidden'>
@@ -51,7 +52,7 @@ function ProductDetailsPage({
           </section>
         </>
       )}
-      {!isLoadingProduct && isSuccessProduct && (
+      {!isLoadingProduct && !isFetchingProduct && isSuccessProduct && (
         <>
           <BreadCrumbs
             path={`/${locale}/products`}

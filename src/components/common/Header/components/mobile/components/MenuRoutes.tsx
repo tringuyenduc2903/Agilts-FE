@@ -274,6 +274,23 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
               <span>{t('search')}</span>
             </p>
           </Link>
+          <Link
+            className={`h-full uppercase ${
+              hoverRoute === 'cart' || pathname === '/cart'
+                ? 'text-red-500'
+                : ''
+            } transition-colors`}
+            href={`/${locale}/cart`}
+            onClick={() => handleRedirect('/cart')}
+            onMouseEnter={() => setHoverRoute('cart')}
+            onMouseLeave={() => setHoverRoute(null)}
+            aria-disabled={isLoadingLogout || isLoadingCSRF}
+            prefetch={true}
+          >
+            <p className='relative py-1'>
+              <span>{t('cart')}</span>
+            </p>
+          </Link>
           <div>
             <button
               className={`w-full uppercase flex justify-between items-center gap-8 ${

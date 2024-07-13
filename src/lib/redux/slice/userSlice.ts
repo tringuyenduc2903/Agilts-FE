@@ -1,18 +1,18 @@
 import { User, ProductOption } from '@/types/types';
 import { createSlice } from '@reduxjs/toolkit';
 type Cart =
-  | (ProductOption & {
+  | ProductOption & {
+      name: string;
       quantity: number;
-    })
-  | null;
+    };
 type InitialState = {
   user: null | User;
   isLoggedIn: boolean;
-  cart: Cart;
+  cart: Cart | null;
 };
 const initialState: InitialState = {
   user: null,
-  cart: {} as Cart,
+  cart: null,
   isLoggedIn: false,
 };
 export const userSlice = createSlice({
@@ -28,11 +28,12 @@ export const userSlice = createSlice({
     setCart: (state, action) => {
       state.cart = {
         ...action.payload.item,
+        name: action.payload.name,
         quantity: action.payload.quantity,
       };
     },
     removeCart: (state, _) => {
-      state.cart = {} as Cart;
+      state.cart = null;
     },
   },
 });

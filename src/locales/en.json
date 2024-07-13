@@ -31,7 +31,8 @@
     "about_description": "Information about {name}",
     "account_title": "Account",
     "account_description": "Manage purchase orders and addresses",
-    "search": "Search"
+    "search": "Search",
+    "cart_title": "Cart"
   },
   "header": {
     "home": "Home",
@@ -54,7 +55,11 @@
     "english": "English",
     "vietnamese": "Vietnamese",
     "title_intro": "Welcome to {name} - A reliable address for searching and shopping for motorbikes!",
-    "des_intro": "At {name}, we understand that motorbikes are not just a means of transportation, but also a passion and a lifestyle. We are proud to offer a diverse range of vehicles, from convenient scooters to powerful motorbikes, to suit all your needs and preferences."
+    "des_intro": "At {name}, we understand that motorbikes are not just a means of transportation, but also a passion and a lifestyle. We are proud to offer a diverse range of vehicles, from convenient scooters to powerful motorbikes, to suit all your needs and preferences.",
+    "no_product_in_cart": "No product in the cart.",
+    "quantity": "Quantity",
+    "order_total": "Order total",
+    "view_cart": "View cart"
   },
 
   "common": {
@@ -278,6 +283,11 @@
     "category": "Category",
     "no_search": "There are currently no search results",
     "mess_found_1": "{number} result found",
-    "mess_found_many": "{number} results found"
+    "mess_found_many": "{number} results found",
+    "product": "Product",
+    "total": "Total",
+    "actions": "Actions",
+    "empty_cart": "Your cart is currently empty.",
+    "return_shop": "Return to shop"
   }
 }

@@ -1,3 +1,4 @@
+'use client';
 import { useCallback, useRef, useEffect } from 'react';
 
 type Props = () => void;

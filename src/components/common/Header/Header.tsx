@@ -1,27 +1,15 @@
 'use client';
-import { Suspense, lazy, useEffect, useState } from 'react';
+import useResponsive from '@/lib/hooks/useResponsive';
+import { Suspense, lazy } from 'react';
 const DesktopNavigation = lazy(() => import('./components/desktop'));
 const MobileNavigation = lazy(() => import('./components/mobile'));
 function Header() {
-  const [isMobile, setIsMobile] = useState(true);
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 1200) {
-        setIsMobile(true);
-      } else {
-        setIsMobile(false);
-      }
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  const index = useResponsive();
+  console.log(index);
   return (
     <Suspense>
-      {isMobile && <MobileNavigation />}
-      {!isMobile && <DesktopNavigation />}
+      {(index === 1 || index === 2) && <MobileNavigation />}
+      {index === 0 && <DesktopNavigation />}
     </Suspense>
   );
 }

@@ -34,7 +34,7 @@ function Aside() {
             </h2>
             <button
               className='w-max text-sm md:text-base flex items-center gap-2 text-neutral-500'
-              onClick={() => router.push(`/${locale}/user/settings/accounts`)}
+              onClick={() => router.push(`/${locale}/user/settings/account`)}
             >
               <FaPen />
               <p>{t('edit_profile')}</p>

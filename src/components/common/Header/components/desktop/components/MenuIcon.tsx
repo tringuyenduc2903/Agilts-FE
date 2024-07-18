@@ -186,7 +186,7 @@ const MenuIcon: React.FC<Props> = React.memo(
               <div className='w-full h-full font-medium flex flex-col gap-2'>
                 <p className='text-4xl font-bold'>{t('welcome')}</p>
                 <div>
-                  <h2 className='text-2xl'>{user?.name}</h2>
+                  <h2 className='text-2xl font-medium'>{user?.name}</h2>
                   <p>{user?.email}</p>
                 </div>
                 <div className='my-4 flex flex-col gap-4 items-start'>

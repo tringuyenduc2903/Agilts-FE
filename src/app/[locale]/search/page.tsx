@@ -22,9 +22,7 @@ function SearchPage() {
     isLoading: isLoadingData,
     isFetching: isFetchingData,
   } = useGetProductsQuery(
-    `page=${searchParams.get('page') || 1}&search=${searchParams.get(
-      'q'
-    )}&offset=12&visibility=Search`,
+    `page=${searchParams.get('page') || 1}&search=${searchParams.get('q')}`,
     {
       skip: !searchParams.get('q'),
     }
@@ -72,7 +70,7 @@ function SearchPage() {
           <span className='px-4'>{searchParams.get('q')}</span>
         </p>
       </section>
-      <section className='container m-auto px-4 flex flex-col gap-4'>
+      <section className='container m-auto px-4 flex xl:hidden flex-col gap-4'>
         <label
           htmlFor='search'
           className='text-xl sm:text-2xl font-black text-neutral-800 uppercase'

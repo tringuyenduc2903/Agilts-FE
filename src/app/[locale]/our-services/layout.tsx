@@ -1,6 +1,6 @@
 import { title } from '@/config/config';
 import { Metadata } from 'next';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('head');
 
@@ -11,8 +11,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 export default async function OurServicesLayout({
   children,
+  params: { locale },
 }: Readonly<{
   children: React.ReactNode;
+  params: { locale: string };
 }>) {
+  unstable_setRequestLocale(locale || 'vi');
+
   return <>{children}</>;
 }

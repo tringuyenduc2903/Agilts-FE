@@ -1,15 +1,19 @@
-'use server';
-import dynamic from 'next/dynamic';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, getTranslations } from 'next-intl/server';
+import {
+  getMessages,
+  getTranslations,
+  unstable_setRequestLocale,
+} from 'next-intl/server';
+import dynamic from 'next/dynamic';
 import { Metadata } from 'next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ModalProvider } from '@/contexts/ModalProvider';
 import { FetchDataProvider } from '@/contexts/FetchDataProvider';
 import { Analytics } from '@vercel/analytics/react';
-import StoreProvider from '@/contexts/StoreProvider';
 import { title } from '@/config/config';
 import { PopupProvider } from '@/contexts/PopupProvider';
+import { locales } from '@/i18n';
+import StoreProvider from '@/contexts/StoreProvider';
 
 const DynamicHeader = dynamic(
   () => import('@/components/common/Header/Header'),
@@ -29,7 +33,9 @@ const DynamicModal = dynamic(() => import('@/components/modal/Modal'), {
 const DynamicPopup = dynamic(() => import('@/components/popup/Popup'), {
   ssr: true,
 });
-
+export async function generateStaticParams() {
+  return locales.map((locale) => ({ locale }));
+}
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('head');
 
@@ -67,10 +73,11 @@ export default async function HomeLayout({
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  locale;
+  unstable_setRequestLocale(locale || 'vi');
   const messages = await getMessages({
     locale: locale,
   });
+
   return (
     <html lang={locale}>
       <body className='flex flex-col justify-between'>

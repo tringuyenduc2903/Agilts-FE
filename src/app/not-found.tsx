@@ -1,8 +1,13 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import notfound from '@/assets/error-img-1.png';
 import Image from 'next/image';
 import Link from 'next/link';
-async function NotFound() {
+async function NotFound({
+  params: { locale },
+}: {
+  params: { locale: string };
+}) {
+  unstable_setRequestLocale(locale || 'vi');
   const t = await getTranslations('common');
   return (
     <main className='m-auto pt-[72px] container h-screen px-4'>

@@ -5,7 +5,6 @@ const DesktopNavigation = lazy(() => import('./components/desktop'));
 const MobileNavigation = lazy(() => import('./components/mobile'));
 function Header() {
   const index = useResponsive();
-  console.log(index);
   return (
     <Suspense>
       {(index === 1 || index === 2) && <MobileNavigation />}

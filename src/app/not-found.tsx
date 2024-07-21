@@ -2,11 +2,9 @@ import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import notfound from '@/assets/error-img-1.png';
 import Image from 'next/image';
 import Link from 'next/link';
-async function NotFound({
-  params: { locale },
-}: {
-  params: { locale: string };
-}) {
+import { cookies } from 'next/headers';
+async function NotFound() {
+  const locale = cookies().get('NEXT_LOCALE')?.value || 'vi';
   unstable_setRequestLocale(locale || 'vi');
   const t = await getTranslations('common');
   return (

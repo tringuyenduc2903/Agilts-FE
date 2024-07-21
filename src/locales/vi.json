@@ -96,9 +96,12 @@
     "result": "Kết quả",
     "results": "Kết quả",
     "default_sorting": "Mặc định",
+    "sort_by_name_A_Z": "Tên A -> Z",
+    "sort_by_name_Z_A": "Tên Z -> A",
     "sort_by_popularity": "Phổ biến",
     "sort_by_average_rating": "Đánh giá trung bình",
     "sort_by_latest": "Mới nhất",
+    "sort_by_oldest": "Cũ nhất",
     "sort_by_price_low": "Theo giá thấp đến cao",
     "sort_by_price_high": "Theo giá cao đến thấp",
     "sort": "Sắp xếp",
@@ -173,7 +176,7 @@
     "add_to_cart": "Thêm giỏ hàng",
     "filter": "Lọc",
     "filter_title": "Lọc theo giá",
-    "price": "Giá",
+    "price": "Giá tiền",
     "categories": "Danh mục",
     "tags": "Nhãn",
     "all": "Tất cả",
@@ -289,6 +292,10 @@
     "empty_cart": "Giỏ hàng của bạn hiện đang trống.",
     "return_shop": "Quay lại cửa hàng",
     "prev_btn": "Trước",
-    "next_btn": "Sau"
+    "next_btn": "Sau",
+    "clear": "Xóa tất cả",
+    "model": "Mẫu",
+    "reset": "Xóa",
+    "apply": "Áp dụng"
   }
 }

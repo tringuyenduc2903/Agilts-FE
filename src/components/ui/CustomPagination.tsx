@@ -93,7 +93,7 @@ function CustomPagination({ totalPage }: Props) {
         <p className='w-[36px] flex justify-center items-center'>{totalPage}</p>
       </div>
       {Number(searchParams.get('page')) < Number(totalPage) &&
-        Number(searchParams.get('page')) > 1 && (
+        Number(totalPage) > 1 && (
           <button
             className='relative w-[96px] md:w-[200px] h-[60px] uppercase bg-white text-neutral-800 px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'
             onMouseEnter={() => setIsHoverButton('next')}

@@ -15,13 +15,15 @@ export const storesApi = createApi({
       }),
       getFilter: builder.query({
         query: () => ({
-          url: `/api${getLangRoute()}/filter`,
+          url: `/api${getLangRoute()}/filter-product`,
           method: 'GET',
         }),
       }),
       getProducts: builder.query({
         query: (search) => ({
-          url: `/api${getLangRoute()}/product${search ? `?${search}` : ''}`,
+          url: `/api${getLangRoute()}/product${
+            search ? `?${search}&perPage=12` : '?perPage=12'
+          }`,
           method: 'GET',
         }),
       }),

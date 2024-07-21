@@ -75,13 +75,12 @@ const RangeSlider: React.FC<Props> = ({ min, max, onChange }) => {
           className='thumb thumb--right'
         />
 
-        <div className='w-[280px] relative'>
+        <div className='w-[240px] relative'>
           <div className='absolute w-full h-1 bg-neutral-200' />
           <div ref={range} className='absolute slider__range bg-red-500 h-1' />
         </div>
       </div>
       <div className='flex items-center gap-2 text-base md:text-lg font-bold'>
-        <p>{t('price')}:</p>
         <div className='flex items-center gap-2'>
           <p
             className='w-auto max-w-[128px] truncate'

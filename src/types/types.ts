@@ -104,11 +104,11 @@ export type Product = {
   id: number;
   name: string;
   description: string;
-  min_price: {
+  options_min_price: {
     raw: number;
     preview: string;
   };
-  max_price: {
+  options_max_price: {
     raw: number;
     preview: string;
   };

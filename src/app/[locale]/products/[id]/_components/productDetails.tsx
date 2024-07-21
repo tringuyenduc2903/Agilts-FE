@@ -22,6 +22,7 @@ type Props = {
   product: Product;
 };
 function ProductDetails({ product }: Props) {
+  console.log(product);
   const { locale } = useParams();
   const { setVisibleModal } = useContext(ModalContext);
   const router = useRouter();
@@ -40,7 +41,7 @@ function ProductDetails({ product }: Props) {
   const [fallBackListImage, setFallBackListImage] = useState<number[]>([]);
   const versions = useMemo(() => {
     const newVersions = new Map<string, ProductOption[]>();
-    product.options.forEach((item) => {
+    product?.options?.forEach((item) => {
       const versionOptions = newVersions.get(item.version);
       if (versionOptions) {
         versionOptions.push(item);

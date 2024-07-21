@@ -27,6 +27,9 @@ const useQueryString = (): [
         });
       } else {
         if (!['null', null, undefined, 'undefined'].includes(value as string)) {
+          if (['review', 'latest', 'oldest'].includes(value as string)) {
+            newQuery.delete('sortDirection');
+          }
           name !== 'page' && newQuery.set('page', '1');
           newQuery.set(name as string, value as string);
         }

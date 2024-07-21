@@ -97,9 +97,12 @@
     "result": "Result",
     "results": "Results",
     "default_sorting": "Default",
+    "sort_by_name_A_Z": "Name A -> Z",
+    "sort_by_name_Z_A": "Name Z -> A",
     "sort_by_popularity": "Popularity",
     "sort_by_average_rating": "Average rating",
     "sort_by_latest": "Latest",
+    "sort_by_oldest": "Oldest",
     "sort_by_price_low": "Low to high",
     "sort_by_price_high": "High to low",
     "sort": "Sort",
@@ -290,6 +293,10 @@
     "empty_cart": "Your cart is currently empty.",
     "return_shop": "Return to shop",
     "prev_btn": "Previous",
-    "next_btn": "Next"
+    "next_btn": "Next",
+    "clear": "Clear All",
+    "model": "Model",
+    "reset": "Reset",
+    "apply": "Apply"
   }
 }

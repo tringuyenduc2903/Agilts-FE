@@ -13,7 +13,7 @@ function ProductsSection({ products, total_pages, current_page }: Props) {
       return (
         <SingleProduct
           articleClass='m-auto md:m-0 w-full max-w-[300px] cursor-pointer flex flex-col gap-2'
-          key={p.id}
+          key={p?.id}
           product={p}
         >
           <SingleProduct.Image />
@@ -27,7 +27,7 @@ function ProductsSection({ products, total_pages, current_page }: Props) {
     });
   }, [products]);
   return (
-    <div className='col-span-1 xl:col-span-3 xl:order-1 order-2 flex flex-col items-center gap-16'>
+    <div className='flex flex-col items-center gap-16'>
       <div className='w-full flex flex-wrap justify-between gap-x-4 gap-y-16'>
         {renderedProducts}
       </div>

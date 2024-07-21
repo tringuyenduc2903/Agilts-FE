@@ -12,11 +12,11 @@ function ProductsSection({ products, total_pages, current_page }: Props) {
     return products?.map((p: Product) => {
       return (
         <SingleProduct
-          articleClass='m-auto md:m-0 w-full max-w-[300px] cursor-pointer flex flex-col gap-2'
+          articleClass='m-auto md:m-0 w-full max-w-[280px] cursor-pointer flex flex-col gap-2'
           key={p?.id}
           product={p}
         >
-          <SingleProduct.Image />
+          <SingleProduct.Image customClass='h-[250px]' />
           <SingleProduct.Type />
           <div className='flex flex-col gap-1 font-bold'>
             <SingleProduct.Title />

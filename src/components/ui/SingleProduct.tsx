@@ -151,8 +151,8 @@ SingleProduct.Image = function ProductImage({
         fetchPriority='low'
         loading='lazy'
         onError={() => setFallbackImg(true)}
-        width={index === 0 ? 300 : 180}
-        height={index === 0 ? 280 : 150}
+        width={index === 0 ? 280 : 180}
+        height={index === 0 ? 250 : 150}
       />
       <div
         style={{ background: 'rgba(220, 38, 38, 0.9)' }}

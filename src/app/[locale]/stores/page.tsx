@@ -39,7 +39,7 @@ function StoresPage() {
   const t = useTranslations('common');
   const { locale } = useParams();
   const searchPrams = useSearchParams();
-  const [createQueryString] = useQueryString();
+  const [createQueryString, _, deleteQueryString] = useQueryString();
   const [country, setCountry] = useState<Form>({
     province: {
       code: '',
@@ -57,6 +57,8 @@ function StoresPage() {
     data: branchData,
     isSuccess: isSuccessBranch,
     isLoading: isLoadingBranch,
+    isFetching: isFetchingBranch,
+    isError: isErrorBranch,
   } = useGetStoresQuery(searchPrams.toString());
   const { data: provincesData, isSuccess: isSuccessProvinces } =
     useGetProvincesQuery(null);
@@ -195,6 +197,7 @@ function StoresPage() {
       })
     );
   }, [branchData, isSuccessBranch]);
+  if (isErrorBranch) throw new Error();
   return (
     <main className='w-full py-[72px] flex flex-col gap-16'>
       <section className='absolute h-[380px] w-full -z-10 hidden lg:block'>
@@ -214,11 +217,11 @@ function StoresPage() {
         </p>
       </section>
       <section className='px-4 md:px-16'>
-        <div className='bg-neutral-100 p-8 grid grid-cols-1 md:grid-cols-7 xl:grid-cols-11 gap-6 text-sm md:text-base'>
-          <p className='col-span-1 md:col-span-2 h-full flex items-center'>
+        <div className='bg-neutral-100 p-8 grid grid-cols-1 lg:grid-cols-8 xl:grid-cols-12 gap-6 text-sm md:text-base'>
+          <p className='col-span-1 lg:col-span-2 h-full flex items-center'>
             {t('search_store')}:
           </p>
-          <div className='relative h-[40px] col-span-1 md:col-span-2 xl:col-span-4'>
+          <div className='relative h-[40px] col-span-1 lg:col-span-2 xl:col-span-4'>
             <button
               className='w-full h-full rounded-sm bg-white px-4 py-1 border border-neutral-400 text-sm md:text-base flex justify-between items-center'
               name='province'
@@ -250,7 +253,7 @@ function StoresPage() {
               {renderedProvinces}
             </ul>
           </div>
-          <div className='relative  h-[40px] col-span-1 md:col-span-2 xl:col-span-4'>
+          <div className='relative  h-[40px] col-span-1 lg:col-span-2 xl:col-span-4'>
             <button
               className='w-full h-full rounded-sm bg-white px-4 py-1 border border-neutral-400 text-sm md:text-base flex justify-between items-center'
               name='district'
@@ -287,6 +290,12 @@ function StoresPage() {
             </ul>
           </div>
           <button
+            className='col-span-1 h-[40px] font-bold py-2 border border-neutral-500 bg-white rounded-sm text-sm md:text-base'
+            onClick={() => deleteQueryString()}
+          >
+            {t('delete')}
+          </button>
+          <button
             className='col-span-1 h-[40px] font-bold py-2 bg-neutral-800 text-white rounded-sm text-sm md:text-base'
             onClick={handleSearch}
           >
@@ -296,6 +305,7 @@ function StoresPage() {
       </section>
       <section className='w-full px-4 md:px-16 flex flex-col gap-16'>
         {!isLoadingBranch &&
+          !isFetchingBranch &&
           (renderedBranch ? (
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16'>
               {renderedBranch}
@@ -305,7 +315,7 @@ function StoresPage() {
               <NotFoundItem message={t('no_store')} />
             </div>
           ))}
-        {isLoadingBranch && (
+        {(isLoadingBranch || isFetchingBranch) && (
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16'>
             <LoadingMultiItem customClass='col-span-1 h-[400px] skeleton' />
           </div>

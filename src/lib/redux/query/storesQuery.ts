@@ -1,8 +1,9 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import { getLangRoute } from '../config/getLangRoute';
+import { axiosBaseQuery } from '../config/axios';
 export const storesApi = createApi({
   reducerPath: 'storesApi',
-  baseQuery: fetchBaseQuery({
+  baseQuery: axiosBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL as string,
   }),
   endpoints: (builder) => {
@@ -33,6 +34,34 @@ export const storesApi = createApi({
           method: 'GET',
         }),
       }),
+      getProductReview: builder.query({
+        query: ({ id, search }) => ({
+          url: search
+            ? `/api${getLangRoute()}/review/${id}?${search}`
+            : `/api${getLangRoute()}/review/${id}`,
+          method: 'GET',
+        }),
+      }),
+      getFilterReview: builder.query({
+        query: (id) => ({
+          url: `/api${getLangRoute()}/filter-review/${id}`,
+          method: 'GET',
+        }),
+      }),
+      postReviewImage: builder.mutation({
+        query: (body) => ({
+          url: `/api${getLangRoute()}/review-image`,
+          method: 'POST',
+          data: body,
+        }),
+      }),
+      postReviewUser: builder.mutation({
+        query: (body) => ({
+          url: `/api${getLangRoute()}/review-user`,
+          method: 'POST',
+          data: body,
+        }),
+      }),
     };
   },
 });
@@ -42,4 +71,8 @@ export const {
   useGetFilterQuery,
   useGetProductsQuery,
   useGetProductDetailsQuery,
+  useGetProductReviewQuery,
+  useGetFilterReviewQuery,
+  usePostReviewImageMutation,
+  usePostReviewUserMutation,
 } = storesApi;

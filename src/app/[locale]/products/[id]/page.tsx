@@ -62,7 +62,10 @@ function ProductDetailsPage({
           <Description description={productData?.description} />
           <Specifications specifications={productData?.specifications} />
           {/* <Videos videos={productData?.videos} /> */}
-          <Reviews />
+          <Reviews
+            reviews_avg_rate={productData?.reviews_avg_rate}
+            reviews_count={productData?.reviews_count}
+          />
         </>
       )}
     </main>

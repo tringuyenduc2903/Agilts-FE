@@ -297,6 +297,18 @@
     "clear": "Clear All",
     "model": "Model",
     "reset": "Reset",
-    "apply": "Apply"
+    "apply": "Apply",
+    "seller_feedback": "Seller feedback",
+    "mess_no_review": "This product currently has no reviews!",
+    "mess_upload_img": "Drag and drop or upload your image here",
+    "evaluate": "Evaluate",
+    "poor": "Poor",
+    "not_satisfied": "Not Satisfied",
+    "average": "Average",
+    "satisfied": "Satisfied",
+    "excellent": "Excellent",
+    "product_reviews": "Product reviews",
+    "mess_reviews": "Please share what you like about this product with others.",
+    "mess_success_review": "Successful product reviews!"
   }
 }

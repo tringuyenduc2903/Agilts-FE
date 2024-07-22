@@ -22,7 +22,6 @@ type Props = {
   product: Product;
 };
 function ProductDetails({ product }: Props) {
-  console.log(product);
   const { locale } = useParams();
   const { setVisibleModal } = useContext(ModalContext);
   const router = useRouter();
@@ -213,14 +212,18 @@ function ProductDetails({ product }: Props) {
         </div>
         <div className='flex items-center gap-4 sm:gap-6'>
           <div className='flex items-center gap-1'>
-            <Stars rate={3} size={18} />
+            <Stars rate={Number(product?.reviews_avg_rate)} size={18} />
           </div>
           <button
             type='button'
             className='text-[10px] sm:text-[12px] md:text-sm font-medium text-neutral-500 hover:text-neutral-800 transition-colors uppercase'
             onClick={() => scrollToElement('reviews')}
           >
-            (1 {t('customers_review')})
+            (
+            {Number(product?.reviews_count) > 1
+              ? `${product?.reviews_count} ${t('customers_review')}`
+              : `${product?.reviews_count} ${t('customer_review')}`}
+            )
           </button>
         </div>
         <div className='flex flex-col gap-4'>
@@ -325,6 +328,16 @@ function ProductDetails({ product }: Props) {
               <span className='w-full h-[1px] bg-white'></span>
               <span className='w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-l-[10px] border-l-white'></span>
             </span>
+          </button>
+        </div>
+        <div>
+          <button
+            className='border border-neutral-300 bg-neutral-800 text-white px-4 py-3'
+            onClick={() =>
+              setVisibleModal({ visibleReviewsModal: selectedOptionDetails })
+            }
+          >
+            Thêm đánh giá sản phẩm (demo)
           </button>
         </div>
         {selectedOptionDetails &&

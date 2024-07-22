@@ -296,6 +296,18 @@
     "clear": "Xóa tất cả",
     "model": "Mẫu",
     "reset": "Xóa",
-    "apply": "Áp dụng"
+    "apply": "Áp dụng",
+    "seller_feedback": "Phản hồi của người bán",
+    "mess_no_review": "Sản phẩm hiện chưa có đánh giá!",
+    "mess_upload_img": "Kéo và thả hoặc tải hình ảnh của bạn lên đây",
+    "evaluate": "Đánh giá",
+    "poor": "Tệ",
+    "not_satisfied": "Không hài lòng",
+    "average": "Hài lòng",
+    "satisfied": "Vừa ý",
+    "excellent": "Xuất xắc",
+    "product_reviews": "Đánh giá sản phẩm",
+    "mess_reviews": "Hãy chia sẻ những điều bạn thích về sản phẩm này với người khác.",
+    "mess_success_review": "Đánh giá sản phẩm thành công!"
   }
 }

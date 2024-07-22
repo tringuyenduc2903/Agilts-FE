@@ -131,6 +131,8 @@ export type Product = {
     }
   ];
   options: ProductOption[];
+  reviews_avg_rate: string;
+  reviews_count: number | string;
   categories: [
     {
       id: number;
@@ -156,5 +158,28 @@ export type Product = {
   ];
   deleted_at: string;
   created_at: string;
+  updated_at: string;
+};
+
+export type Review = {
+  id: number | string;
+  content: string;
+  created_at: string;
+  images: string[] | [];
+  rate: number;
+  response: {
+    id: number;
+    content: string;
+    created_at: string;
+    images: string[] | [];
+    rate: number | null;
+    updated_at: string;
+    reviewable_preview: {
+      name: string;
+    };
+  } | null;
+  reviewable_preview: {
+    name: string;
+  };
   updated_at: string;
 };

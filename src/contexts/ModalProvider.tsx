@@ -23,6 +23,7 @@ type InitialState = {
   visibleUpdateAddressModal: Address;
   visibleAddDocumentModal: boolean;
   visibleUpdateDocumentModal: Document;
+  visibleReviewsModal: ProductOption | null;
 };
 const SET_VISIBLE_MODAL = 'SET_VISIBLE_MODAL';
 const CLOSE_ALL_MODAL = 'CLOSE_ALL_MODAL';

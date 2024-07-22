@@ -3,10 +3,10 @@ import React from 'react';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 
 const Stars = React.memo(({ rate, size }: { rate: number; size: number }) => {
-  const fullStars = Math.floor(rate);
-  const decimalPart = rate - fullStars;
+  const fullStars = Math.ceil(Number(rate) * 2) / 2;
+  const decimalPart = Math.ceil(rate) - fullStars;
   const stars = [];
-  for (let i = 0; i < fullStars; i++) {
+  for (let i = 0; i < Math.floor(fullStars); i++) {
     stars.push(
       <FaStar
         style={{ fontSize: `${size}px` }}
@@ -24,7 +24,7 @@ const Stars = React.memo(({ rate, size }: { rate: number; size: number }) => {
       />
     );
   }
-  const remainingStars = 5 - Math.ceil(rate);
+  const remainingStars = 5 - Math.ceil(fullStars);
   for (let i = 0; i < remainingStars; i++) {
     stars.push(
       <FaRegStar

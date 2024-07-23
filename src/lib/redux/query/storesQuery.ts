@@ -6,6 +6,7 @@ export const storesApi = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL as string,
   }),
+  tagTypes: ['reviews'],
   endpoints: (builder) => {
     return {
       getStores: builder.query({
@@ -41,16 +42,21 @@ export const storesApi = createApi({
             : `/api${getLangRoute()}/review/${id}`,
           method: 'GET',
         }),
+        providesTags: ['reviews'],
       }),
       getFilterReview: builder.query({
         query: (id) => ({
           url: `/api${getLangRoute()}/filter-review/${id}`,
           method: 'GET',
         }),
+        providesTags: ['reviews'],
       }),
       postReviewImage: builder.mutation({
         query: (body) => ({
           url: `/api${getLangRoute()}/review-image`,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
           method: 'POST',
           data: body,
         }),
@@ -61,6 +67,7 @@ export const storesApi = createApi({
           method: 'POST',
           data: body,
         }),
+        invalidatesTags: ['reviews'],
       }),
     };
   },

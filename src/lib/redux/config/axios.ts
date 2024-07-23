@@ -16,22 +16,20 @@ export const axiosBaseQuery =
     unknown,
     unknown
   > =>
-  async ({ url, method, data, params }) => {
+  async ({ url, method, data, params, headers = {} }) => {
     try {
-      const config: AxiosRequestConfig = {
+      const result = await axios({
         url: baseUrl + url,
         method,
         data,
         params,
         headers: {
           'X-Requested-With': 'XMLHttpRequest',
+          ...headers,
         },
         withCredentials: true,
         withXSRFToken: true,
-      };
-
-      const result = await axios(config);
-
+      });
       return { data: result.data };
     } catch (axiosError) {
       const err = axiosError as AxiosError;

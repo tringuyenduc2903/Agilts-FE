@@ -5,7 +5,6 @@ import React, {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from 'react';
 import { FaRegStar, FaStar } from 'react-icons/fa6';
@@ -24,6 +23,8 @@ const ReviewsModal = () => {
   const t = useTranslations('common');
   const { state, setVisibleModal } = useContext(ModalContext);
   const { setVisiblePopup } = useContext(PopupContext);
+  const [images, setImages] = useState<string[]>([]);
+  const [previewImages, setPreviewImages] = useState<File[]>([]);
   const [
     postImage,
     {
@@ -43,23 +44,24 @@ const ReviewsModal = () => {
       isError: isErrorPostReview,
     },
   ] = usePostReviewUserMutation();
-  const onDrop = useCallback(async (acceptedFiles: any) => {
-    acceptedFiles.forEach(async (file: File) => {
-      const reader = new FileReader();
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
       const formData = new FormData();
-      formData.append('image ', file);
+      acceptedFiles.forEach((file) => {
+        formData.append('image', file);
+        setPreviewImages((prevImages) => {
+          return [...prevImages, file];
+        });
+      });
       await postImage(formData);
-      reader.onabort = () => console.log('file reading was aborted');
-      reader.onerror = () => console.log('file reading has failed');
-    });
-  }, []);
+    },
+    [postImage, previewImages]
+  );
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
   const { sectionRef, clickOutside } = useClickOutside(() =>
     setVisibleModal('visibleReviewModal')
   );
-  const imgRef = useRef<HTMLInputElement | null>(null);
   const [rate, setRate] = useState(5);
-  const [images, setImages] = useState([]);
   const [message, setMessage] = useState('');
   const version = useMemo(
     () => state.visibleReviewsModal,
@@ -101,11 +103,6 @@ const ReviewsModal = () => {
       );
     });
   }, [rate]);
-  const handleUploadImg = () => {
-    if (imgRef?.current) {
-      imgRef.current.click();
-    }
-  };
   const handleReviews = useCallback(async () => {
     await postReview({
       content: message,
@@ -116,11 +113,8 @@ const ReviewsModal = () => {
   }, [postReview, message, rate, images, version]);
   useEffect(() => {
     if (isSuccessImageData && imageData) {
-      setVisiblePopup({
-        visibleToastPopup: {
-          type: 'success',
-          message: imageData?.message,
-        },
+      setImages((prevImages) => {
+        return [...prevImages, imageData?.file_name];
       });
     }
     if (isErrorPostImage && errorPostImage) {
@@ -202,7 +196,12 @@ const ReviewsModal = () => {
           </div>
           <div className='flex gap-2'>
             <div className='text-sm flex flex-col gap-[4px]'>
-              <p className='capitalize text-lg font-medium'>{version?.sku}</p>
+              <p
+                title={version?.sku}
+                className='capitalize text-lg font-medium truncate max-w-[250px] sm:max-w-full'
+              >
+                {version?.sku}
+              </p>
             </div>
           </div>
           <div className='flex sm:flex-row items-center gap-4'>
@@ -225,7 +224,6 @@ const ReviewsModal = () => {
               <div
                 className='w-full h-full p-4 cursor-pointer flex flex-col items-center gap-2'
                 role='presentation'
-                onClick={handleUploadImg}
               >
                 <IoCloudUploadOutline className='text-2xl md:text-4xl text-red-500' />
                 <p className='font-bold text-sm md:text-base text-center'>
@@ -240,37 +238,37 @@ const ReviewsModal = () => {
                 disabled={isLoadingPostImage || isLoadingPostReview}
               />
             </div>
-            {/* <div className='grid grid-cols-4 gap-4'>
-                  {images?.map((img, key) => {
-                    return (
-                      <div
-                        className='relative w-[96px] h-[96px]'
-                        key={img.name}
-                      >
-                        {img && (
-                          <img
-                            className='w-full h-full object-cover'
-                            src={URL.createObjectURL(img)}
-                            alt={img.name}
-                          />
-                        )}
-                        <button
-                          type='button'
-                          className='absolute top-1 right-1 border border-red-500 text-red-500 rounded-full p-1'
-                          aria-label='remove-img'
-                          onClick={() =>
-                            setImages(
-                              images.filter((_, index) => index !== key)
-                            )
-                          }
-                        >
-                          <FaXmark />
-                        </button>
-                      </div>
-                    );
-                  })}
-                </div> */}
           </div>
+          {previewImages.length > 0 && (
+            <div className='grid grid-cols-4 gap-4'>
+              {previewImages?.map((img, key) => {
+                return (
+                  <div className='relative w-[96px] h-[96px]' key={img.name}>
+                    {img && (
+                      <img
+                        className='w-full h-full object-cover'
+                        src={URL.createObjectURL(img)}
+                        alt={img.name}
+                      />
+                    )}
+                    <button
+                      type='button'
+                      className='absolute top-1 right-1 border border-red-500 text-red-500 rounded-full p-1'
+                      aria-label='remove-img'
+                      onClick={() => {
+                        setPreviewImages(
+                          previewImages.filter((_, index) => index !== key)
+                        );
+                        setImages(images.filter((_, index) => index !== key));
+                      }}
+                    >
+                      <FaXmark />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
           <textarea
             className={`border ${
               !message ? 'border-red' : 'border-gray'

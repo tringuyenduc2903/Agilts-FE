@@ -41,6 +41,7 @@ function DesktopNavigation() {
   const [hoverRoute, setHoverRoute] = useState<null | String>(null);
   const [hoverSubRoute, setHoverSubRoute] = useState<null | String>(null);
   const [hoverCart, setHoverCart] = useState(false);
+  const [hoverWishList, setHoverWishList] = useState(false);
   const [isFocusInput, setIsFocusInput] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -283,7 +284,41 @@ function DesktopNavigation() {
             ></span>
           </div>
           <div
-            className='relative h-full'
+            className='relative h-full group'
+            onMouseEnter={() => setHoverWishList(true)}
+            onMouseLeave={() => setHoverWishList(false)}
+          >
+            <Link
+              href={`/${locale}/cart`}
+              className='h-full relative z-50 flex items-center gap-2'
+            >
+              <span className='text-neutral-800 text-sm uppercase font-bold tracking-[2px]'>
+                {t('wishlist')}
+              </span>
+              <span
+                className={`p-2 size-[24px] text-[12px] flex justify-center items-center font-bold ${
+                  hoverWishList ? 'text-white bg-red-500' : 'bg-neutral-300'
+                } transition-colors`}
+              >
+                {cart ? 1 : 0}
+              </span>
+            </Link>
+            <div
+              className={`bg-white absolute right-0 w-[420px] rounded-sm ${
+                hoverWishList ? `${cart ? 'h-[40vh]' : 'h-[6vh]'}` : 'h-0'
+              } transition-[height] duration-150 overflow-y-auto`}
+            >
+              {cart ? (
+                <Cart />
+              ) : (
+                <p className='w-full h-full flex justify-center items-center font-bold uppercase'>
+                  {t('no_product_in_wishlist')}
+                </p>
+              )}
+            </div>
+          </div>
+          <div
+            className='relative h-full group'
             onMouseEnter={() => setHoverCart(true)}
             onMouseLeave={() => setHoverCart(false)}
           >

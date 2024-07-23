@@ -1,4 +1,5 @@
 'use client';
+import React, { useMemo } from 'react';
 import CustomPaginationV2 from '@/components/ui/CustomPaginationV2';
 import NotFoundItem from '@/components/ui/NotFoundItem';
 import Stars from '@/components/ui/Stars';
@@ -11,7 +12,7 @@ import { convertData } from '@/lib/utils/format';
 import { Review } from '@/types/types';
 import { useTranslations } from 'next-intl';
 import { useParams, useSearchParams } from 'next/navigation';
-import React, { useMemo } from 'react';
+import CustomImage from '@/components/ui/CustomImage';
 
 function Reviews({
   reviews_avg_rate,
@@ -76,6 +77,16 @@ function Reviews({
             <p className='text-neutral-500 text-sm md:text-base'>
               {r?.content}
             </p>
+            {r?.images?.length > 0 && (
+              <div className='flex flex-wrap gap-4'>
+                <CustomImage
+                  isShowDetails={true}
+                  images={r.images}
+                  width={128}
+                  height={128}
+                />
+              </div>
+            )}
             {r.response && (
               <div className='bg-white rounded-sm p-4 flex flex-col gap-2'>
                 <p className='font-medium'>{t('seller_feedback')}</p>

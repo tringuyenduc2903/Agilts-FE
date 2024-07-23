@@ -17,11 +17,8 @@ import {
 } from 'react-icons/fa6';
 import useClickOutside from '@/lib/hooks/useClickOutside';
 import { ModalContext } from '@/contexts/ModalProvider';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
-import errorImage from '@/assets/not-found-img.avif';
+import errorImage from '@/assets/not-found-img-larger.png';
 function ImageModal() {
-  const containerRef = useRef(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const [fallbackImg, setFallbackImg] = useState(false);
   const { state, setVisibleModal } = useContext(ModalContext);
@@ -45,39 +42,6 @@ function ImageModal() {
       return prevImage - 1;
     });
   }, [state?.visibleImageModal?.totalImages]);
-  useGSAP(
-    () => {
-      if (containerRef.current && state.visibleImageModal) {
-        gsap.fromTo(
-          containerRef.current,
-          {
-            opacity: 0,
-          },
-          {
-            opacity: 1,
-            duration: 0.5,
-          }
-        );
-      }
-      if (imgRef.current && state.visibleImageModal) {
-        gsap.fromTo(
-          imgRef.current,
-          {
-            scale: 0,
-          },
-          {
-            scale: 1,
-            duration: 0.3,
-            // ease: 'sine.in',
-          }
-        );
-      }
-    },
-    {
-      dependencies: [state.visibleImageModal, curImage],
-      scope: containerRef,
-    }
-  );
   const handleZoomIn = useCallback(() => {
     setScale((scale) => scale + 0.1);
   }, []);
@@ -121,7 +85,6 @@ function ImageModal() {
   }, [imgRef, scale]);
   return (
     <section
-      ref={containerRef}
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       className='fixed top-0 left-0 w-full h-full z-[999] flex justify-center items-center px-6'
       onClick={() => clickOutside}
@@ -139,7 +102,7 @@ function ImageModal() {
             <FaXmark className='text-2xl text-neutral-600' />
           </button>
         </div>
-        <div className='relative max-w-[600px] max-h-[600px] border border-neutral-300 overflow-hidden'>
+        <div className='relative max-w-[600px] max-h-[600px] w-full h-full border border-neutral-300 overflow-hidden'>
           <div className='absolute top-0 left-0 z-50 flex flex-col bg-red-500'>
             <button
               className='p-4 text-white border-b border-neutral-300'
@@ -159,7 +122,7 @@ function ImageModal() {
           {state.visibleImageModal && (
             <Image
               ref={imgRef}
-              className='w-full h-full object-cover'
+              className='object-cover'
               style={{
                 transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
               }}

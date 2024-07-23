@@ -59,7 +59,10 @@
     "no_product_in_cart": "No product in the cart.",
     "quantity": "Quantity",
     "order_total": "Order total",
-    "view_cart": "View cart"
+    "view_cart": "View cart",
+    "wishlist": "Wish list",
+    "view_wishlist": "View wish list",
+    "no_product_in_wishlist": "No product in wish list."
   },
 
   "common": {

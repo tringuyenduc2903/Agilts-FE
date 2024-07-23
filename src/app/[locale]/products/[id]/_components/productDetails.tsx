@@ -6,18 +6,16 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import Image from 'next/image';
 import Stars from '@/components/ui/Stars';
 import { useTranslations } from 'next-intl';
 import { scrollToElement } from '@/lib/utils/scrollElement';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { Product, ProductOption } from '@/types/types';
-import errorImage from '@/assets/not-found-img.avif';
-import errorImageLarger from '@/assets/not-found-img-larger.png';
 import { useParams, useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCart, userCart } from '@/lib/redux/slice/userSlice';
 import { PopupContext } from '@/contexts/PopupProvider';
+import CustomImage from '@/components/ui/CustomImage';
 type Props = {
   product: Product;
 };
@@ -36,8 +34,6 @@ function ProductDetails({ product }: Props) {
   );
   const [selectedOptionDetails, setSelectedOptionDetails] =
     useState<ProductOption | null>(null);
-  const [fallbackImg, setFallbackImg] = useState(false);
-  const [fallBackListImage, setFallBackListImage] = useState<number[]>([]);
   const versions = useMemo(() => {
     const newVersions = new Map<string, ProductOption[]>();
     product?.options?.forEach((item) => {
@@ -133,56 +129,29 @@ function ProductDetails({ product }: Props) {
   return (
     <section className='container md:m-auto px-6 md:px-0 grid grid-cols-1 lg:grid-cols-2 gap-16 py-8 md:py-16 overflow-hidden'>
       <div className='col-span-1 flex flex-col items-start gap-6'>
-        <Image
-          className='w-full object-cover border border-neutral-300 rounded-sm cursor-pointer'
-          fetchPriority='high'
-          width={550}
-          height={600}
-          src={
-            fallbackImg
-              ? errorImageLarger
-              : selectedOptionDetails
-              ? selectedOptionDetails.images[0]
-              : product.images.map((img) => img.image)[0]
-          }
-          alt={product.images[0]?.alt as string}
-          onError={() => setFallbackImg(true)}
-          onClick={() =>
-            setVisibleModal({
-              visibleImageModal: {
-                curImage: 0,
-                totalImages: product.images.map((img) => img.image).length,
-                images: product.images.map((img) => img.image),
-              },
-            })
-          }
-        />
+        <div className='w-full'>
+          <CustomImage
+            className='border border-neutral-300 rounded-sm'
+            image={
+              selectedOptionDetails
+                ? selectedOptionDetails.images[0]
+                : product.images.map((img) => img.image)[0]
+            }
+            images={product.images.map((img) => img.image)}
+            isShowDetails={true}
+            width={550}
+            height={600}
+            isErrorImageLarger={true}
+            fetchPriority='high'
+          />
+        </div>
         <div className='w-full grid grid-cols-3 gap-6'>
-          {product?.images?.slice(1, 4)?.map((img, index: number) => {
-            const isError = fallBackListImage.includes(index);
-            return (
-              <Image
-                key={index}
-                className='col-span-1 w-full object-cover border border-neutral-300 rounded-sm cursor-pointer'
-                src={isError ? errorImage : img.image}
-                alt={img?.alt as string}
-                width={250}
-                height={180}
-                onError={() =>
-                  setFallBackListImage([...fallBackListImage, index])
-                }
-                onClick={() =>
-                  setVisibleModal({
-                    visibleImageModal: {
-                      curImage: index,
-                      totalImages: product.images.length,
-                      images: product.images.map((img) => img.image) as any,
-                    },
-                  })
-                }
-              />
-            );
-          })}
+          <CustomImage
+            images={product?.images?.slice(1, 4).map((img) => img.image)}
+            isShowDetails={true}
+            width={250}
+            height={180}
+          />
         </div>
       </div>
       <div className='col-span-1 flex flex-col gap-8'>

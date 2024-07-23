@@ -59,7 +59,10 @@
     "no_product_in_cart": "Không có sản phẩm trong giỏ hàng.",
     "quantity": "Số lượng",
     "order_total": "Tổng đơn hàng",
-    "view_cart": "Xem giỏ hàng"
+    "view_cart": "Xem giỏ hàng",
+    "wishlist": "Danh sách ước",
+    "view_wishlist": "Xem danh sách",
+    "no_product_in_wishlist": "Không có sản phẩm nào trong danh sách."
   },
   "common": {
     "view-more": "Xem thêm",

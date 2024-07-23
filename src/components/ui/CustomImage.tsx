@@ -65,6 +65,7 @@ function CustomImage({
           const isError = fallBackListImage.includes(index);
           return (
             <Image
+              key={index}
               className={`w-[${width ? `${width}px` : '100%'}] h-[${
                 height ? `${height}px` : '100%'
               }] object-cover aspect-auto`}

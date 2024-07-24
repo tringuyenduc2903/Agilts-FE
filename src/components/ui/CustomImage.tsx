@@ -3,9 +3,13 @@ import React, { useContext, useState } from 'react';
 import errorImage from '@/assets/not-found-img.avif';
 import errorImageLarger from '@/assets/not-found-img-larger.png';
 import { ModalContext } from '@/contexts/ModalProvider';
+type SingleImage = {
+  image: string;
+  alt: string;
+};
 type Props = {
-  image?: string;
-  images?: string[];
+  image?: SingleImage;
+  images?: SingleImage[];
   fetchPriority?: 'high' | 'low' | 'auto';
   width?: number;
   height?: number;
@@ -37,9 +41,9 @@ function CustomImage({
             ? isErrorImageLarger
               ? errorImageLarger
               : errorImage
-            : image
+            : image?.image
         }
-        alt={image}
+        alt={image?.alt}
         fetchPriority={fetchPriority ? fetchPriority : 'low'}
         onError={() => setFallbackImg(true)}
         onClick={() => {
@@ -74,9 +78,9 @@ function CustomImage({
                   ? isErrorImageLarger
                     ? errorImageLarger
                     : errorImage
-                  : img
+                  : img?.image
               }
-              alt={img}
+              alt={img?.alt}
               fetchPriority={fetchPriority ? fetchPriority : 'low'}
               onError={() =>
                 setFallBackListImage([...fallBackListImage, index])

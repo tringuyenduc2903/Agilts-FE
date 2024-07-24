@@ -82,7 +82,12 @@ export type ProductOption = {
   color: string;
   created_at: string;
   id: number | string;
-  images: string[];
+  images: [
+    {
+      image: string;
+      alt: string;
+    }
+  ];
   price: string;
   price_preview: string;
   product_id: string | number;

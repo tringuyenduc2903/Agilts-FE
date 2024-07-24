@@ -135,9 +135,9 @@ function ProductDetails({ product }: Props) {
             image={
               selectedOptionDetails
                 ? selectedOptionDetails.images[0]
-                : product.images.map((img) => img.image)[0]
+                : product.images[0]
             }
-            images={product.images.map((img) => img.image)}
+            images={product.images}
             isShowDetails={true}
             width={550}
             height={600}
@@ -147,7 +147,7 @@ function ProductDetails({ product }: Props) {
         </div>
         <div className='w-full grid grid-cols-3 gap-6'>
           <CustomImage
-            images={product?.images?.slice(1, 4).map((img) => img.image)}
+            images={product.images.slice(1, 4)}
             isShowDetails={true}
             width={250}
             height={180}

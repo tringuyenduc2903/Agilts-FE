@@ -131,9 +131,9 @@ function ImageModal() {
               src={
                 fallbackImg
                   ? errorImage
-                  : state?.visibleImageModal?.images[curImage - 1]
+                  : state?.visibleImageModal?.images[curImage - 1]?.image
               }
-              alt={`img-${curImage}`}
+              alt={state?.visibleImageModal?.images[curImage - 1]?.alt}
               onError={() => setFallbackImg(true)}
               draggable={false}
             />

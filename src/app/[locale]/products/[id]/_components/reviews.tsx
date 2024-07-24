@@ -127,9 +127,11 @@ function Reviews({
         {Number(reviews_count) > 0 && isSuccessReview && (
           <div className='flex flex-col gap-6'>
             {renderedReviews}
-            <div className='mt-4 flex justify-center items-center sm:justify-start'>
-              <CustomPaginationV2 totalPage={reviewData?.total_pages} />
-            </div>
+            {reviewData?.total_pages > 1 && (
+              <div className='mt-4 flex justify-center items-center sm:justify-start'>
+                <CustomPaginationV2 totalPage={reviewData?.total_pages} />
+              </div>
+            )}
           </div>
         )}
         {Number(reviews_count) === 0 && (

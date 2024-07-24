@@ -17,7 +17,7 @@ type InitialState = {
   visibleImageModal: {
     curImage: number;
     totalImages: number;
-    images: string[];
+    images: any[];
   };
   visibleAddAddressModal: boolean;
   visibleUpdateAddressModal: Address;

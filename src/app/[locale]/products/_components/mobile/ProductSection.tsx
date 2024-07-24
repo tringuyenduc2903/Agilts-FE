@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { SingleProduct } from '@/components/ui/SingleProduct';
-import CustomPagination from '@/components/ui/CustomPagination';
 import { Product } from '@/types/types';
 import CustomPaginationV2 from '@/components/ui/CustomPaginationV2';
 type Props = {
@@ -13,11 +12,11 @@ function ProductsSection({ products, total_pages, current_page }: Props) {
     return products?.map((p: Product) => {
       return (
         <SingleProduct
-          articleClass='m-auto md:m-0 w-full max-w-[180px] cursor-pointer flex flex-col gap-2'
+          articleClass='m-auto md:m-0 w-full max-w-[180px] md:max-w-[250px] cursor-pointer flex flex-col gap-2'
           key={p?.id}
           product={p}
         >
-          <SingleProduct.Image customClass='h-[150px]' />
+          <SingleProduct.Image customClass='h-[150px] md:h-[180px]' />
           <SingleProduct.Type />
           <div className='flex flex-col gap-1 font-bold'>
             <SingleProduct.Title />

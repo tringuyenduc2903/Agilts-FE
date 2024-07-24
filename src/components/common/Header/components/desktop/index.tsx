@@ -18,7 +18,6 @@ function DesktopNavigation() {
   const { locale } = useParams();
   const t = useTranslations('header');
   const headerRef = useRef<HTMLElement | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const cart = useSelector(userCart);
   useGSAP(
@@ -53,15 +52,6 @@ function DesktopNavigation() {
         window.location.replace(pathname.replace(prevLang, curLang));
     },
     [pathname]
-  );
-  const handleSearch = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' && !e.shiftKey && inputRef.current) {
-        e.preventDefault();
-        router.push(`/${locale}/search?q=${inputRef.current?.value}`);
-      }
-    },
-    [router, locale, inputRef]
   );
   return (
     <>
@@ -265,24 +255,6 @@ function DesktopNavigation() {
           </div>
         </section>
         <section className='h-full flex items-center gap-8'>
-          <div className='relative w-[220px]'>
-            <input
-              className='w-full placeholder:text-neutral-800 text-neutral-800 focus:outline-none font-bold bg-transparent placeholder:uppercase'
-              type='text'
-              placeholder={t('search')}
-              // dir='rtl'
-              ref={inputRef}
-              onFocus={() => setIsFocusInput(true)}
-              onBlur={() => setIsFocusInput(false)}
-              onKeyDown={handleSearch}
-            />
-            <span className='absolute -bottom-2 left-0 w-full h-[2px] bg-neutral-300'></span>
-            <span
-              className={`absolute -bottom-2 left-0 h-[2px] w-full bg-red-500 z-10 ${
-                isFocusInput ? 'opacity-100' : 'opacity-0'
-              } transition-all duration-300`}
-            ></span>
-          </div>
           <div
             className='relative h-full group'
             onMouseEnter={() => setHoverWishList(true)}

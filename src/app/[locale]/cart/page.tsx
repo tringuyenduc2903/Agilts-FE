@@ -50,7 +50,7 @@ function CartPage() {
                     <div className='w-[280px] flex justify-center items-center gap-2 overflow-hidden'>
                       <Image
                         className='object-cover'
-                        src={cart?.images[0]}
+                        src={cart?.images[0]?.image}
                         alt={cart?.name}
                         width={86}
                         height={86}

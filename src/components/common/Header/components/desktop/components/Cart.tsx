@@ -19,7 +19,7 @@ function Cart() {
       <div className='px-4 w-full flex gap-4'>
         <Image
           className='w-ful h-full object-cover border border-neutral-300'
-          src={cart.images[0]}
+          src={cart.images[0].image}
           alt='product-image'
           width={120}
           height={120}

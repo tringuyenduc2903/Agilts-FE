@@ -170,7 +170,14 @@ export type Review = {
   id: number | string;
   content: string;
   created_at: string;
-  images: string[] | [];
+  images:
+    | [
+        {
+          image: string;
+          alt: string;
+        }
+      ]
+    | [];
   rate: number;
   response: {
     id: number;

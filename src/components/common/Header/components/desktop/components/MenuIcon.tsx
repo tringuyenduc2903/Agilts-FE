@@ -223,13 +223,22 @@ const MenuIcon: React.FC<Props> = React.memo(
                 </button>
               </div>
             ) : (
-              <button
-                className='mt-auto ml-auto mb-6 bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
-                disabled={isLoadingLogout || isLoadingCSRF}
-                onClick={() => handleRedirect('login')}
-              >
-                {t('login')}
-              </button>
+              <div className='w-full mt-auto flex justify-end gap-4'>
+                <button
+                  className='w-max border border-red-600 bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
+                  disabled={isLoadingLogout || isLoadingCSRF}
+                  onClick={() => handleRedirect('login')}
+                >
+                  {t('login')}
+                </button>
+                <button
+                  className='w-max border border-neutral-500 px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
+                  disabled={isLoadingLogout || isLoadingCSRF}
+                  onClick={() => handleRedirect('register')}
+                >
+                  {t('register')}
+                </button>
+              </div>
             )}
           </div>
         </div>

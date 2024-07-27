@@ -148,12 +148,22 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
               </div>
             </div>
           ) : (
-            <button
-              className='bg-red-600 text-white px-8 py-2 tracking-[2px] text-base font-bold rounded-sm'
-              onClick={() => handleRedirect('login')}
-            >
-              {t('login')}
-            </button>
+            <div className='flex items-center gap-4'>
+              <button
+                className='w-max border border-red-600 bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
+                disabled={isLoadingLogout || isLoadingCSRF}
+                onClick={() => handleRedirect('login')}
+              >
+                {t('login')}
+              </button>
+              <button
+                className='w-max border border-neutral-500 px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
+                disabled={isLoadingLogout || isLoadingCSRF}
+                onClick={() => handleRedirect('register')}
+              >
+                {t('register')}
+              </button>
+            </div>
           )}
           <button
             className='w-max h-max'

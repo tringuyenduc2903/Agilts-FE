@@ -103,7 +103,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
   return (
     <aside
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
-      className={`fixed top-0 left-0 h-full w-full z-[100] ${
+      className={`fixed top-0 left-0 h-full w-full z-[9999] ${
         isOpenMenu ? 'translate-x-0' : '-translate-x-[100%]'
       } transition-transform duration-200 overflow-y-auto`}
       // onClick={closeMenu}

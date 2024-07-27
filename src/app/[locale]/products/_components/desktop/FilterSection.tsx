@@ -21,17 +21,9 @@ type Props = {
   };
   minPrice: number | string;
   maxPrice: number | string;
-  closeSection: () => void;
 };
 
-function FilterSection({
-  action,
-  models,
-  colors,
-  minPrice,
-  maxPrice,
-  closeSection,
-}: Props) {
+function FilterSection({ action, models, colors, minPrice, maxPrice }: Props) {
   const t = useTranslations('common');
   const searchParams = useSearchParams();
   const [createQueryString] = useQueryString();
@@ -47,10 +39,7 @@ function FilterSection({
                 ? 'text-red-500'
                 : ''
             } transition-colors`}
-            onClick={() => {
-              closeSection();
-              createQueryString(models.name, d.id);
-            }}
+            onClick={() => createQueryString(models.name, d.id)}
           >
             {d.value}
           </button>
@@ -69,10 +58,7 @@ function FilterSection({
                 ? 'text-red-500 border-red-500 '
                 : ''
             } transition-colors`}
-            onClick={() => {
-              closeSection();
-              createQueryString(colors.name, d.id);
-            }}
+            onClick={() => createQueryString(colors.name, d.id)}
           >
             {d.value}
           </button>
@@ -83,7 +69,7 @@ function FilterSection({
 
   return (
     <div
-      className={`absolute bg-white top-[125%] w-[70vw] max-h-screen z-50 overflow-x-hidden overflow-y-auto ${
+      className={`absolute bg-white top-[125%] w-[60vw] max-h-screen z-50 overflow-x-hidden overflow-y-auto ${
         action === 'filter' ? 'h-[auto] border border-neutral-500' : 'h-0'
       }`}
     >
@@ -109,13 +95,12 @@ function FilterSection({
           <button
             className='relative group w-max sm:w-[156px] h-[36px] sm:h-[46px] md:h-[55px] uppercase bg-red-500 text-white px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center text-sm'
             type='button'
-            onClick={() => {
-              closeSection();
+            onClick={() =>
               createQueryString(
                 ['minPrice', 'maxPrice'],
                 [priceMin.toString(), priceMax.toString()]
-              );
-            }}
+              )
+            }
           >
             <span className='w-[76px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 sm:translate-x-0 group-hover:sm:translate-x-[40%] px-2 z-10 bg-red-500 transition-all duration-200'>
               {t('filter')}

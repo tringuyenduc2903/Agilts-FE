@@ -12,12 +12,12 @@ function ProductsSection({ products, total_pages, current_page }: Props) {
     return products?.map((p: Product) => {
       return (
         <SingleProduct
-          articleClass='m-auto md:m-0 w-full max-w-[280px] cursor-pointer flex flex-col gap-2'
+          articleClass='col-span-1 m-auto md:m-0 w-full max-w-[280px] cursor-pointer flex flex-col gap-2'
           key={p?.id}
           product={p}
         >
           <SingleProduct.Image customClass='h-[250px]' />
-          <SingleProduct.Type />
+          <SingleProduct.Category />
           <div className='flex flex-col gap-1 font-bold'>
             <SingleProduct.Title />
             <SingleProduct.Price />
@@ -27,15 +27,16 @@ function ProductsSection({ products, total_pages, current_page }: Props) {
     });
   }, [products]);
   return (
-    <div className='flex flex-col items-center gap-16'>
-      <div className='w-full flex flex-wrap justify-between gap-x-4 gap-y-16'>
+    <div className='w-full flex flex-col items-center gap-16'>
+      <div className='w-full grid grid-cols-4 gap-x-4 gap-y-16'>
         {renderedProducts}
       </div>
-      {Number(total_pages) > 1 && <div className='w-full'></div>}
-      <CustomPagination
-        curPage={Number(current_page)}
-        totalPage={Number(total_pages)}
-      />
+      {Number(total_pages) > 1 && (
+        <CustomPagination
+          curPage={Number(current_page)}
+          totalPage={Number(total_pages)}
+        />
+      )}
     </div>
   );
 }

@@ -83,6 +83,9 @@ function ImageModal() {
       image?.removeEventListener('mouseup', handleMouseUp);
     };
   }, [imgRef, scale]);
+  console.log(
+    typeof state?.visibleImageModal?.images[curImage - 1] === 'string'
+  );
   return (
     <section
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
@@ -102,7 +105,7 @@ function ImageModal() {
             <FaXmark className='text-2xl text-neutral-600' />
           </button>
         </div>
-        <div className='relative max-w-[600px] max-h-[600px] w-full h-full border border-neutral-300 overflow-hidden'>
+        <div className='relative w-full h-full border border-neutral-300 overflow-hidden'>
           <div className='absolute top-0 left-0 z-50 flex flex-col bg-red-500'>
             <button
               className='p-4 text-white border-b border-neutral-300'
@@ -131,9 +134,17 @@ function ImageModal() {
               src={
                 fallbackImg
                   ? errorImage
-                  : state?.visibleImageModal?.images[curImage - 1]?.image
+                  : typeof state?.visibleImageModal?.images[curImage - 1] ===
+                    'string'
+                  ? state?.visibleImageModal?.images[curImage - 1]
+                  : state?.visibleImageModal?.images[curImage - 1].image
               }
-              alt={state?.visibleImageModal?.images[curImage - 1]?.alt}
+              alt={
+                typeof state?.visibleImageModal?.images[curImage - 1] ===
+                'string'
+                  ? state?.visibleImageModal?.images[curImage - 1]
+                  : state?.visibleImageModal?.images[curImage - 1].alt
+              }
               onError={() => setFallbackImg(true)}
               draggable={false}
             />

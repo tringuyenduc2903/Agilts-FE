@@ -37,11 +37,8 @@ function DesktopNavigation() {
     },
     { dependencies: [], scope: headerRef }
   );
-  const [hoverRoute, setHoverRoute] = useState<null | String>(null);
-  const [hoverSubRoute, setHoverSubRoute] = useState<null | String>(null);
-  const [hoverCart, setHoverCart] = useState(false);
-  const [hoverWishList, setHoverWishList] = useState(false);
-  const [isFocusInput, setIsFocusInput] = useState(false);
+  const [hoverMenu, setHoverMenu] = useState<null | String>(null);
+  const [hoverSubMenu, setHoverSubMenu] = useState<null | String>(null);
   const pathname = usePathname();
   const router = useRouter();
   const handleChangeLang = useCallback(
@@ -57,7 +54,7 @@ function DesktopNavigation() {
     <>
       <div
         className={`fixed top-0 left-0 ${
-          hoverRoute || isOpenMenu || hoverCart
+          hoverMenu || isOpenMenu
             ? 'w-full h-full z-[500] opacity-100'
             : 'w-0 h-0 -z-10 opacity-0'
         } transition-opacity duration-300`}
@@ -70,7 +67,7 @@ function DesktopNavigation() {
       >
         <div
           className={`fixed top-0 left-0 ${
-            hoverRoute || isOpenMenu || hoverCart
+            hoverMenu || isOpenMenu
               ? 'w-full h-full z-20 opacity-100'
               : 'w-0 h-0 -z-10 opacity-0'
           } transition-opacity duration-300`}
@@ -97,39 +94,39 @@ function DesktopNavigation() {
         <section className='relative z-[999] h-full flex items-center font-bold tracking-[1px]'>
           <Link
             className={`h-full uppercase flex justify-center items-center px-4 ${
-              hoverRoute === 'home' ? 'bg-white' : ''
+              hoverMenu === 'home' ? 'bg-white' : ''
             }`}
             href={`/${locale}`}
-            onMouseOver={() => setHoverRoute('home')}
-            onMouseOut={() => setHoverRoute(null)}
+            onMouseOver={() => setHoverMenu('home')}
+            onMouseOut={() => setHoverMenu(null)}
             prefetch={true}
           >
             <p className='relative py-1'>
               <span>{t('home')}</span>
               <span
                 className={`absolute left-1/2 -translate-x-1/2 -bottom-1 ${
-                  hoverRoute === 'home' || pathname === '/' ? 'w-8' : 'w-0'
+                  hoverMenu === 'home' || pathname === '/' ? 'w-8' : 'w-0'
                 } h-[2px] bg-red-500 transition-all duration-300`}
               ></span>
             </p>
           </Link>
           <div
             className={`relative h-full px-4 cursor-pointer ${
-              hoverRoute === 'pages' ? 'bg-white' : ''
+              hoverMenu === 'pages' ? 'bg-white' : ''
             }`}
-            onMouseOver={() => setHoverRoute('pages')}
-            onMouseOut={() => setHoverRoute(null)}
+            onMouseOver={() => setHoverMenu('pages')}
+            onMouseOut={() => setHoverMenu(null)}
           >
             <button
               className={`w-full h-full uppercase flex justify-center items-center px-4 ${
-                hoverRoute === 'pages' ? 'bg-white' : ''
+                hoverMenu === 'pages' ? 'bg-white' : ''
               }`}
             >
               <p className='relative py-1'>
                 <span>{t('pages')}</span>
                 <span
                   className={`absolute left-1/2 -translate-x-1/2 -bottom-1 ${
-                    hoverRoute === 'pages' ||
+                    hoverMenu === 'pages' ||
                     subRoutes.includes(pathname.replace('/', ''))
                       ? 'w-8'
                       : 'w-0'
@@ -140,7 +137,7 @@ function DesktopNavigation() {
             <ul
               style={{
                 height:
-                  hoverRoute === 'pages'
+                  hoverMenu === 'pages'
                     ? `${subRoutes.length * 48 + 64}px`
                     : '0px',
               }}
@@ -157,14 +154,14 @@ function DesktopNavigation() {
                     <Link
                       className='relative w-full h-[48px] flex items-center gap-2 px-4'
                       href={`/${locale}/${r}`}
-                      onMouseOver={() => setHoverSubRoute(r)}
-                      onMouseOut={() => setHoverSubRoute(null)}
+                      onMouseOver={() => setHoverSubMenu(r)}
+                      onMouseOut={() => setHoverSubMenu(null)}
                       prefetch={true}
                     >
                       <span className='w-6 h-[2px] bg-red-600'></span>
                       <span
                         className={`absolute w-[180px] px-4 left-0 top-1/2 -translate-y-1/2 ${
-                          hoverSubRoute === r || pathname === `/${r}`
+                          hoverSubMenu === r || pathname === `/${r}`
                             ? 'translate-x-[20%]'
                             : 'translate-x-0'
                         } bg-white transition-all duration-300`}
@@ -179,18 +176,18 @@ function DesktopNavigation() {
           </div>
           <Link
             className={`h-full uppercase flex justify-center items-center px-4 ${
-              hoverRoute === 'products' ? 'bg-white' : ''
+              hoverMenu === 'products' ? 'bg-white' : ''
             }`}
             href={`/${locale}/products`}
-            onMouseOver={() => setHoverRoute('products')}
-            onMouseOut={() => setHoverRoute(null)}
+            onMouseOver={() => setHoverMenu('products')}
+            onMouseOut={() => setHoverMenu(null)}
             prefetch={true}
           >
             <p className='relative py-1'>
               <span>{t('products')}</span>
               <span
                 className={`absolute left-1/2 -translate-x-1/2 -bottom-1 ${
-                  hoverRoute === 'products' || pathname === '/products'
+                  hoverMenu === 'products' || pathname === '/products'
                     ? 'w-8'
                     : 'w-0'
                 } h-[2px] bg-red-500 transition-all duration-300`}
@@ -199,39 +196,39 @@ function DesktopNavigation() {
           </Link>
           <div
             className={`relative h-full px-4 cursor-pointer ${
-              hoverRoute === 'languages' ? 'bg-white' : ''
+              hoverMenu === 'languages' ? 'bg-white' : ''
             }`}
-            onMouseOver={() => setHoverRoute('languages')}
-            onMouseOut={() => setHoverRoute(null)}
+            onMouseOver={() => setHoverMenu('languages')}
+            onMouseOut={() => setHoverMenu(null)}
           >
             <button
               className={`w-full h-full uppercase flex justify-center items-center px-4 ${
-                hoverRoute === 'languages' ? 'bg-white' : ''
+                hoverMenu === 'languages' ? 'bg-white' : ''
               }`}
             >
               <p className='relative py-1'>
                 <span>{t('languages')}</span>
                 <span
                   className={`absolute left-1/2 -translate-x-1/2 -bottom-1 ${
-                    hoverRoute === 'languages' ? 'w-8' : 'w-0'
+                    hoverMenu === 'languages' ? 'w-8' : 'w-0'
                   } h-[2px] bg-red-500 transition-all duration-300`}
                 ></span>
               </p>
             </button>
             <ul
               className={`absolute left-0 w-[240px] ${
-                hoverRoute === 'languages' ? 'h-[180px]' : 'h-0'
+                hoverMenu === 'languages' ? 'h-[180px]' : 'h-0'
               } transition-[height] duration-300 bg-white text-neutral-500 uppercase overflow-hidden`}
             >
               <li className='w-full px-4 pt-12'>
                 <button
                   className={`relative w-full h-[48px] flex items-center gap-2 px-4 uppercase ${
-                    hoverSubRoute === 'english' || locale === 'en'
+                    hoverSubMenu === 'english' || locale === 'en'
                       ? 'text-red-500'
                       : ''
                   } transition-colors`}
-                  onMouseOver={() => setHoverSubRoute('english')}
-                  onMouseOut={() => setHoverSubRoute(null)}
+                  onMouseOver={() => setHoverSubMenu('english')}
+                  onMouseOut={() => setHoverSubMenu(null)}
                   onClick={() => handleChangeLang('vi', 'en')}
                 >
                   {t('english')}
@@ -240,12 +237,12 @@ function DesktopNavigation() {
               <li className='w-full px-4'>
                 <button
                   className={`relative w-full h-[48px] flex items-center gap-2 px-4 uppercase ${
-                    hoverSubRoute === 'vietnamese' || locale === 'vi'
+                    hoverSubMenu === 'vietnamese' || locale === 'vi'
                       ? 'text-red-500'
                       : ''
                   } transition-colors`}
-                  onMouseOver={() => setHoverSubRoute('vietnamese')}
-                  onMouseOut={() => setHoverSubRoute(null)}
+                  onMouseOver={() => setHoverSubMenu('vietnamese')}
+                  onMouseOut={() => setHoverSubMenu(null)}
                   onClick={() => handleChangeLang('en', 'vi')}
                 >
                   {t('vietnamese')}
@@ -257,42 +254,8 @@ function DesktopNavigation() {
         <section className='h-full flex items-center gap-8'>
           <div
             className='relative h-full group'
-            onMouseEnter={() => setHoverWishList(true)}
-            onMouseLeave={() => setHoverWishList(false)}
-          >
-            <Link
-              href={`/${locale}/cart`}
-              className='h-full relative z-50 flex items-center gap-2'
-            >
-              <span className='text-neutral-800 text-sm uppercase font-bold tracking-[2px]'>
-                {t('wishlist')}
-              </span>
-              <span
-                className={`p-2 size-[24px] text-[12px] flex justify-center items-center font-bold ${
-                  hoverWishList ? 'text-white bg-red-500' : 'bg-neutral-300'
-                } transition-colors`}
-              >
-                {cart ? 1 : 0}
-              </span>
-            </Link>
-            <div
-              className={`bg-white absolute right-0 w-[420px] rounded-sm ${
-                hoverWishList ? `${cart ? 'h-[40vh]' : 'h-[6vh]'}` : 'h-0'
-              } transition-[height] duration-150 overflow-y-auto`}
-            >
-              {cart ? (
-                <Cart />
-              ) : (
-                <p className='w-full h-full flex justify-center items-center font-bold uppercase'>
-                  {t('no_product_in_wishlist')}
-                </p>
-              )}
-            </div>
-          </div>
-          <div
-            className='relative h-full group'
-            onMouseEnter={() => setHoverCart(true)}
-            onMouseLeave={() => setHoverCart(false)}
+            onMouseOver={() => setHoverMenu('cart')}
+            onMouseOut={() => setHoverMenu(null)}
           >
             <Link
               href={`/${locale}/cart`}
@@ -302,16 +265,14 @@ function DesktopNavigation() {
                 {t('cart')}
               </span>
               <span
-                className={`p-2 size-[24px] text-[12px] flex justify-center items-center font-bold ${
-                  hoverCart ? 'text-white bg-red-500' : 'bg-neutral-300'
-                } transition-colors`}
+                className={`p-2 size-[24px] text-[12px] flex justify-center items-center font-bold group-hover:text-white group-hover:bg-red-500 bg-neutral-300 transition-colors`}
               >
                 {cart ? 1 : 0}
               </span>
             </Link>
             <div
-              className={`bg-white absolute right-0 w-[420px] rounded-sm ${
-                hoverCart ? `${cart ? 'h-[40vh]' : 'h-[6vh]'}` : 'h-0'
+              className={`bg-white absolute right-0 w-[420px] rounded-sm h-0 ${
+                cart ? 'group-hover:h-[20vh]' : 'group-hover:h-[6vh]'
               } transition-[height] duration-150 overflow-y-auto`}
             >
               {cart ? (

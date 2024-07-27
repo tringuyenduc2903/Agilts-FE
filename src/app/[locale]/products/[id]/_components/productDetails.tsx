@@ -15,7 +15,10 @@ import { useParams, useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCart, userCart } from '@/lib/redux/slice/userSlice';
 import { PopupContext } from '@/contexts/PopupProvider';
+import { TbHeart, TbHeartFilled } from 'react-icons/tb';
+
 import CustomImage from '@/components/ui/CustomImage';
+import { FaMinus } from 'react-icons/fa6';
 type Props = {
   product: Product;
 };
@@ -157,12 +160,17 @@ function ProductDetails({ product }: Props) {
       <div className='col-span-1 flex flex-col gap-8'>
         <div className='flex flex-col gap-2'>
           {selectedOptionDetails && (
-            <p className='text-base md:text-lg font-bold flex items-center gap-4'>
-              <span>{t('status')}:</span>
-              <span className='text-red-600'>
-                {selectedOptionDetails.status}
-              </span>
-            </p>
+            <div className='flex justify-between items-center'>
+              <p className='text-base md:text-lg font-bold flex items-center gap-4'>
+                <span>{t('status')}:</span>
+                <span className='text-red-600'>
+                  {selectedOptionDetails.status}
+                </span>
+              </p>
+              <button aria-label='wishlist-btn'>
+                <TbHeart className='text-4xl' />
+              </button>
+            </div>
           )}
           <h1
             title={product?.name}
@@ -221,24 +229,32 @@ function ProductDetails({ product }: Props) {
             <div className='font-medium flex flex-col gap-2'>
               <div className='flex gap-2'>
                 <p className='text-red-500'>{t('categories')}:</p>
-                {product.categories?.map((c) => {
-                  return (
-                    <button
-                      key={c.id}
-                      className='text-neutral-500'
-                      onClick={() =>
-                        router.push(
-                          `/${locale}/products?page=1&category=${c.id}`,
-                          {
-                            scroll: true,
+                <ul className='flex items-center gap-2'>
+                  {product.categories?.map((c, index) => {
+                    return (
+                      <li className='flex items-center gap-2' key={c.id}>
+                        <button
+                          className='text-neutral-500'
+                          onClick={() =>
+                            router.push(
+                              `/${locale}/products?page=1&category=${c.id}`,
+                              {
+                                scroll: true,
+                              }
+                            )
                           }
-                        )
-                      }
-                    >
-                      {c.name}
-                    </button>
-                  );
-                })}
+                        >
+                          {c.name}
+                        </button>
+                        {index !== product.categories.length - 1 && (
+                          <span>
+                            <FaMinus className='text-neutral-500' />
+                          </span>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
               <p className='flex gap-2'>
                 <span className='text-red-500'>{t('type')}:</span>

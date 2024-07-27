@@ -80,7 +80,7 @@ export default async function HomeLayout({
 
   return (
     <html lang={locale}>
-      <body className='flex flex-col justify-between'>
+      <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <StoreProvider>
             <FetchDataProvider>

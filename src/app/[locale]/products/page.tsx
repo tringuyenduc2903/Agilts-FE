@@ -5,12 +5,12 @@ import {
   useGetFilterQuery,
   useGetProductsQuery,
 } from '@/lib/redux/query/storesQuery';
-import useResponsive from '@/lib/hooks/useResponsive';
+import { useResponsive } from '@/lib/hooks/useResponsive';
 const ProductsDesktop = lazy(() => import('./_components/desktop'));
 const ProductsMobile = lazy(() => import('./_components/mobile'));
 function ProductsLayout() {
   const searchParams = useSearchParams();
-  const index = useResponsive();
+  const state = useResponsive();
   const {
     data: filterData,
     isSuccess: isSuccessFilter,
@@ -26,11 +26,10 @@ function ProductsLayout() {
     isError: isErrorProducts,
   } = useGetProductsQuery(searchParams.toString());
   if (isErrorFilter || isErrorProducts) throw new Error();
-
   return (
     <main className='w-full min-h-screen pt-[72px] flex flex-col'>
       <Suspense>
-        {index === 0 && (
+        {state.isDesktop && (
           <ProductsDesktop
             filterData={filterData}
             isSuccessFilter={isSuccessFilter}
@@ -42,7 +41,7 @@ function ProductsLayout() {
             isFetchingProducts={isFetchingProducts}
           />
         )}
-        {(index === 1 || index === 2) && (
+        {state.isMobile && (
           <ProductsMobile
             filterData={filterData}
             isSuccessFilter={isSuccessFilter}

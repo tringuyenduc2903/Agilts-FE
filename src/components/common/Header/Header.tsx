@@ -1,14 +1,14 @@
 'use client';
-import useResponsive from '@/lib/hooks/useResponsive';
+import { useResponsive } from '@/lib/hooks/useResponsive';
 import { Suspense, lazy } from 'react';
 const DesktopNavigation = lazy(() => import('./components/desktop'));
 const MobileNavigation = lazy(() => import('./components/mobile'));
 function Header() {
-  const index = useResponsive();
+  const state = useResponsive();
   return (
     <Suspense>
-      {(index === 1 || index === 2) && <MobileNavigation />}
-      {index === 0 && <DesktopNavigation />}
+      {state.isMobile && <MobileNavigation />}
+      {state.isDesktop && <DesktopNavigation />}
     </Suspense>
   );
 }

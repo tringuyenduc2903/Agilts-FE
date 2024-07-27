@@ -17,7 +17,7 @@ function ProductsSection({ products, total_pages, current_page }: Props) {
           product={p}
         >
           <SingleProduct.Image customClass='h-[150px] md:h-[180px]' />
-          <SingleProduct.Type />
+          <SingleProduct.Category />
           <div className='flex flex-col gap-1 font-bold'>
             <SingleProduct.Title />
             <SingleProduct.Price />
@@ -32,7 +32,9 @@ function ProductsSection({ products, total_pages, current_page }: Props) {
         {renderedProducts}
       </div>
       {Number(total_pages) > 1 && <div className='w-full'></div>}
-      <CustomPaginationV2 scroll={true} totalPage={Number(total_pages)} />
+      {Number(total_pages) > 1 && (
+        <CustomPaginationV2 scroll={true} totalPage={Number(total_pages)} />
+      )}
     </div>
   );
 }

@@ -19,6 +19,7 @@ import {
 } from '@/lib/redux/query/storesQuery';
 import { useDropzone } from 'react-dropzone';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 const ReviewsModal = () => {
   const t = useTranslations('common');
   const { state, setVisibleModal } = useContext(ModalContext);
@@ -240,15 +241,18 @@ const ReviewsModal = () => {
             </div>
           </div>
           {previewImages.length > 0 && (
-            <div className='grid grid-cols-4 gap-4'>
+            <div className='grid grid-cols-3 xl:grid-cols-5 gap-4'>
               {previewImages?.map((img, key) => {
                 return (
                   <div className='relative w-[96px] h-[96px]' key={img.name}>
                     {img && (
-                      <img
+                      <Image
                         className='w-full h-full object-cover'
                         src={URL.createObjectURL(img)}
                         alt={img.name}
+                        fetchPriority='low'
+                        width={96}
+                        height={96}
                       />
                     )}
                     <button

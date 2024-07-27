@@ -1,15 +1,15 @@
 import useQueryString from '@/lib/hooks/useQueryString';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import React, { useCallback } from 'react';
+import React from 'react';
 type Props = {
   action: string | null;
-  closeSection: () => void;
 };
-function SortSection({ action, closeSection }: Props) {
+function SortSection({ action }: Props) {
   const t = useTranslations('common');
   const searchParams = useSearchParams();
   const [createQueryString] = useQueryString();
+
   return (
     <div
       className={`absolute bg-white top-[125%] w-[15vw] max-h-screen z-50 overflow-x-hidden overflow-y-auto ${
@@ -26,13 +26,12 @@ function SortSection({ action, closeSection }: Props) {
                   ? 'text-red-500'
                   : ''
               } transition-colors`}
-              onClick={() => {
-                closeSection();
+              onClick={() =>
                 createQueryString(
                   ['sortColumn', 'sortDirection'],
                   ['name', 'asc']
-                );
-              }}
+                )
+              }
             >
               {t('sort_by_name_A_Z')}
             </button>
@@ -45,13 +44,12 @@ function SortSection({ action, closeSection }: Props) {
                   ? 'text-red-500'
                   : ''
               } transition-colors`}
-              onClick={() => {
-                closeSection();
+              onClick={() =>
                 createQueryString(
                   ['sortColumn', 'sortDirection'],
                   ['name', 'desc']
-                );
-              }}
+                )
+              }
             >
               {t('sort_by_name_Z_A')}
             </button>
@@ -63,10 +61,7 @@ function SortSection({ action, closeSection }: Props) {
                   ? 'text-red-500'
                   : ''
               } transition-colors`}
-              onClick={() => {
-                closeSection();
-                createQueryString('sortColumn', 'latest');
-              }}
+              onClick={() => createQueryString('sortColumn', 'latest')}
             >
               {t('sort_by_latest')}
             </button>
@@ -78,10 +73,7 @@ function SortSection({ action, closeSection }: Props) {
                   ? 'text-red-500'
                   : ''
               } transition-colors`}
-              onClick={() => {
-                closeSection();
-                createQueryString('sortColumn', 'oldest');
-              }}
+              onClick={() => createQueryString('sortColumn', 'oldest')}
             >
               {t('sort_by_oldest')}
             </button>
@@ -94,13 +86,12 @@ function SortSection({ action, closeSection }: Props) {
                   ? 'text-red-500'
                   : ''
               } transition-colors`}
-              onClick={() => {
-                closeSection();
+              onClick={() =>
                 createQueryString(
                   ['sortColumn', 'sortDirection'],
                   ['price', 'asc']
-                );
-              }}
+                )
+              }
             >
               {t('sort_by_price_low')}
             </button>
@@ -113,13 +104,12 @@ function SortSection({ action, closeSection }: Props) {
                   ? 'text-red-500'
                   : ''
               } transition-colors`}
-              onClick={() => {
-                closeSection();
+              onClick={() =>
                 createQueryString(
                   ['sortColumn', 'sortDirection'],
                   ['price', 'desc']
-                );
-              }}
+                )
+              }
             >
               {t('sort_by_price_high')}
             </button>
@@ -131,10 +121,7 @@ function SortSection({ action, closeSection }: Props) {
                   ? 'text-red-500'
                   : ''
               } transition-colors`}
-              onClick={() => {
-                closeSection();
-                createQueryString('sortColumn', 'review');
-              }}
+              onClick={() => createQueryString('sortColumn', 'review')}
             >
               {t('sort_by_average_rating')}
             </button>

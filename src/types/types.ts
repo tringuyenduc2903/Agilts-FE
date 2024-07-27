@@ -78,16 +78,15 @@ export type ProductFilter = {
   label: string;
   data: string | number | KeyObject;
 };
+export type SingleImage = {
+  image: string;
+  alt: string;
+};
 export type ProductOption = {
   color: string;
   created_at: string;
   id: number | string;
-  images: [
-    {
-      image: string;
-      alt: string;
-    }
-  ];
+  images: SingleImage[];
   price: string;
   price_preview: string;
   product_id: string | number;
@@ -117,12 +116,7 @@ export type Product = {
     raw: number;
     preview: string;
   };
-  images: [
-    {
-      image: string;
-      alt: string;
-    }
-  ];
+  images: SingleImage[];
   videos: [
     {
       image: string;
@@ -170,14 +164,7 @@ export type Review = {
   id: number | string;
   content: string;
   created_at: string;
-  images:
-    | [
-        {
-          image: string;
-          alt: string;
-        }
-      ]
-    | [];
+  images: SingleImage[] | [];
   rate: number;
   response: {
     id: number;
@@ -193,5 +180,20 @@ export type Review = {
   reviewable_preview: {
     name: string;
   };
+  updated_at: string;
+};
+
+export type Wishlist = {
+  id: number;
+  product_preview: {
+    id: number;
+    name: string;
+    option_id: 11;
+    sku: string;
+    color: string;
+    categories: string[];
+    images: SingleImage[];
+  };
+  created_at: string;
   updated_at: string;
 };

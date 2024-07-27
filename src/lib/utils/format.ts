@@ -18,9 +18,11 @@ export const CustomFormatDate = (str: string, type?: string) => {
 
 export const convertData = (data: { [key: string]: string }) => {
   return Object.entries(data)?.map(([key, value]) => {
-    return {
-      id: key,
-      value: value,
-    };
+    return (
+      {
+        id: key,
+        value: value,
+      } || {}
+    );
   });
 };

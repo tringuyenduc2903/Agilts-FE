@@ -1,19 +1,14 @@
 'use client';
-import BreadCrumbs from '@/components/ui/BreadCrumbs';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import React, { LegacyRef, useCallback, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { FaSliders, FaMagnifyingGlass, FaAngleDown } from 'react-icons/fa6';
-// import CategoriesSection from './CategoriesSection';
-// import FilterSection from './FilterSection';
-// import ProductsSection from './ProductSection';
-// import { SkeletonCategory, SkeletonProduct } from './Skeleton';
-// import SortSection from './SortSection';
 import useQueryString from '@/lib/hooks/useQueryString';
 import { convertData } from '@/lib/utils/format';
 import RangeSlider from '@/components/ui/RangeSlider';
 import ProductsSection from './ProductSection';
 import ProductSkeleton from './Skeleton';
+import useClickOutside from '@/lib/hooks/useClickOutside';
 
 type Props = {
   filterData: any;
@@ -38,6 +33,7 @@ function ProductsMobile({
     useQueryString();
   const [selectedTab, setSelectedTab] = useState<string | null>(null);
   const [isOpenFilter, setIsOpenFilter] = useState(false);
+  const { sectionRef } = useClickOutside(() => setIsOpenFilter(false));
   const [form, setForm] = useState({
     search: '',
     sort: {
@@ -70,89 +66,98 @@ function ProductsMobile({
   }, []);
 
   const renderedCategories = useMemo(() => {
-    return convertData(filterData?.[5]?.data)?.map((d) => {
-      return (
-        <li className='h-max' key={d.id}>
-          <button
-            className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
-              searchParams.get(filterData?.[5]?.name) === d.id.toString()
-                ? 'text-red-500'
-                : ''
-            } transition-colors`}
-            onClick={() => {
-              setSelectedTab(null);
-              setForm((prevForm) => ({
-                ...prevForm,
-                category: {
-                  name: filterData?.[5]?.name,
-                  preview: d.value,
-                  value: d.id,
-                },
-              }));
-            }}
-          >
-            {d.value}
-          </button>
-        </li>
-      );
-    });
-  }, [filterData?.[5], searchParams]);
+    return (
+      isSuccessFilter &&
+      convertData(filterData?.[5]?.data)?.map((d) => {
+        return (
+          <li className='h-max' key={d.id}>
+            <button
+              className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
+                searchParams.get(filterData?.[5]?.name) === d.id.toString()
+                  ? 'text-red-500'
+                  : ''
+              } transition-colors`}
+              onClick={() => {
+                setSelectedTab(null);
+                setForm((prevForm) => ({
+                  ...prevForm,
+                  category: {
+                    name: filterData?.[5]?.name,
+                    preview: d.value,
+                    value: d.id,
+                  },
+                }));
+              }}
+            >
+              {d.value}
+            </button>
+          </li>
+        );
+      })
+    );
+  }, [isSuccessFilter, filterData?.[5], searchParams]);
 
   const renderedModels = useMemo(() => {
-    return convertData(filterData?.[4]?.data)?.map((d) => {
-      return (
-        <li className='h-max' key={d.id}>
-          <button
-            className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
-              searchParams.get(filterData?.[4].name) === d.id.toString()
-                ? 'text-red-500'
-                : ''
-            } transition-colors`}
-            onClick={() => {
-              setSelectedTab(null);
-              setForm((prevForm) => ({
-                ...prevForm,
-                model: {
-                  name: filterData?.[4]?.name,
-                  value: d.id,
-                },
-              }));
-            }}
-          >
-            {d.value}
-          </button>
-        </li>
-      );
-    });
-  }, [filterData?.[4], searchParams]);
+    return (
+      isSuccessFilter &&
+      convertData(filterData?.[4]?.data)?.map((d) => {
+        return (
+          <li className='h-max' key={d.id}>
+            <button
+              className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
+                searchParams.get(filterData?.[4].name) === d.id.toString()
+                  ? 'text-red-500'
+                  : ''
+              } transition-colors`}
+              onClick={() => {
+                setSelectedTab(null);
+                setForm((prevForm) => ({
+                  ...prevForm,
+                  model: {
+                    name: filterData?.[4]?.name,
+                    value: d.id,
+                  },
+                }));
+              }}
+            >
+              {d.value}
+            </button>
+          </li>
+        );
+      })
+    );
+  }, [isSuccessFilter, filterData?.[4], searchParams]);
 
   const renderedColors = useMemo(() => {
-    return convertData(filterData?.[3]?.data)?.map((d) => {
-      return (
-        <li className='h-max' key={d.id}>
-          <button
-            className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
-              searchParams.get(filterData?.[3].name) === d.id.toString()
-                ? 'text-red-500'
-                : ''
-            } transition-colors`}
-            onClick={() => {
-              setSelectedTab(null);
-              setForm((prevForm) => ({
-                ...prevForm,
-                color: {
-                  name: filterData?.[3]?.name,
-                  value: d.id,
-                },
-              }));
-            }}
-          >
-            {d.value}
-          </button>
-        </li>
-      );
-    });
-  }, [filterData?.[3], searchParams]);
+    return (
+      isSuccessFilter &&
+      convertData(filterData?.[3]?.data)?.map((d) => {
+        return (
+          <li className='h-max' key={d.id}>
+            <button
+              className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
+                searchParams.get(filterData?.[3].name) === d.id.toString()
+                  ? 'text-red-500'
+                  : ''
+              } transition-colors`}
+              onClick={() => {
+                setSelectedTab(null);
+                setForm((prevForm) => ({
+                  ...prevForm,
+                  color: {
+                    name: filterData?.[3]?.name,
+                    value: d.id,
+                  },
+                }));
+              }}
+            >
+              {d.value}
+            </button>
+          </li>
+        );
+      })
+    );
+  }, [isSuccessFilter, filterData?.[3], searchParams]);
 
   const handleSort = useCallback(() => {
     createQueryString(
@@ -189,7 +194,7 @@ function ProductsMobile({
   }, [createQueryString, removeValueQueryString, form]);
   return (
     <section className='w-full min-h-screen py-8 m-auto px-4 overflow-hidden flex flex-col gap-6 text-sm md:text-base'>
-      <div className='relative'>
+      <div className='relative' ref={sectionRef as LegacyRef<HTMLDivElement>}>
         <button
           className='w-full sm:w-1/2 mx-auto flex justify-center items-center gap-4 border border-neutral-300 rounded-sm py-2'
           onClick={() => setIsOpenFilter(!isOpenFilter)}
@@ -198,7 +203,7 @@ function ProductsMobile({
           <p className='font-medium text-base'>{t('filter')}</p>
         </button>
         {isSuccessFilter && isOpenFilter && (
-          <div className='absolute top-[125%] left-1/2 -translate-x-1/2 w-full sm:w-1/2 h-[70vh] md:h-[75vh] px-4 py-8 border border-neutral-300 bg-white z-[999] overflow-y-auto flex flex-col gap-6'>
+          <div className='absolute top-[125%] left-1/2 -translate-x-1/2 w-full sm:w-1/2 h-[70vh] md:h-[75vh] px-4 py-8 border border-neutral-300 bg-white z-50 overflow-y-auto flex flex-col gap-6'>
             <div className='relative w-full'>
               <input
                 className='px-4 py-2 w-full bg-neutral-100'

@@ -6,7 +6,7 @@ export const storesApi = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL as string,
   }),
-  tagTypes: ['reviews'],
+  tagTypes: ['reviews', 'wishlist'],
   endpoints: (builder) => {
     return {
       getStores: builder.query({
@@ -69,6 +69,28 @@ export const storesApi = createApi({
         }),
         invalidatesTags: ['reviews'],
       }),
+      getWishlist: builder.query({
+        query: () => ({
+          url: `/api${getLangRoute()}/wishlist`,
+          method: 'GET',
+        }),
+        providesTags: ['wishlist'],
+      }),
+      postWishlist: builder.mutation({
+        query: (body) => ({
+          url: `/api${getLangRoute()}/wishlist`,
+          method: 'POST',
+          data: body,
+        }),
+        invalidatesTags: ['wishlist'],
+      }),
+      deleteWishlist: builder.mutation({
+        query: (id) => ({
+          url: `/api${getLangRoute()}/wishlist/${id}`,
+          method: 'DELETE',
+        }),
+        invalidatesTags: ['wishlist'],
+      }),
     };
   },
 });
@@ -82,4 +104,7 @@ export const {
   useGetFilterReviewQuery,
   usePostReviewImageMutation,
   usePostReviewUserMutation,
+  useGetWishlistQuery,
+  usePostWishlistMutation,
+  useDeleteWishlistMutation,
 } = storesApi;

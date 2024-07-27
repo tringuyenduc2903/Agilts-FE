@@ -15,7 +15,7 @@ import errorImage from '@/assets/not-found-img.avif';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCart, userCart } from '@/lib/redux/slice/userSlice';
 import { PopupContext } from '@/contexts/PopupProvider';
-import useResponsive from '@/lib/hooks/useResponsive';
+import { useResponsive } from '@/lib/hooks/useResponsive';
 type PropsProductContext = {
   product: Product;
 };
@@ -107,7 +107,7 @@ SingleProduct.Image = function ProductImage({
 }: {
   customClass?: string;
 }) {
-  const index = useResponsive();
+  const state = useResponsive();
   const { product } = useProductContext();
   const searchParams = useSearchParams();
   const selectedOption = useMemo(() => {
@@ -161,7 +161,7 @@ SingleProduct.Image = function ProductImage({
     <div
       className={`${customClass ? customClass : 'w-full h-[350px]'} relative`}
     >
-      <div className={`w-full h-[${index === 0 ? 250 : 150}px]`}>
+      <div className={`w-full h-[${state.isDesktop ? 250 : 150}px]`}>
         <Image
           className='object-cover w-auto h-auto aspect-auto'
           src={
@@ -175,8 +175,8 @@ SingleProduct.Image = function ProductImage({
           fetchPriority='low'
           loading='lazy'
           onError={() => setFallbackImg(true)}
-          width={index === 0 ? 280 : 180}
-          height={index === 0 ? 250 : 150}
+          width={state.isDesktop ? 280 : 180}
+          height={state.isDesktop ? 250 : 150}
         />
       </div>
       <div

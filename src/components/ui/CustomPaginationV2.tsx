@@ -53,7 +53,9 @@ const CustomPaginationV2: React.FC<Props> = ({ totalPage, scroll = false }) => {
       return (
         <button
           key={key}
-          className={`w-max h-full px-2 py-1 rounded-sm border border-neutral-300 text-neutral-800 text-sm md:text-base ${
+          className={`${
+            totalPage > 1 ? 'block' : 'hidden'
+          } w-max h-full px-2 py-1 rounded-sm border border-neutral-300 text-neutral-800 text-sm md:text-base ${
             curPage >= totalPage && 'cursor-not-allowed'
           }`}
           onClick={() => handleNext(value)}
@@ -68,7 +70,9 @@ const CustomPaginationV2: React.FC<Props> = ({ totalPage, scroll = false }) => {
       return (
         <button
           key={key}
-          className={`w-max h-full px-2 py-1 rounded-sm border border-neutral-300 text-neutral-800 text-sm md:text-base ${
+          className={`${
+            curPage !== 1 ? 'block' : 'hidden'
+          } w-max h-full px-2 py-1 rounded-sm border border-neutral-300 text-neutral-800 text-sm md:text-base ${
             curPage <= 1 && 'cursor-not-allowed'
           }`}
           onClick={() => handlePrevious(value)}

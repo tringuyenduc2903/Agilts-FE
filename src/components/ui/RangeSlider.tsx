@@ -1,5 +1,4 @@
 import { formatPrice } from '@/lib/utils/format';
-import { useTranslations } from 'next-intl';
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 
 type Props = {
@@ -9,7 +8,6 @@ type Props = {
 };
 
 const RangeSlider: React.FC<Props> = ({ min, max, onChange }) => {
-  const t = useTranslations('common');
   const [minVal, setMinVal] = useState<number>(min);
   const [maxVal, setMaxVal] = useState<number>(max);
   const minValRef = useRef<number>(min);

@@ -1,24 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-function useResponsive() {
-  const [index, setIndex] = useState(0);
+export const useResponsive = () => {
+  const [state, setState] = useState({
+    isMobile: false,
+    isDesktop: false,
+  });
+
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 1280) {
-        setIndex(1);
-      } else if (window.innerWidth <= 768) {
-        setIndex(2);
-      } else {
-        setIndex(0);
-      }
+    const onResizeHandler = () => {
+      const isMobile = window.innerWidth < 1280;
+      const isDesktop = window.innerWidth >= 1280;
+
+      setState({ isMobile, isDesktop });
     };
-    handleResize();
-    window.addEventListener('resize', handleResize);
+    onResizeHandler();
+
+    window.addEventListener('resize', onResizeHandler);
+
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', onResizeHandler);
     };
   }, []);
-  return index;
-}
 
-export default useResponsive;
+  return state;
+};

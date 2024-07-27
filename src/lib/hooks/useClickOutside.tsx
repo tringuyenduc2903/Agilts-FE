@@ -15,16 +15,16 @@ const useClickOutside = (cb: Props) => {
         cb();
       }
     },
-    [cb]
+    [cb, sectionRef.current]
   );
 
   const handleKeyPress = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' && sectionRef.current) {
         cb();
       }
     },
-    [cb]
+    [cb, sectionRef.current]
   );
 
   useEffect(() => {

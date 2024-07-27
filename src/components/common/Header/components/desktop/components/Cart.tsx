@@ -1,7 +1,7 @@
 'use client';
+import CustomImage from '@/components/ui/CustomImage';
 import { removeCart, userCart } from '@/lib/redux/slice/userSlice';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { FaXmark } from 'react-icons/fa6';
@@ -17,13 +17,7 @@ function Cart() {
   return cart ? (
     <div className='w-full h-full py-12 flex flex-col justify-between gap-8'>
       <div className='px-4 w-full flex gap-4'>
-        <Image
-          className='w-ful h-full object-cover border border-neutral-300'
-          src={cart.images[0].image}
-          alt='product-image'
-          width={120}
-          height={120}
-        />
+        <CustomImage image={cart.images[0]} width={120} height={120} />
         <div className='w-full flex flex-col justify-between'>
           <div className='flex justify-between'>
             <p

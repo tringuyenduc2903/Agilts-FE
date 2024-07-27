@@ -62,7 +62,8 @@
     "view_cart": "Xem giỏ hàng",
     "wishlist": "Danh sách ước",
     "view_wishlist": "Xem danh sách",
-    "no_product_in_wishlist": "Không có sản phẩm nào trong danh sách."
+    "no_product_in_wishlist": "Không có sản phẩm nào trong danh sách.",
+    "color": "Màu sắc"
   },
   "common": {
     "view-more": "Xem thêm",

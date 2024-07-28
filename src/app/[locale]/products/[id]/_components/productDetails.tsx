@@ -150,7 +150,7 @@ function ProductDetails({ product }: Props) {
         </div>
         <div className='w-full grid grid-cols-3 gap-6'>
           <CustomImage
-            images={product.images.slice(1, 4)}
+            images={product.images.slice(0, 3)}
             isShowDetails={true}
             width={250}
             height={180}

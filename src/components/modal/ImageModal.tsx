@@ -7,7 +7,6 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import Image from 'next/image';
 import {
   FaPlus,
   FaMinus,
@@ -26,19 +25,19 @@ function ImageModal() {
     setVisibleModal('visibleImageModal')
   );
   const [curImage, setCurImage] = useState(
-    () => state?.visibleImageModal?.curImage || 1
+    () => state?.visibleImageModal?.curImage || 0
   );
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const handleNext = useCallback(() => {
     setCurImage((prevImage) => {
-      if (prevImage >= state?.visibleImageModal?.totalImages) return 1;
+      if (prevImage >= state?.visibleImageModal?.totalImages - 1) return 0;
       return prevImage + 1;
     });
   }, [state?.visibleImageModal?.totalImages]);
   const handlePrev = useCallback(() => {
     setCurImage((prevImage) => {
-      if (prevImage <= 1) return state?.visibleImageModal?.totalImages;
+      if (prevImage <= 1) return state?.visibleImageModal?.totalImages - 1;
       return prevImage - 1;
     });
   }, [state?.visibleImageModal?.totalImages]);
@@ -83,9 +82,7 @@ function ImageModal() {
       image?.removeEventListener('mouseup', handleMouseUp);
     };
   }, [imgRef, scale]);
-  console.log(
-    typeof state?.visibleImageModal?.images[curImage - 1] === 'string'
-  );
+  console.log(typeof state?.visibleImageModal?.images[curImage] === 'string');
   return (
     <section
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
@@ -94,7 +91,7 @@ function ImageModal() {
     >
       <div
         ref={sectionRef as LegacyRef<HTMLDivElement>}
-        className='bg-white max-h-[80vh] overflow-y-auto flex flex-col gap-4'
+        className='bg-white w-4/5 h-1/2 md:h-4/5 overflow-y-auto flex flex-col gap-4'
       >
         <div className='w-full flex justify-end px-4 pt-4'>
           <button
@@ -105,7 +102,7 @@ function ImageModal() {
             <FaXmark className='text-2xl text-neutral-600' />
           </button>
         </div>
-        <div className='relative w-full h-full border border-neutral-300 overflow-hidden'>
+        <div className='relative flex-1 w-full h-full border border-neutral-300 overflow-hidden'>
           <div className='absolute top-0 left-0 z-50 flex flex-col bg-red-500'>
             <button
               className='p-4 text-white border-b border-neutral-300'
@@ -123,27 +120,24 @@ function ImageModal() {
             </button>
           </div>
           {state.visibleImageModal && (
-            <Image
+            <img
               ref={imgRef}
-              className='object-cover'
+              className='w-full h-full object-contain'
               style={{
                 transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
               }}
-              width={600}
-              height={600}
               src={
                 fallbackImg
                   ? errorImage
-                  : typeof state?.visibleImageModal?.images[curImage - 1] ===
+                  : typeof state?.visibleImageModal?.images[curImage] ===
                     'string'
-                  ? state?.visibleImageModal?.images[curImage - 1]
-                  : state?.visibleImageModal?.images[curImage - 1].image
+                  ? state?.visibleImageModal?.images[curImage]
+                  : state?.visibleImageModal?.images[curImage].image
               }
               alt={
-                typeof state?.visibleImageModal?.images[curImage - 1] ===
-                'string'
-                  ? state?.visibleImageModal?.images[curImage - 1]
-                  : state?.visibleImageModal?.images[curImage - 1].alt
+                typeof state?.visibleImageModal?.images[curImage] === 'string'
+                  ? state?.visibleImageModal?.images[curImage]
+                  : state?.visibleImageModal?.images[curImage].alt
               }
               onError={() => setFallbackImg(true)}
               draggable={false}
@@ -161,7 +155,7 @@ function ImageModal() {
           </div>
           <div className='w-full flex justify-center items-center'>
             <p className='tracking-[4px] text-neutral-600 text-sm md:text-base'>
-              {curImage}/{state?.visibleImageModal?.totalImages}
+              {curImage + 1}/{state?.visibleImageModal?.totalImages}
             </p>
           </div>
         </div>

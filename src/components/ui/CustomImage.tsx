@@ -33,7 +33,7 @@ function CustomImage({
   if (image) {
     return (
       <Image
-        className={`w-[${width}px] h-[${height}px] object-cover aspect-auto cursor-pointer ${className}`}
+        className={`w-full h-full object-cover cursor-pointer ${className}`}
         width={width}
         height={height}
         src={
@@ -72,7 +72,7 @@ function CustomImage({
               key={index}
               className={`w-[${width ? `${width}px` : '100%'}] h-[${
                 height ? `${height}px` : '100%'
-              }] object-cover`}
+              }] object-cover cursor-pointer`}
               src={
                 isError
                   ? isErrorImageLarger

@@ -60,11 +60,11 @@ function CartPage() {
                   <td className='px-2 py-4 text-center'>{cart?.version}</td>
                   <td className='px-2 py-4 text-center'>{cart?.color}</td>
                   <td className='px-2 py-4 text-center'>
-                    {cart?.price_preview}
+                    {cart?.price.preview}
                   </td>
                   <td className='px-2 py-4 text-center'>{cart?.quantity}</td>
                   <td className='px-2 py-4 text-center'>
-                    {cart?.price_preview}
+                    {cart?.price.preview}
                   </td>
                   <td className='px-2 py-4'>
                     <div className='w-full flex justify-center gap-4'>

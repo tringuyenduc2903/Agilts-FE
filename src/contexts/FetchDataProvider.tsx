@@ -15,8 +15,9 @@ import {
   useGetUserQuery,
 } from '@/lib/redux/query/userQuery';
 import { setIsLoggedIn, setUser, userInfo } from '@/lib/redux/slice/userSlice';
-import { Address, Document, User } from '@/types/types';
+import { Address, Cart, Document, User, Wishlist } from '@/types/types';
 import { useGetCSRFCookieMutation } from '@/lib/redux/query/csrfQuery';
+import { useGetWishlistQuery } from '@/lib/redux/query/storesQuery';
 type FetchData = {
   user: User | null;
   isLoadingUser: boolean;
@@ -25,6 +26,9 @@ type FetchData = {
   refetchUser: () => void;
   handleGetCSRFCookie: () => Promise<void>;
   isLoadingCSRF: boolean;
+  cart: Cart | null;
+  wishlist: Wishlist[] | [];
+  isLoadingWishlist: boolean;
   addresses: Address[];
   allDocuments: Document[];
   isLoadingDocuments: boolean;
@@ -40,6 +44,8 @@ export const FetchDataProvider = ({
 }) => {
   const dispatch = useDispatch();
   const user = useSelector(userInfo);
+  const [cart, setCart] = useState<Cart | null>(null);
+  const [wishlist, setWishlist] = useState<Wishlist[] | []>([]);
   const [defaultAddress, setDefaultAddress] = useState<Address | null>(null);
   const [addresses, setAddresses] = useState<Address[] | []>([]);
   const [allDocuments, setAllDocuments] = useState<Document[] | []>([]);
@@ -52,6 +58,11 @@ export const FetchDataProvider = ({
     isError: isErrorUser,
     refetch: refetchUser,
   } = useGetUserQuery(null);
+  const {
+    data: wishListData,
+    isSuccess: isSuccessWishlist,
+    isLoading: isLoadingWishlist,
+  } = useGetWishlistQuery(null, { skip: !userData });
   const { data: addressData, isSuccess: isSuccessAddress } = useGetAddressQuery(
     null,
     { skip: !userData }
@@ -72,6 +83,11 @@ export const FetchDataProvider = ({
       dispatch(setUser(null));
     }
   }, [dispatch, isSuccessUser, isErrorUser, userData]);
+  useEffect(() => {
+    if (isSuccessWishlist && wishListData) {
+      setWishlist([...wishListData]);
+    }
+  }, [isSuccessWishlist, wishListData]);
   useEffect(() => {
     if (isSuccessAddress && addressData) {
       setAddresses(
@@ -111,6 +127,9 @@ export const FetchDataProvider = ({
     refetchUser,
     handleGetCSRFCookie,
     isLoadingCSRF,
+    cart,
+    wishlist,
+    isLoadingWishlist,
     addresses,
     setAddresses,
     defaultAddress,

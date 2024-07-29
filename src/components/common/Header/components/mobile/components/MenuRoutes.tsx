@@ -16,6 +16,7 @@ import {
   IoPersonCircleOutline,
   IoSettingsOutline,
   IoHelpCircleOutline,
+  IoHeartOutline,
 } from 'react-icons/io5';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { useDispatch } from 'react-redux';
@@ -122,6 +123,14 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                 <p className='text-sm'>{user?.email}</p>
               </div>
               <div className='my-4 flex flex-col gap-4 items-start'>
+                <button
+                  className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
+                  disabled={isLoadingLogout || isLoadingCSRF}
+                  onClick={() => handleRedirect('wishlist')}
+                >
+                  <IoHeartOutline className='text-2xl' />
+                  <p>{t('wishlist')}</p>
+                </button>
                 <button
                   className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
                   disabled={isLoadingLogout || isLoadingCSRF}

@@ -12,21 +12,22 @@ import { scrollToElement } from '@/lib/utils/scrollElement';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { Product, ProductOption } from '@/types/types';
 import { useParams, useRouter } from 'next/navigation';
-import { useDispatch, useSelector } from 'react-redux';
-import { setCart, userCart } from '@/lib/redux/slice/userSlice';
+import { useDispatch } from 'react-redux';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { TbHeart, TbHeartFilled } from 'react-icons/tb';
 
 import CustomImage from '@/components/ui/CustomImage';
 import { FaMinus } from 'react-icons/fa6';
+import { usePostWishlistMutation } from '@/lib/redux/query/storesQuery';
+import { FetchDataContext } from '@/contexts/FetchDataProvider';
 type Props = {
   product: Product;
 };
 function ProductDetails({ product }: Props) {
   const { locale } = useParams();
+  const { user, wishlist } = useContext(FetchDataContext);
   const { setVisibleModal } = useContext(ModalContext);
   const router = useRouter();
-  const cart = useSelector(userCart);
   const t = useTranslations('common');
   const dispatch = useDispatch();
   const { setVisiblePopup } = useContext(PopupContext);
@@ -37,6 +38,20 @@ function ProductDetails({ product }: Props) {
   );
   const [selectedOptionDetails, setSelectedOptionDetails] =
     useState<ProductOption | null>(null);
+  const isWishlist = useMemo(() => {
+    return wishlist.findIndex(
+      (w) => w.product_preview.option_id === selectedOptionDetails?.id
+    );
+  }, [wishlist, selectedOptionDetails]);
+  const [
+    postWishList,
+    {
+      isSuccess: isSuccessPostWishlist,
+      isLoading: isLoadingPostWishlist,
+      isError: isErrorPostWishlist,
+      error: errorPostWishlist,
+    },
+  ] = usePostWishlistMutation();
   const versions = useMemo(() => {
     const newVersions = new Map<string, ProductOption[]>();
     product?.options?.forEach((item) => {
@@ -68,35 +83,36 @@ function ProductDetails({ product }: Props) {
     [versions]
   );
   const handleAddToCart = useCallback(() => {
-    if (cart && selectedOptionDetails) {
-      setVisiblePopup({
-        visibleToastPopup: {
-          type: 'warning',
-          message: 'Bạn đã có sản phẩm khác trong giỏ hàng!',
-        },
-      });
-    } else {
-      dispatch(
-        setCart({
-          item: selectedOptionDetails,
-          name: product.name,
-          quantity: 1,
-        })
-      );
-      setVisiblePopup({
-        visibleToastPopup: {
-          type: 'success',
-          message: 'Thêm sản phẩm thành công!',
-        },
-      });
-    }
-  }, [dispatch, setVisiblePopup, cart, selectedOptionDetails]);
+    // if (cart && selectedOptionDetails) {
+    //   setVisiblePopup({
+    //     visibleToastPopup: {
+    //       type: 'warning',
+    //       message: 'Bạn đã có sản phẩm khác trong giỏ hàng!',
+    //     },
+    //   });
+    // } else {
+    //   dispatch(
+    //     setCart({
+    //       item: selectedOptionDetails,
+    //       name: product.name,
+    //       quantity: 1,
+    //     })
+    //   );
+    //   setVisiblePopup({
+    //     visibleToastPopup: {
+    //       type: 'success',
+    //       message: 'Thêm sản phẩm thành công!',
+    //     },
+    //   });
+    // }
+  }, [dispatch, setVisiblePopup, selectedOptionDetails]);
   const renderedOptions = useMemo(() => {
     return versions.map((v: any, index: number) => {
       return (
         <button
           key={index}
           onClick={() => handleSetCurOption(v[0])}
+          disabled={isLoadingPostWishlist}
           className={`border ${
             curOption === v[0]
               ? 'border-red-500 text-red-500'
@@ -121,6 +137,7 @@ function ProductDetails({ product }: Props) {
                   : 'border-neutral-300'
               } px-4 py-1 font-bold`}
               onClick={() => setSelectedOptionDetails(s)}
+              disabled={isLoadingPostWishlist}
             >
               {s.color}
             </button>
@@ -129,6 +146,31 @@ function ProductDetails({ product }: Props) {
       })
     );
   }, [selectedOption, selectedOptionDetails]);
+  useEffect(() => {
+    if (isSuccessPostWishlist) {
+      setVisiblePopup({
+        visibleToastPopup: {
+          type: 'success',
+          message: t('mess_success_wishlist'),
+        },
+      });
+    }
+    if (isErrorPostWishlist && errorPostWishlist) {
+      const error = errorPostWishlist as any;
+      setVisiblePopup({
+        visibleToastPopup: {
+          type: 'error',
+          message: error?.data?.message,
+        },
+      });
+    }
+  }, [
+    isSuccessPostWishlist,
+    isErrorPostWishlist,
+    errorPostWishlist,
+    setVisiblePopup,
+    t,
+  ]);
   return (
     <section className='container md:m-auto px-6 md:px-0 grid grid-cols-1 lg:grid-cols-2 gap-16 py-8 md:py-16 overflow-hidden'>
       <div className='col-span-1 flex flex-col items-start gap-6'>
@@ -167,9 +209,21 @@ function ProductDetails({ product }: Props) {
                   {selectedOptionDetails.status}
                 </span>
               </p>
-              <button aria-label='wishlist-btn'>
-                <TbHeart className='text-4xl' />
-              </button>
+              {user && (
+                <button
+                  aria-label='wishlist-btn'
+                  disabled={isLoadingPostWishlist}
+                  onClick={async () =>
+                    await postWishList({ version: selectedOptionDetails.id })
+                  }
+                >
+                  {isWishlist !== -1 ? (
+                    <TbHeartFilled className='text-4xl text-red-500' />
+                  ) : (
+                    <TbHeart className='text-4xl' />
+                  )}
+                </button>
+              )}
             </div>
           )}
           <h1
@@ -180,10 +234,10 @@ function ProductDetails({ product }: Props) {
           </h1>
           <div className='flex flex-col sm:flex-row sm:items-center sm:gap-4'>
             <p
-              title={selectedOptionDetails?.price_preview}
+              title={selectedOptionDetails?.price.preview}
               className='max-w-[280px] truncate font-bold text-lg md:text-xl'
             >
-              {selectedOptionDetails?.price_preview}
+              {selectedOptionDetails?.price.preview}
             </p>
           </div>
         </div>
@@ -195,6 +249,7 @@ function ProductDetails({ product }: Props) {
             type='button'
             className='text-[10px] sm:text-[12px] md:text-sm font-medium text-neutral-500 hover:text-neutral-800 transition-colors uppercase'
             onClick={() => scrollToElement('reviews')}
+            disabled={isLoadingPostWishlist}
           >
             (
             {Number(product?.reviews_count) > 1
@@ -235,6 +290,7 @@ function ProductDetails({ product }: Props) {
                       <li className='flex items-center gap-2' key={c.id}>
                         <button
                           className='text-neutral-500'
+                          disabled={isLoadingPostWishlist}
                           onClick={() =>
                             router.push(
                               `/${locale}/products?page=1&category=${c.id}`,
@@ -259,7 +315,7 @@ function ProductDetails({ product }: Props) {
               <p className='flex gap-2'>
                 <span className='text-red-500'>{t('type')}:</span>
                 <span className='text-neutral-500'>
-                  {selectedOptionDetails.type}
+                  {/* {selectedOptionDetails.type} */}
                 </span>
               </p>
               <p className='flex gap-2'>
@@ -301,6 +357,7 @@ function ProductDetails({ product }: Props) {
             onMouseEnter={() => setIsHoverAddToCart(true)}
             onMouseLeave={() => setIsHoverAddToCart(false)}
             onClick={handleAddToCart}
+            disabled={isLoadingPostWishlist}
           >
             <span
               className={`w-[142px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${
@@ -315,16 +372,19 @@ function ProductDetails({ product }: Props) {
             </span>
           </button>
         </div>
-        <div>
-          <button
-            className='border border-neutral-300 bg-neutral-800 text-white px-4 py-3'
-            onClick={() =>
-              setVisibleModal({ visibleReviewsModal: selectedOptionDetails })
-            }
-          >
-            Thêm đánh giá sản phẩm (demo)
-          </button>
-        </div>
+        {selectedOptionDetails && (
+          <div>
+            <button
+              className='border border-neutral-300 bg-neutral-800 text-white px-4 py-3'
+              disabled={isLoadingPostWishlist}
+              onClick={() =>
+                setVisibleModal({ visibleReviewsModal: selectedOptionDetails })
+              }
+            >
+              Thêm đánh giá sản phẩm (demo)
+            </button>
+          </div>
+        )}
         {selectedOptionDetails &&
           selectedOptionDetails.specifications.length > 0 && (
             <div className='flex flex-col gap-4'>

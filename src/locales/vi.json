@@ -32,7 +32,8 @@
     "account_title": "Tài khoản",
     "account_description": "Quản lý đơn mua và địa chỉ",
     "search": "Tìm kiếm",
-    "cart_title": "Giỏ hàng"
+    "cart_title": "Giỏ hàng",
+    "wishlist_title": "Danh sách ước"
   },
   "header": {
     "home": "Trang chủ",
@@ -313,6 +314,9 @@
     "excellent": "Xuất xắc",
     "product_reviews": "Đánh giá sản phẩm",
     "mess_reviews": "Hãy chia sẻ những điều bạn thích về sản phẩm này với người khác.",
-    "mess_success_review": "Đánh giá sản phẩm thành công!"
+    "mess_success_review": "Đánh giá sản phẩm thành công!",
+    "mess_success_wishlist": "Thêm sản phẩm vào danh sách ước thành công!",
+    "wishlist": "Danh sách ước",
+    "empty_wishlist": "Danh sách ước của bạn hiện đang trống."
   }
 }

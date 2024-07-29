@@ -1,19 +1,18 @@
 'use client';
 import Image from 'next/image';
-import React from 'react';
+import React, { useContext } from 'react';
 import bgImg from '@/assets/port-title-area.jpg';
 import { useTranslations } from 'next-intl';
-import { useDispatch, useSelector } from 'react-redux';
-import { removeCart, userCart } from '@/lib/redux/slice/userSlice';
 import { FaRegPenToSquare, FaRegTrashCan } from 'react-icons/fa6';
 import { useParams, useRouter } from 'next/navigation';
+import withAuth from '@/protected-page/withAuth';
+import { FetchDataContext } from '@/contexts/FetchDataProvider';
 
 function CartPage() {
   const t = useTranslations('common');
   const { locale } = useParams();
   const router = useRouter();
-  const cart = useSelector(userCart);
-  const dispatch = useDispatch();
+  const { cart } = useContext(FetchDataContext);
   return (
     <main className='w-full py-[72px] flex flex-col gap-16'>
       <section className='absolute h-[280px] w-full -z-10 hidden lg:block'>
@@ -78,7 +77,7 @@ function CartPage() {
                       <button
                         className='hover:text-red-500 transition-colors'
                         aria-label='delete-cart'
-                        onClick={() => dispatch(removeCart(null))}
+                        // onClick={() => dispatch(removeCart(null))}
                       >
                         <FaRegTrashCan className='text-xl' />
                       </button>
@@ -108,4 +107,4 @@ function CartPage() {
   );
 }
 
-export default CartPage;
+export default withAuth(CartPage);

@@ -13,9 +13,9 @@ import React, {
 import { IoCartOutline } from 'react-icons/io5';
 import errorImage from '@/assets/not-found-img.avif';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCart, userCart } from '@/lib/redux/slice/userSlice';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { useResponsive } from '@/lib/hooks/useResponsive';
+import { FetchDataContext } from '@/contexts/FetchDataProvider';
 type PropsProductContext = {
   product: Product;
 };
@@ -31,6 +31,7 @@ function useProductContext() {
 type PropsSingleProduct = {
   children: React.ReactNode;
   product: Product;
+  selectedOption: ProductOption;
   articleClass?: string;
 };
 export function SingleProduct({
@@ -88,15 +89,34 @@ SingleProduct.Title = function ProductTitle() {
 
 SingleProduct.Price = function ProductPrice() {
   const { product } = useProductContext();
+  const searchParams = useSearchParams();
   const t = useTranslations('common');
+  const selectedOption = useMemo(() => {
+    return product.options.find((o) => {
+      return (
+        o.color === searchParams.get('color') ||
+        searchParams.get('version')?.includes(o.version) ||
+        (o.color === searchParams.get('color') &&
+          searchParams.get('version')?.includes(o.version))
+      );
+    });
+  }, [searchParams]);
   return (
     <div className='w-full flex items-center gap-2'>
       <p
-        title={product?.options_min_price.preview}
+        title={
+          selectedOption
+            ? selectedOption.price.preview
+            : product?.options_min_price.preview
+        }
         className={`w-full truncate overflow-hidden flex items-center gap-2`}
       >
         <span> {t('from')}</span>
-        <span>{product?.options_min_price.preview}</span>
+        <span>
+          {selectedOption
+            ? selectedOption.price.preview
+            : product?.options_min_price.preview}
+        </span>
       </p>
     </div>
   );
@@ -122,7 +142,7 @@ SingleProduct.Image = function ProductImage({
   }, [searchParams]);
   const t = useTranslations('common');
   const [fallbackImg, setFallbackImg] = useState(false);
-  const cart = useSelector(userCart);
+  const { cart } = useContext(FetchDataContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const dispatch = useDispatch();
   const handleAddToCart = useCallback(
@@ -140,19 +160,6 @@ SingleProduct.Image = function ProductImage({
           },
         });
       } else {
-        dispatch(
-          setCart({
-            item: product,
-            name: productName,
-            quantity: 1,
-          })
-        );
-        setVisiblePopup({
-          visibleToastPopup: {
-            type: 'success',
-            message: 'Thêm sản phẩm thành công!',
-          },
-        });
       }
     },
     [dispatch, setVisiblePopup, cart]

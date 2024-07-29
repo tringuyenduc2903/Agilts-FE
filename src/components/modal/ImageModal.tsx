@@ -82,7 +82,6 @@ function ImageModal() {
       image?.removeEventListener('mouseup', handleMouseUp);
     };
   }, [imgRef, scale]);
-  console.log(typeof state?.visibleImageModal?.images[curImage] === 'string');
   return (
     <section
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
@@ -129,16 +128,9 @@ function ImageModal() {
               src={
                 fallbackImg
                   ? errorImage
-                  : typeof state?.visibleImageModal?.images[curImage] ===
-                    'string'
-                  ? state?.visibleImageModal?.images[curImage]
                   : state?.visibleImageModal?.images[curImage].image
               }
-              alt={
-                typeof state?.visibleImageModal?.images[curImage] === 'string'
-                  ? state?.visibleImageModal?.images[curImage]
-                  : state?.visibleImageModal?.images[curImage].alt
-              }
+              alt={state?.visibleImageModal?.images[curImage].alt}
               onError={() => setFallbackImg(true)}
               draggable={false}
             />

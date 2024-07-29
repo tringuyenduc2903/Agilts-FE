@@ -4,56 +4,52 @@ import { axiosBaseQuery } from '../config/axios';
 export const storesApi = createApi({
   reducerPath: 'storesApi',
   baseQuery: axiosBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_BACKEND_URL as string,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api${getLangRoute()}`,
   }),
   tagTypes: ['reviews', 'wishlist'],
   endpoints: (builder) => {
     return {
       getStores: builder.query({
         query: (search) => ({
-          url: `/api/branch${search ? `?${search}` : ''}`,
+          url: `/branch${search ? `?${search}` : ''}`,
           method: 'GET',
         }),
       }),
       getFilter: builder.query({
         query: () => ({
-          url: `/api${getLangRoute()}/filter-product`,
+          url: `/filter-product`,
           method: 'GET',
         }),
       }),
       getProducts: builder.query({
         query: (search) => ({
-          url: `/api${getLangRoute()}/product${
-            search ? `?${search}&perPage=12` : '?perPage=12'
-          }`,
+          url: `/product${search ? `?${search}&perPage=12` : '?perPage=12'}`,
           method: 'GET',
         }),
       }),
       getProductDetails: builder.query({
         query: (id) => ({
-          url: `/api${getLangRoute()}/product/${id}`,
+          url: `/product/${id}`,
           method: 'GET',
         }),
       }),
       getProductReview: builder.query({
         query: ({ id, search }) => ({
-          url: search
-            ? `/api${getLangRoute()}/review/${id}?${search}`
-            : `/api${getLangRoute()}/review/${id}`,
+          url: search ? `/review/${id}?${search}` : `/review/${id}`,
           method: 'GET',
         }),
         providesTags: ['reviews'],
       }),
       getFilterReview: builder.query({
         query: (id) => ({
-          url: `/api${getLangRoute()}/filter-review/${id}`,
+          url: `/filter-review/${id}`,
           method: 'GET',
         }),
         providesTags: ['reviews'],
       }),
       postReviewImage: builder.mutation({
         query: (body) => ({
-          url: `/api${getLangRoute()}/review-image`,
+          url: `/review-image`,
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -63,7 +59,7 @@ export const storesApi = createApi({
       }),
       postReviewUser: builder.mutation({
         query: (body) => ({
-          url: `/api${getLangRoute()}/review-user`,
+          url: `/review-user`,
           method: 'POST',
           data: body,
         }),
@@ -71,14 +67,14 @@ export const storesApi = createApi({
       }),
       getWishlist: builder.query({
         query: () => ({
-          url: `/api${getLangRoute()}/wishlist`,
+          url: `/wishlist`,
           method: 'GET',
         }),
         providesTags: ['wishlist'],
       }),
       postWishlist: builder.mutation({
         query: (body) => ({
-          url: `/api${getLangRoute()}/wishlist`,
+          url: `/wishlist`,
           method: 'POST',
           data: body,
         }),
@@ -86,7 +82,7 @@ export const storesApi = createApi({
       }),
       deleteWishlist: builder.mutation({
         query: (id) => ({
-          url: `/api${getLangRoute()}/wishlist/${id}`,
+          url: `/wishlist/${id}`,
           method: 'DELETE',
         }),
         invalidatesTags: ['wishlist'],

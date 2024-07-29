@@ -16,16 +16,13 @@ function ProductsLayout() {
     isSuccess: isSuccessFilter,
     isLoading: isLoadingFilter,
     isFetching: isFetchingFilter,
-    isError: isErrorFilter,
   } = useGetFilterQuery(null);
   const {
     data: productsData,
     isSuccess: isSuccessProducts,
     isLoading: isLoadingProducts,
     isFetching: isFetchingProducts,
-    isError: isErrorProducts,
   } = useGetProductsQuery(searchParams.toString());
-  if (isErrorFilter || isErrorProducts) throw new Error();
   return (
     <main className='w-full min-h-screen pt-[72px] flex flex-col'>
       <Suspense>

@@ -4,42 +4,42 @@ import { getLangRoute } from '../config/getLangRoute';
 export const userApi = createApi({
   reducerPath: 'userApi',
   baseQuery: axiosBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL as string}`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api${getLangRoute()}`,
   }),
   tagTypes: ['users', 'recover_codes', 'address', 'documents', 'social'],
   endpoints: (builder) => {
     return {
       getUser: builder.query({
         query: () => ({
-          url: `/api/user`,
+          url: `/user`,
           method: 'GET',
         }),
         providesTags: ['users'],
       }),
       login: builder.mutation({
         query: (body) => ({
-          url: `${getLangRoute()}/login`,
+          url: `/login`,
           method: 'POST',
           data: body,
         }),
       }),
       register: builder.mutation({
         query: (body) => ({
-          url: `${getLangRoute()}/register`,
+          url: `/register`,
           method: 'POST',
           data: body,
         }),
       }),
       logout: builder.mutation({
         query: () => ({
-          url: `${getLangRoute()}/logout`,
+          url: `/logout`,
           method: 'POST',
         }),
         invalidatesTags: ['users'],
       }),
       updateUser: builder.mutation({
         query: (body) => ({
-          url: `${getLangRoute()}/user/profile-information`,
+          url: `/user/profile-information`,
           method: 'PUT',
           data: body,
         }),
@@ -47,7 +47,7 @@ export const userApi = createApi({
       }),
       confirmPassword: builder.mutation({
         query: (password) => ({
-          url: `${getLangRoute()}/user/confirm-password`,
+          url: `/user/confirm-password`,
           method: 'POST',
           data: {
             password: password,
@@ -56,12 +56,12 @@ export const userApi = createApi({
       }),
       confirmPasswordStatus: builder.query({
         query: () => ({
-          url: `${getLangRoute()}/user/confirmed-password-status`,
+          url: `/user/confirmed-password-status`,
         }),
       }),
       forgotPassword: builder.mutation({
         query: (email) => ({
-          url: `${getLangRoute()}/forgot-password`,
+          url: `/forgot-password`,
           method: 'POST',
           data: {
             email: email,
@@ -70,21 +70,21 @@ export const userApi = createApi({
       }),
       resetPassword: builder.mutation({
         query: (body) => ({
-          url: `${getLangRoute()}/reset-password`,
+          url: `/reset-password`,
           method: 'POST',
           data: body,
         }),
       }),
       changePassword: builder.mutation({
         query: (body) => ({
-          url: `${getLangRoute()}/user/password`,
+          url: `/user/password`,
           method: 'PUT',
           data: body,
         }),
       }),
       turnOn2FA: builder.mutation({
         query: () => ({
-          url: `${getLangRoute()}/user/two-factor-authentication`,
+          url: `/user/two-factor-authentication`,
           method: 'POST',
           body: {
             force: true,
@@ -93,17 +93,17 @@ export const userApi = createApi({
       }),
       twoFactorQrCode: builder.query({
         query: () => ({
-          url: `${getLangRoute()}/user/two-factor-qr-code`,
+          url: `/user/two-factor-qr-code`,
         }),
       }),
       twoFactorSecretKey: builder.query({
         query: () => ({
-          url: `${getLangRoute()}/user/two-factor-secret-key`,
+          url: `/user/two-factor-secret-key`,
         }),
       }),
       confirm2FA: builder.mutation({
         query: (code) => ({
-          url: `${getLangRoute()}/user/confirmed-two-factor-authentication`,
+          url: `/user/confirmed-two-factor-authentication`,
           method: 'POST',
           data: {
             code: code,
@@ -113,27 +113,27 @@ export const userApi = createApi({
       }),
       getRecoveryCodes: builder.query({
         query: () => ({
-          url: `${getLangRoute()}/user/two-factor-recovery-codes`,
+          url: `/user/two-factor-recovery-codes`,
         }),
         providesTags: ['recover_codes'],
       }),
       postRecoveryCodes: builder.mutation({
         query: () => ({
-          url: `${getLangRoute()}/user/two-factor-recovery-codes`,
+          url: `/user/two-factor-recovery-codes`,
           method: 'POST',
         }),
         invalidatesTags: ['recover_codes'],
       }),
       verifyTwoFactor: builder.mutation({
         query: (body) => ({
-          url: `${getLangRoute()}/two-factor-challenge`,
+          url: `/two-factor-challenge`,
           method: 'POST',
           data: body,
         }),
       }),
       deleteTwoFactor: builder.mutation({
         query: () => ({
-          url: `${getLangRoute()}/user/two-factor-authentication`,
+          url: `/user/two-factor-authentication`,
           method: 'DELETE',
         }),
       }),
@@ -145,66 +145,44 @@ export const userApi = createApi({
       }),
       getAddress: builder.query({
         query: () => ({
-          url: `/api${getLangRoute()}/address`,
+          url: `/address`,
           method: 'GET',
         }),
         providesTags: ['address'],
       }),
       postAddress: builder.mutation({
         query: (body) => ({
-          url: `/api${getLangRoute()}/address`,
+          url: `/address`,
           method: 'POST',
           data: body,
         }),
-        // async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
-        //   try {
-        //     const { data: createdPost } = await queryFulfilled;
-        //     dispatch(
-        //       userApi.util.upsertQueryData('getAddress', id, createdPost)
-        //     );
-        //     await queryFulfilled;
-        //   } catch {}
-        // },
         invalidatesTags: ['address'],
       }),
       updateAddress: builder.mutation({
         query: ({ body, address_id }) => ({
-          url: `/api${getLangRoute()}/address/${address_id}`,
+          url: `/address/${address_id}`,
           method: 'PUT',
           data: body,
         }),
-        // async onQueryStarted({ id, ...patch }, { dispatch, queryFulfilled }) {
-        //   const { data: updatedPost } = await queryFulfilled;
-        //   const patchResult = dispatch(
-        //     userApi.util.updateQueryData('getAddress', id, (draft) => {
-        //       Object.assign(draft, updatedPost);
-        //     })
-        //   );
-        //   try {
-        //     await queryFulfilled;
-        //   } catch {
-        //     patchResult.undo();
-        //   }
-        // },
         invalidatesTags: ['address'],
       }),
       deleteAddress: builder.mutation({
         query: (id) => ({
-          url: `/api${getLangRoute()}/address/${id}`,
+          url: `/address/${id}`,
           method: 'DELETE',
         }),
         invalidatesTags: ['address'],
       }),
       getDocuments: builder.query({
         query: () => ({
-          url: `/api${getLangRoute()}/identification`,
+          url: `/identification`,
           method: 'GET',
         }),
         providesTags: ['documents'],
       }),
       postDocument: builder.mutation({
         query: (body) => ({
-          url: `/api${getLangRoute()}/identification`,
+          url: `/identification`,
           method: 'POST',
           data: body,
         }),
@@ -212,7 +190,7 @@ export const userApi = createApi({
       }),
       updateDocument: builder.mutation({
         query: ({ body, id }) => ({
-          url: `/api${getLangRoute()}/identification/${id}`,
+          url: `/identification/${id}`,
           method: 'PUT',
           data: body,
         }),
@@ -220,21 +198,21 @@ export const userApi = createApi({
       }),
       deleteDocument: builder.mutation({
         query: (id) => ({
-          url: `/api${getLangRoute()}/identification/${id}`,
+          url: `/identification/${id}`,
           method: 'DELETE',
         }),
         invalidatesTags: ['documents'],
       }),
       getSocials: builder.query({
         query: () => ({
-          url: `/api/social`,
+          url: `/social`,
           method: 'GET',
         }),
         providesTags: ['social'],
       }),
       deleteSocial: builder.mutation({
         query: (id) => ({
-          url: `/api${getLangRoute()}/social/${id}`,
+          url: `/social/${id}`,
           method: 'DELETE',
         }),
         invalidatesTags: ['social'],

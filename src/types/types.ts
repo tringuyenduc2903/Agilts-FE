@@ -87,8 +87,11 @@ export type ProductOption = {
   created_at: string;
   id: number | string;
   images: SingleImage[];
-  price: string;
-  price_preview: string;
+  price: {
+    raw: number;
+    preview: string;
+  };
+  value_added_tax: number;
   product_id: string | number;
   quantity: number;
   sku: string;
@@ -182,7 +185,10 @@ export type Review = {
   };
   updated_at: string;
 };
-
+export type Cart = ProductOption & {
+  name: string;
+  quantity: number;
+};
 export type Wishlist = {
   id: number;
   product_preview: {

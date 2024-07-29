@@ -1,5 +1,5 @@
 'user client';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useContext, useRef, useState } from 'react';
 import { setCookie } from 'cookies-next';
 import Image from 'next/image';
 import logo from '../.././../../../../public/logo.png';
@@ -11,15 +11,14 @@ import gsap from 'gsap';
 import MenuIcon from './components/MenuIcon';
 import { title } from '@/config/config';
 import { subRoutes } from '../../headerData';
-import { useSelector } from 'react-redux';
-import { userCart } from '@/lib/redux/slice/userSlice';
 import Cart from './components/Cart';
+import { FetchDataContext } from '@/contexts/FetchDataProvider';
 function DesktopNavigation() {
   const { locale } = useParams();
+  const { cart } = useContext(FetchDataContext);
   const t = useTranslations('header');
   const headerRef = useRef<HTMLElement | null>(null);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
-  const cart = useSelector(userCart);
   useGSAP(
     () => {
       if (headerRef.current) {
@@ -272,7 +271,7 @@ function DesktopNavigation() {
             </Link>
             <div
               className={`bg-white absolute right-0 w-[420px] rounded-sm h-0 ${
-                cart ? 'group-hover:h-[20vh]' : 'group-hover:h-[6vh]'
+                cart ? 'group-hover:h-[40vh]' : 'group-hover:h-[6vh]'
               } transition-[height] duration-150 overflow-y-auto`}
             >
               {cart ? (

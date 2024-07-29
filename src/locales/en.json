@@ -32,7 +32,8 @@
     "account_title": "Account",
     "account_description": "Manage purchase orders and addresses",
     "search": "Search",
-    "cart_title": "Cart"
+    "cart_title": "Cart",
+    "wishlist_title": "Wishlist"
   },
   "header": {
     "home": "Home",
@@ -60,9 +61,9 @@
     "quantity": "Quantity",
     "order_total": "Order total",
     "view_cart": "View cart",
-    "wishlist": "Wish list",
-    "view_wishlist": "View wish list",
-    "no_product_in_wishlist": "No product in wish list.",
+    "wishlist": "Wishlist",
+    "view_wishlist": "View wishlist",
+    "no_product_in_wishlist": "No product in wishlist.",
     "color": "Color",
     "register": "Register"
   },
@@ -314,6 +315,9 @@
     "excellent": "Excellent",
     "product_reviews": "Product reviews",
     "mess_reviews": "Please share what you like about this product with others.",
-    "mess_success_review": "Successful product reviews!"
+    "mess_success_review": "Successful product reviews!",
+    "mess_success_wishlist": "Add product to wishlist successfully!",
+    "wishlist": "Wishlist",
+    "empty_wishlist": "Your wishlist is currently empty."
   }
 }

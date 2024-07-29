@@ -1,24 +1,28 @@
 'use client';
-import CustomImage from '@/components/ui/CustomImage';
-import { removeCart, userCart } from '@/lib/redux/slice/userSlice';
+import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FaXmark } from 'react-icons/fa6';
-import { useDispatch, useSelector } from 'react-redux';
 
 function Cart() {
-  const cart = useSelector(userCart);
+  const { cart } = useContext(FetchDataContext);
   const t = useTranslations('header');
   const { locale } = useParams();
   const router = useRouter();
   const [isHoverButton, setIsHoverButton] = useState(false);
-  const dispatch = useDispatch();
   return cart ? (
     <div className='w-full h-full py-12 flex flex-col justify-between gap-8'>
-      <div className='px-4 w-full flex gap-4'>
-        <CustomImage image={cart.images[0]} width={120} height={120} />
-        <div className='w-full flex flex-col justify-between'>
+      <div className='px-4 w-full flex gap-8'>
+        <Image
+          className='size-[120px] object-cover'
+          src={cart.images[0].image}
+          alt={cart.images[0].alt}
+          width={120}
+          height={120}
+        />
+        <div className='w-full flex flex-col gap-4'>
           <div className='flex justify-between'>
             <p
               title={cart.name}
@@ -32,7 +36,7 @@ function Cart() {
             >
               <FaXmark
                 className='text-xl'
-                onClick={() => dispatch(removeCart(null))}
+                // onClick={() => dispatch(removeCart(null))}
               />
             </button>
           </div>

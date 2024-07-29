@@ -31,7 +31,6 @@ function useProductContext() {
 type PropsSingleProduct = {
   children: React.ReactNode;
   product: Product;
-  selectedOption: ProductOption;
   articleClass?: string;
 };
 export function SingleProduct({

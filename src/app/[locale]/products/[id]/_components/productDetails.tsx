@@ -315,7 +315,7 @@ function ProductDetails({ product }: Props) {
               <p className='flex gap-2'>
                 <span className='text-red-500'>{t('type')}:</span>
                 <span className='text-neutral-500'>
-                  {/* {selectedOptionDetails.type} */}
+                  {selectedOptionDetails?.type}
                 </span>
               </p>
               <p className='flex gap-2'>

@@ -8,6 +8,8 @@ import { useGetProductDetailsQuery } from '@/lib/redux/query/storesQuery';
 import { notFound } from 'next/navigation';
 import Videos from './_components/videos';
 import Description from './_components/description';
+import { useTranslations } from 'next-intl';
+import { scrollToElement } from '@/lib/utils/scrollElement';
 
 function ProductDetailsPage({
   params: { id, locale },
@@ -17,6 +19,7 @@ function ProductDetailsPage({
     locale: string;
   };
 }) {
+  const t = useTranslations('common');
   const {
     data: productData,
     isSuccess: isSuccessProduct,
@@ -58,10 +61,40 @@ function ProductDetailsPage({
             path={`/${locale}/products`}
             details={productData?.name}
           />
+          <aside className='fixed top-1/3 -translate-y-1/2 right-4 flex flex-col items-end gap-2'>
+            <button
+              className='px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
+              onClick={() => scrollToElement('description')}
+            >
+              {t('description')}
+            </button>
+            <button
+              className='px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
+              onClick={() => scrollToElement('specifications')}
+            >
+              {t('specifications')}
+            </button>
+            {productData?.videos.length > 0 && (
+              <button
+                className='px-6 py-1 bg-white text-red-500 border border-red-500 font-bold rounded-tl-2xl rounded-bl-2xl'
+                onClick={() => scrollToElement('Video')}
+              >
+                Video
+              </button>
+            )}
+            <button
+              className='px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
+              onClick={() => scrollToElement('reviews')}
+            >
+              {t('reviews')}
+            </button>
+          </aside>
           <ProductDetails product={productData} />
           <Description description={productData?.description} />
           <Specifications specifications={productData?.specifications} />
-          <Videos videos={productData?.videos} />
+          {productData?.videos.length > 0 && (
+            <Videos videos={productData?.videos} />
+          )}
           <Reviews
             reviews_avg_rate={productData?.reviews_avg_rate}
             reviews_count={productData?.reviews_count}

@@ -19,7 +19,10 @@ function Videos({ videos }: Props) {
     },
   };
   return (
-    <section className='container md:m-auto px-6 md:px-0 flex flex-col gap-4'>
+    <section
+      id='video'
+      className='container md:m-auto px-6 md:px-0 flex flex-col gap-4'
+    >
       <h2 className='text-xl md:text-2xl font-bold'>Video</h2>
       {videos && (
         <div className='sm:px-8 md:px-16 py-6 bg-neutral-100 flex justify-center items-center gap-6 rounded-sm border-t-4 border-red-600'>

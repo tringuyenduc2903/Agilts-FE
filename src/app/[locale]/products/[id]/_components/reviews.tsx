@@ -107,8 +107,7 @@ function Reviews({
       <h2 className='text-xl md:text-2xl font-bold'>
         {t('reviews')}{' '}
         {Number(reviews_count) > 0 &&
-          `(${Math.ceil(Number(reviews_avg_rate) * 2) / 2}
-        /5)`}
+          `(${Math.ceil(Number(reviews_avg_rate) * 2) / 2}/5)`}
       </h2>
       <div className='py-8 px-4 sm:px-8 md:px-16 bg-neutral-100 flex flex-col gap-12 rounded-sm border-t-4 border-red-600'>
         <div className='flex flex-wrap gap-4'>

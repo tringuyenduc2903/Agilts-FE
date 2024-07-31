@@ -44,16 +44,16 @@ function Cart() {
             <span>{t('quantity')}:</span>
             <span>{cart.quantity}</span>
           </p>
-          <p className='text-sm font-bold'>{cart.price_preview}</p>
+          <p className='text-sm font-bold'>{cart?.price.preview}</p>
         </div>
       </div>
       <div className='bg-neutral-100 p-4 flex justify-between'>
         <p className='uppercase font-bold'>{t('order_total')}:</p>
         <p
-          title={cart.price_preview}
+          title={cart?.price.preview}
           className='max-w-[280px] truncate font-bold'
         >
-          {cart.price_preview}
+          {cart?.price.preview}
         </p>
       </div>
       <div className='px-4'>

@@ -20,6 +20,7 @@ import CustomImage from '@/components/ui/CustomImage';
 import { FaMinus } from 'react-icons/fa6';
 import { usePostWishlistMutation } from '@/lib/redux/query/storesQuery';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { setCurMotorbike } from '@/lib/redux/slice/userSlice';
 type Props = {
   product: Product;
 };
@@ -82,30 +83,10 @@ function ProductDetails({ product }: Props) {
     },
     [versions]
   );
-  const handleAddToCart = useCallback(() => {
-    // if (cart && selectedOptionDetails) {
-    //   setVisiblePopup({
-    //     visibleToastPopup: {
-    //       type: 'warning',
-    //       message: 'Bạn đã có sản phẩm khác trong giỏ hàng!',
-    //     },
-    //   });
-    // } else {
-    //   dispatch(
-    //     setCart({
-    //       item: selectedOptionDetails,
-    //       name: product.name,
-    //       quantity: 1,
-    //     })
-    //   );
-    //   setVisiblePopup({
-    //     visibleToastPopup: {
-    //       type: 'success',
-    //       message: 'Thêm sản phẩm thành công!',
-    //     },
-    //   });
-    // }
-  }, [dispatch, setVisiblePopup, selectedOptionDetails]);
+  const handleBuyNow = useCallback(() => {
+    dispatch(setCurMotorbike(selectedOptionDetails));
+    router.push(`/${locale}/purchase-motorbike`);
+  }, [dispatch, router, locale, selectedOptionDetails]);
   const renderedOptions = useMemo(() => {
     return versions.map((v: any, index: number) => {
       return (
@@ -356,7 +337,7 @@ function ProductDetails({ product }: Props) {
             className='relative w-max sm:w-[220px] sm:h-[55px] uppercase bg-red-600 text-white px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center text-sm'
             onMouseEnter={() => setIsHoverAddToCart(true)}
             onMouseLeave={() => setIsHoverAddToCart(false)}
-            onClick={handleAddToCart}
+            onClick={handleBuyNow}
             disabled={isLoadingPostWishlist}
           >
             <span
@@ -364,7 +345,7 @@ function ProductDetails({ product }: Props) {
                 isHoverAddToCart ? 'sm:translate-x-[20%]' : 'sm:translate-x-0'
               } px-2 z-10 bg-red-600 transition-all duration-200 text-[12px]`}
             >
-              {t('add_to_cart')}
+              {t('buy_now')}
             </span>
             <span className='w-full hidden sm:flex items-center'>
               <span className='w-full h-[1px] bg-white'></span>

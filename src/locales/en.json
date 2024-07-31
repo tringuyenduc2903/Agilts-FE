@@ -318,6 +318,7 @@
     "mess_success_review": "Successful product reviews!",
     "mess_success_wishlist": "Add product to wishlist successfully!",
     "wishlist": "Wishlist",
-    "empty_wishlist": "Your wishlist is currently empty."
+    "empty_wishlist": "Your wishlist is currently empty.",
+    "buy_now": "Buy now"
   }
 }

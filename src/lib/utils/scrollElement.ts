@@ -5,6 +5,8 @@ export const scrollToTop = () => {
 export const scrollToElement = (id: string) => {
   const element = document.getElementById(id);
   if (element) {
-    element.scrollIntoView({ behavior: 'smooth' });
+    const elementTop = element.getBoundingClientRect().top + window.pageYOffset;
+    const offset = elementTop - 76;
+    window.scrollTo({ top: offset, behavior: 'smooth' });
   }
 };

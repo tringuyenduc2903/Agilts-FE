@@ -17,6 +17,7 @@ import {
 import useClickOutside from '@/lib/hooks/useClickOutside';
 import { ModalContext } from '@/contexts/ModalProvider';
 import errorImage from '@/assets/not-found-img-larger.png';
+import Image from 'next/image';
 function ImageModal() {
   const imgRef = useRef<HTMLImageElement | null>(null);
   const [fallbackImg, setFallbackImg] = useState(false);
@@ -119,7 +120,7 @@ function ImageModal() {
             </button>
           </div>
           {state.visibleImageModal && (
-            <img
+            <Image
               ref={imgRef}
               className='w-full h-full object-contain'
               style={{
@@ -131,6 +132,8 @@ function ImageModal() {
                   : state?.visibleImageModal?.images[curImage].image
               }
               alt={state?.visibleImageModal?.images[curImage].alt}
+              width={1500}
+              height={800}
               onError={() => setFallbackImg(true)}
               draggable={false}
             />

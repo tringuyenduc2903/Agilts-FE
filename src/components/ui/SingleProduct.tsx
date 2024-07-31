@@ -1,21 +1,16 @@
 'use client';
 import { Product, ProductOption } from '@/types/types';
 import { useTranslations } from 'next-intl';
-import Image from 'next/image';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import React, {
-  useContext,
-  createContext,
-  useState,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { useContext, createContext, useCallback, useMemo } from 'react';
 import { IoCartOutline } from 'react-icons/io5';
-import errorImage from '@/assets/not-found-img.avif';
-import { useDispatch, useSelector } from 'react-redux';
+import { FaAnglesRight } from 'react-icons/fa6';
+import { useDispatch } from 'react-redux';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { useResponsive } from '@/lib/hooks/useResponsive';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { setCurMotorbike } from '@/lib/redux/slice/userSlice';
+import CustomImage from './CustomImage';
 type PropsProductContext = {
   product: Product;
 };
@@ -38,8 +33,6 @@ export function SingleProduct({
   product,
   articleClass,
 }: PropsSingleProduct) {
-  const { locale } = useParams();
-  const router = useRouter();
   return (
     <ProductContext.Provider value={{ product }}>
       <article
@@ -48,7 +41,6 @@ export function SingleProduct({
             ? articleClass
             : 'col-span-1 m-auto max-w-[300px] flex flex-col gap-4 cursor-pointer'
         } relative group`}
-        onClick={() => router.push(`/${locale}/products/${product.id}`)}
       >
         {children}
       </article>
@@ -61,7 +53,9 @@ SingleProduct.Category = function ProductType() {
   return (
     <p className='font-bold text-[12px] md:text-sm flex items-center gap-2'>
       <span>{t('category')}:</span>
-      <span className='text-red-500'>{product?.categories[0].name}</span>
+      <span className='text-red-500'>
+        {product?.categories[0]?.name ? product?.categories[0].name : 'N/A'}
+      </span>
     </p>
   );
 };
@@ -127,6 +121,8 @@ SingleProduct.Image = function ProductImage({
   customClass?: string;
 }) {
   const state = useResponsive();
+  const router = useRouter();
+  const { locale } = useParams();
   const { product } = useProductContext();
   const searchParams = useSearchParams();
   const selectedOption = useMemo(() => {
@@ -140,15 +136,21 @@ SingleProduct.Image = function ProductImage({
     });
   }, [searchParams]);
   const t = useTranslations('common');
-  const [fallbackImg, setFallbackImg] = useState(false);
   const { cart } = useContext(FetchDataContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const dispatch = useDispatch();
+  const handleBuyNow = useCallback(
+    (p: ProductOption) => {
+      dispatch(setCurMotorbike(p));
+      router.push(`/${locale}/purchase-motorbike`);
+    },
+    [dispatch, router, locale]
+  );
   const handleAddToCart = useCallback(
     (
       e: React.MouseEvent<HTMLButtonElement>,
-      product: ProductOption,
-      productName: Product['name']
+      product?: ProductOption,
+      productName?: Product['name']
     ) => {
       e.stopPropagation();
       if (cart) {
@@ -167,38 +169,45 @@ SingleProduct.Image = function ProductImage({
     <div
       className={`${customClass ? customClass : 'w-full h-[350px]'} relative`}
     >
-      <div className={`w-full h-[${state.isDesktop ? 250 : 150}px]`}>
-        <Image
+      <div>
+        <CustomImage
           className='object-cover w-auto h-auto aspect-auto'
-          src={
-            fallbackImg
-              ? errorImage
-              : selectedOption
-              ? selectedOption.images[0]?.image
-              : product.images[0]?.image
-          }
-          alt={product.images[0]?.alt}
+          image={selectedOption ? selectedOption.images[0] : product.images[0]}
           fetchPriority='low'
-          loading='lazy'
-          onError={() => setFallbackImg(true)}
           width={state.isDesktop ? 280 : 180}
           height={state.isDesktop ? 250 : 150}
         />
       </div>
-      <div
-        style={{ background: 'rgba(220, 38, 38, 0.9)' }}
-        className='absolute top-0 left-0 w-full h-full z-10 hidden xl:flex justify-center items-center group-hover:opacity-100 opacity-0 transition-opacity'
-      >
-        <button
-          className='w-max text-sm uppercase font-bold text-white flex justify-center items-center gap-2 border border-neutral-300 rounded-sm px-6 py-3'
-          onClick={(e) =>
-            handleAddToCart(e, product?.options[0], product?.name)
-          }
+      {state.isDesktop && (
+        <div
+          style={{ background: 'rgba(220, 38, 38, 0.9)' }}
+          className='absolute top-0 left-0 w-full h-full z-10 hidden xl:flex justify-center items-center group-hover:opacity-100 opacity-0 transition-opacity'
         >
-          <span className='uppercase'>{t('add_to_cart')}</span>
-          <IoCartOutline className='text-2xl' />
-        </button>
-      </div>
+          {product.must_direct_purchase ? (
+            <button
+              className='w-max text-sm uppercase font-bold text-white flex justify-center items-center gap-2 border border-neutral-300 rounded-sm px-6 py-3'
+              onClick={() =>
+                handleBuyNow(
+                  selectedOption ? selectedOption : product.options[0]
+                )
+              }
+            >
+              <span className='uppercase'>{t('buy_now')}</span>
+              <FaAnglesRight className='text-2xl' />
+            </button>
+          ) : (
+            <button
+              className='w-max text-sm uppercase font-bold text-white flex justify-center items-center gap-2 border border-neutral-300 rounded-sm px-6 py-3'
+              onClick={(e) =>
+                handleAddToCart(e, product?.options[0], product?.name)
+              }
+            >
+              <span className='uppercase'>{t('add_to_cart')}</span>
+              <IoCartOutline className='text-2xl' />
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 };

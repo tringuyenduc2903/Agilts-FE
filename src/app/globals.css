@@ -110,3 +110,9 @@ input::-webkit-outer-spin-button {
     clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
   }
 }
+
+#reviews,
+#description,
+#video {
+  scroll-padding-top: 72px;
+}

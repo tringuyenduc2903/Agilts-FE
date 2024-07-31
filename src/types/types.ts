@@ -111,6 +111,7 @@ export type Product = {
   id: number;
   name: string;
   description: string;
+  must_direct_purchase: boolean;
   options_min_price: {
     raw: number;
     preview: string;

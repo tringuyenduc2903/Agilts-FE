@@ -30,10 +30,12 @@ type FetchData = {
   wishlist: Wishlist[] | [];
   isLoadingWishlist: boolean;
   addresses: Address[];
+  isLoadingAddress: boolean;
   allDocuments: Document[];
   isLoadingDocuments: boolean;
-  defaultAddress: Address | null;
   setAddresses: Dispatch<SetStateAction<Address[] | []>>;
+  defaultAddress: Address | null;
+  defaultDocument: Document | null;
 };
 export const FetchDataContext = createContext({} as FetchData);
 
@@ -48,6 +50,7 @@ export const FetchDataProvider = ({
   const [wishlist, setWishlist] = useState<Wishlist[] | []>([]);
   const [defaultAddress, setDefaultAddress] = useState<Address | null>(null);
   const [addresses, setAddresses] = useState<Address[] | []>([]);
+  const [defaultDocument, setDefaultDocument] = useState<Document | null>(null);
   const [allDocuments, setAllDocuments] = useState<Document[] | []>([]);
   const [getCSRFCookie, { isLoading: isLoadingCSRF }] =
     useGetCSRFCookieMutation();
@@ -63,10 +66,11 @@ export const FetchDataProvider = ({
     isSuccess: isSuccessWishlist,
     isLoading: isLoadingWishlist,
   } = useGetWishlistQuery(null, { skip: !userData });
-  const { data: addressData, isSuccess: isSuccessAddress } = useGetAddressQuery(
-    null,
-    { skip: !userData }
-  );
+  const {
+    data: addressData,
+    isSuccess: isSuccessAddress,
+    isLoading: isLoadingAddress,
+  } = useGetAddressQuery(null, { skip: !userData });
   const {
     data: documentsData,
     isSuccess: isSuccessDocument,
@@ -118,6 +122,7 @@ export const FetchDataProvider = ({
         })
       );
     }
+    setDefaultDocument(documentsData?.find((d: Document) => d.default));
   }, [isSuccessDocument, documentsData]);
   const contextValue = {
     user,
@@ -130,11 +135,13 @@ export const FetchDataProvider = ({
     cart,
     wishlist,
     isLoadingWishlist,
+    defaultAddress,
     addresses,
     setAddresses,
-    defaultAddress,
+    defaultDocument,
     allDocuments,
     isLoadingDocuments,
+    isLoadingAddress,
   };
   return (
     <FetchDataContext.Provider value={contextValue}>

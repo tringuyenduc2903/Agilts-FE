@@ -196,7 +196,7 @@ export type Wishlist = {
   product_preview: {
     id: number;
     name: string;
-    option_id: 11;
+    option_id: number;
     sku: string;
     color: string;
     categories: string[];

@@ -18,7 +18,10 @@ import { TbHeart, TbHeartFilled } from 'react-icons/tb';
 
 import CustomImage from '@/components/ui/CustomImage';
 import { FaMinus } from 'react-icons/fa6';
-import { usePostWishlistMutation } from '@/lib/redux/query/storesQuery';
+import {
+  useDeleteWishlistMutation,
+  usePostWishlistMutation,
+} from '@/lib/redux/query/storesQuery';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { setCurMotorbike } from '@/lib/redux/slice/userSlice';
 type Props = {
@@ -40,9 +43,9 @@ function ProductDetails({ product }: Props) {
   const [selectedOptionDetails, setSelectedOptionDetails] =
     useState<ProductOption | null>(null);
   const isWishlist = useMemo(() => {
-    return wishlist.findIndex(
-      (w) => w.product_preview.option_id === selectedOptionDetails?.id
-    );
+    return wishlist
+      .map((w) => w.product_preview.option_id)
+      .includes(selectedOptionDetails?.id as number);
   }, [wishlist, selectedOptionDetails]);
   const [
     postWishList,
@@ -53,6 +56,8 @@ function ProductDetails({ product }: Props) {
       error: errorPostWishlist,
     },
   ] = usePostWishlistMutation();
+  const [deleteWishList, { isLoading: isLoadingDeleteWishlist }] =
+    useDeleteWishlistMutation();
   const versions = useMemo(() => {
     const newVersions = new Map<string, ProductOption[]>();
     product?.options?.forEach((item) => {
@@ -88,8 +93,8 @@ function ProductDetails({ product }: Props) {
       router.push(`/${locale}/login`);
     } else {
       dispatch(setCurMotorbike(selectedOptionDetails));
+      router.push(`/${locale}/purchase-motorbike`);
     }
-    router.push(`/${locale}/purchase-motorbike`);
   }, [dispatch, user, router, locale, selectedOptionDetails]);
   const renderedOptions = useMemo(() => {
     return versions.map((v: any, index: number) => {
@@ -97,7 +102,7 @@ function ProductDetails({ product }: Props) {
         <button
           key={index}
           onClick={() => handleSetCurOption(v[0])}
-          disabled={isLoadingPostWishlist}
+          disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
           className={`border ${
             curOption === v[0]
               ? 'border-red-500 text-red-500'
@@ -122,7 +127,7 @@ function ProductDetails({ product }: Props) {
                   : 'border-neutral-300'
               } px-4 py-1 font-bold`}
               onClick={() => setSelectedOptionDetails(s)}
-              disabled={isLoadingPostWishlist}
+              disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
             >
               {s.color}
             </button>
@@ -196,13 +201,18 @@ function ProductDetails({ product }: Props) {
               </p>
               {user && (
                 <button
+                  className='w-max'
                   aria-label='wishlist-btn'
-                  disabled={isLoadingPostWishlist}
+                  disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
                   onClick={async () =>
-                    await postWishList({ version: selectedOptionDetails.id })
+                    isWishlist
+                      ? await deleteWishList(selectedOptionDetails.id)
+                      : await postWishList({
+                          version: selectedOptionDetails.id,
+                        })
                   }
                 >
-                  {isWishlist !== -1 ? (
+                  {isWishlist ? (
                     <TbHeartFilled className='text-4xl text-red-500' />
                   ) : (
                     <TbHeart className='text-4xl' />
@@ -234,7 +244,7 @@ function ProductDetails({ product }: Props) {
             type='button'
             className='text-[10px] sm:text-[12px] md:text-sm font-medium text-neutral-500 hover:text-neutral-800 transition-colors uppercase'
             onClick={() => scrollToElement('reviews')}
-            disabled={isLoadingPostWishlist}
+            disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
           >
             (
             {Number(product?.reviews_count) > 1
@@ -276,7 +286,9 @@ function ProductDetails({ product }: Props) {
                         <li className='flex items-center gap-2' key={c.id}>
                           <button
                             className='text-neutral-500'
-                            disabled={isLoadingPostWishlist}
+                            disabled={
+                              isLoadingPostWishlist || isLoadingDeleteWishlist
+                            }
                             onClick={() =>
                               router.push(
                                 `/${locale}/products?page=1&category=${c.id}`,
@@ -348,7 +360,7 @@ function ProductDetails({ product }: Props) {
             onMouseEnter={() => setIsHoverAddToCart(true)}
             onMouseLeave={() => setIsHoverAddToCart(false)}
             onClick={handleBuyNow}
-            disabled={isLoadingPostWishlist}
+            disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
           >
             <span
               className={`w-[142px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${
@@ -367,7 +379,7 @@ function ProductDetails({ product }: Props) {
           <div>
             <button
               className='border border-neutral-300 bg-neutral-800 text-white px-4 py-3'
-              disabled={isLoadingPostWishlist}
+              disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
               onClick={() =>
                 setVisibleModal({ visibleReviewsModal: selectedOptionDetails })
               }

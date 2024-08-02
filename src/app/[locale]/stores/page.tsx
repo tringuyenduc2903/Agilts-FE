@@ -5,9 +5,8 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { FaAngleDown } from 'react-icons/fa6';
 import { useGetStoresQuery } from '@/lib/redux/query/storesQuery';
-import { Branch } from '@/types/types';
+import { Branch, SingleImage } from '@/types/types';
 import { TiLocationOutline, TiPhoneOutline } from 'react-icons/ti';
-import demoimg from '@/assets/demo-branch.jpg';
 import CustomPaginationV2 from '@/components/ui/CustomPaginationV2';
 import { useParams, useSearchParams } from 'next/navigation';
 import NotFoundItem from '@/components/ui/NotFoundItem';
@@ -18,6 +17,7 @@ import {
 import useQueryString from '@/lib/hooks/useQueryString';
 import { defaultCountry } from '@/config/config';
 import LoadingMultiItem from '@/components/ui/LoadingMultiItem';
+import CustomImage from '@/components/ui/CustomImage';
 type PartOfCountry = {
   id: string;
   full_name: string;
@@ -165,12 +165,12 @@ function StoresPage() {
       branchData?.data?.map((b: Branch) => {
         return (
           <article className='col-span-1 flex flex-col gap-2' key={b.id}>
-            <div className='max-h-[350px] h-full'>
-              <Image
-                className='w-full h-full object-cover'
-                src={demoimg}
-                alt='demoimg'
-                fetchPriority='high'
+            <div className='max-h-[350px] h-full overflow-hidden'>
+              <CustomImage
+                className='object-cover w-full h-full'
+                image={b.image ? b.image : ({} as SingleImage)}
+                width={500}
+                height={300}
               />
             </div>
             <h2 className='text-lg md:text-xl font-bold'>{b?.name}</h2>
@@ -185,12 +185,14 @@ function StoresPage() {
             </div>
             <div className='flex items-center gap-2'>
               <TiPhoneOutline className='text-2xl text-red-500' />
-              <p
+              <a
                 title={b?.phone_number as string}
                 className='line-clamp-1 font-medium'
+                id='phone'
+                href={`tel:${b?.phone_number}`}
               >
                 {b?.phone_number}
-              </p>
+              </a>
             </div>
           </article>
         );

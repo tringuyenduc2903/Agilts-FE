@@ -1,4 +1,5 @@
 'use client';
+import Loading from '@/app/[locale]/loading';
 import NotFoundItem from '@/components/ui/NotFoundItem';
 import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
@@ -13,7 +14,7 @@ import { useTranslations } from 'next-intl';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { FaPlus } from 'react-icons/fa6';
 function AddressPage() {
-  const { addresses, defaultAddress } = useContext(FetchDataContext);
+  const { addresses, isLoadingAddress } = useContext(FetchDataContext);
   const t = useTranslations('common');
   const { setVisibleModal } = useContext(ModalContext);
   const { setVisiblePopup } = useContext(PopupContext);
@@ -174,6 +175,8 @@ function AddressPage() {
       });
     }
   }, [isSuccessDelete, isErrorDelete, errorDelete, t, setVisiblePopup]);
+  if (isLoadingAddress) return <Loading />;
+
   return (
     <div className='w-full h-full flex flex-col gap-6'>
       <section className='pb-4 flex flex-col sm:flex-row justify-between sm:items-center border-b border-neutral-300'>

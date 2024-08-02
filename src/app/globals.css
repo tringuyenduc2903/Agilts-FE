@@ -35,10 +35,6 @@ select:focus {
   outline: none;
 }
 
-html {
-  min-height: 100vh;
-}
-
 html,
 body {
   scroll-behavior: smooth;

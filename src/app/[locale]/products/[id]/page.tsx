@@ -61,10 +61,10 @@ function ProductDetailsPage({
             path={`/${locale}/products`}
             details={productData?.name}
           />
-          <aside className='fixed top-1/3 -translate-y-1/2 right-4 flex flex-col items-end gap-2'>
+          <aside className='fixed w-max top-1/3 -translate-y-1/2 right-4 flex flex-col items-end gap-2'>
             {productData?.description && (
               <button
-                className='px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
+                className='w-max px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
                 onClick={() => scrollToElement('description')}
               >
                 {t('description')}
@@ -72,7 +72,7 @@ function ProductDetailsPage({
             )}
             {productData?.specifications?.length > 0 && (
               <button
-                className='px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
+                className='w-max px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
                 onClick={() => scrollToElement('specifications')}
               >
                 {t('specifications')}
@@ -80,7 +80,7 @@ function ProductDetailsPage({
             )}
             {productData?.videos.length > 0 && (
               <button
-                className='px-6 py-1 bg-white text-red-500 border border-red-500 font-bold rounded-tl-2xl rounded-bl-2xl'
+                className='w-max px-6 py-1 bg-white text-red-500 border border-red-500 font-bold rounded-tl-2xl rounded-bl-2xl'
                 onClick={() => scrollToElement('Video')}
               >
                 Video

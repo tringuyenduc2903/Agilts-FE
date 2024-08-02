@@ -70,7 +70,11 @@ function ResetPasswordPage() {
   useEffect(() => {
     if (isLoadingPost || isLoadingCSRF) {
       setVisiblePopup({ visibleLoadingPopup: true });
+    } else {
+      setVisiblePopup({ visibleLoadingPopup: false });
     }
+  }, [setVisiblePopup, isLoadingPost, isLoadingCSRF]);
+  useEffect(() => {
     if (isSuccessPost && postData) {
       setVisiblePopup({
         visibleToastPopup: {
@@ -78,11 +82,6 @@ function ResetPasswordPage() {
           message: postData?.message,
         },
       });
-      formState.defaultValues = {
-        email: '',
-        password: '',
-        password_confirmation: '',
-      };
     }
     if (isErrorPost && errorPost) {
       const error = errorPost as any;
@@ -93,28 +92,19 @@ function ResetPasswordPage() {
         },
       });
     }
-  }, [
-    isLoadingPost,
-    isLoadingCSRF,
-    isSuccessPost,
-    postData,
-    isErrorPost,
-    errorPost,
-    setVisiblePopup,
-    formState,
-  ]);
+  }, [isSuccessPost, postData, isErrorPost, errorPost, setVisiblePopup]);
   if (isLoadingUser) return <Loading />;
   if (user && isSuccessUser && !isLoadingUser) return notFound();
   return (
-    <main className='w-full pt-[72px] flex flex-col'>
-      <section className='absolute h-[500px] w-full -z-10 hidden lg:block'>
+    <main className='w-full h-full pt-[72px] flex flex-col'>
+      <section className='absolute h-full w-full -z-10 hidden lg:block'>
         <Image
           className='w-full h-full object-cover'
           src={bgImg}
           alt='bg-img'
         />
       </section>
-      <section className='lg:container m-auto py-8 w-full h-auto lg:h-[500px] bg-neutral-800 lg:bg-transparent grid grid-cols-1 lg:grid-cols-2 place-content-center gap-8'>
+      <section className='lg:container m-auto py-8 w-full h-full bg-neutral-800 lg:bg-transparent grid grid-cols-1 lg:grid-cols-2 place-content-center gap-8'>
         <div className='col-span-1 flex flex-col justify-center items-center gap-4 lg:items-start'>
           <h1 className='text-red-600 font-bold tracking-[8px]'>
             {t('performance')}
@@ -135,6 +125,7 @@ function ResetPasswordPage() {
                 type='email'
                 placeholder='Email'
                 {...register('email')}
+                disabled
               />
               {errors?.email && (
                 <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -154,7 +145,7 @@ function ResetPasswordPage() {
                   type='button'
                   className='absolute top-1/2 -translate-y-1/2 right-2'
                   aria-label='show-pwd-btn'
-                  onClick={() => setIsShowPwd(false)}
+                  onClick={() => setIsShowPwd(!isShowPwd)}
                 >
                   {isShowPwd ? (
                     <FaRegEye className='text-xl' />

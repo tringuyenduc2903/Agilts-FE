@@ -115,7 +115,7 @@ function ProductsDesktop({
                 {isSuccessFilter && (
                   <FilterSection
                     action={selectedAction}
-                    models={filterData[4]}
+                    versions={filterData[4]}
                     colors={filterData[3]}
                     minPrice={filterData[1]?.data}
                     maxPrice={filterData[2]?.data}

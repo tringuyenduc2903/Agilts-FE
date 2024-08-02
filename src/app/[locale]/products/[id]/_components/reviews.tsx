@@ -89,7 +89,11 @@ function Reviews({
             )}
             {r.response && (
               <div className='bg-white rounded-sm p-4 flex flex-col gap-2'>
-                <p className='font-medium'>{t('seller_feedback')}</p>
+                <p className='font-medium'>
+                  {t('seller_feedback', {
+                    name: r?.response?.reviewable_preview?.name,
+                  })}
+                </p>
                 <p>{r?.content}</p>
               </div>
             )}
@@ -133,7 +137,7 @@ function Reviews({
             )}
           </div>
         )}
-        {Number(reviews_count) === 0 && (
+        {(Number(reviews_count) === 0 || reviewData?.data?.length === 0) && (
           <div className='h-[20vh] flex justify-center items-center'>
             <NotFoundItem message={t('mess_no_review')} />
           </div>

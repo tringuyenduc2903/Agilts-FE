@@ -46,7 +46,7 @@ function ProductsMobile({
       name: '',
       value: '',
     },
-    model: {
+    version: {
       name: '',
       value: '',
     },
@@ -97,7 +97,7 @@ function ProductsMobile({
     );
   }, [isSuccessFilter, filterData?.[5], searchParams]);
 
-  const renderedModels = useMemo(() => {
+  const renderedVerions = useMemo(() => {
     return (
       isSuccessFilter &&
       convertData(filterData?.[4]?.data)?.map((d) => {
@@ -163,7 +163,7 @@ function ProductsMobile({
     createQueryString(
       [
         form.category.name,
-        form.model.name,
+        form.version.name,
         form.color.name,
         'minPrice',
         'maxPrice',
@@ -173,7 +173,7 @@ function ProductsMobile({
       ],
       [
         form.category.value,
-        form.model.value,
+        form.version.value,
         form.color.value,
         priceMin.toString(),
         priceMax.toString(),
@@ -422,12 +422,12 @@ function ProductsMobile({
                 className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
                 onClick={() => handleSelectedTab('model')}
               >
-                <p>{form?.model?.name ? form?.model?.value : t('all')}</p>
+                <p>{form?.version?.name ? form?.version?.value : t('all')}</p>
                 <FaAngleDown />
               </button>
               {selectedTab === 'model' && (
                 <ul className='w-full h-auto max-h-[40vh] p-4 flex flex-col gap-1 border border-neutral-300 overflow-y-auto'>
-                  {renderedModels}
+                  {renderedVerions}
                 </ul>
               )}
             </div>
@@ -477,7 +477,7 @@ function ProductsMobile({
                       name: '',
                       value: '',
                     },
-                    model: {
+                    version: {
                       name: '',
                       value: '',
                     },
@@ -521,7 +521,7 @@ function ProductsMobile({
           <ProductsSection
             products={productsData?.data}
             total_pages={productsData?.total_pages}
-            current_page={productsData?.current_page}
+            // current_page={productsData?.current_page}
           />
         )}
       {(isLoadingProducts || isFetchingProducts) && <ProductSkeleton />}

@@ -84,9 +84,13 @@ function ProductDetails({ product }: Props) {
     [versions]
   );
   const handleBuyNow = useCallback(() => {
-    dispatch(setCurMotorbike(selectedOptionDetails));
+    if (!user) {
+      router.push(`/${locale}/login`);
+    } else {
+      dispatch(setCurMotorbike(selectedOptionDetails));
+    }
     router.push(`/${locale}/purchase-motorbike`);
-  }, [dispatch, router, locale, selectedOptionDetails]);
+  }, [dispatch, user, router, locale, selectedOptionDetails]);
   const renderedOptions = useMemo(() => {
     return versions.map((v: any, index: number) => {
       return (
@@ -265,33 +269,37 @@ function ProductDetails({ product }: Props) {
             <div className='font-medium flex flex-col gap-2'>
               <div className='flex gap-2'>
                 <p className='text-red-500'>{t('categories')}:</p>
-                <ul className='flex items-center gap-2'>
-                  {product.categories?.map((c, index) => {
-                    return (
-                      <li className='flex items-center gap-2' key={c.id}>
-                        <button
-                          className='text-neutral-500'
-                          disabled={isLoadingPostWishlist}
-                          onClick={() =>
-                            router.push(
-                              `/${locale}/products?page=1&category=${c.id}`,
-                              {
-                                scroll: true,
-                              }
-                            )
-                          }
-                        >
-                          {c.name}
-                        </button>
-                        {index !== product.categories.length - 1 && (
-                          <span>
-                            <FaMinus className='text-neutral-500' />
-                          </span>
-                        )}
-                      </li>
-                    );
-                  })}
-                </ul>
+                {product.categories.length > 0 ? (
+                  <ul className='flex items-center gap-2'>
+                    {product.categories?.map((c, index) => {
+                      return (
+                        <li className='flex items-center gap-2' key={c.id}>
+                          <button
+                            className='text-neutral-500'
+                            disabled={isLoadingPostWishlist}
+                            onClick={() =>
+                              router.push(
+                                `/${locale}/products?page=1&category=${c.id}`,
+                                {
+                                  scroll: true,
+                                }
+                              )
+                            }
+                          >
+                            {c.name}
+                          </button>
+                          {index !== product.categories.length - 1 && (
+                            <span>
+                              <FaMinus className='text-neutral-500' />
+                            </span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p>N/A</p>
+                )}
               </div>
               <p className='flex gap-2'>
                 <span className='text-red-500'>{t('type')}:</span>
@@ -325,7 +333,9 @@ function ProductDetails({ product }: Props) {
                 <p className='flex gap-2'>
                   <span className='text-red-500'>{t('quantity')}:</span>
                   <span className='text-neutral-500'>
-                    {selectedOptionDetails.quantity}
+                    {selectedOptionDetails.quantity > 0
+                      ? selectedOptionDetails?.quantity
+                      : '0'}
                   </span>
                 </p>
               )}
@@ -367,7 +377,7 @@ function ProductDetails({ product }: Props) {
           </div>
         )}
         {selectedOptionDetails &&
-          selectedOptionDetails.specifications.length > 0 && (
+          selectedOptionDetails?.specifications?.length > 0 && (
             <div className='flex flex-col gap-4'>
               <p className='uppercase font-bold text-base md:text-lg'>
                 {t('special_specification')}

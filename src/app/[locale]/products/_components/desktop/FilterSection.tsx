@@ -7,7 +7,7 @@ import React, { useMemo, useState } from 'react';
 
 type Props = {
   action: string | null;
-  models: {
+  versions: {
     name: string;
     data: {
       [key: string]: string;
@@ -23,30 +23,36 @@ type Props = {
   maxPrice: number | string;
 };
 
-function FilterSection({ action, models, colors, minPrice, maxPrice }: Props) {
+function FilterSection({
+  action,
+  versions,
+  colors,
+  minPrice,
+  maxPrice,
+}: Props) {
   const t = useTranslations('common');
   const searchParams = useSearchParams();
   const [createQueryString] = useQueryString();
   const [priceMin, setPriceMin] = useState<string | number>(0);
   const [priceMax, setPriceMax] = useState<string | number>(0);
-  const renderedModels = useMemo(() => {
-    return convertData(models?.data)?.map((d) => {
+  const renderedVersions = useMemo(() => {
+    return convertData(versions?.data)?.map((d) => {
       return (
         <li className='h-max' key={d.id}>
           <button
             className={`font-bold text-sm md:text-base text-neutral-500 hover:text-red-500 ${
-              searchParams.get(models.name) === d.id.toString()
+              searchParams.get(versions.name) === d.id.toString()
                 ? 'text-red-500'
                 : ''
             } transition-colors`}
-            onClick={() => createQueryString(models.name, d.id)}
+            onClick={() => createQueryString(versions.name, d.id)}
           >
             {d.value}
           </button>
         </li>
       );
     });
-  }, [models, searchParams, createQueryString]);
+  }, [versions, searchParams, createQueryString]);
 
   const renderedColors = useMemo(() => {
     return convertData(colors?.data)?.map((d) => {
@@ -75,8 +81,8 @@ function FilterSection({ action, models, colors, minPrice, maxPrice }: Props) {
     >
       <div className='w-full h-full px-6 py-8 flex justify-between gap-16'>
         <div className='w-1/5 flex flex-col gap-8'>
-          <h2 className='text-lg md:text-xl font-bold'>{t('models')}</h2>
-          <ul className='flex flex-col gap-2'>{renderedModels}</ul>
+          <h2 className='text-lg md:text-xl font-bold'>{t('version')}</h2>
+          <ul className='flex flex-col gap-2'>{renderedVersions}</ul>
         </div>
         <div className='w-2/5 flex flex-col gap-8'>
           <h3 className='text-lg md:text-xl font-bold'>{t('colors')}</h3>

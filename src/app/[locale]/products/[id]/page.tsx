@@ -62,18 +62,22 @@ function ProductDetailsPage({
             details={productData?.name}
           />
           <aside className='fixed top-1/3 -translate-y-1/2 right-4 flex flex-col items-end gap-2'>
-            <button
-              className='px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
-              onClick={() => scrollToElement('description')}
-            >
-              {t('description')}
-            </button>
-            <button
-              className='px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
-              onClick={() => scrollToElement('specifications')}
-            >
-              {t('specifications')}
-            </button>
+            {productData?.description && (
+              <button
+                className='px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
+                onClick={() => scrollToElement('description')}
+              >
+                {t('description')}
+              </button>
+            )}
+            {productData?.specifications?.length > 0 && (
+              <button
+                className='px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
+                onClick={() => scrollToElement('specifications')}
+              >
+                {t('specifications')}
+              </button>
+            )}
             {productData?.videos.length > 0 && (
               <button
                 className='px-6 py-1 bg-white text-red-500 border border-red-500 font-bold rounded-tl-2xl rounded-bl-2xl'
@@ -82,23 +86,31 @@ function ProductDetailsPage({
                 Video
               </button>
             )}
-            <button
-              className='px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
-              onClick={() => scrollToElement('reviews')}
-            >
-              {t('reviews')}
-            </button>
+            {productData?.reviews_avg_rate && productData?.reviews_count && (
+              <button
+                className='px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
+                onClick={() => scrollToElement('reviews')}
+              >
+                {t('reviews')}
+              </button>
+            )}
           </aside>
           <ProductDetails product={productData} />
-          <Description description={productData?.description} />
-          <Specifications specifications={productData?.specifications} />
+          {productData?.description && (
+            <Description description={productData?.description} />
+          )}
+          {productData?.specifications?.length > 0 && (
+            <Specifications specifications={productData?.specifications} />
+          )}
           {productData?.videos.length > 0 && (
             <Videos videos={productData?.videos} />
           )}
-          <Reviews
-            reviews_avg_rate={productData?.reviews_avg_rate}
-            reviews_count={productData?.reviews_count}
-          />
+          {productData?.reviews_avg_rate && productData?.reviews_count && (
+            <Reviews
+              reviews_avg_rate={productData?.reviews_avg_rate}
+              reviews_count={productData?.reviews_count}
+            />
+          )}
         </>
       )}
     </main>

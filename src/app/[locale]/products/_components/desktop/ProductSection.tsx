@@ -24,8 +24,9 @@ function ProductsSection({ products, total_pages, current_page }: Props) {
             className='flex flex-col gap-2'
             onClick={() => router.push(`/${locale}/products/${p.id}`)}
           >
-            <SingleProduct.Category />
             <div className='flex flex-col gap-1 font-bold'>
+              <SingleProduct.Category />
+              <SingleProduct.Rate />
               <SingleProduct.Title />
               <SingleProduct.Price />
             </div>

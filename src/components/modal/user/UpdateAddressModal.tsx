@@ -337,7 +337,7 @@ function UpdateAddressModal() {
     >
       <form
         method='POST'
-        className='bg-white text-neutral-800 text-sm md:text-base px-4 py-8 rounded-sm flex flex-col gap-6 min-h-[40vh] max-h-[80vh] max-w-[500px] w-full overflow-y-auto'
+        className='bg-white text-neutral-800 text-sm md:text-base px-4 py-8 rounded-sm flex flex-col gap-6 min-h-[40vh] max-h-[80vh] w-full sm:w-3/4 md:w-2/3 xl:w-1/2 overflow-y-auto'
         onSubmit={handleSubmit}
       >
         <div className='flex justify-between gap-4'>

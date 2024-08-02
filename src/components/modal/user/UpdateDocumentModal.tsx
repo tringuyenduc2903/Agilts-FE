@@ -143,7 +143,7 @@ function UpdateDocumentModal() {
     >
       <form
         method='POST'
-        className='relative bg-white text-neutral-800 text-sm md:text-base rounded-sm min-h-[40vh] max-h-[60vh] max-w-[500px] w-full overflow-hidden'
+        className='relative bg-white text-neutral-800 text-sm md:text-base py-8 rounded-sm flex flex-col gap-6 min-h-[40vh] max-h-[80vh] w-full sm:w-3/4 md:w-2/3 xl:w-1/2 overflow-y-auto'
         onSubmit={handleSubmit}
       >
         <div className='w-full min-h-[40vh] max-h-[60vh] px-4 pt-8 pb-24 overflow-y-auto flex flex-col gap-6'>

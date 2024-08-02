@@ -33,7 +33,8 @@
     "account_description": "Quản lý đơn mua và địa chỉ",
     "search": "Tìm kiếm",
     "cart_title": "Giỏ hàng",
-    "wishlist_title": "Danh sách ước"
+    "wishlist_title": "Danh sách ước",
+    "purchase": "Đơn đặt hàng"
   },
   "header": {
     "home": "Trang chủ",
@@ -203,7 +204,7 @@
     "specifications": "Thông số kỹ thuật",
     "reviews": "Đánh giá",
     "edit_profile": "Sửa hồ sơ",
-    "purchase_order": "Đơn mua",
+    "purchase_order": "Đơn đặt hàng",
     "address": "Địa chỉ",
     "address_list": "Danh sách địa chỉ",
     "cart": "Giỏ hàng",
@@ -303,7 +304,7 @@
     "model": "Mẫu",
     "reset": "Xóa",
     "apply": "Áp dụng",
-    "seller_feedback": "Phản hồi của người bán",
+    "seller_feedback": "Phản hồi của {name}",
     "mess_no_review": "Sản phẩm hiện chưa có đánh giá!",
     "mess_upload_img": "Kéo và thả hoặc tải hình ảnh của bạn lên đây",
     "evaluate": "Đánh giá",
@@ -318,6 +319,14 @@
     "mess_success_wishlist": "Thêm sản phẩm vào danh sách ước thành công!",
     "wishlist": "Danh sách ước",
     "empty_wishlist": "Danh sách ước của bạn hiện đang trống.",
-    "buy_now": "Mua ngay"
+    "buy_now": "Mua ngay",
+    "mess_no_address_default": "Bạn chưa có địa chỉ mặc định nào.",
+    "mess_no_document_default": "Bạn chưa có hồ sơ mặc định nào.",
+    "vehicle_registration_support": "Hỗ trợ đăng ký xe",
+    "yes": "Có",
+    "no": "Không",
+    "update_the_quotation": "Cập nhật báo giá",
+    "mess_no_cur_order": "Bạn chưa có sản phẩm cho mình!",
+    "change": "Thay đổi"
   }
 }

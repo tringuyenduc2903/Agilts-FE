@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import React, { useContext, createContext, useCallback, useMemo } from 'react';
 import { IoCartOutline } from 'react-icons/io5';
-import { FaAnglesRight } from 'react-icons/fa6';
+import { FaAnglesRight, FaRegStar, FaStar } from 'react-icons/fa6';
 import { useDispatch } from 'react-redux';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { useResponsive } from '@/lib/hooks/useResponsive';
@@ -51,10 +51,12 @@ SingleProduct.Category = function ProductType() {
   const { product } = useProductContext();
   const t = useTranslations('common');
   return (
-    <p className='font-bold text-[12px] md:text-sm flex items-center gap-2'>
+    <p className='font-bold text-sm md:text-base flex items-center gap-2 max-w-[280px] truncate'>
       <span>{t('category')}:</span>
       <span className='text-red-500'>
-        {product?.categories[0]?.name ? product?.categories[0].name : 'N/A'}
+        {product?.categories.length > 0
+          ? product?.categories?.map((c) => c.name).join(', ')
+          : 'N/A'}
       </span>
     </p>
   );
@@ -79,7 +81,26 @@ SingleProduct.Title = function ProductTitle() {
     </p>
   );
 };
-
+SingleProduct.Rate = function ProductRate() {
+  const { product } = useProductContext();
+  const t = useTranslations('common');
+  return (
+    <p
+      title={product?.reviews_avg_rate}
+      className='font-bold flex items-center gap-2 text-sm md:text-base'
+    >
+      <span>{t('reviews')}:</span>
+      {product?.reviews_avg_rate ? (
+        <span className='flex items-center gap-1'>
+          <span> {Math.ceil(Number(product?.reviews_avg_rate) * 2) / 2} </span>
+          <FaStar className='text-base text-yellow-300' />
+        </span>
+      ) : (
+        <span>N/A</span>
+      )}
+    </p>
+  );
+};
 SingleProduct.Price = function ProductPrice() {
   const { product } = useProductContext();
   const searchParams = useSearchParams();
@@ -136,15 +157,19 @@ SingleProduct.Image = function ProductImage({
     });
   }, [searchParams]);
   const t = useTranslations('common');
-  const { cart } = useContext(FetchDataContext);
+  const { user, cart } = useContext(FetchDataContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const dispatch = useDispatch();
   const handleBuyNow = useCallback(
     (p: ProductOption) => {
-      dispatch(setCurMotorbike(p));
-      router.push(`/${locale}/purchase-motorbike`);
+      if (!user) {
+        router.push(`/${locale}/login`);
+      } else {
+        dispatch(setCurMotorbike(p));
+        router.push(`/${locale}/purchase-motorbike`);
+      }
     },
-    [dispatch, router, locale]
+    [dispatch, user, router, locale]
   );
   const handleAddToCart = useCallback(
     (
@@ -169,9 +194,9 @@ SingleProduct.Image = function ProductImage({
     <div
       className={`${customClass ? customClass : 'w-full h-[350px]'} relative`}
     >
-      <div>
+      <div className='overflow-hidden'>
         <CustomImage
-          className='object-cover w-auto h-auto aspect-auto'
+          className='object-cover w-auto h-auto aspect-auto bg-center'
           image={selectedOption ? selectedOption.images[0] : product.images[0]}
           fetchPriority='low'
           width={state.isDesktop ? 280 : 180}

@@ -179,7 +179,7 @@ const ReviewsModal = () => {
       aria-disabled={isLoadingPostReview || isLoadingPostImage}
     >
       <div
-        className='bg-white max-h-[70vh] w-11/12 sm:w-3/4 xl:w-1/3 py-6 flex flex-col justify-between gap-4 rounded-sm overflow-y-auto'
+        className='bg-white text-neutral-800 text-sm md:text-base px-4 py-8 rounded-sm flex flex-col gap-6 min-h-[40vh] max-h-[80vh] w-full sm:w-3/4 md:w-2/3 xl:w-1/2 overflow-y-auto'
         ref={sectionRef as LegacyRef<HTMLDivElement>}
       >
         <div className='px-6 flex flex-col gap-4'>

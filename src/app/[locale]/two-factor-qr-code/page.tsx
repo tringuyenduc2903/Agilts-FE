@@ -104,14 +104,14 @@ function TwoFactorQrCodePage() {
   if (!isLoggedIn) return notFound();
   return (
     <main className='w-full pt-[72px] flex flex-col'>
-      <section className='absolute h-[500px] w-full -z-10 hidden lg:block'>
+      <section className='absolute h-full w-full -z-10 hidden lg:block'>
         <Image
           className='w-full h-full object-cover'
           src={bgImg}
           alt='bg-img'
         />
       </section>
-      <section className='lg:container m-auto py-8 w-full h-auto lg:h-[500px] bg-neutral-800 lg:bg-transparent grid grid-cols-1 lg:grid-cols-2 place-content-center gap-8'>
+      <section className='lg:container m-auto py-8 w-full h-full bg-neutral-800 lg:bg-transparent grid grid-cols-1 lg:grid-cols-2 place-content-center gap-8'>
         <div className='col-span-1 flex flex-col justify-center items-center gap-4 lg:items-start'>
           <h1 className='text-red-600 font-bold tracking-[8px]'>
             {t('performance')}

@@ -33,7 +33,8 @@
     "account_description": "Manage purchase orders and addresses",
     "search": "Search",
     "cart_title": "Cart",
-    "wishlist_title": "Wishlist"
+    "wishlist_title": "Wishlist",
+    "purchase": "Purchase Order"
   },
   "header": {
     "home": "Home",
@@ -204,7 +205,7 @@
     "specifications": "Specifications",
     "reviews": "Reviews",
     "edit_profile": "Edit profile",
-    "purchase_order": "Purchase orders",
+    "purchase_order": "Purchase order",
     "address": "Addresses",
     "address_list": "Addresses",
     "cart": "Cart",
@@ -304,7 +305,7 @@
     "model": "Model",
     "reset": "Reset",
     "apply": "Apply",
-    "seller_feedback": "Seller feedback",
+    "seller_feedback": "{name} feedback",
     "mess_no_review": "This product currently has no reviews!",
     "mess_upload_img": "Drag and drop or upload your image here",
     "evaluate": "Evaluate",
@@ -319,6 +320,14 @@
     "mess_success_wishlist": "Add product to wishlist successfully!",
     "wishlist": "Wishlist",
     "empty_wishlist": "Your wishlist is currently empty.",
-    "buy_now": "Buy now"
+    "buy_now": "Buy now",
+    "mess_no_address_default": "You don't have any default addresses yet.",
+    "mess_no_document_default": "You don't have any default profiles yet.",
+    "vehicle_registration_support": "Vehicle registration support",
+    "yes": "Yes",
+    "no": "No",
+    "update_the_quotation": "Update the quotation",
+    "mess_no_cur_order": "You don't have a product yet!",
+    "change": "Change"
   }
 }

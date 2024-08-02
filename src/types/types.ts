@@ -35,6 +35,7 @@ export type Address = {
 export type Branch = {
   id: number | string;
   name: string;
+  image: SingleImage;
   phone_number: number | string;
   address: Address;
   deleted_at: string;

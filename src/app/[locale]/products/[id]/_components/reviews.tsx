@@ -25,16 +25,10 @@ function Reviews({
   const t = useTranslations('common');
   const searchParams = useSearchParams();
   const [createQueryString, removeValueQueryString] = useQueryString();
-  const {
-    data: reviewData,
-    isSuccess: isSuccessReview,
-    isError: isErrorReview,
-  } = useGetProductReviewQuery({ id: id, search: searchParams.toString() });
-  const {
-    data: filterData,
-    isSuccess: isSuccessFilter,
-    isError: isErrorFilter,
-  } = useGetFilterReviewQuery(id);
+  const { data: reviewData, isSuccess: isSuccessReview } =
+    useGetProductReviewQuery({ id: id, search: searchParams.toString() });
+  const { data: filterData, isSuccess: isSuccessFilter } =
+    useGetFilterReviewQuery(id);
   const renderedFilter = useMemo(() => {
     return (
       isSuccessFilter &&
@@ -102,7 +96,6 @@ function Reviews({
       })
     );
   }, [isSuccessReview, reviewData, t]);
-  if (isErrorReview || isErrorFilter) throw new Error();
   return (
     <section
       id='reviews'

@@ -49,7 +49,7 @@ function WishlistPage() {
       </section>
       {!isLoadingWishlist && (
         <section className='w-full h-full container m-auto px-4'>
-          {wishlist.length > 0 ? (
+          {wishlist?.length > 0 ? (
             <div className='w-full overflow-x-auto text-sm md:text-base'>
               <table className='w-full whitespace-nowrap'>
                 <thead>

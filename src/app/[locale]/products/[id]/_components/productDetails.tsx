@@ -43,9 +43,9 @@ function ProductDetails({ product }: Props) {
   const [selectedOptionDetails, setSelectedOptionDetails] =
     useState<ProductOption | null>(null);
   const isWishlist = useMemo(() => {
-    return wishlist
-      .map((w) => w.product_preview.option_id)
-      .includes(selectedOptionDetails?.id as number);
+    return wishlist.find(
+      (w) => w.product_preview.option_id === selectedOptionDetails?.id
+    );
   }, [wishlist, selectedOptionDetails]);
   const [
     postWishList,
@@ -206,7 +206,7 @@ function ProductDetails({ product }: Props) {
                   disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
                   onClick={async () =>
                     isWishlist
-                      ? await deleteWishList(selectedOptionDetails.id)
+                      ? await deleteWishList(isWishlist.id)
                       : await postWishList({
                           version: selectedOptionDetails.id,
                         })

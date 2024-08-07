@@ -1,28 +1,32 @@
 'use client';
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import {
-  useGetFilterQuery,
-  useGetProductsQuery,
-} from '@/lib/redux/query/storesQuery';
 import { useResponsive } from '@/lib/hooks/useResponsive';
+import { useFetch } from '@/lib/hooks/useFetch';
+import { getFilterProduct, getProducts } from '@/api/product';
 const ProductsDesktop = lazy(() => import('./_components/desktop'));
 const ProductsMobile = lazy(() => import('./_components/mobile'));
 function ProductsLayout() {
   const searchParams = useSearchParams();
   const state = useResponsive();
   const {
+    fetchData: getFilterProductMutation,
     data: filterData,
     isSuccess: isSuccessFilter,
     isLoading: isLoadingFilter,
-    isFetching: isFetchingFilter,
-  } = useGetFilterQuery(null);
+  } = useFetch(async () => await getFilterProduct());
   const {
+    fetchData: getProductMutation,
     data: productsData,
     isSuccess: isSuccessProducts,
     isLoading: isLoadingProducts,
-    isFetching: isFetchingProducts,
-  } = useGetProductsQuery(searchParams.toString());
+  } = useFetch(async () => await getProducts(searchParams.toString()));
+  useEffect(() => {
+    getFilterProductMutation();
+  }, []);
+  useEffect(() => {
+    getProductMutation();
+  }, [searchParams]);
   return (
     <main className='w-full min-h-screen pt-[72px] flex flex-col'>
       <Suspense>
@@ -31,11 +35,9 @@ function ProductsLayout() {
             filterData={filterData}
             isSuccessFilter={isSuccessFilter}
             isLoadingFilter={isLoadingFilter}
-            isFetchingFilter={isFetchingFilter}
             productsData={productsData}
             isSuccessProducts={isSuccessProducts}
             isLoadingProducts={isLoadingProducts}
-            isFetchingProducts={isFetchingProducts}
           />
         )}
         {state.isMobile && (
@@ -45,7 +47,6 @@ function ProductsLayout() {
             productsData={productsData}
             isSuccessProducts={isSuccessProducts}
             isLoadingProducts={isLoadingProducts}
-            isFetchingProducts={isFetchingProducts}
           />
         )}
       </Suspense>

@@ -1,5 +1,19 @@
 import { ReactElement } from 'react';
-
+export type Params = {
+  id: string;
+  locale: string;
+};
+export type Login = {
+  email: string;
+  password: string;
+  remember: boolean;
+};
+export type Register = {
+  name: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+};
 export type User = {
   id: string | number;
   name: string;
@@ -111,8 +125,10 @@ export type ProductOption = {
 export type Product = {
   id: number;
   name: string;
+  search_url: string;
   description: string;
   must_direct_purchase: boolean;
+  manufacturer: string;
   options_min_price: {
     raw: number;
     preview: string;
@@ -163,6 +179,16 @@ export type Product = {
   deleted_at: string;
   created_at: string;
   updated_at: string;
+  seo: {
+    id: number;
+    title: string;
+    description: string;
+    image: string;
+    author: any;
+    robots: any;
+    created_at: string;
+    updated_at: string;
+  };
 };
 
 export type Review = {

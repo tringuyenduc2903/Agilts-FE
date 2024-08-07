@@ -16,12 +16,13 @@ import {
   IoSettingsOutline,
   IoHelpCircleOutline,
 } from 'react-icons/io5';
-import { useLogoutMutation } from '@/lib/redux/query/userQuery';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { UserContext } from '@/contexts/UserProvider';
 import { useDispatch } from 'react-redux';
-import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
+import { setUser } from '@/lib/redux/slice/userSlice';
 import { title } from '@/config/config';
 import { PopupContext } from '@/contexts/PopupProvider';
+import { useFetch } from '@/lib/hooks/useFetch';
+import { logout } from '@/api/user';
 type Props = {
   isOpenMenu: boolean;
   openMenu: () => void;
@@ -34,21 +35,18 @@ const MenuIcon: React.FC<Props> = React.memo(
     const t = useTranslations('header');
     const dispatch = useDispatch();
     const { setVisiblePopup } = useContext(PopupContext);
-    const { user, handleGetCSRFCookie, isLoadingCSRF } =
-      useContext(FetchDataContext);
+    const { user } = useContext(UserContext);
     const router = useRouter();
     const container = useRef<HTMLButtonElement | null>(null);
     const circlesRef = useRef<(HTMLDivElement | null)[]>([]);
     const { sectionRef, clickOutside } = useClickOutside(closeMenu);
-    const [
-      logout,
-      {
-        isSuccess: isSuccessLogout,
-        isLoading: isLoadingLogout,
-        isError: isErrorLogout,
-        error: errorLogout,
-      },
-    ] = useLogoutMutation();
+    const {
+      fetchData: logoutMutation,
+      isSuccess: isSuccessLogout,
+      isLoading: isLoadingLogout,
+      isError: isErrorLogout,
+      error: errorLogout,
+    } = useFetch(async () => await logout());
     useGSAP(
       () => {
         if (circlesRef.current.length > 0 && container.current && isOpenMenu) {
@@ -107,12 +105,11 @@ const MenuIcon: React.FC<Props> = React.memo(
       [router, closeMenu, locale]
     );
     const handleLogout = useCallback(async () => {
-      await handleGetCSRFCookie();
-      await logout(null);
-    }, [logout, handleGetCSRFCookie]);
+      await logoutMutation();
+    }, [logoutMutation]);
     useEffect(() => {
-      closeMenu();
       if (isSuccessLogout) {
+        closeMenu();
         router.replace(`/${locale}`);
         setVisiblePopup({
           visibleToastPopup: {
@@ -120,7 +117,7 @@ const MenuIcon: React.FC<Props> = React.memo(
             message: `${t('success_logout')}`,
           },
         });
-        dispatch(setIsLoggedIn(false));
+        dispatch(setUser(null));
       }
       if (isErrorLogout && errorLogout) {
         const error = errorLogout as any;
@@ -145,7 +142,7 @@ const MenuIcon: React.FC<Props> = React.memo(
       <div className='relative'>
         {!isOpenMenu && (
           <button
-            disabled={isLoadingLogout || isLoadingCSRF}
+            disabled={isLoadingLogout}
             onClick={openMenu}
             ref={container}
             className='relative circles-menu bg-red-500 p-6 w-full h-full grid grid-cols-4 gap-1'
@@ -156,7 +153,7 @@ const MenuIcon: React.FC<Props> = React.memo(
         )}
         {isOpenMenu && (
           <button
-            disabled={isLoadingLogout || isLoadingCSRF}
+            disabled={isLoadingLogout}
             onClick={() => clickOutside}
             ref={container}
             className='relative circles-menu bg-red-500 p-6 w-full h-full grid grid-cols-4 gap-1'
@@ -193,7 +190,7 @@ const MenuIcon: React.FC<Props> = React.memo(
                 <div className='my-4 flex flex-col gap-4 items-start'>
                   <button
                     className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
-                    disabled={isLoadingLogout || isLoadingCSRF}
+                    disabled={isLoadingLogout}
                     onClick={() => handleRedirect('wishlist')}
                   >
                     <IoHeartOutline className='text-2xl' />
@@ -201,7 +198,7 @@ const MenuIcon: React.FC<Props> = React.memo(
                   </button>
                   <button
                     className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
-                    disabled={isLoadingLogout || isLoadingCSRF}
+                    disabled={isLoadingLogout}
                     onClick={() => handleRedirect('user/account')}
                   >
                     <IoPersonCircleOutline className='text-2xl' />
@@ -209,7 +206,7 @@ const MenuIcon: React.FC<Props> = React.memo(
                   </button>
                   <button
                     className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
-                    disabled={isLoadingLogout || isLoadingCSRF}
+                    disabled={isLoadingLogout}
                     onClick={() => handleRedirect('user/settings')}
                   >
                     <IoSettingsOutline className='text-2xl' />
@@ -217,7 +214,7 @@ const MenuIcon: React.FC<Props> = React.memo(
                   </button>
                   <button
                     className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
-                    disabled={isLoadingLogout || isLoadingCSRF}
+                    disabled={isLoadingLogout}
                   >
                     <IoHelpCircleOutline className='text-2xl' />
                     <p>{t('help')}</p>
@@ -226,7 +223,7 @@ const MenuIcon: React.FC<Props> = React.memo(
                 <button
                   className='mt-auto ml-auto mb-6 bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
                   onClick={handleLogout}
-                  disabled={isLoadingLogout || isLoadingCSRF}
+                  disabled={isLoadingLogout}
                 >
                   {t('logout')}
                 </button>
@@ -235,14 +232,14 @@ const MenuIcon: React.FC<Props> = React.memo(
               <div className='w-full mt-auto flex justify-end gap-4'>
                 <button
                   className='w-max border border-red-600 bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
-                  disabled={isLoadingLogout || isLoadingCSRF}
+                  disabled={isLoadingLogout}
                   onClick={() => handleRedirect('login')}
                 >
                   {t('login')}
                 </button>
                 <button
                   className='w-max border border-neutral-500 px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
-                  disabled={isLoadingLogout || isLoadingCSRF}
+                  disabled={isLoadingLogout}
                   onClick={() => handleRedirect('register')}
                 >
                   {t('register')}

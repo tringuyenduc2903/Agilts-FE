@@ -1,74 +1,63 @@
 'use client';
-import React, { useCallback, useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import bgImg from '@/assets/port-title-area.jpg';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { useForgotPasswordMutation } from '@/lib/redux/query/userQuery';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
-import { notFound } from 'next/navigation';
-import Loading from '../loading';
 import { PopupContext } from '@/contexts/PopupProvider';
+import { forgotPassword } from '@/api/user';
+import withNoAuth from '@/protected-page/withNoAuth';
 
 type Form = {
   email: string;
 };
 function ForgotPasswordPage() {
   const t = useTranslations('common');
-  const {
-    user,
-    isLoadingUser,
-    isSuccessUser,
-    handleGetCSRFCookie,
-    isLoadingCSRF,
-  } = useContext(FetchDataContext);
   const { setVisiblePopup } = useContext(PopupContext);
-  const { register, handleSubmit } = useForm<Form>();
-  const [
-    forgotPassword,
-    {
-      data: postData,
-      isSuccess: isSuccessPost,
-      isLoading: isLoadingPost,
-      isError: isErrorPost,
-      error: errorPost,
-    },
-  ] = useForgotPasswordMutation();
+  const [errors, setErrors] = useState<any>(null);
+  const [success, setSuccess] = useState<any>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<Form>();
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {
-      await handleGetCSRFCookie();
-      await forgotPassword(data.email);
+      const res = await forgotPassword(data.email);
+      if (res.type === 'error') {
+        setErrors(res.data);
+        setSuccess(null);
+      }
+      if (res.type === 'success') {
+        setSuccess(res.data);
+        setErrors(null);
+      }
     },
-    [handleGetCSRFCookie, forgotPassword]
+    [forgotPassword]
   );
   useEffect(() => {
-    if (isLoadingCSRF || isLoadingPost) {
+    if (isSubmitting) {
       setVisiblePopup({ visibleLoadingPopup: true });
     } else {
       setVisiblePopup({ visibleLoadingPopup: false });
     }
-  }, [isLoadingCSRF, isLoadingPost, setVisiblePopup]);
-  useEffect(() => {
-    if (isSuccessPost && postData) {
+    if (!isSubmitting && success) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
-          message: postData?.message,
+          message: success?.message,
         },
       });
     }
-    if (isErrorPost && errorPost) {
-      const error = errorPost as any;
+    if (!isSubmitting && errors) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: errors?.message,
         },
       });
     }
-  }, [isSuccessPost, postData, isErrorPost, errorPost, setVisiblePopup]);
-  if (isLoadingUser) return <Loading />;
-  if (user && isSuccessUser && !isLoadingUser) return notFound();
+  }, [isSubmitting, success, errors, setVisiblePopup]);
   return (
     <main className='w-full pt-[72px] flex flex-col'>
       <section className='absolute h-full w-full -z-10 hidden lg:block'>
@@ -106,11 +95,12 @@ function ForgotPasswordPage() {
                 formNoValidate
                 placeholder={`${t('enter_email')}`}
                 {...register('email')}
+                disabled={isSubmitting}
               />
             </div>
             <button
               className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
-              disabled={isLoadingPost || isLoadingCSRF}
+              disabled={isSubmitting}
             >
               {t('submit')}
             </button>
@@ -121,4 +111,4 @@ function ForgotPasswordPage() {
   );
 }
 
-export default ForgotPasswordPage;
+export default withNoAuth(ForgotPasswordPage);

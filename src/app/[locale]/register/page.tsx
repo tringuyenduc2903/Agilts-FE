@@ -1,14 +1,6 @@
 'use client';
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
-import { notFound, useParams, useRouter } from 'next/navigation';
-import Loading from '../loading';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import bgLogo from '@/assets/h4-slider-img-1.jpg';
 import Image from 'next/image';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -19,52 +11,39 @@ import {
   FaRegEyeSlash,
 } from 'react-icons/fa6';
 import { useTranslations } from 'next-intl';
-import { useRegisterMutation } from '@/lib/redux/query/userQuery';
 import { getCookies } from 'cookies-next';
 import { PopupContext } from '@/contexts/PopupProvider';
-type Form = {
-  name: string;
-  email: string;
-  password: string;
-  password_confirmation: string;
-};
+import { Register } from '@/types/types';
+import { registerAccount } from '@/api/user';
+import { UserContext } from '@/contexts/UserProvider';
+import withNoAuth from '@/protected-page/withNoAuth';
 function RegisterPage() {
   const { locale } = useParams();
   const router = useRouter();
-  const {
-    user,
-    isLoadingUser,
-    refetchUser,
-    handleGetCSRFCookie,
-    isLoadingCSRF,
-  } = useContext(FetchDataContext);
+  const { refetchUser } = useContext(UserContext);
   const t = useTranslations('common');
-  const { register, handleSubmit } = useForm<Form>();
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<Register>();
   const [isShowPwd, setIsShowPwd] = useState(false);
   const [isShowConfirmPwd, setIsShowConfirmPwd] = useState(false);
   const { setVisiblePopup } = useContext(PopupContext);
-  const [
-    registerUser,
-    {
-      isSuccess: isSuccessRegister,
-      isLoading: isLoadingRegister,
-      isError: isErrorRegister,
-      error: errorRegister,
-    },
-  ] = useRegisterMutation();
-  const errors = useMemo(() => {
-    if (isErrorRegister && errorRegister) {
-      const error = errorRegister as any;
-      return error?.data?.errors;
-    }
-    return null;
-  }, [isErrorRegister, errorRegister]);
-  const onSubmit: SubmitHandler<Form> = useCallback(
+  const [errors, setErrors] = useState<any>(null);
+  const [success, setSuccess] = useState<any>(null);
+  const onSubmit: SubmitHandler<Register> = useCallback(
     async (data) => {
-      await handleGetCSRFCookie();
-      await registerUser(data);
+      const res = await registerAccount(data);
+      if (res.type === 'error') {
+        setErrors(res.data);
+        setSuccess(null);
+      } else {
+        setErrors(null);
+        setSuccess(res.data);
+      }
     },
-    [handleGetCSRFCookie, registerUser]
+    [registerAccount]
   );
   const redirectToOauth = useCallback((provider: 'google' | 'facebook') => {
     if (typeof window !== 'undefined') {
@@ -75,14 +54,22 @@ function RegisterPage() {
     }
   }, []);
   useEffect(() => {
-    if (isLoadingCSRF || isLoadingRegister) {
+    if (isSubmitting) {
       setVisiblePopup({ visibleLoadingPopup: true });
     } else {
       setVisiblePopup({ visibleLoadingPopup: false });
     }
-  }, [isLoadingCSRF, isLoadingRegister, setVisiblePopup]);
+    if (!isSubmitting && errors) {
+      setVisiblePopup({
+        visibleToastPopup: {
+          type: 'error',
+          message: errors?.message,
+        },
+      });
+    }
+  }, [isSubmitting, setVisiblePopup]);
   useEffect(() => {
-    if (isSuccessRegister) {
+    if (success) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
@@ -92,30 +79,7 @@ function RegisterPage() {
       router.replace(`/${locale}`);
       refetchUser();
     }
-    if (isErrorRegister && errorRegister) {
-      const err = errorRegister as any;
-      setVisiblePopup({
-        visibleToastPopup: {
-          type: 'error',
-          message: err?.data?.message,
-        },
-      });
-    }
-  }, [
-    isSuccessRegister,
-    isErrorRegister,
-    errorRegister,
-    setVisiblePopup,
-    t,
-    router,
-    refetchUser,
-    locale,
-  ]);
-  if (user) return router.replace(`/${locale}`);
-  if (user && !isLoadingUser) {
-    return notFound();
-  }
-  if (isLoadingUser) return <Loading />;
+  }, [setVisiblePopup, t, router, refetchUser, locale]);
   return (
     <main className='w-full h-full flex justify-center items-center font-medium text-sm sm:text-base overflow-y-auto'>
       <section
@@ -146,9 +110,9 @@ function RegisterPage() {
               placeholder={`${t('name')}`}
               {...register('name')}
             />
-            {errors?.name && (
+            {errors?.errors?.name && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.name[0]}
+                {errors?.errors.name[0]}
               </p>
             )}
           </div>
@@ -159,9 +123,9 @@ function RegisterPage() {
               placeholder='Email'
               {...register('email')}
             />
-            {errors?.email && (
+            {errors?.errors?.email && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.email[0]}
+                {errors?.errors.email[0]}
               </p>
             )}
           </div>
@@ -178,7 +142,7 @@ function RegisterPage() {
                 className='absolute top-1/2 -translate-y-1/2 right-2'
                 aria-label='toggle-pwd-btn'
                 onClick={() => setIsShowPwd(!isShowPwd)}
-                disabled={isLoadingRegister || isLoadingCSRF}
+                disabled={isSubmitting}
               >
                 {isShowPwd ? (
                   <FaRegEye className='text-xl' />
@@ -187,9 +151,9 @@ function RegisterPage() {
                 )}
               </button>
             </div>
-            {errors?.password && (
+            {errors?.errors?.password && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.password[0]}
+                {errors?.errors.password[0]}
               </p>
             )}
           </div>
@@ -218,7 +182,7 @@ function RegisterPage() {
           <button
             className='w-full rounded-sm bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
             type='submit'
-            disabled={isLoadingRegister}
+            disabled={isSubmitting}
           >
             {t('register')}
           </button>
@@ -231,7 +195,7 @@ function RegisterPage() {
                 onClick={() =>
                   router.push(`/${getCookies()?.NEXT_LOCALE || 'vi'}/login`)
                 }
-                disabled={isLoadingRegister || isLoadingCSRF}
+                disabled={isSubmitting}
               >
                 {t('sign-in')}
               </button>
@@ -242,7 +206,7 @@ function RegisterPage() {
                 <button
                   type='button'
                   className='bg-neutral-800 rounded-full p-2 text-white hover:text-red-500 transition-colors'
-                  disabled={isLoadingRegister || isLoadingCSRF}
+                  disabled={isSubmitting}
                   onClick={() => redirectToOauth('google')}
                 >
                   <FaGoogle className='text-lg' />
@@ -250,7 +214,7 @@ function RegisterPage() {
                 <button
                   type='button'
                   className='bg-neutral-800 rounded-full p-2 text-white hover:text-blue-500 transition-colors'
-                  disabled={isLoadingRegister || isLoadingCSRF}
+                  disabled={isSubmitting}
                   onClick={() => redirectToOauth('facebook')}
                 >
                   <FaFacebookF className='text-lg' />
@@ -269,4 +233,4 @@ function RegisterPage() {
   );
 }
 
-export default RegisterPage;
+export default withNoAuth(RegisterPage);

@@ -1,6 +1,5 @@
 'use client';
 import useClickOutside from '@/lib/hooks/useClickOutside';
-import { useLogoutMutation } from '@/lib/redux/query/userQuery';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import React, {
@@ -18,20 +17,21 @@ import {
   IoHelpCircleOutline,
   IoHeartOutline,
 } from 'react-icons/io5';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { UserContext } from '@/contexts/UserProvider';
 import { useDispatch } from 'react-redux';
-import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
+import { setUser } from '@/lib/redux/slice/userSlice';
 import { setCookie } from 'cookies-next';
 import { subRoutes } from '../../../headerData';
 import { PopupContext } from '@/contexts/PopupProvider';
+import { useFetch } from '@/lib/hooks/useFetch';
+import { logout } from '@/api/user';
 type Props = {
   isOpenMenu: boolean;
   closeMenu: () => void;
 };
 const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
   const { locale } = useParams();
-  const { user, handleGetCSRFCookie, isLoadingCSRF } =
-    useContext(FetchDataContext);
+  const { user } = useContext(UserContext);
   const t = useTranslations('header');
   const dispatch = useDispatch();
   const { setVisiblePopup } = useContext(PopupContext);
@@ -41,15 +41,13 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
   const [subRoute, setSubRoute] = useState<null | String>(null);
   const [hoverSubRoute, setHoverSubRoute] = useState<null | String>(null);
   const { sectionRef } = useClickOutside(closeMenu);
-  const [
-    logout,
-    {
-      isSuccess: isSuccessLogout,
-      isLoading: isLoadingLogout,
-      isError: isErrorLogout,
-      error: errorLogout,
-    },
-  ] = useLogoutMutation();
+  const {
+    fetchData: logoutMutation,
+    isSuccess: isSuccessLogout,
+    isLoading: isLoadingLogout,
+    isError: isErrorLogout,
+    error: errorLogout,
+  } = useFetch(async () => await logout());
   const handleRedirect = useCallback(
     (url: string) => {
       router.push(`/${locale}/${url}`);
@@ -67,9 +65,8 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
     [closeMenu, pathname]
   );
   const handleLogout = useCallback(async () => {
-    await handleGetCSRFCookie();
-    await logout(null);
-  }, [logout, handleGetCSRFCookie]);
+    await logoutMutation();
+  }, [logout]);
   useEffect(() => {
     closeMenu();
     if (isSuccessLogout) {
@@ -79,7 +76,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
           message: `${t('success_logout')}`,
         },
       });
-      dispatch(setIsLoggedIn(false));
+      dispatch(setUser(null));
       router.replace(`/${locale}`);
     }
     if (isErrorLogout && errorLogout) {
@@ -112,7 +109,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
       <div
         ref={isOpenMenu ? (sectionRef as LegacyRef<HTMLDivElement>) : null}
         className='sm:w-2/3 md:w-1/2 h-full bg-white p-4 flex flex-col gap-6'
-        aria-disabled={isLoadingLogout || isLoadingCSRF}
+        aria-disabled={isLoadingLogout}
       >
         <div className='pb-4 border-b border-neutral-300 flex justify-between'>
           {user ? (
@@ -125,7 +122,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
               <div className='my-4 flex flex-col gap-4 items-start'>
                 <button
                   className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
-                  disabled={isLoadingLogout || isLoadingCSRF}
+                  disabled={isLoadingLogout}
                   onClick={() => handleRedirect('wishlist')}
                 >
                   <IoHeartOutline className='text-2xl' />
@@ -133,7 +130,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                 </button>
                 <button
                   className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
-                  disabled={isLoadingLogout || isLoadingCSRF}
+                  disabled={isLoadingLogout}
                   onClick={() => handleRedirect('user/account')}
                 >
                   <IoPersonCircleOutline className='text-2xl' />
@@ -141,7 +138,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                 </button>
                 <button
                   className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
-                  disabled={isLoadingLogout || isLoadingCSRF}
+                  disabled={isLoadingLogout}
                   onClick={() => handleRedirect('user/settings')}
                 >
                   <IoSettingsOutline className='text-2xl' />
@@ -149,7 +146,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                 </button>
                 <button
                   className='w-max flex items-center gap-2 hover:text-red-500 transition-colors'
-                  disabled={isLoadingLogout || isLoadingCSRF}
+                  disabled={isLoadingLogout}
                 >
                   <IoHelpCircleOutline className='text-2xl' />
                   <p>{t('help')}</p>
@@ -160,14 +157,14 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
             <div className='flex items-center gap-4'>
               <button
                 className='w-max border border-red-600 bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
-                disabled={isLoadingLogout || isLoadingCSRF}
+                disabled={isLoadingLogout}
                 onClick={() => handleRedirect('login')}
               >
                 {t('login')}
               </button>
               <button
                 className='w-max border border-neutral-500 px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
-                disabled={isLoadingLogout || isLoadingCSRF}
+                disabled={isLoadingLogout}
                 onClick={() => handleRedirect('register')}
               >
                 {t('register')}
@@ -178,7 +175,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
             className='w-max h-max'
             aria-label='close-menu-routes'
             onClick={closeMenu}
-            disabled={isLoadingLogout || isLoadingCSRF}
+            disabled={isLoadingLogout}
           >
             <FaXmark className='text-2xl' />
           </button>
@@ -192,7 +189,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
             onClick={() => handleRedirect('')}
             onMouseEnter={() => setHoverRoute('home')}
             onMouseLeave={() => setHoverRoute(null)}
-            aria-disabled={isLoadingLogout || isLoadingCSRF}
+            aria-disabled={isLoadingLogout}
             prefetch={true}
           >
             <p className='relative py-1'>
@@ -214,7 +211,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
             }
             onMouseEnter={() => setHoverRoute('pages')}
             onMouseLeave={() => setHoverRoute(null)}
-            aria-disabled={isLoadingLogout || isLoadingCSRF}
+            aria-disabled={isLoadingLogout}
           >
             <button className='w-full uppercase flex justify-between items-center gap-8'>
               <p>{t('pages')}</p>
@@ -240,7 +237,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                       onClick={() => handleRedirect(r)}
                       onMouseOver={() => setHoverSubRoute(r)}
                       onMouseOut={() => setHoverSubRoute(null)}
-                      aria-disabled={isLoadingLogout || isLoadingCSRF}
+                      aria-disabled={isLoadingLogout}
                       prefetch={true}
                     >
                       <span className='w-6 h-[2px] bg-red-600'></span>
@@ -269,7 +266,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
             onClick={() => handleRedirect('/products')}
             onMouseEnter={() => setHoverRoute('products')}
             onMouseLeave={() => setHoverRoute(null)}
-            aria-disabled={isLoadingLogout || isLoadingCSRF}
+            aria-disabled={isLoadingLogout}
             prefetch={true}
           >
             <p className='relative py-1'>
@@ -286,7 +283,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
             onClick={() => handleRedirect('/cart')}
             onMouseEnter={() => setHoverRoute('cart')}
             onMouseLeave={() => setHoverRoute(null)}
-            aria-disabled={isLoadingLogout || isLoadingCSRF}
+            aria-disabled={isLoadingLogout}
             prefetch={true}
           >
             <p className='relative py-1'>
@@ -306,7 +303,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
               }
               onMouseEnter={() => setHoverRoute('languages')}
               onMouseLeave={() => setHoverRoute(null)}
-              disabled={isLoadingLogout || isLoadingCSRF}
+              disabled={isLoadingLogout}
             >
               <p>{t('languages')}</p>
               <FaAngleRight
@@ -330,7 +327,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                   onClick={() => handleChangeLang('vi', 'en')}
                   onMouseOver={() => setHoverSubRoute('english')}
                   onMouseOut={() => setHoverSubRoute(null)}
-                  disabled={isLoadingLogout || isLoadingCSRF}
+                  disabled={isLoadingLogout}
                 >
                   {t('english')}
                 </button>
@@ -345,7 +342,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
                   onClick={() => handleChangeLang('en', 'vi')}
                   onMouseOver={() => setHoverSubRoute('vietnamese')}
                   onMouseOut={() => setHoverSubRoute(null)}
-                  disabled={isLoadingLogout || isLoadingCSRF}
+                  disabled={isLoadingLogout}
                 >
                   {t('vietnamese')}
                 </button>
@@ -357,7 +354,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
           <button
             className='mt-auto ml-auto bg-red-600 text-white px-8 py-2 tracking-[2px] text-lg font-bold rounded-sm'
             onClick={handleLogout}
-            disabled={isLoadingLogout || isLoadingCSRF}
+            disabled={isLoadingLogout}
           >
             {t('logout')}
           </button>

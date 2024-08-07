@@ -2,7 +2,7 @@
 import Loading from '@/app/[locale]/loading';
 import NotFoundItem from '@/components/ui/NotFoundItem';
 import { documents } from '@/config/config';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { UserContext } from '@/contexts/UserProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
 import withAuth from '@/protected-page/withAuth';
 import { useTranslations } from 'next-intl';
@@ -15,7 +15,7 @@ function DocumentsPage() {
   const { locale } = useParams();
   const router = useRouter();
   const { setVisibleModal } = useContext(ModalContext);
-  const { allDocuments, isLoadingDocuments } = useContext(FetchDataContext);
+  const { allDocuments, isLoadingDocuments } = useContext(UserContext);
   const renderedDocuments = useMemo(() => {
     return (
       allDocuments?.map((d) => {
@@ -50,10 +50,6 @@ function DocumentsPage() {
               {t('issuance_date')}:{' '}
               <span className='font-bold break-words'>{d.issuance_date}</span>
             </p>
-            {/* <p>
-              {t('expiry_date')}:{' '}
-              <span className='font-bold'>{d.expiry_date}</span>
-            </p> */}
             <div className='w-full flex justify-end'>
               <button
                 className='text-sm md:text-base font-bold text-blue-500'

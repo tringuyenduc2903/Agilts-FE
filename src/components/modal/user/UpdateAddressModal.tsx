@@ -1,18 +1,18 @@
 'use client';
+import { updateAddress } from '@/api/address';
 import { defaultCountry } from '@/config/config';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { PopupContext } from '@/contexts/PopupProvider';
+import { UserContext } from '@/contexts/UserProvider';
+import { useFetch } from '@/lib/hooks/useFetch';
 import {
   useGetDistrictsQuery,
   useGetProvincesQuery,
   useGetWardsQuery,
 } from '@/lib/redux/query/countryQuery';
-import { useUpdateAddressMutation } from '@/lib/redux/query/userQuery';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React, {
-  LegacyRef,
   useCallback,
   useContext,
   useEffect,
@@ -49,7 +49,7 @@ type Form = {
 function UpdateAddressModal() {
   const { locale } = useParams();
   const t = useTranslations('common');
-  const { defaultAddress } = useContext(FetchDataContext);
+  const { refetchAddress } = useContext(UserContext);
   const { state, setVisibleModal } = useContext(ModalContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const [country, setCountry] = useState<Form>({
@@ -83,21 +83,33 @@ function UpdateAddressModal() {
     country.district.code,
     { skip: !country.district.code }
   );
-  const [
-    updateAddress,
-    {
-      isLoading: isLoadingUpdate,
-      isSuccess: isSuccessUpdate,
-      isError: isErrorUpdate,
-      error: errorUpdate,
-    },
-  ] = useUpdateAddressMutation();
+  const {
+    fetchData: updateAddressMutation,
+    isLoading: isLoadingUpdate,
+    isSuccess: isSuccessUpdate,
+    isError: isErrorUpdate,
+    error: errorUpdate,
+  } = useFetch(
+    async () =>
+      await updateAddress({
+        body: {
+          default: country.default,
+          type: country.type,
+          country: defaultCountry,
+          province: country.province.full_name,
+          district: country.district.full_name,
+          ward: country.ward.full_name,
+          address_detail: country.address_detail,
+        },
+        address_id: state?.visibleUpdateAddressModal.id,
+      })
+  );
   const errors = useMemo(() => {
     if (isErrorUpdate && errorUpdate) {
       const error = errorUpdate as any;
       return {
-        errors: error?.data?.errors,
-        message: error?.data?.message,
+        errors: error?.errors,
+        message: error?.message,
       };
     }
     return null;
@@ -262,20 +274,9 @@ function UpdateAddressModal() {
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      await updateAddress({
-        body: {
-          default: country.default,
-          type: country.type,
-          country: defaultCountry,
-          province: country.province.full_name,
-          district: country.district.full_name,
-          ward: country.ward.full_name,
-          address_detail: country.address_detail,
-        },
-        address_id: state.visibleUpdateAddressModal?.id,
-      });
+      await updateAddressMutation();
     },
-    [updateAddress, country, state.visibleUpdateAddressModal]
+    [updateAddressMutation]
   );
   useEffect(() => {
     if (isLoadingUpdate) {
@@ -286,6 +287,7 @@ function UpdateAddressModal() {
   }, [isLoadingUpdate, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessUpdate) {
+      refetchAddress();
       setVisibleModal('visibleUpdateAddressModal');
       setVisiblePopup({
         visibleToastPopup: {
@@ -307,6 +309,7 @@ function UpdateAddressModal() {
     isSuccessUpdate,
     isErrorUpdate,
     errorUpdate,
+    refetchAddress,
     setVisiblePopup,
     setVisibleModal,
     t,

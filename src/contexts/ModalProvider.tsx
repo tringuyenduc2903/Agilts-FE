@@ -4,7 +4,6 @@ import { createContext, useCallback, useReducer } from 'react';
 type InitialState = {
   visibleTwoFactorAuthenticationModal: boolean;
   visibleConfirmPasswordModal: {
-    // cb: () => Promise<void> | null;
     state: 'success' | 'error' | 'idle';
     display: boolean;
   };
@@ -19,8 +18,10 @@ type InitialState = {
     totalImages: number;
     images: any[];
   };
+  visibleListAddressModal: boolean;
   visibleAddAddressModal: boolean;
   visibleUpdateAddressModal: Address;
+  visibleListDocumentModal: boolean;
   visibleAddDocumentModal: boolean;
   visibleUpdateDocumentModal: Document;
   visibleReviewsModal: ProductOption | null;

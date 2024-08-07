@@ -8,13 +8,12 @@ import dynamic from 'next/dynamic';
 import { Metadata } from 'next';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ModalProvider } from '@/contexts/ModalProvider';
-import { FetchDataProvider } from '@/contexts/FetchDataProvider';
 import { Analytics } from '@vercel/analytics/react';
 import { title } from '@/config/config';
 import { PopupProvider } from '@/contexts/PopupProvider';
 import { locales } from '@/i18n';
 import StoreProvider from '@/contexts/StoreProvider';
-
+import { UserProvider } from '@/contexts/UserProvider';
 const DynamicHeader = dynamic(
   () => import('@/components/common/Header/Header'),
   { ssr: false }
@@ -77,13 +76,12 @@ export default async function HomeLayout({
   const messages = await getMessages({
     locale: locale,
   });
-
   return (
     <html lang={locale}>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <StoreProvider>
-            <FetchDataProvider>
+            <UserProvider>
               <PopupProvider>
                 <ModalProvider>
                   <DynamicHeader />
@@ -94,7 +92,7 @@ export default async function HomeLayout({
                   <DynamicPopup />
                 </ModalProvider>
               </PopupProvider>
-            </FetchDataProvider>
+            </UserProvider>
           </StoreProvider>
           <Analytics debug={false} />
           <SpeedInsights />

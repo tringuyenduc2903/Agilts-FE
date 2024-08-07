@@ -1,5 +1,5 @@
 'use client';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { UserContext } from '@/contexts/UserProvider';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
@@ -7,7 +7,7 @@ import React, { useContext, useState } from 'react';
 import { FaXmark } from 'react-icons/fa6';
 
 function Cart() {
-  const { cart } = useContext(FetchDataContext);
+  const { cart } = useContext(UserContext);
   const t = useTranslations('header');
   const { locale } = useParams();
   const router = useRouter();

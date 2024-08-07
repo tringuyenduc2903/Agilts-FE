@@ -38,7 +38,7 @@ function ImageModal() {
   }, [state?.visibleImageModal?.totalImages]);
   const handlePrev = useCallback(() => {
     setCurImage((prevImage) => {
-      if (prevImage <= 1) return state?.visibleImageModal?.totalImages - 1;
+      if (prevImage < 1) return state?.visibleImageModal?.totalImages - 1;
       return prevImage - 1;
     });
   }, [state?.visibleImageModal?.totalImages]);

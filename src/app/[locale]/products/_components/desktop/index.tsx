@@ -1,6 +1,12 @@
 'use client';
 import BreadCrumbs from '@/components/ui/BreadCrumbs';
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useParams, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import {
@@ -19,21 +25,17 @@ type Props = {
   filterData: any;
   isSuccessFilter: boolean;
   isLoadingFilter: boolean;
-  isFetchingFilter: boolean;
   productsData: any;
   isSuccessProducts: boolean;
   isLoadingProducts: boolean;
-  isFetchingProducts: boolean;
 };
 function ProductsDesktop({
   filterData,
   isSuccessFilter,
   isLoadingFilter,
-  isFetchingFilter,
   productsData,
   isSuccessProducts,
   isLoadingProducts,
-  isFetchingProducts,
 }: Props) {
   const { locale } = useParams();
   const searchParams = useSearchParams();
@@ -72,18 +74,33 @@ function ProductsDesktop({
   useLayoutEffect(() => {
     handleResetSelectedAction();
   }, [searchParams]);
+  const filterCategory = useMemo(() => {
+    return (
+      isSuccessFilter && filterData?.find((f: any) => f.name === 'category')
+    );
+  }, [filterData, isSuccessFilter]);
+  const formatFilter = useMemo(() => {
+    const formatted: { [key: string]: any } = {};
+    if (isSuccessFilter && filterData) {
+      filterData?.forEach((f: any) => {
+        formatted[f.name] = f;
+      });
+    }
+    return formatted;
+  }, [isSuccessFilter, filterData]);
   return (
     <>
       <BreadCrumbs path={`/${locale}/products`} />
       <section className='w-full min-h-screen py-16 m-auto px-4 md:px-8 xl:px-16 gap-16 overflow-hidden grid grid-cols-10'>
         <div className='col-span-2 rounded-sm border-r border-neutral-200 px-4'>
-          {isSuccessFilter && !isLoadingFilter && !isFetchingFilter && (
+          {isSuccessFilter && !isLoadingFilter && (
             <CategoriesSection
-              name={filterData[5]?.name as string}
-              data={filterData[5]?.data}
+              name={filterCategory?.name}
+              data={filterCategory?.data}
+              label={filterCategory?.label}
             />
           )}
-          {(isLoadingFilter || isFetchingFilter) && <SkeletonCategory />}
+          {isLoadingFilter && <SkeletonCategory />}
         </div>
         <div className='col-span-8 h-full flex flex-col gap-16'>
           <div className='w-full flex flex-col gap-4'>
@@ -115,10 +132,13 @@ function ProductsDesktop({
                 {isSuccessFilter && (
                   <FilterSection
                     action={selectedAction}
-                    versions={filterData[4]}
-                    colors={filterData[3]}
-                    minPrice={filterData[1]?.data}
-                    maxPrice={filterData[2]?.data}
+                    versions={formatFilter?.version}
+                    colors={formatFilter?.color}
+                    minPrice={formatFilter?.minPrice}
+                    maxPrice={formatFilter?.maxPrice}
+                    product_type={formatFilter?.product_type}
+                    option_type={formatFilter?.option_type}
+                    manufacturer={formatFilter?.manufacturer}
                   />
                 )}
               </div>
@@ -142,7 +162,7 @@ function ProductsDesktop({
                 </button>
               </div>
             </div>
-            {!isFetchingProducts && productsData && (
+            {!isLoadingProducts && productsData && (
               <div className='w-full flex justify-end'>
                 {productsData?.total > 0 ? (
                   <h3 className='text-lg text-start font-bold tracking-[2px]'>
@@ -158,7 +178,6 @@ function ProductsDesktop({
             )}
           </div>
           {!isLoadingProducts &&
-            !isFetchingProducts &&
             isSuccessProducts &&
             productsData?.data?.length > 0 && (
               <ProductsSection
@@ -167,8 +186,7 @@ function ProductsDesktop({
                 current_page={productsData?.current_page}
               />
             )}
-          {(isLoadingProducts || isFetchingProducts) && <SkeletonProduct />}
-
+          {isLoadingProducts && <SkeletonProduct />}
           {!isLoadingProducts &&
             isSuccessProducts &&
             productsData?.data?.length === 0 && (

@@ -206,7 +206,7 @@
     "reviews": "Reviews",
     "edit_profile": "Edit profile",
     "purchase_order": "Purchase order",
-    "address": "Addresses",
+    "address": "Address",
     "address_list": "Addresses",
     "cart": "Cart",
     "add_address": "Add address",
@@ -328,6 +328,7 @@
     "no": "No",
     "update_the_quotation": "Update the quotation",
     "mess_no_cur_order": "You don't have a product yet!",
-    "change": "Change"
+    "change": "Change",
+    "manufacturer": "Manufacturer"
   }
 }

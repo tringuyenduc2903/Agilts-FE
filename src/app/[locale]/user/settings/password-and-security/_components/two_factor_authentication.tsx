@@ -1,14 +1,5 @@
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { UserContext } from '@/contexts/UserProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
-import {
-  useConfirm2FAMutation,
-  useDeleteTwoFactorMutation,
-  useGetRecoveryCodesQuery,
-  usePostRecoveryCodesMutation,
-  useTurnOn2FAMutation,
-  useTwoFactorQrCodeQuery,
-  useTwoFactorSecretKeyQuery,
-} from '@/lib/redux/query/userQuery';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -16,7 +7,6 @@ import React, {
   useCallback,
   useContext,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -24,6 +14,16 @@ import { useTranslations } from 'next-intl';
 import { FaAngleLeft, FaXmark } from 'react-icons/fa6';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { PopupContext } from '@/contexts/PopupProvider';
+import { useFetch } from '@/lib/hooks/useFetch';
+import {
+  confirm2FA,
+  getRecoveryCodes,
+  postRecoveryCodes,
+  turnOf2FA,
+  turnOn2FA,
+  twoFactorQrCode,
+  twoFactorSecretKey,
+} from '@/api/user';
 type Props = {
   closeForm: () => void;
 };
@@ -31,74 +31,74 @@ type Form = {
   code: string;
 };
 const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
-  const { user, refetchUser } = useContext(FetchDataContext);
+  const { user, refetchUser } = useContext(UserContext);
   const t = useTranslations('common');
   const { setVisibleModal } = useContext(ModalContext);
-  const { setVisiblePopup, closeAllPopup } = useContext(PopupContext);
+  const { setVisiblePopup } = useContext(PopupContext);
   const [curStep, setCurStep] = useState(1);
   const containerRef = useRef<HTMLElement | null>(null);
   const firstStepRef = useRef<HTMLDivElement | null>(null);
   const secondStepRef = useRef<HTMLDivElement | null>(null);
   const thirdStepRef = useRef<HTMLDivElement | null>(null);
   const fourthStepRef = useRef<HTMLDivElement | null>(null);
-  const [
-    turnOn2FA,
-    { isSuccess: isSuccessTurnOn, isLoading: isLoadingTurnOn },
-  ] = useTurnOn2FAMutation();
+  const [errorsConfirm2FA, setErrorsConfirm2FA] = useState<any>(null);
+  const [successConfirm2FA, setSuccessConfirm2FA] = useState<any>(null);
   const {
+    fetchData: turnOn2FAMutation,
+    isSuccess: isSuccessTurnOn,
+    isLoading: isLoadingTurnOn,
+  } = useFetch(async () => await turnOn2FA());
+  const {
+    fetchData: twoFactorQrCodeMutation,
     data: qrCode,
     isSuccess: isSuccessQrCode,
     isLoading: isLoadingQrCode,
     isError: isErrQrCode,
     error: errorQrCode,
-  } = useTwoFactorQrCodeQuery(null, { skip: !isSuccessTurnOn });
+  } = useFetch(async () => await twoFactorQrCode());
   const {
+    fetchData: twoFactorSecretKeyMutation,
     data: secretKey,
     isSuccess: isSuccessSecretKey,
     isLoading: isLoadingSecretKey,
     isError: isErrSecretKey,
     error: errorSecretKey,
-  } = useTwoFactorSecretKeyQuery(null, { skip: !isSuccessTurnOn });
-  const [
-    confirm2FA,
-    {
-      isSuccess: isSuccessConfirm,
-      isLoading: isLoadingConfirm,
-      isError: isErrorConfirm,
-      error: errorConfirm,
-    },
-  ] = useConfirm2FAMutation();
-  const [
-    postRecoveryCodes,
-    { isSuccess: isSuccessRecoveryCodes, isLoading: isLoadingRecoveryCodes },
-  ] = usePostRecoveryCodesMutation();
+  } = useFetch(async () => await twoFactorSecretKey());
   const {
+    fetchData: postRecoveryCodesMutation,
+    isLoading: isLoadingRecoveryCodes,
+  } = useFetch(async () => await postRecoveryCodes());
+  const {
+    fetchData: getRecoveryCodesMutation,
     data: listCodes,
     isSuccess: isSuccessListCodes,
     isLoading: isLoadingListCodes,
-  } = useGetRecoveryCodesQuery(null, {
-    skip: !isSuccessConfirm && !isSuccessRecoveryCodes,
-  });
-  const [
-    deleteTwoFactor,
-    {
-      isSuccess: isSuccessDelete,
-      isLoading: isLoadingDelete,
-      isError: isErrorDelete,
-      error: errorDelete,
-    },
-  ] = useDeleteTwoFactorMutation();
-  const errors = useMemo(() => {
-    if (isErrorConfirm && errorConfirm) {
-      const error = errorConfirm as any;
-      return error?.data?.errors;
-    }
-    return null;
-  }, [isErrorConfirm, errorConfirm]);
-  const { register, handleSubmit } = useForm<Form>();
+  } = useFetch(async () => await getRecoveryCodes());
+  const {
+    fetchData: turnOf2FAMutation,
+    isSuccess: isSuccessDelete,
+    isLoading: isLoadingDelete,
+    isError: isErrorDelete,
+    error: errorDelete,
+  } = useFetch(async () => await turnOf2FA());
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<Form>();
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {
-      await confirm2FA(data.code);
+      const res = await confirm2FA(data.code);
+      if (res.type === 'error') {
+        setErrorsConfirm2FA(res.data);
+        setSuccessConfirm2FA(null);
+      }
+      if (res.type === 'success') {
+        await getRecoveryCodesMutation();
+        await refetchUser();
+        setSuccessConfirm2FA('success');
+        setErrorsConfirm2FA(null);
+      }
     },
     [confirm2FA]
   );
@@ -122,33 +122,35 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
     { dependencies: [curStep], scope: containerRef }
   );
   useEffect(() => {
-    if (isLoadingConfirm) {
+    if (isSubmitting) {
       setVisiblePopup({ visibleLoadingPopup: true });
     } else {
       setVisiblePopup({ visibleLoadingPopup: false });
     }
-  }, [isLoadingConfirm, setVisiblePopup]);
+  }, [isSubmitting, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessTurnOn) {
       setCurStep(2);
+      Promise.allSettled([
+        twoFactorQrCodeMutation(),
+        twoFactorSecretKeyMutation(),
+      ]);
     }
   }, [isSuccessTurnOn]);
   useEffect(() => {
     if (isErrQrCode && errorQrCode) {
-      const error = errorQrCode as any;
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: errorQrCode?.message,
         },
       });
     }
     if (isErrSecretKey && errorSecretKey) {
-      const error = errorSecretKey as any;
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: errorSecretKey?.message,
         },
       });
     }
@@ -160,11 +162,10 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
     setVisiblePopup,
   ]);
   useEffect(() => {
-    if (isSuccessConfirm) {
+    if (successConfirm2FA) {
       setCurStep(4);
     }
-  }, [isSuccessConfirm]);
-
+  }, [successConfirm2FA]);
   useEffect(() => {
     if (isSuccessDelete) {
       refetchUser();
@@ -177,11 +178,10 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
       closeForm();
     }
     if (isErrorDelete && errorDelete) {
-      const error = errorDelete as any;
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: errorDelete?.message,
         },
       });
     }
@@ -189,7 +189,6 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
     isSuccessDelete,
     isErrorDelete,
     errorDelete,
-    refetchUser,
     setVisiblePopup,
     closeForm,
     t,
@@ -210,7 +209,6 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
       ref={containerRef}
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       className='fixed top-0 left-0 w-full h-full z-[999] py-16 px-4 flex justify-center items-center'
-      // aria-disabled={isLoadingChangePassword}
     >
       <div className='max-w-[540px] w-full max-h-[80vh] bg-white rounded-sm overflow-y-auto px-4 py-6 flex flex-col gap-6'>
         {curStep === 1 && (
@@ -221,7 +219,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
             <div className='w-full flex justify-end'>
               <button
                 aria-label='close'
-                disabled={isLoadingTurnOn || isLoadingConfirm}
+                disabled={isLoadingTurnOn || isSubmitting}
                 onClick={closeForm}
               >
                 <FaXmark className='text-2xl' />
@@ -236,8 +234,8 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
             {user?.two_factor_confirmed_at && (
               <button
                 className='w-max font-bold text-red-500'
-                disabled={isLoadingRecoveryCodes}
-                onClick={async () => await postRecoveryCodes(null)}
+                disabled={isLoadingRecoveryCodes || isLoadingListCodes}
+                onClick={getRecoveryCodesMutation}
               >
                 {t('create_new_codes')}
               </button>
@@ -249,7 +247,6 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
                 </div>
               )}
             {user?.two_factor_confirmed_at &&
-              isSuccessRecoveryCodes &&
               isSuccessListCodes &&
               !isLoadingListCodes && (
                 <div className='flex flex-col gap-2'>
@@ -278,7 +275,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
               {!user?.two_factor_confirmed_at && (
                 <button
                   className='w-max font-bold bg-neutral-800 text-white py-2 px-4 md:py-3 md:px-6 rounded-sm'
-                  onClick={async () => await turnOn2FA(null)}
+                  onClick={turnOn2FAMutation}
                   disabled={isLoadingTurnOn}
                 >
                   {t('turn_on')}
@@ -294,7 +291,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
                         title: `${t('title_del_2fa')}`,
                         description: `${t('des_del_2fa')}`,
                         isLoading: isLoadingDelete,
-                        cb: () => deleteTwoFactor(null),
+                        cb: turnOf2FAMutation,
                       },
                     })
                   }
@@ -375,14 +372,14 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
             <div className='w-full flex justify-between'>
               <button
                 aria-label='set-step'
-                disabled={isLoadingConfirm}
+                disabled={isSubmitting}
                 onClick={() => setCurStep(2)}
               >
                 <FaAngleLeft className='text-2xl' />
               </button>
               <button
                 aria-label='close'
-                disabled={isLoadingConfirm}
+                disabled={isSubmitting}
                 onClick={closeForm}
               >
                 <FaXmark className='text-2xl' />
@@ -397,22 +394,22 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
             >
               <div className='relative w-full flex flex-col gap-2'>
                 <input
-                  disabled={isLoadingConfirm}
+                  disabled={isSubmitting}
                   className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                   type='text'
                   placeholder={t('code')}
                   {...register('code')}
                 />
-                {errors?.code && (
+                {errorsConfirm2FA?.errors.code && (
                   <p className='text-red-500 font-bold text-sm md:text-base'>
-                    {errors.code[0]}
+                    {errorsConfirm2FA.errors.code[0]}
                   </p>
                 )}
               </div>
               <button
                 type='submit'
                 className='font-bold bg-neutral-800 text-white py-2 px-4 md:py-3 md:px-6 rounded-sm'
-                disabled={isLoadingConfirm}
+                disabled={isSubmitting}
               >
                 {t('confirm')}
               </button>
@@ -453,7 +450,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
               </button>
               <button
                 className='w-max text-sm font-bold text-blue-700'
-                onClick={async () => await postRecoveryCodes(null)}
+                onClick={postRecoveryCodesMutation}
               >
                 {t('refresh_recovery')}
               </button>

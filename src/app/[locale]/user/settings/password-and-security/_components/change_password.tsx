@@ -1,17 +1,10 @@
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
-import { useChangePasswordMutation } from '@/lib/redux/query/userQuery';
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
 import { FaXmark } from 'react-icons/fa6';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
 import { PopupContext } from '@/contexts/PopupProvider';
+import { changePassword } from '@/api/user';
 type Form = {
   current_password: string;
   password: string;
@@ -21,69 +14,59 @@ type Props = {
   closeForm: () => void;
 };
 const ChangePasswordPopup: React.FC<Props> = ({ closeForm }) => {
-  const { register, handleSubmit } = useForm<Form>();
-  const { handleGetCSRFCookie, isLoadingCSRF } = useContext(FetchDataContext);
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<Form>();
   const t = useTranslations('common');
   const { setVisiblePopup, closeAllPopup } = useContext(PopupContext);
   const [isShowCurPwd, setIsShowCurPwd] = useState(false);
   const [isShowNewPwd, setIsShowNewPwd] = useState(false);
   const [isShowReNewPwd, setIsShowReNewPwd] = useState(false);
-  const [
-    changePassword,
-    {
-      isSuccess: isSuccessChangePassword,
-      isLoading: isLoadingChangePassword,
-      isError: isErrorChangePassword,
-      error: errorChangePassword,
-    },
-  ] = useChangePasswordMutation();
-  const errors = useMemo(() => {
-    if (isErrorChangePassword && errorChangePassword) {
-      const error = errorChangePassword as any;
-      return error?.data?.errors;
-    }
-    return null;
-  }, [isErrorChangePassword, errorChangePassword]);
+  const [errors, setErrors] = useState<any>(null);
+  const [success, setSuccess] = useState<any>(null);
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {
-      await handleGetCSRFCookie();
-      await changePassword(data);
+      const res = await changePassword({ ...data });
+      if (res.type === 'error') {
+        setErrors(res.data);
+        setSuccess(null);
+      }
+      if (res.type === 'success') {
+        setSuccess('success');
+        setErrors(null);
+      }
     },
-    [handleGetCSRFCookie, changePassword]
+    [changePassword]
   );
   useEffect(() => {
-    if (isLoadingCSRF || isLoadingChangePassword) {
+    if (isSubmitting) {
       closeAllPopup();
       setVisiblePopup({ visibleLoadingPopup: true });
+    } else {
+      setVisiblePopup({ visibleLoadingPopup: false });
     }
-  }, [isLoadingCSRF, isLoadingChangePassword, setVisiblePopup, closeAllPopup]);
+  }, [isSubmitting, setVisiblePopup, closeAllPopup]);
   useEffect(() => {
-    if (isSuccessChangePassword) {
+    if (success) {
+      closeForm();
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
           message: `${t('mess_change_password')}`,
         },
       });
-      closeForm();
     }
-    if (isErrorChangePassword && errorChangePassword) {
-      const error = errorChangePassword as any;
+    if (errors) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: errors?.message,
         },
       });
     }
-  }, [
-    isSuccessChangePassword,
-    isErrorChangePassword,
-    errorChangePassword,
-    setVisiblePopup,
-    closeForm,
-    t,
-  ]);
+  }, [success, errors, t, setVisiblePopup]);
   return (
     <section
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
@@ -94,7 +77,7 @@ const ChangePasswordPopup: React.FC<Props> = ({ closeForm }) => {
           <button
             aria-label='close-change-password'
             onClick={closeForm}
-            disabled={isLoadingCSRF || isLoadingChangePassword}
+            disabled={isSubmitting}
           >
             <FaXmark className='text-2xl' />
           </button>
@@ -114,14 +97,14 @@ const ChangePasswordPopup: React.FC<Props> = ({ closeForm }) => {
                   type={isShowCurPwd ? 'text' : 'password'}
                   placeholder={`${t('current_password')}`}
                   {...register('current_password')}
-                  disabled={isLoadingCSRF || isLoadingChangePassword}
+                  disabled={isSubmitting}
                 />
                 <button
                   type='button'
                   className='absolute top-1/2 -translate-y-1/2 right-2'
                   aria-label='toggle-pwd-btn'
                   onClick={() => setIsShowCurPwd(!isShowCurPwd)}
-                  disabled={isLoadingCSRF || isLoadingChangePassword}
+                  disabled={isSubmitting}
                 >
                   {isShowCurPwd ? (
                     <FaRegEye className='text-xl' />
@@ -130,9 +113,9 @@ const ChangePasswordPopup: React.FC<Props> = ({ closeForm }) => {
                   )}
                 </button>
               </div>
-              {errors?.current_password && (
+              {errors?.errors?.current_password && (
                 <p className='text-red-500 font-bold text-sm md:text-base'>
-                  {errors.current_password[0]}
+                  {errors?.errors?.current_password[0]}
                 </p>
               )}
             </div>
@@ -144,14 +127,14 @@ const ChangePasswordPopup: React.FC<Props> = ({ closeForm }) => {
                   type={isShowNewPwd ? 'text' : 'password'}
                   placeholder={`${t('new_password')}`}
                   {...register('password')}
-                  disabled={isLoadingCSRF || isLoadingChangePassword}
+                  disabled={isSubmitting}
                 />
                 <button
                   type='button'
                   className='absolute top-1/2 -translate-y-1/2 right-2'
                   aria-label='toggle-pwd-btn'
                   onClick={() => setIsShowNewPwd(!isShowNewPwd)}
-                  disabled={isLoadingCSRF || isLoadingChangePassword}
+                  disabled={isSubmitting}
                 >
                   {isShowNewPwd ? (
                     <FaRegEye className='text-xl' />
@@ -160,9 +143,9 @@ const ChangePasswordPopup: React.FC<Props> = ({ closeForm }) => {
                   )}
                 </button>
               </div>
-              {errors?.password && (
+              {errors?.errors?.password && (
                 <p className='text-red-500 font-bold text-sm md:text-base'>
-                  {errors.password[0]}
+                  {errors?.errors?.password[0]}
                 </p>
               )}
             </div>
@@ -176,14 +159,14 @@ const ChangePasswordPopup: React.FC<Props> = ({ closeForm }) => {
                   type={isShowReNewPwd ? 'text' : 'password'}
                   placeholder={`${t('re_new_password')}`}
                   {...register('password_confirmation')}
-                  disabled={isLoadingCSRF || isLoadingChangePassword}
+                  disabled={isSubmitting}
                 />
                 <button
                   type='button'
                   className='absolute top-1/2 -translate-y-1/2 right-2'
                   aria-label='toggle-pwd-btn'
                   onClick={() => setIsShowReNewPwd(!isShowReNewPwd)}
-                  disabled={isLoadingCSRF || isLoadingChangePassword}
+                  disabled={isSubmitting}
                 >
                   {isShowReNewPwd ? (
                     <FaRegEye className='text-xl' />
@@ -192,24 +175,17 @@ const ChangePasswordPopup: React.FC<Props> = ({ closeForm }) => {
                   )}
                 </button>
               </div>
-              {errors?.password_confirmation && (
+              {errors?.errors?.password_confirmation && (
                 <p className='text-red-500 font-bold text-sm md:text-base'>
-                  {errors.password_confirmation[0]}
+                  {errors?.errors?.password_confirmation[0]}
                 </p>
               )}
             </div>
-            {/* <button
-              type='button'
-              className='w-max text-start font-bold'
-              disabled={isLoadingChangePassword}
-            >
-              {t('forgot-password')}?
-            </button> */}
           </div>
           <button
             type='submit'
             className='font-bold bg-neutral-800 text-white py-3 md:py-4 rounded-sm'
-            disabled={isLoadingCSRF || isLoadingChangePassword}
+            disabled={isSubmitting}
           >
             {t('change_password')}
           </button>

@@ -14,7 +14,7 @@ function ProductsSection({ products, total_pages }: Props) {
     return products?.map((p: Product) => {
       return (
         <SingleProduct
-          articleClass='m-auto md:m-0 w-full max-w-[180px] md:max-w-[250px] cursor-pointer flex flex-col gap-2'
+          articleClass='col-span-1 m-auto md:m-0 w-full max-w-[180px] md:max-w-[250px] cursor-pointer flex flex-col gap-2'
           key={p?.id}
           product={p}
         >
@@ -36,7 +36,7 @@ function ProductsSection({ products, total_pages }: Props) {
   }, [products, router, locale]);
   return (
     <div className='flex flex-col items-center gap-4'>
-      <div className='w-full flex flex-wrap justify-between gap-x-4 gap-y-8'>
+      <div className='w-full grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-8'>
         {renderedProducts}
       </div>
       {Number(total_pages) > 1 && <div className='w-full'></div>}

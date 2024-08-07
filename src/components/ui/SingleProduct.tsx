@@ -2,17 +2,13 @@
 import { Product, ProductOption } from '@/types/types';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
-import React, { useContext, createContext, useCallback, useMemo } from 'react';
-import { IoCartOutline } from 'react-icons/io5';
-import { FaAnglesRight, FaRegStar, FaStar } from 'react-icons/fa6';
-import { useDispatch } from 'react-redux';
-import { PopupContext } from '@/contexts/PopupProvider';
+import React, { useContext, createContext, useMemo } from 'react';
+import { FaStar } from 'react-icons/fa6';
 import { useResponsive } from '@/lib/hooks/useResponsive';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
-import { setCurMotorbike } from '@/lib/redux/slice/userSlice';
 import CustomImage from './CustomImage';
 type PropsProductContext = {
   product: Product;
+  selectedOption: ProductOption | null;
 };
 const ProductContext = createContext<PropsProductContext | null>(null);
 
@@ -33,15 +29,42 @@ export function SingleProduct({
   product,
   articleClass,
 }: PropsSingleProduct) {
+  const router = useRouter();
+  const { locale } = useParams();
+  const searchParams = useSearchParams();
+  const selectedOption = useMemo(() => {
+    return (
+      product.options.find((o) => {
+        return (
+          o.color === searchParams.get('color') ||
+          searchParams.get('version')?.includes(o.version) ||
+          o.type === searchParams.get('option_type') ||
+          (o.color === searchParams.get('color') &&
+            searchParams.get('version')?.includes(o.version) &&
+            o.type === searchParams.get('option_type'))
+        );
+      }) || null
+    );
+  }, [searchParams]);
   return (
-    <ProductContext.Provider value={{ product }}>
+    <ProductContext.Provider value={{ product, selectedOption }}>
       <article
         className={`${
           articleClass
             ? articleClass
             : 'col-span-1 m-auto max-w-[300px] flex flex-col gap-4 cursor-pointer'
         } relative group`}
+        onClick={() =>
+          router.push(
+            `/${locale}/products/${
+              product.search_url ? product.search_url : product.id
+            }`
+          )
+        }
       >
+        <p className='absolute top-0 right-0 px-4 py-1 text-xs md:text-sm font-bold bg-red-500 text-white z-10 -rotate-3'>
+          {selectedOption ? selectedOption.type : product.options[0].type}
+        </p>
         {children}
       </article>
     </ProductContext.Provider>
@@ -117,21 +140,22 @@ SingleProduct.Price = function ProductPrice() {
   }, [searchParams]);
   return (
     <div className='w-full flex items-center gap-2'>
-      <p
-        title={
-          selectedOption
-            ? selectedOption.price.preview
-            : product?.options_min_price.preview
-        }
-        className={`w-full truncate overflow-hidden flex items-center gap-2`}
-      >
-        <span> {t('from')}</span>
-        <span>
-          {selectedOption
-            ? selectedOption.price.preview
-            : product?.options_min_price.preview}
-        </span>
-      </p>
+      {selectedOption ? (
+        <p
+          title={selectedOption.price.preview}
+          className={`w-full truncate overflow-hidden flex items-center gap-2`}
+        >
+          {selectedOption.price.preview}
+        </p>
+      ) : (
+        <p
+          title={product?.options_min_price.preview}
+          className={`w-full truncate overflow-hidden flex items-center gap-2`}
+        >
+          <span> {t('from')}</span>
+          <span>{product?.options_min_price.preview}</span>
+        </p>
+      )}
     </div>
   );
 };
@@ -142,54 +166,7 @@ SingleProduct.Image = function ProductImage({
   customClass?: string;
 }) {
   const state = useResponsive();
-  const router = useRouter();
-  const { locale } = useParams();
-  const { product } = useProductContext();
-  const searchParams = useSearchParams();
-  const selectedOption = useMemo(() => {
-    return product.options.find((o) => {
-      return (
-        o.color === searchParams.get('color') ||
-        searchParams.get('version')?.includes(o.version) ||
-        (o.color === searchParams.get('color') &&
-          searchParams.get('version')?.includes(o.version))
-      );
-    });
-  }, [searchParams]);
-  const t = useTranslations('common');
-  const { user, cart } = useContext(FetchDataContext);
-  const { setVisiblePopup } = useContext(PopupContext);
-  const dispatch = useDispatch();
-  const handleBuyNow = useCallback(
-    (p: ProductOption) => {
-      if (!user) {
-        router.push(`/${locale}/login`);
-      } else {
-        dispatch(setCurMotorbike(p));
-        router.push(`/${locale}/purchase-motorbike`);
-      }
-    },
-    [dispatch, user, router, locale]
-  );
-  const handleAddToCart = useCallback(
-    (
-      e: React.MouseEvent<HTMLButtonElement>,
-      product?: ProductOption,
-      productName?: Product['name']
-    ) => {
-      e.stopPropagation();
-      if (cart) {
-        setVisiblePopup({
-          visibleToastPopup: {
-            type: 'warning',
-            message: 'Bạn đã có sản phẩm khác trong giỏ hàng!',
-          },
-        });
-      } else {
-      }
-    },
-    [dispatch, setVisiblePopup, cart]
-  );
+  const { product, selectedOption } = useProductContext();
   return (
     <div
       className={`${customClass ? customClass : 'w-full h-[350px]'} relative`}
@@ -197,42 +174,16 @@ SingleProduct.Image = function ProductImage({
       <div className='overflow-hidden'>
         <CustomImage
           className='object-cover w-auto h-auto aspect-auto bg-center'
-          image={selectedOption ? selectedOption.images[0] : product.images[0]}
+          image={
+            selectedOption
+              ? selectedOption.images[0]
+              : product.options[0].images[0]
+          }
           fetchPriority='low'
           width={state.isDesktop ? 280 : 180}
           height={state.isDesktop ? 250 : 150}
         />
       </div>
-      {state.isDesktop && (
-        <div
-          style={{ background: 'rgba(220, 38, 38, 0.9)' }}
-          className='absolute top-0 left-0 w-full h-full z-10 hidden xl:flex justify-center items-center group-hover:opacity-100 opacity-0 transition-opacity'
-        >
-          {product.must_direct_purchase ? (
-            <button
-              className='w-max text-sm uppercase font-bold text-white flex justify-center items-center gap-2 border border-neutral-300 rounded-sm px-6 py-3'
-              onClick={() =>
-                handleBuyNow(
-                  selectedOption ? selectedOption : product.options[0]
-                )
-              }
-            >
-              <span className='uppercase'>{t('buy_now')}</span>
-              <FaAnglesRight className='text-2xl' />
-            </button>
-          ) : (
-            <button
-              className='w-max text-sm uppercase font-bold text-white flex justify-center items-center gap-2 border border-neutral-300 rounded-sm px-6 py-3'
-              onClick={(e) =>
-                handleAddToCart(e, product?.options[0], product?.name)
-              }
-            >
-              <span className='uppercase'>{t('add_to_cart')}</span>
-              <IoCartOutline className='text-2xl' />
-            </button>
-          )}
-        </div>
-      )}
     </div>
   );
 };

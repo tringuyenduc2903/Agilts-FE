@@ -1,21 +1,14 @@
 'use client';
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import bgImg from '@/assets/port-title-area.jpg';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { useResetPasswordMutation } from '@/lib/redux/query/userQuery';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
-import { notFound, useParams, useSearchParams } from 'next/navigation';
-import Loading from '../../loading';
+import { useParams, useSearchParams } from 'next/navigation';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
 import { PopupContext } from '@/contexts/PopupProvider';
+import { resetPassword } from '@/api/user';
+import withNoAuth from '@/protected-page/withNoAuth';
 
 type Form = {
   email: string;
@@ -26,75 +19,64 @@ function ResetPasswordPage() {
   const { token } = useParams();
   const searchParams = useSearchParams();
   const t = useTranslations('common');
-  const {
-    user,
-    isLoadingUser,
-    isSuccessUser,
-    handleGetCSRFCookie,
-    isLoadingCSRF,
-  } = useContext(FetchDataContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const [isShowPwd, setIsShowPwd] = useState(false);
   const [isShowConfirmPwd, setIsShowConfirmPwd] = useState(false);
-  const { register, handleSubmit, formState } = useForm<Form>({
+  const [errors, setErrors] = useState<any>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [success, setSuccess] = useState<any>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<Form>({
     defaultValues: {
       email: searchParams.get('email') || '',
       password: '',
       password_confirmation: '',
     },
   });
-  const [
-    resetPassword,
-    {
-      data: postData,
-      isSuccess: isSuccessPost,
-      isLoading: isLoadingPost,
-      isError: isErrorPost,
-      error: errorPost,
-    },
-  ] = useResetPasswordMutation();
-  const errors = useMemo(() => {
-    if (isErrorPost && errorPost) {
-      const error = errorPost as any;
-      return error?.data?.errors;
-    }
-    return null;
-  }, [isErrorPost, errorPost]);
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {
-      await handleGetCSRFCookie();
-      await resetPassword({ ...data, token: token });
+      const res = await resetPassword({ ...data, token: token });
+      if (res.type === 'error') {
+        setIsSuccess(false);
+        setErrors(res.data);
+        setSuccess(null);
+      }
+      if (res.type === 'success') {
+        setIsSuccess(true);
+        setErrors(null);
+        setSuccess(res.data);
+      }
     },
-    [handleGetCSRFCookie, resetPassword, token]
+    [resetPassword, token]
   );
   useEffect(() => {
-    if (isLoadingPost || isLoadingCSRF) {
+    if (isSubmitting) {
       setVisiblePopup({ visibleLoadingPopup: true });
     } else {
       setVisiblePopup({ visibleLoadingPopup: false });
     }
-  }, [setVisiblePopup, isLoadingPost, isLoadingCSRF]);
+  }, [setVisiblePopup, isSubmitting]);
   useEffect(() => {
-    if (isSuccessPost && postData) {
+    if (isSuccess && success) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
-          message: postData?.message,
+          message: success?.message,
         },
       });
     }
-    if (isErrorPost && errorPost) {
-      const error = errorPost as any;
+    if (errors) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: errors?.message,
         },
       });
     }
-  }, [isSuccessPost, postData, isErrorPost, errorPost, setVisiblePopup]);
-  if (isLoadingUser) return <Loading />;
-  if (user && isSuccessUser && !isLoadingUser) return notFound();
+  }, [isSuccess, success, errors, setVisiblePopup]);
   return (
     <main className='w-full h-full pt-[72px] flex flex-col'>
       <section className='absolute h-full w-full -z-10 hidden lg:block'>
@@ -140,6 +122,7 @@ function ResetPasswordPage() {
                   type={isShowPwd ? 'text' : 'password'}
                   placeholder={`${t('password')}`}
                   {...register('password')}
+                  disabled={isSubmitting}
                 />
                 <button
                   type='button'
@@ -167,12 +150,14 @@ function ResetPasswordPage() {
                   type={isShowConfirmPwd ? 'text' : 'password'}
                   placeholder={`${t('confirm-pwd')}`}
                   {...register('password_confirmation')}
+                  disabled={isSubmitting}
                 />
                 <button
                   type='button'
                   className='absolute top-1/2 -translate-y-1/2 right-2'
                   aria-label='show-pwd-btn'
                   onClick={() => setIsShowConfirmPwd(!isShowConfirmPwd)}
+                  disabled={isSubmitting}
                 >
                   {isShowConfirmPwd ? (
                     <FaRegEye className='text-xl' />
@@ -195,4 +180,4 @@ function ResetPasswordPage() {
   );
 }
 
-export default ResetPasswordPage;
+export default withNoAuth(ResetPasswordPage);

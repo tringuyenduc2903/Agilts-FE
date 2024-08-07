@@ -1,4 +1,5 @@
 import { formatPrice } from '@/lib/utils/format';
+import { useSearchParams } from 'next/navigation';
 import React, { useCallback, useEffect, useState, useRef } from 'react';
 
 type Props = {
@@ -8,6 +9,7 @@ type Props = {
 };
 
 const RangeSlider: React.FC<Props> = ({ min, max, onChange }) => {
+  const searchParams = useSearchParams();
   const [minVal, setMinVal] = useState<number>(min);
   const [maxVal, setMaxVal] = useState<number>(max);
   const minValRef = useRef<number>(min);
@@ -30,7 +32,18 @@ const RangeSlider: React.FC<Props> = ({ min, max, onChange }) => {
       range.current.style.width = `${maxPercent - minPercent}%`;
     }
   }, [minVal, getPercent]);
-
+  useEffect(() => {
+    const minPrice = Number(searchParams.get('minPrice'))
+      ? Number(searchParams.get('minPrice'))
+      : Number(min);
+    const maxPrice = Number(searchParams.get('maxPrice'))
+      ? Number(searchParams.get('maxPrice'))
+      : Number(max);
+    setMinVal(Number(minPrice) ? Number(minPrice) : Number(min));
+    setMaxVal(Number(maxPrice) ? Number(maxPrice) : Number(max));
+    minValRef.current = minPrice as number;
+    maxValRef.current = maxPrice as number;
+  }, [searchParams]);
   useEffect(() => {
     const minPercent = getPercent(minValRef.current);
     const maxPercent = getPercent(maxVal);

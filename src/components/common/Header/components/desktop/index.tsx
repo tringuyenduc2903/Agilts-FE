@@ -12,10 +12,10 @@ import MenuIcon from './components/MenuIcon';
 import { title } from '@/config/config';
 import { subRoutes } from '../../headerData';
 import Cart from './components/Cart';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { UserContext } from '@/contexts/UserProvider';
 function DesktopNavigation() {
   const { locale } = useParams();
-  const { cart } = useContext(FetchDataContext);
+  const { cart } = useContext(UserContext);
   const t = useTranslations('header');
   const headerRef = useRef<HTMLElement | null>(null);
   const [isOpenMenu, setIsOpenMenu] = useState(false);

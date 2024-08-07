@@ -13,38 +13,22 @@ import { FaXmark } from 'react-icons/fa6';
 import { ModalContext } from '@/contexts/ModalProvider';
 import useClickOutside from '@/lib/hooks/useClickOutside';
 import { PopupContext } from '@/contexts/PopupProvider';
-import {
-  usePostReviewImageMutation,
-  usePostReviewUserMutation,
-} from '@/lib/redux/query/storesQuery';
 import { useDropzone } from 'react-dropzone';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
+import { postReviewImage, postReviewUser } from '@/api/product';
 const ReviewsModal = () => {
   const t = useTranslations('common');
   const { state, setVisibleModal } = useContext(ModalContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const [images, setImages] = useState<string[]>([]);
   const [previewImages, setPreviewImages] = useState<File[]>([]);
-  const [
-    postImage,
-    {
-      data: imageData,
-      isSuccess: isSuccessImageData,
-      isLoading: isLoadingPostImage,
-      isError: isErrorPostImage,
-      error: errorPostImage,
-    },
-  ] = usePostReviewImageMutation();
-  const [
-    postReview,
-    {
-      isSuccess: isSuccessPostReview,
-      isLoading: isLoadingPostReview,
-      error: errorPostReview,
-      isError: isErrorPostReview,
-    },
-  ] = usePostReviewUserMutation();
+  const [isLoadingPostImage, setIsLoadingPostImage] = useState(false);
+  const [successPostImage, setSuccessPostImage] = useState<any>(null);
+  const [errorPostImage, setErrorPostImage] = useState<any>(null);
+  const [isLoadingPostReview, setIsLoadingPostReview] = useState(false);
+  const [successPostReview, setSuccessPostReview] = useState<any>(null);
+  const [errorPostReview, setErrorPostReview] = useState<any>(null);
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       const formData = new FormData();
@@ -54,9 +38,19 @@ const ReviewsModal = () => {
           return [...prevImages, file];
         });
       });
-      await postImage(formData);
+      setIsLoadingPostImage(true);
+      const res = await postReviewImage(formData);
+      if (res.type === 'error') {
+        setErrorPostImage(res.data);
+        setSuccessPostImage(null);
+      }
+      if (res.type === 'success') {
+        setErrorPostImage(null);
+        setSuccessPostImage(res.data);
+      }
+      setIsLoadingPostImage(false);
     },
-    [postImage, previewImages]
+    [postReviewImage, previewImages]
   );
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
   const { sectionRef, clickOutside } = useClickOutside(() =>
@@ -105,35 +99,39 @@ const ReviewsModal = () => {
     });
   }, [rate]);
   const handleReviews = useCallback(async () => {
-    await postReview({
+    setIsLoadingPostReview(true);
+    const res = await postReviewUser({
       content: message,
       rate: rate,
       version: version?.id,
       images: images,
     });
-  }, [postReview, message, rate, images, version]);
-  useEffect(() => {
-    if (isSuccessImageData && imageData) {
-      setImages((prevImages) => {
-        return [...prevImages, imageData?.file_name];
-      });
+    if (res.type === 'error') {
+      setErrorPostReview(res.data);
+      setSuccessPostReview(null);
     }
-    if (isErrorPostImage && errorPostImage) {
-      const error = errorPostImage as any;
+    if (res.type === 'success') {
+      setSuccessPostReview('success');
+      setErrorPostReview(res.data);
+    }
+    setIsLoadingPostReview(false);
+  }, [postReviewImage, message, rate, images, version]);
+  useEffect(() => {
+    if (!isLoadingPostImage && successPostImage) {
+      setImages((prevImages) => {
+        return [...prevImages, successPostImage?.file_name];
+      });
+      setSuccessPostImage(null);
+    }
+    if (!isLoadingPostImage && errorPostImage) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: errorPostImage?.message,
         },
       });
     }
-  }, [
-    isSuccessImageData,
-    imageData,
-    isErrorPostImage,
-    errorPostImage,
-    setVisiblePopup,
-  ]);
+  }, [isLoadingPostImage, successPostImage, errorPostImage, setVisiblePopup]);
   useEffect(() => {
     if (isLoadingPostReview) {
       setVisiblePopup({ visibleLoadingPopup: true });
@@ -142,7 +140,7 @@ const ReviewsModal = () => {
     }
   }, [isLoadingPostReview, setVisiblePopup]);
   useEffect(() => {
-    if (isSuccessPostReview) {
+    if (!isLoadingPostReview && successPostImage) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
@@ -151,18 +149,17 @@ const ReviewsModal = () => {
       });
       setVisibleModal('visibleReviewModal');
     }
-    if (isErrorPostReview && errorPostReview) {
-      const error = errorPostReview as any;
+    if (!isLoadingPostReview && errorPostReview) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: errorPostReview?.message,
         },
       });
     }
   }, [
-    isSuccessPostReview,
-    isErrorPostReview,
+    isLoadingPostReview,
+    successPostReview,
     errorPostReview,
     setVisiblePopup,
     setVisibleModal,

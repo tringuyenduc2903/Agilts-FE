@@ -1,49 +1,62 @@
 'use client';
 import Loading from '@/app/[locale]/loading';
 import NotFoundItem from '@/components/ui/NotFoundItem';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { UserContext } from '@/contexts/UserProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { PopupContext } from '@/contexts/PopupProvider';
-import {
-  useDeleteAddressMutation,
-  useUpdateAddressMutation,
-} from '@/lib/redux/query/userQuery';
 import withAuth from '@/protected-page/withAuth';
 import { Address } from '@/types/types';
 import { useTranslations } from 'next-intl';
-import React, { useCallback, useContext, useEffect, useMemo } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { FaPlus } from 'react-icons/fa6';
+import { useFetch } from '@/lib/hooks/useFetch';
+import { deleteAddress, updateAddress } from '@/api/address';
 function AddressPage() {
-  const { addresses, isLoadingAddress } = useContext(FetchDataContext);
+  const { addresses, isLoadingAddress, refetchAddress } =
+    useContext(UserContext);
   const t = useTranslations('common');
   const { setVisibleModal } = useContext(ModalContext);
   const { setVisiblePopup } = useContext(PopupContext);
-  const [
-    updateAddress,
-    {
-      isLoading: isLoadingUpdate,
-      isSuccess: isSuccessUpdate,
-      isError: isErrorUpdate,
-      error: errorUpdate,
-    },
-  ] = useUpdateAddressMutation();
-  const [
-    deleteAddress,
-    {
-      isLoading: isLoadingDelete,
-      isSuccess: isSuccessDelete,
-      isError: isErrorDelete,
-      error: errorDelete,
-    },
-  ] = useDeleteAddressMutation();
+  const [curAddress, setCurAddress] = useState<Address | null>(null);
+  const {
+    fetchData: updateAddressMutation,
+    isLoading: isLoadingUpdate,
+    isSuccess: isSuccessUpdate,
+    isError: isErrorUpdate,
+    error: errorUpdate,
+  } = useFetch(
+    async () =>
+      await updateAddress({
+        body: { ...curAddress, default: true },
+        address_id: curAddress?.id as number,
+      })
+  );
+  const {
+    fetchData: deleteAddressMutation,
+    isLoading: isLoadingDelete,
+    isSuccess: isSuccessDelete,
+    isError: isErrorDelete,
+    error: errorDelete,
+  } = useFetch(async () => await deleteAddress(curAddress?.id as number));
   const handleSetDefaultAddress = useCallback(
     async (address: Address) => {
-      await updateAddress({
-        body: { ...address, default: true },
-        address_id: address.id,
-      });
+      setCurAddress(address);
+      await updateAddressMutation();
     },
-    [updateAddress]
+    [updateAddressMutation]
+  );
+  const handleDeleteAddress = useCallback(
+    async (address: Address) => {
+      setCurAddress(address);
+      await deleteAddressMutation();
+    },
+    [deleteAddressMutation]
   );
   const renderedAddress = useMemo(() => {
     return (
@@ -52,6 +65,8 @@ function AddressPage() {
           <article
             className='flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-neutral-300 pb-4'
             key={a.id}
+            onMouseEnter={() => setCurAddress(a)}
+            onMouseLeave={() => setCurAddress(null)}
           >
             <div className='text-sm md:text-base text-neutral-600 flex flex-col gap-2'>
               <p>{a.address_detail}</p>
@@ -85,7 +100,7 @@ function AddressPage() {
                           title: t('title_del_address'),
                           description: t('des_del_address'),
                           isLoading: isLoadingDelete,
-                          cb: () => deleteAddress(a.id),
+                          cb: () => handleDeleteAddress(a),
                         },
                       })
                     }
@@ -132,6 +147,8 @@ function AddressPage() {
   }, [isLoadingUpdate, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessUpdate) {
+      setCurAddress(null);
+      refetchAddress();
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
@@ -158,6 +175,7 @@ function AddressPage() {
   ]);
   useEffect(() => {
     if (isSuccessDelete) {
+      refetchAddress();
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',

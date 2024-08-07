@@ -23,12 +23,12 @@ function ConfirmModal() {
     >
       <div
         ref={sectionRef as LegacyRef<HTMLDivElement>}
-        className='bg-white text-neutral-800 text-sm md:text-base px-4 py-8 rounded-sm flex flex-col gap-6 min-h-[40vh] max-h-[80vh] w-full sm:w-3/4 md:w-2/3 xl:w-1/2 overflow-y-auto'
+        className='bg-white text-neutral-800 text-sm md:text-base px-4 py-8 rounded-sm flex flex-col gap-6 max-h-[40vh] w-full sm:w-3/4 md:w-2/3 xl:w-1/2 overflow-y-auto'
       >
         <h1 className='text-xl md:text-2xl font-bold text-center'>
           {state?.visibleConfirmModal?.title}
         </h1>
-        <p className='md:text-base text-sm'>
+        <p className='md:text-base text-sm text-center'>
           {state?.visibleConfirmModal?.description}
         </p>
         <div className='flex justify-end items-center gap-4'>

@@ -9,8 +9,9 @@ type PropsFilter = {
   data: {
     [key: string]: string;
   };
+  label: string;
 };
-export default function CategoriesSection({ name, data }: PropsFilter) {
+export default function CategoriesSection({ name, data, label }: PropsFilter) {
   const t = useTranslations('common');
   const searchParams = useSearchParams();
   const [createQueryString, removeValueQueryString] = useQueryString();
@@ -33,7 +34,7 @@ export default function CategoriesSection({ name, data }: PropsFilter) {
   return (
     <div className='flex flex-col gap-6'>
       <h1 className='text-xl md:text-2xl font-bold uppercase border-b borer-neutral-300 pb-6'>
-        {t('categories')}
+        {label}
       </h1>
       <ul className='h-auto flex flex-col gap-4'>
         <li className='h-max'>

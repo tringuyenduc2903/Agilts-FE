@@ -1,17 +1,8 @@
 'use client';
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
-import { notFound, useParams, useRouter } from 'next/navigation';
-import Loading from '../loading';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
-import { useLoginMutation } from '@/lib/redux/query/userQuery';
 import bgLogo from '@/assets/h4-slider-img-1.jpg';
 import Image from 'next/image';
 import {
@@ -20,56 +11,44 @@ import {
   FaRegEye,
   FaRegEyeSlash,
 } from 'react-icons/fa6';
-import { useDispatch } from 'react-redux';
-import { setIsLoggedIn } from '@/lib/redux/slice/userSlice';
 import { PopupContext } from '@/contexts/PopupProvider';
-type Form = {
-  email: string;
-  password: string;
-  remember: boolean;
-};
+import { login } from '@/api/user';
+import { Login } from '@/types/types';
+import { UserContext } from '@/contexts/UserProvider';
+import withNoAuth from '@/protected-page/withNoAuth';
 function LoginPage() {
   const { locale } = useParams();
   const router = useRouter();
-  const {
-    user,
-    isLoadingUser,
-    refetchUser,
-    handleGetCSRFCookie,
-    isLoadingCSRF,
-  } = useContext(FetchDataContext);
+  const { refetchUser } = useContext(UserContext);
   const t = useTranslations('common');
-  const dispatch = useDispatch();
   const { setVisiblePopup } = useContext(PopupContext);
-  const { register, handleSubmit } = useForm<Form>({
+  const [errors, setErrors] = useState<any>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<Login>({
     defaultValues: {
       remember: true,
     },
   });
   const [isShowPwd, setIsShowPwd] = useState(false);
-  const [
-    login,
-    {
-      data: loginData,
-      isSuccess: isSuccessLogin,
-      isError: isErrorLogin,
-      error: errorLogin,
-      isLoading: isLoadingLogin,
-    },
-  ] = useLoginMutation();
-  const errors = useMemo(() => {
-    if (isErrorLogin && errorLogin) {
-      const error = errorLogin as any;
-      return error?.data?.errors;
-    }
-    return null;
-  }, [isErrorLogin, errorLogin]);
-  const onSubmit: SubmitHandler<Form> = useCallback(
+  const onSubmit: SubmitHandler<Login> = useCallback(
     async (data) => {
-      await handleGetCSRFCookie();
-      await login({ ...data });
+      const res = await login({ ...data });
+      if (res.type === 'error') {
+        setErrors(res.data);
+      }
+      if (res.type === 'success') {
+        setErrors(null);
+        if (res.data?.two_factor) {
+          router.push(`/${locale}/two-factor-qr-code`);
+        } else {
+          await refetchUser();
+        }
+      }
     },
-    [handleGetCSRFCookie, login]
+    [login, refetchUser, locale, router]
   );
   const redirectToOauth = useCallback((provider: 'google' | 'facebook') => {
     if (typeof window !== 'undefined') {
@@ -80,47 +59,20 @@ function LoginPage() {
     }
   }, []);
   useEffect(() => {
-    if (isLoadingCSRF || isLoadingLogin) {
+    if (isSubmitting) {
       setVisiblePopup({ visibleLoadingPopup: true });
     } else {
       setVisiblePopup({ visibleLoadingPopup: false });
     }
-  }, [isLoadingCSRF, isLoadingLogin, setVisiblePopup]);
-  useEffect(() => {
-    if (isSuccessLogin && loginData) {
-      dispatch(setIsLoggedIn(true));
-      if (loginData?.two_factor) {
-        router.replace(`/${locale}/two-factor-qr-code`);
-      } else {
-        refetchUser();
-        router.replace(`/${locale}`);
-      }
-    }
-    if (isErrorLogin && errorLogin) {
-      const error = errorLogin as any;
+    if (!isSubmitting && errors) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: errors?.message,
         },
       });
     }
-  }, [
-    isSuccessLogin,
-    loginData,
-    isErrorLogin,
-    errorLogin,
-    setVisiblePopup,
-    router,
-    refetchUser,
-    dispatch,
-    locale,
-  ]);
-  if (user) return router.replace(`/${locale}`);
-  if (user && !isLoadingUser) {
-    return notFound();
-  }
-  if (isLoadingUser) return <Loading />;
+  }, [isSubmitting, setVisiblePopup]);
   return (
     <main className='relative w-full h-full flex justify-center items-center font-medium text-sm sm:text-base overflow-y-auto'>
       <section
@@ -135,8 +87,8 @@ function LoginPage() {
           alt='bg-logo'
         />
       </section>
-      <section className='relative z-10 w-full min-h-screen px-4 py-32 md:px-0 md:w-4/5 lg:w-2/3 2xl:w-1/2 rounded-sm grid lg:grid-cols-2 overflow-hidden'>
-        <div className='hidden col-span-1 bg-neutral-800 text-white lg:flex flex-col justify-center items-center gap-8 px-16'>
+      <section className='relative z-10 w-full min-h-screen px-4 py-32 md:px-0 md:w-4/5 lg:w-2/3 2xl:w-1/2 rounded-sm grid xl:grid-cols-2 overflow-hidden'>
+        <div className='hidden col-span-1 bg-neutral-800 text-white xl:flex flex-col justify-center items-center gap-8 px-16'>
           <h1 className='uppercase text-[56px] leading-[56px] font-bold tracking-[4px]'>
             The black & white form
           </h1>
@@ -144,7 +96,7 @@ function LoginPage() {
             <button
               type='button'
               className='bg-white rounded-full p-3 text-neutral-800 hover:text-red-500 transition-colors'
-              disabled={isLoadingLogin}
+              disabled={isSubmitting}
               onClick={() => redirectToOauth('google')}
             >
               <FaGoogle className='text-xl' />
@@ -152,7 +104,7 @@ function LoginPage() {
             <button
               type='button'
               className='bg-white rounded-full p-3 text-neutral-800 hover:text-blue-500 transition-colors'
-              disabled={isLoadingLogin}
+              disabled={isSubmitting}
               onClick={() => redirectToOauth('facebook')}
             >
               <FaFacebookF className='text-xl' />
@@ -169,23 +121,23 @@ function LoginPage() {
           </h1>
           <div className='w-full flex flex-col gap-2'>
             <input
-              disabled={isLoadingLogin || isLoadingCSRF}
+              disabled={isSubmitting}
               className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
               type='email'
               placeholder='Email'
               formNoValidate
               {...register('email')}
             />
-            {errors?.email && (
+            {errors?.errors?.email && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.email[0]}
+                {errors.errors?.email[0]}
               </p>
             )}
           </div>
           <div className='w-full flex flex-col gap-2'>
             <div className='relative w-full'>
               <input
-                disabled={isLoadingLogin || isLoadingCSRF}
+                disabled={isSubmitting}
                 className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
                 type={isShowPwd ? 'text' : 'password'}
                 placeholder={`${t('password')}`}
@@ -196,7 +148,7 @@ function LoginPage() {
                 className='absolute top-1/2 -translate-y-1/2 right-2'
                 aria-label='toggle-pwd-btn'
                 onClick={() => setIsShowPwd(!isShowPwd)}
-                disabled={isLoadingLogin || isLoadingCSRF}
+                disabled={isSubmitting}
               >
                 {isShowPwd ? (
                   <FaRegEye className='text-xl' />
@@ -205,9 +157,9 @@ function LoginPage() {
                 )}
               </button>
             </div>
-            {errors?.password && (
+            {errors?.errors?.password && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.password[0]}
+                {errors.errors?.password[0]}
               </p>
             )}
           </div>
@@ -216,7 +168,7 @@ function LoginPage() {
               <input
                 id='remember'
                 className='checked:bg-red-500'
-                disabled={isLoadingLogin || isLoadingCSRF}
+                disabled={isSubmitting}
                 type='checkbox'
                 {...register('remember')}
               />
@@ -224,16 +176,11 @@ function LoginPage() {
                 {t('remember_me')}
               </label>
             </div>
-            {/* {errors.email && (
-              <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors.email?.message}
-              </p>
-            )} */}
           </div>
           <button
             className='w-full rounded-sm bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
             type='submit'
-            disabled={isLoadingLogin || isLoadingCSRF}
+            disabled={isSubmitting}
           >
             {t('login')}
           </button>
@@ -252,7 +199,7 @@ function LoginPage() {
                 type='button'
                 className='font-bold'
                 onClick={() => router.push(`/${locale}/register`)}
-                disabled={isLoadingLogin || isLoadingCSRF}
+                disabled={isSubmitting}
               >
                 {t('sign-up')}
               </button>
@@ -263,7 +210,7 @@ function LoginPage() {
                 <button
                   type='button'
                   className='bg-neutral-800 rounded-full p-2 text-white hover:text-red-500 transition-colors'
-                  disabled={isLoadingLogin || isLoadingCSRF}
+                  disabled={isSubmitting}
                   onClick={() => redirectToOauth('google')}
                 >
                   <FaGoogle className='text-lg' />
@@ -271,7 +218,7 @@ function LoginPage() {
                 <button
                   type='button'
                   className='bg-neutral-800 rounded-full p-2 text-white hover:text-blue-500 transition-colors'
-                  disabled={isLoadingLogin || isLoadingCSRF}
+                  disabled={isSubmitting}
                   onClick={() => redirectToOauth('facebook')}
                 >
                   <FaFacebookF className='text-lg' />
@@ -285,4 +232,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default withNoAuth(LoginPage);

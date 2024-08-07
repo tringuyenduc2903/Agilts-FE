@@ -16,7 +16,6 @@ type Props = {
   productsData: any;
   isSuccessProducts: boolean;
   isLoadingProducts: boolean;
-  isFetchingProducts: boolean;
 };
 
 function ProductsMobile({
@@ -25,7 +24,6 @@ function ProductsMobile({
   productsData,
   isSuccessProducts,
   isLoadingProducts,
-  isFetchingProducts,
 }: Props) {
   const searchParams = useSearchParams();
   const t = useTranslations('common');
@@ -41,6 +39,8 @@ function ProductsMobile({
       sortColumn: '',
       sortDirection: '',
     },
+    manufacturer: '',
+    option_type: '',
     category: {
       preview: '',
       name: '',
@@ -57,23 +57,87 @@ function ProductsMobile({
   });
   const [priceMin, setPriceMin] = useState<string | number>(0);
   const [priceMax, setPriceMax] = useState<string | number>(0);
-
   const handleSelectedTab = useCallback((tab: string) => {
     setSelectedTab((prevTab) => {
       if (prevTab === tab) return null;
       return tab;
     });
   }, []);
-
-  const renderedCategories = useMemo(() => {
+  const formatFilter = useMemo(() => {
+    const formatted: { [key: string]: any } = {};
+    if (isSuccessFilter && filterData) {
+      filterData?.forEach((f: any) => {
+        formatted[f.name] = f;
+      });
+    }
+    return formatted;
+  }, [isSuccessFilter, filterData]);
+  const renderedManufacturer = useMemo(() => {
     return (
       isSuccessFilter &&
-      convertData(filterData?.[5]?.data)?.map((d) => {
+      convertData(formatFilter?.manufacturer?.data)?.map((d) => {
         return (
           <li className='h-max' key={d.id}>
             <button
               className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
-                searchParams.get(filterData?.[5]?.name) === d.id.toString()
+                searchParams.get(formatFilter?.manufacturer?.name) ===
+                d.id.toString()
+                  ? 'text-red-500'
+                  : ''
+              } transition-colors`}
+              onClick={() => {
+                setSelectedTab(null);
+                setForm((prevForm) => ({
+                  ...prevForm,
+                  manufacturer: d.value,
+                }));
+              }}
+            >
+              {d.value}
+            </button>
+          </li>
+        );
+      })
+    );
+  }, [isSuccessFilter, formatFilter?.manufacturer, searchParams]);
+  const renderedOptionType = useMemo(() => {
+    return (
+      isSuccessFilter &&
+      formatFilter?.option_type?.data?.map((d: string) => {
+        return (
+          <li className='h-max' key={d}>
+            <button
+              className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
+                searchParams.get(formatFilter?.manufacturer?.name) ===
+                d.toString()
+                  ? 'text-red-500'
+                  : ''
+              } transition-colors`}
+              onClick={() => {
+                setSelectedTab(null);
+                setForm((prevForm) => ({
+                  ...prevForm,
+                  option_type: d,
+                }));
+              }}
+            >
+              {d}
+            </button>
+          </li>
+        );
+      })
+    );
+  }, [isSuccessFilter, formatFilter?.option_type, searchParams]);
+  const renderedCategories = useMemo(() => {
+    return (
+      isSuccessFilter &&
+      convertData(formatFilter?.category?.data)?.map((d) => {
+        return (
+          <li className='h-max' key={d.id}>
+            <button
+              className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
+                searchParams.get(formatFilter?.category?.name) ===
+                d.id.toString()
                   ? 'text-red-500'
                   : ''
               } transition-colors`}
@@ -82,7 +146,7 @@ function ProductsMobile({
                 setForm((prevForm) => ({
                   ...prevForm,
                   category: {
-                    name: filterData?.[5]?.name,
+                    name: formatFilter?.category?.name,
                     preview: d.value,
                     value: d.id,
                   },
@@ -95,17 +159,17 @@ function ProductsMobile({
         );
       })
     );
-  }, [isSuccessFilter, filterData?.[5], searchParams]);
+  }, [isSuccessFilter, formatFilter?.category, searchParams]);
 
-  const renderedVerions = useMemo(() => {
+  const renderedVersion = useMemo(() => {
     return (
       isSuccessFilter &&
-      convertData(filterData?.[4]?.data)?.map((d) => {
+      convertData(formatFilter?.version?.data)?.map((d) => {
         return (
           <li className='h-max' key={d.id}>
             <button
               className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
-                searchParams.get(filterData?.[4].name) === d.id.toString()
+                searchParams.get(formatFilter?.version.name) === d.id.toString()
                   ? 'text-red-500'
                   : ''
               } transition-colors`}
@@ -114,7 +178,7 @@ function ProductsMobile({
                 setForm((prevForm) => ({
                   ...prevForm,
                   model: {
-                    name: filterData?.[4]?.name,
+                    name: formatFilter?.version?.name,
                     value: d.id,
                   },
                 }));
@@ -126,17 +190,17 @@ function ProductsMobile({
         );
       })
     );
-  }, [isSuccessFilter, filterData?.[4], searchParams]);
+  }, [isSuccessFilter, formatFilter?.version, searchParams]);
 
   const renderedColors = useMemo(() => {
     return (
       isSuccessFilter &&
-      convertData(filterData?.[3]?.data)?.map((d) => {
+      convertData(formatFilter?.color?.data)?.map((d) => {
         return (
           <li className='h-max' key={d.id}>
             <button
               className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
-                searchParams.get(filterData?.[3].name) === d.id.toString()
+                searchParams.get(formatFilter?.color.name) === d.id.toString()
                   ? 'text-red-500'
                   : ''
               } transition-colors`}
@@ -145,7 +209,7 @@ function ProductsMobile({
                 setForm((prevForm) => ({
                   ...prevForm,
                   color: {
-                    name: filterData?.[3]?.name,
+                    name: formatFilter?.color?.name,
                     value: d.id,
                   },
                 }));
@@ -157,11 +221,13 @@ function ProductsMobile({
         );
       })
     );
-  }, [isSuccessFilter, filterData?.[3], searchParams]);
+  }, [isSuccessFilter, formatFilter?.color, searchParams]);
 
   const handleSort = useCallback(() => {
     createQueryString(
       [
+        'manufacturer',
+        'option_type',
         form.category.name,
         form.version.name,
         form.color.name,
@@ -172,7 +238,8 @@ function ProductsMobile({
         'search',
       ],
       [
-        form.category.value,
+        form.manufacturer,
+        form.option_type,
         form.version.value,
         form.color.value,
         priceMin.toString(),
@@ -196,14 +263,14 @@ function ProductsMobile({
     <section className='w-full min-h-screen py-8 m-auto px-4 overflow-hidden flex flex-col gap-6 text-sm md:text-base'>
       <div className='relative' ref={sectionRef as LegacyRef<HTMLDivElement>}>
         <button
-          className='w-full sm:w-1/2 mx-auto flex justify-center items-center gap-4 border border-neutral-300 rounded-sm py-2'
+          className='w-full md:w-1/2 mx-auto flex justify-center items-center gap-4 border border-neutral-300 rounded-sm py-2'
           onClick={() => setIsOpenFilter(!isOpenFilter)}
         >
           <FaSliders />
           <p className='font-medium text-base'>{t('filter')}</p>
         </button>
         {isSuccessFilter && isOpenFilter && (
-          <div className='absolute top-[125%] left-1/2 -translate-x-1/2 w-full sm:w-1/2 h-[70vh] md:h-[75vh] px-4 py-8 border border-neutral-300 bg-white z-50 overflow-y-auto flex flex-col gap-6'>
+          <div className='absolute top-[125%] left-1/2 -translate-x-1/2 w-full md:w-1/2 h-[70vh] md:h-[75vh] px-4 py-8 border border-neutral-300 bg-white z-50 overflow-y-auto flex flex-col gap-6'>
             <div className='relative w-full'>
               <input
                 className='px-4 py-2 w-full bg-neutral-100'
@@ -400,7 +467,43 @@ function ProductsMobile({
               )}
             </div>
             <div className='flex flex-col gap-2'>
-              <h2 className='text-base font-medium'>{t('category')}</h2>
+              <h2 className='text-base font-medium'>
+                {formatFilter?.manufacturer?.label}
+              </h2>
+              <button
+                className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
+                onClick={() => handleSelectedTab('manufacturer')}
+              >
+                <p>{form?.manufacturer ? form?.manufacturer : t('all')}</p>
+                <FaAngleDown />
+              </button>
+              {selectedTab === 'manufacturer' && (
+                <ul className='w-full h-auto max-h-[40vh] p-4 flex flex-col gap-1 border border-neutral-300 overflow-y-auto'>
+                  {renderedManufacturer}
+                </ul>
+              )}
+            </div>
+            <div className='flex flex-col gap-2'>
+              <h2 className='text-base font-medium'>
+                {formatFilter?.option_type?.label}
+              </h2>
+              <button
+                className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
+                onClick={() => handleSelectedTab('option_type')}
+              >
+                <p>{form?.option_type ? form?.option_type : t('all')}</p>
+                <FaAngleDown />
+              </button>
+              {selectedTab === 'option_type' && (
+                <ul className='w-full h-auto max-h-[40vh] p-4 flex flex-col gap-1 border border-neutral-300 overflow-y-auto'>
+                  {renderedOptionType}
+                </ul>
+              )}
+            </div>
+            <div className='flex flex-col gap-2'>
+              <h2 className='text-base font-medium'>
+                {formatFilter?.category?.label}
+              </h2>
               <button
                 className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
                 onClick={() => handleSelectedTab('category')}
@@ -417,7 +520,9 @@ function ProductsMobile({
               )}
             </div>
             <div className='flex flex-col gap-2'>
-              <h2 className='text-base font-medium'>{t('model')}</h2>
+              <h2 className='text-base font-medium'>
+                {formatFilter?.version?.label}
+              </h2>
               <button
                 className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
                 onClick={() => handleSelectedTab('model')}
@@ -427,12 +532,14 @@ function ProductsMobile({
               </button>
               {selectedTab === 'model' && (
                 <ul className='w-full h-auto max-h-[40vh] p-4 flex flex-col gap-1 border border-neutral-300 overflow-y-auto'>
-                  {renderedVerions}
+                  {renderedVersion}
                 </ul>
               )}
             </div>
             <div className='flex flex-col gap-2'>
-              <h2 className='text-base font-medium'>{t('color')}</h2>
+              <h2 className='text-base font-medium'>
+                {formatFilter?.color?.label}
+              </h2>
               <button
                 className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
                 onClick={() => handleSelectedTab('color')}
@@ -450,8 +557,8 @@ function ProductsMobile({
               <h2 className='text-base font-medium'>{t('price')}</h2>
               <div className='w-full flex justify-center items-center'>
                 <RangeSlider
-                  min={Number(filterData[1]?.data)}
-                  max={Number(filterData[2]?.data)}
+                  min={Number(formatFilter?.minPrice?.data?.raw)}
+                  max={Number(formatFilter?.maxPrice?.data?.raw)}
                   onChange={({ min, max }) => {
                     setPriceMin(min);
                     setPriceMax(max);
@@ -472,6 +579,8 @@ function ProductsMobile({
                       sortColumn: '',
                       sortDirection: '',
                     },
+                    manufacturer: '',
+                    option_type: '',
                     category: {
                       preview: '',
                       name: '',
@@ -500,7 +609,7 @@ function ProductsMobile({
           </div>
         )}
       </div>
-      {!isFetchingProducts && productsData && (
+      {!isLoadingProducts && productsData && (
         <div className='w-full flex justify-center'>
           {productsData?.total > 0 ? (
             <h3 className='text-sm md:text-base font-medium tracking-[2px]'>
@@ -515,7 +624,6 @@ function ProductsMobile({
         </div>
       )}
       {!isLoadingProducts &&
-        !isFetchingProducts &&
         isSuccessProducts &&
         productsData?.data?.length > 0 && (
           <ProductsSection
@@ -524,7 +632,7 @@ function ProductsMobile({
             // current_page={productsData?.current_page}
           />
         )}
-      {(isLoadingProducts || isFetchingProducts) && <ProductSkeleton />}
+      {isLoadingProducts && <ProductSkeleton />}
       {!isLoadingProducts &&
         isSuccessProducts &&
         productsData?.data?.length === 0 && (

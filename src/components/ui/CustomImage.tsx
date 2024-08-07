@@ -65,7 +65,7 @@ function CustomImage({
   if (!image && images && images?.length > 0) {
     return (
       <React.Fragment>
-        {images?.map((img, index) => {
+        {images?.slice(0, 3).map((img, index) => {
           const isError = fallBackListImage.includes(index);
           return (
             <Image

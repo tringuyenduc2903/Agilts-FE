@@ -6,13 +6,13 @@ import { useTranslations } from 'next-intl';
 import { FaRegPenToSquare, FaRegTrashCan } from 'react-icons/fa6';
 import { useParams, useRouter } from 'next/navigation';
 import withAuth from '@/protected-page/withAuth';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { UserContext } from '@/contexts/UserProvider';
 
 function CartPage() {
   const t = useTranslations('common');
   const { locale } = useParams();
   const router = useRouter();
-  const { cart } = useContext(FetchDataContext);
+  const { cart } = useContext(UserContext);
   return (
     <main className='w-full py-[72px] flex flex-col gap-16'>
       <section className='absolute h-[280px] w-full -z-10 hidden lg:block'>

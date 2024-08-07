@@ -4,27 +4,36 @@ import { convertData } from '@/lib/utils/format';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import React, { useMemo, useState } from 'react';
-
+type SingleData = {
+  name: string;
+  data: {
+    [key: string]: string;
+  };
+  label: string;
+};
 type Props = {
   action: string | null;
-  versions: {
+  versions: SingleData;
+  colors: SingleData;
+  minPrice: SingleData;
+  product_type: {
     name: string;
-    data: {
-      [key: string]: string;
-    };
+    data: string[];
+    label: string;
   };
-  colors: {
+  option_type: {
     name: string;
-    data: {
-      [key: string]: string;
-    };
+    data: string[];
+    label: string;
   };
-  minPrice: number | string;
-  maxPrice: number | string;
+  manufacturer: SingleData;
+  maxPrice: SingleData;
 };
 
 function FilterSection({
   action,
+  option_type,
+  manufacturer,
   versions,
   colors,
   minPrice,
@@ -35,6 +44,42 @@ function FilterSection({
   const [createQueryString] = useQueryString();
   const [priceMin, setPriceMin] = useState<string | number>(0);
   const [priceMax, setPriceMax] = useState<string | number>(0);
+  const renderedManufacturer = useMemo(() => {
+    return convertData(manufacturer?.data)?.map((m) => {
+      return (
+        <li className='h-max' key={m.id}>
+          <button
+            className={`font-bold text-sm md:text-base text-neutral-500 hover:text-red-500 ${
+              searchParams.get(manufacturer.name) === m.value.toString()
+                ? 'text-red-500'
+                : ''
+            } transition-colors`}
+            onClick={() => createQueryString(manufacturer.name, m.value)}
+          >
+            {m.value}
+          </button>
+        </li>
+      );
+    });
+  }, [manufacturer, searchParams, createQueryString]);
+  const renderedOptionType = useMemo(() => {
+    return option_type?.data?.map((o) => {
+      return (
+        <li className='h-max' key={o}>
+          <button
+            className={`font-bold text-sm md:text-base text-neutral-500 hover:text-red-500 ${
+              searchParams.get(option_type.name) === o.toString()
+                ? 'text-red-500'
+                : ''
+            } transition-colors`}
+            onClick={() => createQueryString(option_type.name, o)}
+          >
+            {o}
+          </button>
+        </li>
+      );
+    });
+  }, [option_type, searchParams, createQueryString]);
   const renderedVersions = useMemo(() => {
     return convertData(versions?.data)?.map((d) => {
       return (
@@ -75,24 +120,38 @@ function FilterSection({
 
   return (
     <div
-      className={`absolute bg-white top-[125%] w-[60vw] max-h-screen z-50 overflow-x-hidden overflow-y-auto ${
+      className={`absolute bg-white top-[125%] -left-[100%] w-[75vw] max-h-screen z-50 overflow-x-hidden overflow-y-auto ${
         action === 'filter' ? 'h-[auto] border border-neutral-500' : 'h-0'
       }`}
     >
-      <div className='w-full h-full px-6 py-8 flex justify-between gap-16'>
-        <div className='w-1/5 flex flex-col gap-8'>
-          <h2 className='text-lg md:text-xl font-bold'>{t('version')}</h2>
+      <div className='w-full h-full px-6 py-8 grid grid-cols-6 gap-x-8'>
+        <div className='col-span-1 flex flex-col gap-16'>
+          <div className='flex flex-col gap-4'>
+            <h2 className='text-lg md:text-xl font-bold'>
+              {manufacturer.label}
+            </h2>
+            <ul className='flex flex-col gap-2'>{renderedManufacturer}</ul>
+          </div>
+          <div className='flex flex-col gap-4'>
+            <h2 className='text-lg md:text-xl font-bold'>
+              {option_type.label}
+            </h2>
+            <ul className='flex flex-col gap-2'>{renderedOptionType}</ul>
+          </div>
+        </div>
+        <div className='col-span-1 flex flex-col gap-4'>
+          <h2 className='text-lg md:text-xl font-bold'>{versions.label}</h2>
           <ul className='flex flex-col gap-2'>{renderedVersions}</ul>
         </div>
-        <div className='w-2/5 flex flex-col gap-8'>
-          <h3 className='text-lg md:text-xl font-bold'>{t('colors')}</h3>
+        <div className='col-span-2 flex flex-col gap-4'>
+          <h3 className='text-lg md:text-xl font-bold'>{colors.label}</h3>
           <ul className='grid grid-cols-3 gap-4'>{renderedColors}</ul>
         </div>
-        <div className='w-2/5 flex flex-col gap-8'>
+        <div className='col-span-2 flex flex-col gap-4'>
           <h3 className='text-lg md:text-xl font-bold'>{t('price')}</h3>
           <RangeSlider
-            min={Number(minPrice)}
-            max={Number(maxPrice)}
+            min={Number(minPrice.data?.raw)}
+            max={Number(maxPrice.data?.raw)}
             onChange={({ min, max }) => {
               setPriceMin(min);
               setPriceMax(max);
@@ -104,7 +163,7 @@ function FilterSection({
             onClick={() =>
               createQueryString(
                 ['minPrice', 'maxPrice'],
-                [priceMin.toString(), priceMax.toString()]
+                [priceMin?.toString(), priceMax.toString()]
               )
             }
           >

@@ -1,8 +1,9 @@
 'use client';
+import { createDocument } from '@/api/document';
 import { documents } from '@/config/config';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { PopupContext } from '@/contexts/PopupProvider';
-import { usePostDocumentMutation } from '@/lib/redux/query/userQuery';
+import { UserContext } from '@/contexts/UserProvider';
 import { useTranslations } from 'next-intl';
 import React, {
   useCallback,
@@ -11,6 +12,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { FaCheck } from 'react-icons/fa6';
 type Form = {
   number: string | number;
@@ -22,6 +24,7 @@ type Form = {
 function AddDocumentModal() {
   const t = useTranslations('common');
   const { state, setVisibleModal } = useContext(ModalContext);
+  const { refetchDocument } = useContext(UserContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const [openType, setOpenType] = useState(false);
   const [type, setType] = useState<number | null>(null);
@@ -30,73 +33,57 @@ function AddDocumentModal() {
     if (valid) return valid;
     return null;
   }, [type]);
-  const [form, setForm] = useState<Form>({
-    number: '',
-    issued_name: '',
-    issuance_date: '',
-    expiry_date: '',
-    default: false,
-  });
-  const [
-    postDocument,
-    {
-      isLoading: isLoadingPost,
-      isSuccess: isSuccessPost,
-      isError: isErrorPost,
-      error: errorPost,
+  const [errors, setErrors] = useState<any>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+    reset,
+    watch,
+    setValue,
+  } = useForm<Form>({
+    defaultValues: {
+      number: '',
+      issued_name: '',
+      issuance_date: '',
+      expiry_date: '',
+      default: false,
     },
-  ] = usePostDocumentMutation();
-  const errors = useMemo(() => {
-    if (isErrorPost && errorPost) {
-      const error = errorPost as any;
-      return {
-        errors: error?.data?.errors,
-        message: error?.data?.message,
-      };
-    }
-    return null;
-  }, [isErrorPost, errorPost]);
+  });
+  const watchValue = watch();
   useEffect(() => {
     if (!state.visibleAddDocumentModal) {
-      setType(null);
-      setForm({
-        number: '',
-        issued_name: '',
-        issuance_date: '',
-        expiry_date: '',
-        default: false,
-      });
+      reset();
     }
   }, [state.visibleAddDocumentModal]);
   const handleSelectedType = useCallback((code: number) => {
     setType(code);
     setOpenType(false);
   }, []);
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prevForm) => {
-      return { ...prevForm, [name]: value };
-    });
-  }, []);
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      await postDocument({
-        ...form,
-        type: curType?.code,
-      });
+  const onSubmit: SubmitHandler<Form> = useCallback(
+    async (data) => {
+      const res = await createDocument({ ...data, type: curType?.code });
+      if (res.type === 'error') {
+        setErrors(res.data);
+        setIsSuccess(false);
+      } else {
+        setErrors(null);
+        setIsSuccess(true);
+      }
     },
-    [postDocument, form, curType]
+    [createDocument, curType]
   );
   useEffect(() => {
-    if (isLoadingPost) {
+    if (isSubmitting) {
       setVisiblePopup({ visibleLoadingPopup: true });
     } else {
       setVisiblePopup({ visibleLoadingPopup: false });
     }
-  }, [isLoadingPost, setVisiblePopup]);
+  }, [isSubmitting, setVisiblePopup]);
   useEffect(() => {
-    if (isSuccessPost) {
+    if (isSuccess) {
+      refetchDocument();
       setVisibleModal('visibleAddDocumentModal');
       setVisiblePopup({
         visibleToastPopup: {
@@ -104,24 +91,11 @@ function AddDocumentModal() {
           message: t('mess_add_document'),
         },
       });
+      setType(null);
+      reset();
+      setIsSuccess(false);
     }
-    if (isErrorPost && errorPost) {
-      const error = errorPost as any;
-      setVisiblePopup({
-        visibleToastPopup: {
-          type: 'error',
-          message: error?.data?.message,
-        },
-      });
-    }
-  }, [
-    isSuccessPost,
-    isErrorPost,
-    errorPost,
-    setVisiblePopup,
-    setVisibleModal,
-    t,
-  ]);
+  }, [isSuccess, refetchDocument, setVisiblePopup, setVisibleModal, t]);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'
@@ -129,8 +103,8 @@ function AddDocumentModal() {
     >
       <form
         method='POST'
-        className='relative bg-white text-neutral-800 text-sm md:text-base py-8 rounded-sm flex flex-col gap-6 min-h-[40vh] max-h-[80vh] w-full sm:w-3/4 md:w-2/3 xl:w-1/2 overflow-y-auto'
-        onSubmit={handleSubmit}
+        className='relative bg-white text-neutral-800 text-sm md:text-base rounded-sm flex flex-col gap-6 min-h-[40vh] max-h-[80vh] w-full sm:w-3/4 md:w-2/3 xl:w-1/2 overflow-y-auto'
+        onSubmit={handleSubmit(onSubmit)}
       >
         <div className='w-full min-h-[40vh] max-h-[60vh] px-4 pt-8 pb-24 overflow-y-auto flex flex-col gap-6'>
           <div className='flex justify-between gap-4'>
@@ -144,7 +118,7 @@ function AddDocumentModal() {
               className='text-sm md:text-base w-full border border-neutral-300 rounded-sm px-4 py-2 text-start'
               type='button'
               onClick={() => setOpenType(!openType)}
-              disabled={isLoadingPost}
+              disabled={isSubmitting}
             >
               {curType ? t(`${curType.name}`) : t('select_document')}
             </button>
@@ -158,7 +132,7 @@ function AddDocumentModal() {
                   className='w-full px-4 py-2 hover:bg-neutral-100 transition-colors text-start'
                   type='button'
                   onClick={() => handleSelectedType(0)}
-                  disabled={isLoadingPost}
+                  disabled={isSubmitting}
                 >
                   {t('identity_card')}
                 </button>
@@ -168,7 +142,7 @@ function AddDocumentModal() {
                   className='w-full px-4 py-2 hover:bg-neutral-100 transition-colors text-start'
                   type='button'
                   onClick={() => handleSelectedType(1)}
-                  disabled={isLoadingPost}
+                  disabled={isSubmitting}
                 >
                   {t('citizen_identification_card')}
                 </button>
@@ -178,7 +152,7 @@ function AddDocumentModal() {
                   className='w-full px-4 py-2 hover:bg-neutral-100 transition-colors text-start'
                   type='button'
                   onClick={() => handleSelectedType(2)}
-                  disabled={isLoadingPost}
+                  disabled={isSubmitting}
                 >
                   {t('passport')}
                 </button>
@@ -193,14 +167,13 @@ function AddDocumentModal() {
           <div className='flex flex-col gap-2'>
             <label htmlFor='number'>{t('document_number')}</label>
             <input
+              {...register('number')}
               className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base'
               type='number'
               id='number'
               name='number'
-              value={form.number}
               placeholder={`${t('document_number')}...`}
-              onChange={handleChange}
-              disabled={isLoadingPost}
+              disabled={isSubmitting}
             />
             {errors?.errors.number && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -211,14 +184,13 @@ function AddDocumentModal() {
           <div className='flex flex-col gap-2'>
             <label htmlFor='issued_name'>{t('issued_name')}</label>
             <input
+              {...register('issued_name')}
               className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base'
               type='text'
               id='issued_name'
               name='issued_name'
-              value={form.issued_name}
               placeholder={`${t('issued_name')}...`}
-              onChange={handleChange}
-              disabled={isLoadingPost}
+              disabled={isSubmitting}
             />
             {errors?.errors.issued_name && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -229,13 +201,12 @@ function AddDocumentModal() {
           <div className='flex flex-col gap-2'>
             <label htmlFor='issuance_date'>{t('issuance_date')}</label>
             <input
+              {...register('issuance_date')}
               className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base'
               type='date'
               id='issuance_date'
               name='issuance_date'
-              value={form.issuance_date}
-              onChange={handleChange}
-              disabled={isLoadingPost}
+              disabled={isSubmitting}
             />
             {errors?.errors.issuance_date && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -246,13 +217,12 @@ function AddDocumentModal() {
           <div className='flex flex-col gap-2'>
             <label htmlFor='expiry_date'>{t('expiry_date')}</label>
             <input
+              {...register('expiry_date')}
               className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base'
               type='date'
               id='expiry_date'
               name='expiry_date'
-              value={form.expiry_date}
-              onChange={handleChange}
-              disabled={isLoadingPost}
+              disabled={isSubmitting}
             />
             {errors?.errors.expiry_date && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -264,15 +234,17 @@ function AddDocumentModal() {
             <button
               type='button'
               className='text-sm md:text-base w-max flex justify-start items-center gap-2'
-              onClick={() => setForm({ ...form, default: !form.default })}
-              disabled={isLoadingPost}
+              onClick={() => setValue('default', !watchValue?.default)}
+              disabled={isSubmitting}
             >
               <span
                 className={`relative w-[18px] h-[18px] ${
-                  form.default ? 'bg-red-500' : 'border border-neutral-400'
+                  watchValue?.default
+                    ? 'bg-red-500'
+                    : 'border border-neutral-400'
                 } rounded-sm text-white`}
               >
-                {form.default && (
+                {watchValue?.default && (
                   <FaCheck className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2' />
                 )}
               </span>
@@ -285,14 +257,14 @@ function AddDocumentModal() {
             type='button'
             className='px-4 py-2 border border-neutral-300 text-neutral-600 hover:text-neutral-800 hover:border-neutral-400 transition-colors'
             onClick={() => setVisibleModal('visibleAddDocumentModal')}
-            disabled={isLoadingPost}
+            disabled={isSubmitting}
           >
             {t('return')}
           </button>
           <button
             type='submit'
             className='px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition-colors'
-            disabled={isLoadingPost}
+            disabled={isSubmitting}
           >
             {t('complete')}
           </button>

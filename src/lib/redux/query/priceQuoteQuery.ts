@@ -1,10 +1,9 @@
-import { createApi } from '@reduxjs/toolkit/query/react';
-import { axiosBaseQuery } from '../config/axios';
-import { getLangRoute } from '../config/getLangRoute';
+import { getLangRoute } from '@/config/axios';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const priceQuoteApi = createApi({
   reducerPath: 'priceQuoteApi',
-  baseQuery: axiosBaseQuery({
+  baseQuery: fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_PRICEQUOTE_URL}/api${getLangRoute()}`,
   }),
   endpoints: (builder) => {

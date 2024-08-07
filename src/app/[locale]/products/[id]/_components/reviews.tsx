@@ -1,34 +1,45 @@
 'use client';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import CustomPaginationV2 from '@/components/ui/CustomPaginationV2';
 import NotFoundItem from '@/components/ui/NotFoundItem';
 import Stars from '@/components/ui/Stars';
 import useQueryString from '@/lib/hooks/useQueryString';
-import {
-  useGetFilterReviewQuery,
-  useGetProductReviewQuery,
-} from '@/lib/redux/query/storesQuery';
 import { convertData } from '@/lib/utils/format';
 import { Review } from '@/types/types';
 import { useTranslations } from 'next-intl';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import CustomImage from '@/components/ui/CustomImage';
+import { useFetch } from '@/lib/hooks/useFetch';
+import { getFilterReview, getProductReview } from '@/api/product';
 
 function Reviews({
+  product_id,
   reviews_avg_rate,
   reviews_count,
 }: {
+  product_id: number | string;
   reviews_avg_rate: number | string;
   reviews_count: number | string;
 }) {
-  const { id } = useParams();
   const t = useTranslations('common');
   const searchParams = useSearchParams();
   const [createQueryString, removeValueQueryString] = useQueryString();
-  const { data: reviewData, isSuccess: isSuccessReview } =
-    useGetProductReviewQuery({ id: id, search: searchParams.toString() });
-  const { data: filterData, isSuccess: isSuccessFilter } =
-    useGetFilterReviewQuery(id);
+  const {
+    fetchData: getProductReviewMutation,
+    data: reviewData,
+    isSuccess: isSuccessReview,
+  } = useFetch(
+    async () =>
+      await getProductReview({
+        id: product_id,
+        search: searchParams.toString(),
+      })
+  );
+  const {
+    fetchData: getFilterReviewMutation,
+    data: filterData,
+    isSuccess: isSuccessFilter,
+  } = useFetch(async () => await getFilterReview(product_id));
   const renderedFilter = useMemo(() => {
     return (
       isSuccessFilter &&
@@ -96,6 +107,12 @@ function Reviews({
       })
     );
   }, [isSuccessReview, reviewData, t]);
+  useEffect(() => {
+    getFilterReviewMutation();
+  }, []);
+  useEffect(() => {
+    getProductReviewMutation();
+  }, [searchParams]);
   return (
     <section
       id='reviews'

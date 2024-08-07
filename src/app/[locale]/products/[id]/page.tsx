@@ -1,120 +1,103 @@
-'use client';
-import React from 'react';
-import BreadCrumbs from '@/components/ui/BreadCrumbs';
-import Specifications from './_components/specifications';
-import ProductDetails from './_components/productDetails';
-import Reviews from './_components/reviews';
-import { useGetProductDetailsQuery } from '@/lib/redux/query/storesQuery';
+import { getProductDetails } from '@/api/product';
+import { Params } from '@/types/types';
 import { notFound } from 'next/navigation';
-import Videos from './_components/videos';
-import Description from './_components/description';
-import { useTranslations } from 'next-intl';
-import { scrollToElement } from '@/lib/utils/scrollElement';
+import React from 'react';
+import { metadata } from './layout';
+import dynamic from 'next/dynamic';
+const BreadCrumbs = dynamic(() => import('@/components/ui/BreadCrumbs'), {
+  ssr: false,
+  loading: () => <section className='w-full h-[68px] skeleton'></section>,
+});
+const Aside = dynamic(() => import('./_components/aside'), {
+  ssr: false,
+});
+const ProductDetails = dynamic(() => import('./_components/productDetails'), {
+  ssr: false,
+  loading: () => (
+    <section className='container md:m-auto px-6 md:px-0 grid grid-cols-1 lg:grid-cols-2 gap-16 py-8 md:py-16 overflow-hidden'>
+      <div className='col-span-1 w-full h-[550px] skeleton'></div>
+      <div className='col-span-1 w-full h-[550px] skeleton'></div>
+    </section>
+  ),
+});
+const Description = dynamic(() => import('./_components/description'), {
+  ssr: false,
+  loading: () => (
+    <section className='container md:m-auto px-6 md:px-0 flex flex-col gap-4 w-full'>
+      <div className='w-[250px] h-[32px] skeleton'></div>
+      <div className='w-full h-[480px] skeleton'></div>
+    </section>
+  ),
+});
+const Specifications = dynamic(() => import('./_components/specifications'), {
+  ssr: false,
+  loading: () => (
+    <section className='container md:m-auto px-6 md:px-0 w-full flex flex-col gap-4'>
+      <div className='w-[250px] h-[32px] skeleton'></div>
+      <div className='w-full h-[480px] skeleton'></div>
+    </section>
+  ),
+});
+const Videos = dynamic(() => import('./_components/videos'), {
+  ssr: false,
 
-function ProductDetailsPage({
-  params: { id, locale },
+  loading: () => (
+    <section className='container md:m-auto px-6 md:px-0 w-full flex flex-col gap-4'>
+      <div className='w-[250px] h-[32px] skeleton'></div>
+      <div className='w-full h-[480px] skeleton'></div>
+    </section>
+  ),
+});
+const Reviews = dynamic(() => import('./_components/reviews'), {
+  ssr: false,
+  loading: () => (
+    <section className='container md:m-auto px-6 md:px-0 w-full flex flex-col gap-4'>
+      <div className='w-[250px] h-[32px] skeleton'></div>
+      <div className='w-full h-[480px] skeleton'></div>
+    </section>
+  ),
+});
+export default async function ProductDetailsPage({
+  params,
 }: {
-  params: {
-    id: string;
-    locale: string;
-  };
+  params: Params;
 }) {
-  const t = useTranslations('common');
-  const {
-    data: productData,
-    isSuccess: isSuccessProduct,
-    isError: isErrorProduct,
-    isLoading: isLoadingProduct,
-    isFetching: isFetchingProduct,
-  } = useGetProductDetailsQuery(id);
-  if (!isLoadingProduct && isErrorProduct) return notFound();
+  const repo = await getProductDetails(params.id);
+  if (repo.type === 'error') return notFound();
+  metadata.title = repo.data.seo.title;
+  metadata.keywords = repo.data.seo.title;
+  metadata.openGraph = {
+    siteName: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+    type: 'website',
+    url: `${process.env.NEXT_CLIENT_URL}/products/${repo.data.search_url}`,
+    images: [
+      {
+        url: repo.data.seo?.image,
+      },
+    ],
+  };
   return (
     <main className='w-full min-h-screen py-[72px] flex flex-col gap-12 text-sm md:text-base'>
-      {(isLoadingProduct || isFetchingProduct) && (
-        <>
-          <section className='w-full h-[68px] skeleton'></section>
-          <section className='container md:m-auto px-6 md:px-0 grid grid-cols-1 lg:grid-cols-2 gap-16 py-8 md:py-16 overflow-hidden'>
-            <div className='col-span-1 w-full h-[550px] skeleton'></div>
-            <div className='col-span-1 w-full h-[550px] skeleton'></div>
-          </section>
-          <section className='container md:m-auto px-6 md:px-0 flex flex-col gap-4 w-full'>
-            <div className='w-[250px] h-[32px] skeleton'></div>
-            <div className='w-full h-[480px] skeleton'></div>
-          </section>
-          <section className='container md:m-auto px-6 md:px-0 w-full flex flex-col gap-4'>
-            <div className='w-[250px] h-[32px] skeleton'></div>
-            <div className='w-full h-[480px] skeleton'></div>
-          </section>
-          <section className='container md:m-auto px-6 md:px-0 w-full flex flex-col gap-4'>
-            <div className='w-[250px] h-[32px] skeleton'></div>
-            <div className='w-full h-[480px] skeleton'></div>
-          </section>
-          <section className='container md:m-auto px-6 md:px-0 w-full flex flex-col gap-4'>
-            <div className='w-[250px] h-[32px] skeleton'></div>
-            <div className='w-full h-[480px] skeleton'></div>
-          </section>
-        </>
+      <BreadCrumbs
+        path={`/${params.locale}/products`}
+        details={repo?.data?.name}
+      />
+      <Aside product={repo?.data} />
+      <ProductDetails product={repo?.data} />
+      {repo?.data?.description && (
+        <Description description={repo?.data?.description} />
       )}
-      {!isLoadingProduct && !isFetchingProduct && isSuccessProduct && (
-        <>
-          <BreadCrumbs
-            path={`/${locale}/products`}
-            details={productData?.name}
-          />
-          <aside className='fixed w-max top-1/3 -translate-y-1/2 right-4 flex flex-col items-end gap-2'>
-            {productData?.description && (
-              <button
-                className='w-max px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
-                onClick={() => scrollToElement('description')}
-              >
-                {t('description')}
-              </button>
-            )}
-            {productData?.specifications?.length > 0 && (
-              <button
-                className='w-max px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
-                onClick={() => scrollToElement('specifications')}
-              >
-                {t('specifications')}
-              </button>
-            )}
-            {productData?.videos.length > 0 && (
-              <button
-                className='w-max px-6 py-1 bg-white text-red-500 border border-red-500 font-bold rounded-tl-2xl rounded-bl-2xl'
-                onClick={() => scrollToElement('Video')}
-              >
-                Video
-              </button>
-            )}
-            {productData?.reviews_avg_rate && productData?.reviews_count && (
-              <button
-                className='px-6 py-1 bg-white text-red-500 border border-red-500 font-bold'
-                onClick={() => scrollToElement('reviews')}
-              >
-                {t('reviews')}
-              </button>
-            )}
-          </aside>
-          <ProductDetails product={productData} />
-          {productData?.description && (
-            <Description description={productData?.description} />
-          )}
-          {productData?.specifications?.length > 0 && (
-            <Specifications specifications={productData?.specifications} />
-          )}
-          {productData?.videos.length > 0 && (
-            <Videos videos={productData?.videos} />
-          )}
-          {productData?.reviews_avg_rate && productData?.reviews_count && (
-            <Reviews
-              reviews_avg_rate={productData?.reviews_avg_rate}
-              reviews_count={productData?.reviews_count}
-            />
-          )}
-        </>
+      {repo?.data?.specifications?.length > 0 && (
+        <Specifications specifications={repo?.data?.specifications} />
+      )}
+      {repo?.data?.videos.length > 0 && <Videos videos={repo?.data?.videos} />}
+      {repo?.data?.reviews_avg_rate && repo?.data?.reviews_count && (
+        <Reviews
+          product_id={repo?.data?.id}
+          reviews_avg_rate={repo?.data?.reviews_avg_rate}
+          reviews_count={repo?.data?.reviews_count}
+        />
       )}
     </main>
   );
 }
-
-export default ProductDetailsPage;

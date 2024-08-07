@@ -1,13 +1,15 @@
 'use client';
+import { createAddress } from '@/api/address';
 import { defaultCountry } from '@/config/config';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { PopupContext } from '@/contexts/PopupProvider';
+import { UserContext } from '@/contexts/UserProvider';
+import { useFetch } from '@/lib/hooks/useFetch';
 import {
   useGetDistrictsQuery,
   useGetProvincesQuery,
   useGetWardsQuery,
 } from '@/lib/redux/query/countryQuery';
-import { usePostAddressMutation } from '@/lib/redux/query/userQuery';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React, {
@@ -48,6 +50,7 @@ function AddAddressModal() {
   const { locale } = useParams();
   const t = useTranslations('common');
   const { state, setVisibleModal } = useContext(ModalContext);
+  const { refetchAddress } = useContext(UserContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const [country, setCountry] = useState<Form>({
     province: {
@@ -80,21 +83,30 @@ function AddAddressModal() {
     country.district.code,
     { skip: !country.district.code }
   );
-  const [
-    postAddress,
-    {
-      isLoading: isLoadingPost,
-      isSuccess: isSuccessPost,
-      isError: isErrorPost,
-      error: errorPost,
-    },
-  ] = usePostAddressMutation();
+  const {
+    fetchData: createAddressMutation,
+    isLoading: isLoadingPost,
+    isSuccess: isSuccessPost,
+    isError: isErrorPost,
+    error: errorPost,
+  } = useFetch(
+    async () =>
+      await createAddress({
+        default: country.default,
+        type: country.type,
+        country: defaultCountry,
+        province: country.province.full_name,
+        district: country.district.full_name,
+        ward: country.ward.full_name,
+        address_detail: country.address_detail,
+      })
+  );
   const errors = useMemo(() => {
     if (isErrorPost && errorPost) {
       const error = errorPost as any;
       return {
-        errors: error?.data?.errors,
-        message: error?.data?.message,
+        errors: error?.errors,
+        message: error?.message,
       };
     }
     return null;
@@ -257,17 +269,9 @@ function AddAddressModal() {
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      await postAddress({
-        default: country.default,
-        type: country.type,
-        country: defaultCountry,
-        province: country.province.full_name,
-        district: country.district.full_name,
-        ward: country.ward.full_name,
-        address_detail: country.address_detail,
-      });
+      await createAddressMutation();
     },
-    [postAddress, country]
+    [createAddressMutation]
   );
   useEffect(() => {
     if (isLoadingPost) {
@@ -278,6 +282,7 @@ function AddAddressModal() {
   }, [isLoadingPost, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessPost) {
+      refetchAddress();
       setVisibleModal('visibleAddAddressModal');
       setVisiblePopup({
         visibleToastPopup: {
@@ -291,7 +296,7 @@ function AddAddressModal() {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: error?.message,
         },
       });
     }
@@ -299,6 +304,7 @@ function AddAddressModal() {
     isSuccessPost,
     isErrorPost,
     errorPost,
+    refetchAddress,
     setVisiblePopup,
     setVisibleModal,
     t,

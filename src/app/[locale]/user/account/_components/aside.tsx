@@ -1,5 +1,5 @@
 'use client';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { UserContext } from '@/contexts/UserProvider';
 import { useTranslations } from 'next-intl';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import React, { useContext } from 'react';
@@ -14,7 +14,7 @@ import {
 function Aside() {
   const { locale } = useParams();
   const pathname = usePathname();
-  const { user } = useContext(FetchDataContext);
+  const { user } = useContext(UserContext);
   const t = useTranslations('common');
   const router = useRouter();
   return (

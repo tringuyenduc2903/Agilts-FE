@@ -1,107 +1,73 @@
 'use client';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
-import { useVerifyTwoFactorMutation } from '@/lib/redux/query/userQuery';
+import { UserContext } from '@/contexts/UserProvider';
 import Image from 'next/image';
-import { notFound, useRouter } from 'next/navigation';
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import bgImg from '@/assets/port-title-area.jpg';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import Loading from '../loading';
-import { useSelector } from 'react-redux';
-import { isLoggedInState } from '@/lib/redux/slice/userSlice';
 import { PopupContext } from '@/contexts/PopupProvider';
+import { verifyTwoFactor } from '@/api/user';
+import withNoAuth from '@/protected-page/withNoAuth';
 type Form = {
   code: string;
   recovery_code: string;
 };
 function TwoFactorQrCodePage() {
   const t = useTranslations('common');
-  const isLoggedIn = useSelector(isLoggedInState);
   const [curInput, setCurInput] = useState('code');
-  const router = useRouter();
-  const {
-    user,
-    isSuccessUser,
-    isLoadingUser,
-    refetchUser,
-    handleGetCSRFCookie,
-    isLoadingCSRF,
-  } = useContext(FetchDataContext);
+  const { refetchUser } = useContext(UserContext);
   const { setVisiblePopup } = useContext(PopupContext);
-  const [
-    verifyTwoFactor,
-    {
-      isSuccess: isSuccessVerify,
-      isLoading: isLoadingVerify,
-      isError: isErrorVerify,
-      error: errorVerify,
-    },
-  ] = useVerifyTwoFactorMutation();
-  const errors = useMemo(() => {
-    if (isErrorVerify && errorVerify) {
-      const error = errorVerify as any;
-      return error?.data?.errors;
-    }
-    return null;
-  }, [isErrorVerify, errorVerify]);
-  const { register, handleSubmit } = useForm<Form>();
+  const [errors, setErrors] = useState<any>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<Form>();
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {
-      await handleGetCSRFCookie();
-      await verifyTwoFactor(
+      const res = await verifyTwoFactor(
         curInput === 'code'
           ? { code: data.code }
           : { recovery_code: data.recovery_code }
       );
+      if (res.type === 'error') {
+        setErrors(res.data);
+        setIsSuccess(false);
+      }
+      if (res.type === 'success') {
+        await refetchUser();
+        setIsSuccess(true);
+        setErrors(null);
+      }
     },
-    [handleGetCSRFCookie, verifyTwoFactor, curInput]
+    [verifyTwoFactor, curInput]
   );
   useEffect(() => {
-    if (isLoadingVerify) {
+    if (isSubmitting) {
       setVisiblePopup({ visibleLoadingPopup: true });
     } else {
       setVisiblePopup({ visibleLoadingPopup: false });
     }
-  }, [isLoadingVerify, setVisiblePopup]);
+  }, [isSubmitting, setVisiblePopup]);
   useEffect(() => {
-    if (isSuccessVerify) {
+    if (isSuccess) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
           message: t('mess_success_verify'),
         },
       });
-      refetchUser();
     }
-    if (isErrorVerify && errorVerify) {
-      const error = errorVerify as any;
+    if (errors) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: errors?.message,
         },
       });
     }
-  }, [
-    isSuccessVerify,
-    isErrorVerify,
-    errorVerify,
-    refetchUser,
-    setVisiblePopup,
-    t,
-  ]);
-  if (user && isSuccessUser && !isLoadingUser) {
-    return router.replace('/');
-  }
-  if (isLoadingUser) return <Loading />;
-  if (!isLoggedIn) return notFound();
+  }, [isSuccess, errors, setVisiblePopup, t]);
   return (
     <main className='w-full pt-[72px] flex flex-col'>
       <section className='absolute h-full w-full -z-10 hidden lg:block'>
@@ -140,7 +106,7 @@ function TwoFactorQrCodePage() {
                     type='text'
                     placeholder={`${t('mess_enter_code')}`}
                     {...register('code')}
-                    disabled={isLoadingVerify || isLoadingCSRF}
+                    disabled={isSubmitting}
                   />
                   {errors?.code && (
                     <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -164,7 +130,7 @@ function TwoFactorQrCodePage() {
                     type='text'
                     placeholder={`${t('recovery_code')}`}
                     {...register('recovery_code')}
-                    disabled={isLoadingVerify || isLoadingCSRF}
+                    disabled={isSubmitting}
                   />
                   {errors?.recovery_code && (
                     <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -179,7 +145,7 @@ function TwoFactorQrCodePage() {
                 className='w-max text-sm font-bold text-blue-700'
                 type='button'
                 onClick={() => setCurInput('code')}
-                disabled={isLoadingVerify || isLoadingCSRF}
+                disabled={isSubmitting}
               >
                 {t('using_code')}
               </button>
@@ -189,7 +155,7 @@ function TwoFactorQrCodePage() {
                 className='w-max text-sm font-bold text-blue-700'
                 type='button'
                 onClick={() => setCurInput('recovery')}
-                disabled={isLoadingVerify || isLoadingCSRF}
+                disabled={isSubmitting}
               >
                 {t('using_recovery')}
               </button>
@@ -197,7 +163,7 @@ function TwoFactorQrCodePage() {
             <button
               className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
               type='submit'
-              disabled={isLoadingVerify || isLoadingCSRF}
+              disabled={isSubmitting}
             >
               {t('submit')}
             </button>
@@ -208,4 +174,4 @@ function TwoFactorQrCodePage() {
   );
 }
 
-export default TwoFactorQrCodePage;
+export default withNoAuth(TwoFactorQrCodePage);

@@ -1,26 +1,36 @@
 'use client';
 import Image from 'next/image';
-import React, { useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import bgImg from '@/assets/port-title-area.jpg';
 import { useTranslations } from 'next-intl';
 import { FaRegTrashCan } from 'react-icons/fa6';
 import { useParams, useRouter } from 'next/navigation';
 import withAuth from '@/protected-page/withAuth';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { UserContext } from '@/contexts/UserProvider';
 import CustomImage from '@/components/ui/CustomImage';
-import { useDeleteWishlistMutation } from '@/lib/redux/query/storesQuery';
 import { PopupContext } from '@/contexts/PopupProvider';
-
+import { useFetch } from '@/lib/hooks/useFetch';
+import { deleteWishlist } from '@/api/wishlist';
 function WishlistPage() {
   const t = useTranslations('common');
   const { locale } = useParams();
   const router = useRouter();
   const { setVisiblePopup } = useContext(PopupContext);
-  const { wishlist, isLoadingWishlist } = useContext(FetchDataContext);
-  const [
-    deleteWishlist,
-    { isLoading: isLoadingDelete, isError: isErrorDelete, error: errorDelete },
-  ] = useDeleteWishlistMutation();
+  const { wishlist, isLoadingWishlist } = useContext(UserContext);
+  const [curId, setCurId] = useState<number | string>('');
+  const {
+    fetchData: deleteWishlistMutation,
+    isLoading: isLoadingDelete,
+    isError: isErrorDelete,
+    error: errorDelete,
+  } = useFetch(async () => await deleteWishlist(curId));
+  const handleDeleteWishlist = useCallback(
+    async (id: number | string) => {
+      setCurId(id);
+      await deleteWishlistMutation();
+    },
+    [deleteWishlistMutation]
+  );
   useEffect(() => {
     if (isErrorDelete && errorDelete) {
       const error = errorDelete as any;
@@ -63,7 +73,11 @@ function WishlistPage() {
                 <tbody className='border-t border-b border-neutral-300'>
                   {wishlist?.map((w) => {
                     return (
-                      <tr key={w.id}>
+                      <tr
+                        key={w.id}
+                        onMouseEnter={() => setCurId(w.id)}
+                        onMouseLeave={() => setCurId('')}
+                      >
                         <td className='px-2 py-4'>
                           <div
                             className='flex justify-center items-center gap-2 overflow-hidden cursor-pointer'
@@ -98,7 +112,9 @@ function WishlistPage() {
                               className='hover:text-red-500 transition-colors'
                               aria-label='delete-wishlist'
                               disabled={isLoadingDelete}
-                              onClick={async () => await deleteWishlist(w.id)}
+                              onClick={async () =>
+                                await handleDeleteWishlist(w.id)
+                              }
                             >
                               <FaRegTrashCan className='text-xl' />
                             </button>

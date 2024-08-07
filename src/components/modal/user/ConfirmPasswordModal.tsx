@@ -1,11 +1,7 @@
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
-import {
-  useConfirmPasswordMutation,
-  useConfirmPasswordStatusQuery,
-} from '@/lib/redux/query/userQuery';
 import React, {
   LegacyRef,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -16,61 +12,52 @@ import { useTranslations } from 'next-intl';
 import { FaRegEye, FaRegEyeSlash, FaXmark } from 'react-icons/fa6';
 import { PopupContext } from '@/contexts/PopupProvider';
 import useClickOutside from '@/lib/hooks/useClickOutside';
+import { useFetch } from '@/lib/hooks/useFetch';
+import { confirmPassword, confirmPasswordStatus } from '@/api/user';
 type Form = {
   password: string;
 };
 function ConfirmPasswordModal() {
   const { setVisibleModal } = useContext(ModalContext);
-  const { handleGetCSRFCookie, isLoadingCSRF } = useContext(FetchDataContext);
   const t = useTranslations('common');
   const [isShowCurPwd, setIsShowCurPwd] = useState(false);
   const { setVisiblePopup } = useContext(PopupContext);
   const { sectionRef, clickOutside } = useClickOutside(() =>
     setVisibleModal('visibleConfirmPasswordModal')
   );
-  const { register, handleSubmit } = useForm<Form>();
-  const [
-    confirmPassword,
-    {
-      isSuccess: isSuccessConfirm,
-      isLoading: isLoadingConfirm,
-      isError: isErrorConfirm,
-      error: errorConfirm,
-    },
-  ] = useConfirmPasswordMutation();
+  const [errors, setErrors] = useState<any>(null);
   const {
-    data: statusConfirm,
-    isLoading: isLoadingStatus,
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<Form>();
+  const {
+    fetchData: confirmPasswordStatusMutation,
     isSuccess: isSuccessStatus,
     isError: isErrorStatus,
     error: errorStatus,
-  } = useConfirmPasswordStatusQuery(null, {
-    skip: !isSuccessConfirm,
-  });
-  const errors = useMemo(() => {
-    if (isErrorConfirm && errorConfirm) {
-      const error = errorConfirm as any;
-      return error?.data?.errors;
-    }
-    if (isErrorStatus && errorStatus) {
-      const error = errorStatus as any;
-      return error?.data?.errors;
-    }
-    return null;
-  }, [isErrorConfirm, errorConfirm, isErrorStatus, errorStatus]);
-  const onSubmit: SubmitHandler<Form> = async (data) => {
-    await handleGetCSRFCookie();
-    await confirmPassword(data.password);
-  };
+  } = useFetch(async () => await confirmPasswordStatus());
+  const onSubmit: SubmitHandler<Form> = useCallback(
+    async (data) => {
+      const res = await confirmPassword(data.password);
+      if (res.type === 'error') {
+        setErrors(res.data);
+      } else {
+        setErrors(null);
+        await confirmPasswordStatusMutation();
+      }
+    },
+    [confirmPassword]
+  );
   useEffect(() => {
-    if (isLoadingCSRF || isLoadingConfirm || isLoadingStatus) {
+    if (isSubmitting) {
       setVisiblePopup({ visibleLoadingPopup: true });
     } else {
       setVisiblePopup({ visibleLoadingPopup: false });
     }
-  }, [isLoadingConfirm, isLoadingStatus, isLoadingCSRF, setVisiblePopup]);
+  }, [isSubmitting, setVisiblePopup]);
   useEffect(() => {
-    if (isSuccessStatus && statusConfirm) {
+    if (isSuccessStatus) {
       setVisibleModal({
         visibleConfirmPasswordModal: {
           state: 'success',
@@ -78,7 +65,10 @@ function ConfirmPasswordModal() {
         },
       });
     }
-  }, [isSuccessStatus, statusConfirm, setVisibleModal]);
+    if (isErrorStatus && errorStatus) {
+      setErrors(errorStatus);
+    }
+  }, [isSuccessStatus, setVisibleModal, isErrorStatus, errorStatus]);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'
@@ -89,7 +79,7 @@ function ConfirmPasswordModal() {
         ref={sectionRef as LegacyRef<HTMLFormElement>}
         onSubmit={handleSubmit(onSubmit)}
         method='POST'
-        className='bg-white text-neutral-800 text-sm md:text-base px-4 py-8 rounded-sm flex flex-col gap-6 min-h-[40vh] max-h-[80vh] w-full sm:w-3/4 md:w-2/3 xl:w-1/2 overflow-y-auto'
+        className='bg-white text-neutral-800 text-sm md:text-base px-4 py-8 rounded-sm flex flex-col justify-between gap-6 min-h-[40vh] max-h-[80vh] w-full sm:w-3/4 md:w-2/3 xl:w-1/2 overflow-y-auto'
       >
         <div className='w-full flex justify-end'>
           <button
@@ -107,7 +97,7 @@ function ConfirmPasswordModal() {
         <p> {t('mess_confirm_password')}</p>
         <div className='relative w-full'>
           <input
-            disabled={isLoadingConfirm || isLoadingStatus || isLoadingCSRF}
+            disabled={isSubmitting}
             className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
             type={isShowCurPwd ? 'text' : 'password'}
             placeholder={`${t('current_password')}`}
@@ -118,7 +108,7 @@ function ConfirmPasswordModal() {
             className='absolute top-1/2 -translate-y-1/2 right-2'
             aria-label='toggle-pwd-btn'
             onClick={() => setIsShowCurPwd(!isShowCurPwd)}
-            disabled={isLoadingConfirm || isLoadingStatus || isLoadingCSRF}
+            disabled={isSubmitting}
           >
             {isShowCurPwd ? (
               <FaRegEye className='text-xl' />
@@ -127,15 +117,15 @@ function ConfirmPasswordModal() {
             )}
           </button>
         </div>
-        {errors?.password && (
+        {errors?.errors?.password && (
           <p className='text-red-500 font-bold text-sm md:text-base'>
-            {errors.password[0]}
+            {errors.errors.password[0]}
           </p>
         )}
         <button
           type='submit'
-          className='font-bold bg-neutral-800 text-white py-3 md:py-4 rounded-sm'
-          disabled={isLoadingConfirm || isLoadingStatus || isLoadingCSRF}
+          className='mt-auto font-bold bg-neutral-800 text-white py-3 md:py-4 rounded-sm'
+          disabled={isSubmitting}
         >
           {t('confirm')}
         </button>

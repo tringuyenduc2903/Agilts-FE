@@ -15,7 +15,7 @@ export const SkeletonProduct = () => {
     <div className='flex flex-col items-center gap-16'>
       <div className='w-full grid grid-cols-4 gap-x-4 gap-y-16'>
         <LoadingMultiItem
-          customClass='col-span-1 m-auto md:m-0 w-full w-[280px]  h-[300px]cursor-pointer skeleton'
+          customClass='col-span-1 m-auto md:m-0 w-full w-[280px] h-[300px] skeleton'
           number={12}
         />
       </div>

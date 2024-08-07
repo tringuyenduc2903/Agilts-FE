@@ -1,3 +1,4 @@
+'use client';
 import { useResponsive } from '@/lib/hooks/useResponsive';
 import { Product } from '@/types/types';
 import React from 'react';

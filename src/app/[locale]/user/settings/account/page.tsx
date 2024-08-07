@@ -1,13 +1,7 @@
 'use client';
 import 'react-phone-number-input/style.css';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { UserContext } from '@/contexts/UserProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
-import {
-  useDeleteSocialMutation,
-  useGetSocialsQuery,
-  useResendVerifyAccountMutation,
-  useUpdateUserMutation,
-} from '@/lib/redux/query/userQuery';
 import PhoneInputWithCountry from 'react-phone-number-input/react-hook-form';
 import withAuth from '@/protected-page/withAuth';
 import React, {
@@ -24,7 +18,13 @@ import { SocialProvider } from '@/types/types';
 import { Social } from '@/types/types';
 import { FaFacebook, FaGoogle, FaGithub } from 'react-icons/fa6';
 import { PopupContext } from '@/contexts/PopupProvider';
-
+import { useFetch } from '@/lib/hooks/useFetch';
+import {
+  deleteSocial,
+  getSocials,
+  resendVerifyAccount,
+  updateUser,
+} from '@/api/user';
 type Form = {
   name: string;
   email: string;
@@ -49,32 +49,40 @@ const socials: Social = {
 };
 function AccountsPage() {
   const t = useTranslations('common');
-  const { user, handleGetCSRFCookie, isLoadingCSRF } =
-    useContext(FetchDataContext);
+  const { user, refetchUser } = useContext(UserContext);
   const { setVisibleModal } = useContext(ModalContext);
-  const { setVisiblePopup, closeAllPopup } = useContext(PopupContext);
-  const [sendVerify, setSendVerify] = useState(false);
-  const [
-    resendVerifyAccount,
-    {
-      isLoading: isLoadingPostData,
-      isSuccess: isSuccessPostData,
-      isError: isErrorPostData,
-      error: errorPostData,
-    },
-  ] = useResendVerifyAccountMutation();
-  const { data: socialData, isSuccess: isSuccessSocial } =
-    useGetSocialsQuery(null);
-  const [
-    deleteSocial,
-    {
-      isSuccess: isSuccessDelete,
-      isLoading: isLoadingDelete,
-      isError: isErrorDelete,
-      error: errorDelete,
-    },
-  ] = useDeleteSocialMutation();
-  const { register, handleSubmit, reset, watch, control } = useForm<Form>({
+  const { setVisiblePopup } = useContext(PopupContext);
+  const {
+    fetchData: resendVerifyAccountMutation,
+    isLoading: isLoadingPostData,
+    isSuccess: isSuccessPostData,
+    isError: isErrorPostData,
+    error: errorPostData,
+  } = useFetch(async () => await resendVerifyAccount());
+  const {
+    fetchData: fetchSocials,
+    data: socialData,
+    isSuccess: isSuccessSocial,
+    refetch: refetchSocials,
+  } = useFetch(async () => await getSocials());
+  const [socialId, setSocialId] = useState<string | number | null>(null);
+  const {
+    fetchData: deleteSocialMutation,
+    isSuccess: isSuccessDelete,
+    isLoading: isLoadingDelete,
+    isError: isErrorDelete,
+    error: errorDelete,
+  } = useFetch(async () => await deleteSocial(socialId as number));
+  const [errors, setErrors] = useState<any>(null);
+  const [success, setSuccess] = useState<any>(null);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    control,
+    formState: { isSubmitting },
+  } = useForm<Form>({
     defaultValues: { ...user, timezone: defaultTimezone },
   });
 
@@ -85,64 +93,48 @@ function AccountsPage() {
     return string1 !== string2;
   }, [watchedValues, user]);
 
-  const [
-    updateUser,
-    {
-      isLoading: isLoadingUpdate,
-      isSuccess: isSuccessUpdate,
-      isError: isErrorUpdate,
-      error: errorUpdate,
-    },
-  ] = useUpdateUserMutation();
-
-  const errors = useMemo(() => {
-    if (isErrorUpdate && errorUpdate) {
-      const error = errorUpdate as any;
-      return error?.data?.errors;
-    }
-    return null;
-  }, [isErrorUpdate, errorUpdate]);
   const handleResendVerify = useCallback(async () => {
-    setSendVerify(true);
-    await handleGetCSRFCookie();
-    await resendVerifyAccount(null);
-  }, [handleGetCSRFCookie, resendVerifyAccount]);
-
+    await resendVerifyAccountMutation();
+  }, [resendVerifyAccountMutation]);
+  const handleDeleteSocial = useCallback(
+    async (id: string | number) => {
+      setSocialId(id);
+      await deleteSocialMutation();
+    },
+    [deleteSocialMutation]
+  );
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {
-      await handleGetCSRFCookie();
-      await updateUser({
-        ...data,
-      });
+      const res = await updateUser({ ...data });
+      if (res.type === 'error') {
+        setErrors(res.data);
+        setSuccess(null);
+      }
+      if (res.type === 'success') {
+        setSuccess('success');
+        setErrors(null);
+        await refetchUser();
+      }
     },
-    [handleGetCSRFCookie, updateUser]
+    [updateUser, refetchUser]
   );
-
+  useEffect(() => {
+    fetchSocials();
+  }, []);
   useEffect(() => {
     if (user) {
       reset({ ...user });
     }
   }, [user, reset]);
   useEffect(() => {
-    if (
-      isLoadingCSRF ||
-      isLoadingUpdate ||
-      isLoadingPostData ||
-      isLoadingDelete
-    ) {
-      closeAllPopup();
+    if (isSubmitting) {
       setVisiblePopup({ visibleLoadingPopup: true });
+    } else {
+      setVisiblePopup({ visibleLoadingPopup: false });
     }
-  }, [
-    isLoadingCSRF,
-    isLoadingUpdate,
-    isLoadingPostData,
-    isLoadingDelete,
-    setVisiblePopup,
-    closeAllPopup,
-  ]);
+  }, [isSubmitting, setVisiblePopup]);
   useEffect(() => {
-    if (isSuccessUpdate) {
+    if (success && !isSubmitting) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
@@ -150,19 +142,17 @@ function AccountsPage() {
         },
       });
     }
-    if (isErrorUpdate && errorUpdate) {
-      const error = errorUpdate as any;
+    if (errors && !isSubmitting) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: errors?.message,
         },
       });
     }
-  }, [isSuccessUpdate, isErrorUpdate, errorUpdate, setVisiblePopup, t]);
+  }, [success, errors, isSubmitting, setVisiblePopup, t]);
   useEffect(() => {
     if (isSuccessPostData) {
-      setSendVerify(false);
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
@@ -171,23 +161,14 @@ function AccountsPage() {
       });
     }
     if (isErrorPostData && errorPostData) {
-      setSendVerify(false);
-      const error = errorPostData as any;
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: errorPostData?.message,
         },
       });
     }
-  }, [
-    sendVerify,
-    isSuccessPostData,
-    isErrorPostData,
-    errorPostData,
-    setVisiblePopup,
-    t,
-  ]);
+  }, [isSuccessPostData, isErrorPostData, errorPostData, setVisiblePopup, t]);
   useEffect(() => {
     if (isSuccessDelete) {
       setVisiblePopup({
@@ -196,17 +177,24 @@ function AccountsPage() {
           message: `${t('delete_success_social')}`,
         },
       });
+      refetchSocials();
     }
     if (isErrorDelete && errorDelete) {
-      const error = errorDelete as any;
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: errorDelete?.message,
         },
       });
     }
-  }, [isSuccessDelete, isErrorDelete, errorDelete, setVisiblePopup, t]);
+  }, [
+    isSuccessDelete,
+    isErrorDelete,
+    errorDelete,
+    refetchSocials,
+    setVisiblePopup,
+    t,
+  ]);
   return (
     <div className='flex flex-col gap-6'>
       <div>
@@ -229,16 +217,11 @@ function AccountsPage() {
             type='text'
             id='name'
             {...register('name')}
-            disabled={
-              isLoadingUpdate ||
-              isLoadingCSRF ||
-              isLoadingPostData ||
-              isLoadingDelete
-            }
+            disabled={isSubmitting || isLoadingPostData}
           />
-          {errors?.name && (
+          {errors?.errors?.name && (
             <p className='text-red-500 font-bold text-sm md:text-base'>
-              {errors.name[0]}
+              {errors?.errors.name[0]}
             </p>
           )}
         </div>
@@ -256,12 +239,7 @@ function AccountsPage() {
                   type='button'
                   className='w-max sm:ml-auto text-red-500 font-bold'
                   onClick={handleResendVerify}
-                  disabled={
-                    isLoadingUpdate ||
-                    isLoadingCSRF ||
-                    isLoadingPostData ||
-                    isLoadingDelete
-                  }
+                  disabled={isSubmitting || isLoadingPostData}
                 >
                   {t('verify')}
                 </button>
@@ -275,9 +253,9 @@ function AccountsPage() {
             {...register('email')}
             disabled
           />
-          {errors?.email && (
+          {errors?.errors?.email && (
             <p className='text-red-500 font-bold text-sm md:text-base'>
-              {errors.email[0]}
+              {errors?.errors?.email[0]}
             </p>
           )}
         </div>
@@ -311,16 +289,11 @@ function AccountsPage() {
                           title: `${t('title_del_social')}`,
                           description: `${t('des_del_social')}`,
                           isLoading: isLoadingDelete,
-                          cb: () => deleteSocial(s.id),
+                          cb: () => handleDeleteSocial(s.id),
                         },
                       })
                     }
-                    disabled={
-                      isLoadingUpdate ||
-                      isLoadingCSRF ||
-                      isLoadingPostData ||
-                      isLoadingDelete
-                    }
+                    disabled={isSubmitting || isLoadingPostData}
                   >
                     {t('unlink')}
                   </button>
@@ -335,12 +308,7 @@ function AccountsPage() {
             type='date'
             id='birthday'
             {...register('birthday')}
-            disabled={
-              isLoadingUpdate ||
-              isLoadingCSRF ||
-              isLoadingPostData ||
-              isLoadingDelete
-            }
+            disabled={isSubmitting || isLoadingPostData}
           />
           {errors?.birthday && (
             <p className='text-red-500 font-bold text-sm md:text-base'>
@@ -359,16 +327,11 @@ function AccountsPage() {
             control={control}
             defaultCountry='VN'
             defaultValue={watchedValues.phone_number as string}
-            disabled={
-              isLoadingUpdate ||
-              isLoadingCSRF ||
-              isLoadingPostData ||
-              isLoadingDelete
-            }
+            disabled={isSubmitting || isLoadingPostData}
           />
-          {errors?.phone_number && (
+          {errors?.errors?.phone_number && (
             <p className='text-red-500 font-bold text-sm md:text-base'>
-              {errors.phone_number[0]}
+              {errors?.errors?.phone_number[0]}
             </p>
           )}
         </div>
@@ -378,21 +341,16 @@ function AccountsPage() {
             id='gender'
             className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base focus:outline-none'
             {...register('gender')}
-            disabled={
-              isLoadingUpdate ||
-              isLoadingCSRF ||
-              isLoadingPostData ||
-              isLoadingDelete
-            }
+            disabled={isSubmitting || isLoadingPostData}
           >
             <option value=''>{t('select_gender')}</option>
             <option value={0}>{t('male')}</option>
             <option value={1}>{t('female')}</option>
             <option value={2}>{t('unknown')}</option>
           </select>
-          {errors?.gender && (
+          {errors?.errors?.gender && (
             <p className='text-red-500 font-bold text-sm md:text-base'>
-              {errors.gender[0]}
+              {errors?.errors.gender[0]}
             </p>
           )}
         </div>
@@ -402,12 +360,7 @@ function AccountsPage() {
               className='font-bold bg-red-500 hover:bg-red-600 transition-colors text-white px-6 py-3 rounded-sm'
               type='button'
               onClick={() => reset({ ...user })}
-              disabled={
-                isLoadingUpdate ||
-                isLoadingCSRF ||
-                isLoadingPostData ||
-                isLoadingDelete
-              }
+              disabled={isSubmitting || isLoadingPostData}
             >
               {t('cancel')}
             </button>
@@ -415,12 +368,7 @@ function AccountsPage() {
           <button
             className='font-bold bg-neutral-800 text-white px-4 py-3 rounded-sm'
             type='submit'
-            disabled={
-              isLoadingUpdate ||
-              isLoadingCSRF ||
-              isLoadingPostData ||
-              isLoadingDelete
-            }
+            disabled={isSubmitting || isLoadingPostData}
           >
             {t('update')}
           </button>

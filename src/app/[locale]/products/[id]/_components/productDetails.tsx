@@ -15,21 +15,18 @@ import { useParams, useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { TbHeart, TbHeartFilled } from 'react-icons/tb';
-
 import CustomImage from '@/components/ui/CustomImage';
 import { FaMinus } from 'react-icons/fa6';
-import {
-  useDeleteWishlistMutation,
-  usePostWishlistMutation,
-} from '@/lib/redux/query/storesQuery';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { UserContext } from '@/contexts/UserProvider';
 import { setCurMotorbike } from '@/lib/redux/slice/userSlice';
+import { useFetch } from '@/lib/hooks/useFetch';
+import { createWishlist, deleteWishlist } from '@/api/wishlist';
 type Props = {
   product: Product;
 };
 function ProductDetails({ product }: Props) {
   const { locale } = useParams();
-  const { user, wishlist } = useContext(FetchDataContext);
+  const { user, wishlist, refetchWishlist } = useContext(UserContext);
   const { setVisibleModal } = useContext(ModalContext);
   const router = useRouter();
   const t = useTranslations('common');
@@ -47,17 +44,20 @@ function ProductDetails({ product }: Props) {
       (w) => w.product_preview.option_id === selectedOptionDetails?.id
     );
   }, [wishlist, selectedOptionDetails]);
-  const [
-    postWishList,
-    {
-      isSuccess: isSuccessPostWishlist,
-      isLoading: isLoadingPostWishlist,
-      isError: isErrorPostWishlist,
-      error: errorPostWishlist,
-    },
-  ] = usePostWishlistMutation();
-  const [deleteWishList, { isLoading: isLoadingDeleteWishlist }] =
-    useDeleteWishlistMutation();
+  const {
+    fetchData: createWishlistMutation,
+    isSuccess: isSuccessPostWishlist,
+    isLoading: isLoadingPostWishlist,
+    isError: isErrorPostWishlist,
+    error: errorPostWishlist,
+  } = useFetch(
+    async () => await createWishlist({ version: selectedOptionDetails?.id })
+  );
+  const {
+    fetchData: deleteWishlistMutation,
+    isLoading: isLoadingDeleteWishlist,
+    isSuccess: isSuccessDeleteWishlist,
+  } = useFetch(async () => await deleteWishlist(isWishlist?.id as number));
   const versions = useMemo(() => {
     const newVersions = new Map<string, ProductOption[]>();
     product?.options?.forEach((item) => {
@@ -146,11 +146,10 @@ function ProductDetails({ product }: Props) {
       });
     }
     if (isErrorPostWishlist && errorPostWishlist) {
-      const error = errorPostWishlist as any;
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: errorPostWishlist?.message,
         },
       });
     }
@@ -161,6 +160,11 @@ function ProductDetails({ product }: Props) {
     setVisiblePopup,
     t,
   ]);
+  useEffect(() => {
+    if (isSuccessPostWishlist || isSuccessDeleteWishlist) {
+      refetchWishlist();
+    }
+  }, [isSuccessPostWishlist, isSuccessDeleteWishlist]);
   return (
     <section className='container md:m-auto px-6 md:px-0 grid grid-cols-1 lg:grid-cols-2 gap-16 py-8 md:py-16 overflow-hidden'>
       <div className='col-span-1 flex flex-col items-start gap-6'>
@@ -182,7 +186,7 @@ function ProductDetails({ product }: Props) {
         </div>
         <div className='w-full grid grid-cols-3 gap-6'>
           <CustomImage
-            images={product.images.slice(0, 3)}
+            images={product.images}
             isShowDetails={true}
             width={250}
             height={180}
@@ -206,10 +210,8 @@ function ProductDetails({ product }: Props) {
                   disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
                   onClick={async () =>
                     isWishlist
-                      ? await deleteWishList(isWishlist.id)
-                      : await postWishList({
-                          version: selectedOptionDetails.id,
-                        })
+                      ? await deleteWishlistMutation()
+                      : await createWishlistMutation()
                   }
                 >
                   {isWishlist ? (
@@ -317,6 +319,12 @@ function ProductDetails({ product }: Props) {
                 <span className='text-red-500'>{t('type')}:</span>
                 <span className='text-neutral-500'>
                   {selectedOptionDetails?.type}
+                </span>
+              </p>
+              <p className='flex gap-2'>
+                <span className='text-red-500'>{t('manufacturer')}:</span>
+                <span className='text-neutral-500'>
+                  {product?.manufacturer ? product?.manufacturer : 'N/A'}
                 </span>
               </p>
               <p className='flex gap-2'>

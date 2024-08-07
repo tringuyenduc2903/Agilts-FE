@@ -1,6 +1,6 @@
 'use client';
 import Loading from '@/app/[locale]/loading';
-import { FetchDataContext } from '@/contexts/FetchDataProvider';
+import { UserContext } from '@/contexts/UserProvider';
 import withAuth from '@/protected-page/withAuth';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
@@ -9,26 +9,26 @@ import { parse } from 'date-fns';
 import { documents } from '@/config/config';
 import { FaPenToSquare, FaRegTrashCan } from 'react-icons/fa6';
 import { ModalContext } from '@/contexts/ModalProvider';
-import { useDeleteDocumentMutation } from '@/lib/redux/query/userQuery';
 import NotFoundItem from '@/components/ui/NotFoundItem';
 import { PopupContext } from '@/contexts/PopupProvider';
+import { useFetch } from '@/lib/hooks/useFetch';
+import { deleteDocument } from '@/api/document';
 function DocumentDetailsPage() {
   const { locale, id } = useParams();
   const router = useRouter();
   const t = useTranslations('common');
+  const { refetchDocument } = useContext(UserContext);
   const { setVisibleModal } = useContext(ModalContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const { allDocuments, isLoadingDocuments, isLoadingUser } =
-    useContext(FetchDataContext);
-  const [
-    deleteDocument,
-    {
-      isSuccess: isSuccessDelete,
-      isLoading: isLoadingDelete,
-      isError: isErrorDelete,
-      error: errorDelete,
-    },
-  ] = useDeleteDocumentMutation();
+    useContext(UserContext);
+  const {
+    fetchData: deleteDocumentMutation,
+    isSuccess: isSuccessDelete,
+    isLoading: isLoadingDelete,
+    isError: isErrorDelete,
+    error: errorDelete,
+  } = useFetch(async () => await deleteDocument(id as string));
   const curDocument = useMemo(() => {
     return allDocuments?.find((d) => d.id.toString() === id);
   }, [id, allDocuments]);
@@ -47,6 +47,7 @@ function DocumentDetailsPage() {
   }, [curDocument]);
   useEffect(() => {
     if (isSuccessDelete) {
+      refetchDocument();
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
@@ -56,11 +57,10 @@ function DocumentDetailsPage() {
       router.replace(`/${locale}/user/account/documents`);
     }
     if (isErrorDelete && errorDelete) {
-      const error = errorDelete as any;
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: error?.data?.message,
+          message: errorDelete?.message,
         },
       });
     }
@@ -170,7 +170,7 @@ function DocumentDetailsPage() {
                     title: t('title_del_document'),
                     description: t('des_del_document'),
                     isLoading: isLoadingDelete,
-                    cb: () => deleteDocument(curDocument?.id),
+                    cb: () => deleteDocumentMutation(),
                   },
                 })
               }

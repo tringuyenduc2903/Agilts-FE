@@ -16,10 +16,12 @@ function WishlistPage() {
   const { locale } = useParams();
   const router = useRouter();
   const { setVisiblePopup } = useContext(PopupContext);
-  const { wishlist, isLoadingWishlist } = useContext(UserContext);
+  const { wishlist, isLoadingWishlist, refetchWishlist } =
+    useContext(UserContext);
   const [curId, setCurId] = useState<number | string>('');
   const {
     fetchData: deleteWishlistMutation,
+    isSuccess: isSuccessDelete,
     isLoading: isLoadingDelete,
     isError: isErrorDelete,
     error: errorDelete,
@@ -41,7 +43,10 @@ function WishlistPage() {
         },
       });
     }
-  }, [isErrorDelete, errorDelete, setVisiblePopup]);
+    if (isSuccessDelete) {
+      refetchWishlist();
+    }
+  }, [isErrorDelete, errorDelete, setVisiblePopup, isSuccessDelete]);
   return (
     <main className='w-full min-h-max py-[72px] flex flex-col gap-16'>
       <section className='absolute h-[280px] w-full -z-10 hidden lg:block'>

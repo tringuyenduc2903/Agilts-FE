@@ -240,6 +240,7 @@ function ProductsMobile({
       [
         form.manufacturer,
         form.option_type,
+        form.category.value,
         form.version.value,
         form.color.value,
         priceMin.toString(),

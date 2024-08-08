@@ -14,7 +14,7 @@ function ProductsSection({ products, total_pages }: Props) {
     return products?.map((p: Product) => {
       return (
         <SingleProduct
-          articleClass='col-span-1 m-auto md:m-0 w-full max-w-[180px] md:max-w-[250px] cursor-pointer flex flex-col gap-2'
+          articleClass='col-span-1 m-auto w-full max-w-[180px] md:max-w-[250px] cursor-pointer flex flex-col gap-2'
           key={p?.id}
           product={p}
         >

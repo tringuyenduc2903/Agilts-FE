@@ -49,7 +49,7 @@ function FilterSection({
       return (
         <li className='h-max' key={m.id}>
           <button
-            className={`font-bold text-sm md:text-base text-neutral-500 hover:text-red-500 ${
+            className={`text-start font-bold text-sm md:text-base text-neutral-500 hover:text-red-500 ${
               searchParams.get(manufacturer.name) === m.value.toString()
                 ? 'text-red-500'
                 : ''
@@ -67,7 +67,7 @@ function FilterSection({
       return (
         <li className='h-max' key={o}>
           <button
-            className={`font-bold text-sm md:text-base text-neutral-500 hover:text-red-500 ${
+            className={`text-start font-bold text-sm md:text-base text-neutral-500 hover:text-red-500 ${
               searchParams.get(option_type.name) === o.toString()
                 ? 'text-red-500'
                 : ''
@@ -85,7 +85,7 @@ function FilterSection({
       return (
         <li className='h-max' key={d.id}>
           <button
-            className={`font-bold text-sm md:text-base text-neutral-500 hover:text-red-500 ${
+            className={`text-start font-bold text-sm md:text-base text-neutral-500 hover:text-red-500 ${
               searchParams.get(versions.name) === d.id.toString()
                 ? 'text-red-500'
                 : ''
@@ -120,7 +120,7 @@ function FilterSection({
 
   return (
     <div
-      className={`absolute bg-white top-[125%] -left-[100%] w-[75vw] max-h-screen z-50 overflow-x-hidden overflow-y-auto ${
+      className={`absolute bg-white top-[125%] -left-[100%] w-[70vw] 2xl:w-[75vw] max-h-screen z-50 overflow-x-hidden overflow-y-auto ${
         action === 'filter' ? 'h-[auto] border border-neutral-500' : 'h-0'
       }`}
     >
@@ -145,7 +145,9 @@ function FilterSection({
         </div>
         <div className='col-span-2 flex flex-col gap-4'>
           <h3 className='text-lg md:text-xl font-bold'>{colors.label}</h3>
-          <ul className='grid grid-cols-3 gap-4'>{renderedColors}</ul>
+          <ul className='grid grid-cols-2 2xl:grid-cols-3 gap-4'>
+            {renderedColors}
+          </ul>
         </div>
         <div className='col-span-2 flex flex-col gap-4'>
           <h3 className='text-lg md:text-xl font-bold'>{t('price')}</h3>

@@ -263,14 +263,14 @@ function ProductsMobile({
     <section className='w-full min-h-screen py-8 m-auto px-4 overflow-hidden flex flex-col gap-6 text-sm md:text-base'>
       <div className='relative' ref={sectionRef as LegacyRef<HTMLDivElement>}>
         <button
-          className='w-full md:w-1/2 mx-auto flex justify-center items-center gap-4 border border-neutral-300 rounded-sm py-2'
+          className='w-full mx-auto flex justify-center items-center gap-4 border border-neutral-300 rounded-sm py-2'
           onClick={() => setIsOpenFilter(!isOpenFilter)}
         >
           <FaSliders />
           <p className='font-medium text-base'>{t('filter')}</p>
         </button>
         {isSuccessFilter && isOpenFilter && (
-          <div className='absolute top-[125%] left-1/2 -translate-x-1/2 w-full md:w-1/2 h-[70vh] md:h-[75vh] px-4 py-8 border border-neutral-300 bg-white z-50 overflow-y-auto flex flex-col gap-6'>
+          <div className='absolute top-[125%] left-1/2 -translate-x-1/2 w-full h-[70vh] md:h-[75vh] px-4 py-8 border border-neutral-300 bg-white z-50 overflow-y-auto flex flex-col gap-6'>
             <div className='relative w-full'>
               <input
                 className='px-4 py-2 w-full bg-neutral-100'

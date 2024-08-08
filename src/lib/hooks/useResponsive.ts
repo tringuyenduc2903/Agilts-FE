@@ -8,8 +8,8 @@ export const useResponsive = () => {
 
   useEffect(() => {
     const onResizeHandler = () => {
-      const isMobile = window.innerWidth < 1536;
-      const isDesktop = window.innerWidth >= 1536;
+      const isMobile = window.innerWidth < 1280;
+      const isDesktop = window.innerWidth >= 1280;
 
       setState({ isMobile, isDesktop });
     };

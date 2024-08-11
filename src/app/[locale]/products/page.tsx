@@ -14,13 +14,15 @@ function ProductsLayout() {
     data: filterData,
     isSuccess: isSuccessFilter,
     isLoading: isLoadingFilter,
-  } = useFetch(async () => await getFilterProduct());
+  } = useFetch(async () => await getFilterProduct('motor-cycle'));
   const {
     fetchData: getProductMutation,
     data: productsData,
     isSuccess: isSuccessProducts,
     isLoading: isLoadingProducts,
-  } = useFetch(async () => await getProducts(searchParams.toString()));
+  } = useFetch(
+    async () => await getProducts(searchParams.toString(), 'motor-cycle')
+  );
   useEffect(() => {
     getFilterProductMutation();
   }, []);

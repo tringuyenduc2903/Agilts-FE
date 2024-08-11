@@ -9,28 +9,24 @@ import React, {
 import Stars from '@/components/ui/Stars';
 import { useTranslations } from 'next-intl';
 import { scrollToElement } from '@/lib/utils/scrollElement';
-import { ModalContext } from '@/contexts/ModalProvider';
 import { Product, ProductOption } from '@/types/types';
 import { useParams, useRouter } from 'next/navigation';
-import { useDispatch } from 'react-redux';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { TbHeart, TbHeartFilled } from 'react-icons/tb';
 import CustomImage from '@/components/ui/CustomImage';
 import { FaMinus } from 'react-icons/fa6';
 import { UserContext } from '@/contexts/UserProvider';
-import { setCurMotorbike } from '@/lib/redux/slice/userSlice';
 import { useFetch } from '@/lib/hooks/useFetch';
 import { createWishlist, deleteWishlist } from '@/api/wishlist';
+import { setCookie } from 'cookies-next';
 type Props = {
   product: Product;
 };
 function ProductDetails({ product }: Props) {
   const { locale } = useParams();
   const { user, wishlist, refetchWishlist } = useContext(UserContext);
-  const { setVisibleModal } = useContext(ModalContext);
   const router = useRouter();
   const t = useTranslations('common');
-  const dispatch = useDispatch();
   const { setVisiblePopup } = useContext(PopupContext);
   const [isHoverAddToCart, setIsHoverAddToCart] = useState(false);
   const [curOption, setCurOption] = useState<ProductOption['version']>('');
@@ -92,10 +88,12 @@ function ProductDetails({ product }: Props) {
     if (!user) {
       router.push(`/${locale}/login`);
     } else {
-      dispatch(setCurMotorbike(selectedOptionDetails));
+      setCookie('buy_now', JSON.stringify(selectedOptionDetails), {
+        expires: new Date(new Date().getTime() + 30 * 60000),
+      });
       router.push(`/${locale}/purchase-motorbike`);
     }
-  }, [dispatch, user, router, locale, selectedOptionDetails]);
+  }, [user, router, locale, selectedOptionDetails, setCookie]);
   const renderedOptions = useMemo(() => {
     return versions.map((v: any, index: number) => {
       return (
@@ -333,22 +331,6 @@ function ProductDetails({ product }: Props) {
                   {selectedOptionDetails.sku}
                 </span>
               </p>
-              {selectedOptionDetails.color && (
-                <p className='flex gap-2'>
-                  <span className='text-red-500'>{t('color')}:</span>
-                  <span className='text-neutral-500'>
-                    {selectedOptionDetails.color}
-                  </span>
-                </p>
-              )}
-              {selectedOptionDetails.version && (
-                <p className='flex gap-2'>
-                  <span className='text-red-500'>{t('version')}:</span>
-                  <span className='text-neutral-500'>
-                    {selectedOptionDetails.version}
-                  </span>
-                </p>
-              )}
               {selectedOptionDetails.quantity && (
                 <p className='flex gap-2'>
                   <span className='text-red-500'>{t('quantity')}:</span>
@@ -383,19 +365,6 @@ function ProductDetails({ product }: Props) {
             </span>
           </button>
         </div>
-        {selectedOptionDetails && (
-          <div>
-            <button
-              className='border border-neutral-300 bg-neutral-800 text-white px-4 py-3'
-              disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
-              onClick={() =>
-                setVisibleModal({ visibleReviewsModal: selectedOptionDetails })
-              }
-            >
-              Thêm đánh giá sản phẩm (demo)
-            </button>
-          </div>
-        )}
         {selectedOptionDetails &&
           selectedOptionDetails?.specifications?.length > 0 && (
             <div className='flex flex-col gap-4'>

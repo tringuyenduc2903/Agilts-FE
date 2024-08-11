@@ -5,10 +5,8 @@ export const getProducts = async (
 ) => {
   try {
     const res = await axiosInstance.get(
-      `/api${getLangRoute()}/product${
-        search
-          ? `?${search}&perPage=12&product_type=${type}`
-          : `?perPage=12&product_type=${type}`
+      `/api${getLangRoute()}/product/${type}/${
+        search ? `?${search}&perPage=12` : `?perPage=12`
       }`
     );
     return {
@@ -85,7 +83,7 @@ export const getProductReview = async ({
 export const getFilterReview = async (id: string | number) => {
   try {
     const res = await axiosInstance.get(
-      `/api${getLangRoute()}/filter-review/${id}`
+      `/api${getLangRoute()}/filter/review/${id}`
     );
     return {
       type: 'success',

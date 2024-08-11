@@ -19,8 +19,8 @@ import {
 } from 'react-icons/io5';
 import { UserContext } from '@/contexts/UserProvider';
 import { useDispatch } from 'react-redux';
-import { setUser } from '@/lib/redux/slice/userSlice';
-import { setCookie } from 'cookies-next';
+import { setCurMotorbike, setUser } from '@/lib/redux/slice/userSlice';
+import { deleteCookie, setCookie } from 'cookies-next';
 import { subRoutes } from '../../../headerData';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { useFetch } from '@/lib/hooks/useFetch';
@@ -70,6 +70,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
   useEffect(() => {
     closeMenu();
     if (isSuccessLogout) {
+      closeMenu();
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
@@ -77,6 +78,8 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
         },
       });
       dispatch(setUser(null));
+      dispatch(setCurMotorbike(null));
+      deleteCookie('buy_now');
       router.replace(`/${locale}`);
     }
     if (isErrorLogout && errorLogout) {
@@ -97,6 +100,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
     dispatch,
     router,
     locale,
+    deleteCookie,
   ]);
   return (
     <aside

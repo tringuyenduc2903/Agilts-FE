@@ -45,7 +45,7 @@ export function SingleProduct({
         );
       }) || null
     );
-  }, [searchParams]);
+  }, [searchParams, product.options]);
   return (
     <ProductContext.Provider value={{ product, selectedOption }}>
       <article
@@ -137,7 +137,7 @@ SingleProduct.Price = function ProductPrice() {
           searchParams.get('version')?.includes(o.version))
       );
     });
-  }, [searchParams]);
+  }, [searchParams, product.options]);
   return (
     <div className='w-full flex items-center gap-2'>
       {selectedOption ? (

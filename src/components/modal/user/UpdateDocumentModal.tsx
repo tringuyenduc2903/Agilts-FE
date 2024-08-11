@@ -86,7 +86,7 @@ function UpdateDocumentModal() {
         setErrors(null);
       }
     },
-    [updateDocument, state.visibleUpdateDocumentModal?.id, curType]
+    [state.visibleUpdateDocumentModal?.id, curType]
   );
   useEffect(() => {
     if (isSubmitting) {
@@ -117,7 +117,15 @@ function UpdateDocumentModal() {
         },
       });
     }
-  }, [isSuccess, errors, refetchDocument, setVisiblePopup, setVisibleModal, t]);
+  }, [
+    isSuccess,
+    errors,
+    refetchDocument,
+    setVisiblePopup,
+    setVisibleModal,
+    t,
+    reset,
+  ]);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'

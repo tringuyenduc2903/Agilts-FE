@@ -18,11 +18,12 @@ import {
 } from 'react-icons/io5';
 import { UserContext } from '@/contexts/UserProvider';
 import { useDispatch } from 'react-redux';
-import { setUser } from '@/lib/redux/slice/userSlice';
+import { setCurMotorbike, setUser } from '@/lib/redux/slice/userSlice';
 import { title } from '@/config/config';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { useFetch } from '@/lib/hooks/useFetch';
 import { logout } from '@/api/user';
+import { deleteCookie } from 'cookies-next';
 type Props = {
   isOpenMenu: boolean;
   openMenu: () => void;
@@ -110,14 +111,16 @@ const MenuIcon: React.FC<Props> = React.memo(
     useEffect(() => {
       if (isSuccessLogout) {
         closeMenu();
-        router.replace(`/${locale}`);
+        dispatch(setUser(null));
+        dispatch(setCurMotorbike(null));
+        deleteCookie('buy_now');
         setVisiblePopup({
           visibleToastPopup: {
             type: 'success',
             message: `${t('success_logout')}`,
           },
         });
-        dispatch(setUser(null));
+        router.replace(`/${locale}`);
       }
       if (isErrorLogout && errorLogout) {
         const error = errorLogout as any;
@@ -137,6 +140,7 @@ const MenuIcon: React.FC<Props> = React.memo(
       dispatch,
       router,
       locale,
+      deleteCookie,
     ]);
     return (
       <div className='relative'>

@@ -15,7 +15,7 @@ const useClickOutside = (cb: Props) => {
         cb();
       }
     },
-    [cb, sectionRef.current]
+    [cb]
   );
 
   const handleKeyPress = useCallback(
@@ -24,7 +24,7 @@ const useClickOutside = (cb: Props) => {
         cb();
       }
     },
-    [cb, sectionRef.current]
+    [cb]
   );
 
   useEffect(() => {

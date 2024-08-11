@@ -43,7 +43,7 @@ const RangeSlider: React.FC<Props> = ({ min, max, onChange }) => {
     setMaxVal(Number(maxPrice) ? Number(maxPrice) : Number(max));
     minValRef.current = minPrice as number;
     maxValRef.current = maxPrice as number;
-  }, [searchParams]);
+  }, [searchParams, min, max]);
   useEffect(() => {
     const minPercent = getPercent(minValRef.current);
     const maxPercent = getPercent(maxVal);

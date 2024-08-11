@@ -38,9 +38,11 @@ function RegisterPage() {
       if (res.type === 'error') {
         setErrors(res.data);
         setSuccess(null);
-      } else {
+      }
+      if (res.type === 'success') {
         setErrors(null);
         setSuccess(res.data);
+        await refetchUser();
       }
     },
     [registerAccount]

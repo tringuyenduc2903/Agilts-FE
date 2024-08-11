@@ -62,7 +62,7 @@ export default async function ProductDetailsPage({
 }: {
   params: Params;
 }) {
-  const repo = await getProductDetails(params.id);
+  const repo = await getProductDetails(params.id, 'motor-cycle');
   if (repo.type === 'error') return notFound();
   metadata.title = repo.data.seo.title;
   metadata.keywords = repo.data.seo.title;

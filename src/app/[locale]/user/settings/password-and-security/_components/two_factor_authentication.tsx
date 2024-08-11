@@ -67,6 +67,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
   const {
     fetchData: postRecoveryCodesMutation,
     isLoading: isLoadingRecoveryCodes,
+    isSuccess: isSuccessPostRecoveryCodes,
   } = useFetch(async () => await postRecoveryCodes());
   const {
     fetchData: getRecoveryCodesMutation,
@@ -193,6 +194,11 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
     closeForm,
     t,
   ]);
+  useEffect(() => {
+    if (isSuccessPostRecoveryCodes) {
+      getRecoveryCodesMutation();
+    }
+  }, [isSuccessPostRecoveryCodes]);
   const handleDownload = useCallback(() => {
     if (isSuccessListCodes && listCodes) {
       const element = document.createElement('a');
@@ -204,6 +210,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
       document.body.removeChild(element);
     }
   }, [listCodes, isSuccessListCodes]);
+  console.log(listCodes);
   return (
     <section
       ref={containerRef}
@@ -235,7 +242,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
               <button
                 className='w-max font-bold text-red-500'
                 disabled={isLoadingRecoveryCodes || isLoadingListCodes}
-                onClick={getRecoveryCodesMutation}
+                onClick={postRecoveryCodesMutation}
               >
                 {t('create_new_codes')}
               </button>
@@ -248,7 +255,8 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
               )}
             {user?.two_factor_confirmed_at &&
               isSuccessListCodes &&
-              !isLoadingListCodes && (
+              !isLoadingListCodes &&
+              !isLoadingRecoveryCodes && (
                 <div className='flex flex-col gap-2'>
                   <div className='border border-neutral-300 rounded-sm p-4'>
                     {isSuccessListCodes &&
@@ -455,33 +463,37 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
                 {t('refresh_recovery')}
               </button>
             </div>
-            {isLoadingListCodes && curStep === 4 && (
-              <div className='relative w-full h-[250px] flex justify-center items-center'>
-                <div className='loader'></div>
-              </div>
-            )}
-            {isSuccessListCodes && !isLoadingListCodes && curStep === 4 && (
-              <div className='flex flex-col gap-2'>
-                <div className='border border-neutral-300 rounded-sm p-4'>
-                  {listCodes?.map((c: string) => {
-                    return <p key={c}>{c}</p>;
-                  })}
+            {(isLoadingListCodes || isLoadingRecoveryCodes) &&
+              curStep === 4 && (
+                <div className='relative w-full h-[250px] flex justify-center items-center'>
+                  <div className='loader'></div>
                 </div>
-                <div className='w-full flex justify-center'>
-                  <CopyToClipboard
-                    text={listCodes}
-                    onCopy={() => console.log('copied')}
-                  >
-                    <button
-                      className='w-max font-bold'
-                      disabled={isLoadingListCodes}
+              )}
+            {isSuccessListCodes &&
+              !isLoadingListCodes &&
+              !isLoadingRecoveryCodes &&
+              curStep === 4 && (
+                <div className='flex flex-col gap-2'>
+                  <div className='border border-neutral-300 rounded-sm p-4'>
+                    {listCodes?.map((c: string) => {
+                      return <p key={c}>{c}</p>;
+                    })}
+                  </div>
+                  <div className='w-full flex justify-center'>
+                    <CopyToClipboard
+                      text={listCodes}
+                      onCopy={() => console.log('copied')}
                     >
-                      {t('copy_list')}
-                    </button>
-                  </CopyToClipboard>
+                      <button
+                        className='w-max font-bold'
+                        disabled={isLoadingListCodes}
+                      >
+                        {t('copy_list')}
+                      </button>
+                    </CopyToClipboard>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
             <button
               type='submit'
               className='font-bold bg-neutral-800 text-white py-2 px-4 md:py-3 md:px-6 rounded-sm'

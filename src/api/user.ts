@@ -298,9 +298,6 @@ export const postRecoveryCodes = async () => {
     const res = await axiosInstance.post(
       `/api${getLangRoute()}/user/two-factor-recovery-codes`
     );
-    if (res.status === 200) {
-      await getRecoveryCodes();
-    }
     return {
       type: 'success',
       data: res.data,
@@ -353,6 +350,38 @@ export const resendVerifyAccount = async () => {
     const res = await axiosInstance.post(
       `/api${getLangRoute()}/email/verification-notification`
     );
+    return {
+      type: 'success',
+      data: res.data,
+    };
+  } catch (error: any) {
+    return {
+      type: 'error',
+      data: error?.response?.data,
+    };
+  }
+};
+
+export const getOrders = async (search: string | null) => {
+  try {
+    const res = await axiosInstance.get(
+      `/api${getLangRoute()}/order${search ? `?${search}` : ''}`
+    );
+    return {
+      type: 'success',
+      data: res.data,
+    };
+  } catch (error: any) {
+    return {
+      type: 'error',
+      data: error?.response?.data,
+    };
+  }
+};
+
+export const getOrderDetails = async (id: string | number) => {
+  try {
+    const res = await axiosInstance.get(`/api${getLangRoute()}/order/${id}`);
     return {
       type: 'success',
       data: res.data,

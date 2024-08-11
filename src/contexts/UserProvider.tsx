@@ -91,7 +91,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     if (isErrorUser) {
       dispatch(setUser(null));
     }
-  }, [dispatch, userData, isSuccessUser, isErrorUser, user]);
+  }, [dispatch, userData, isSuccessUser, isErrorUser]);
   useEffect(() => {
     if (isSuccessWishlist && wishListData) {
       setWishlist([...wishListData]);
@@ -126,8 +126,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           return 0;
         })
       );
+      setDefaultDocument(documentsData?.find((d: Document) => d.default));
     }
-    setDefaultDocument(documentsData?.find((d: Document) => d.default));
   }, [isSuccessDocument, documentsData]);
   const contextValue = {
     user,

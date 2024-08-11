@@ -21,7 +21,7 @@ export default async function AccountLayout({
     <>
       <div className='px-4 min-h-[60vh] w-full md:w-4/5 2xl:w-3/5 pt-[72px] m-auto flex flex-col lg:flex-row text-sm md:text-base'>
         <Aside />
-        <main className='w-full p-4'>{children}</main>
+        <main className='flex-1 p-4'>{children}</main>
       </div>
     </>
   );

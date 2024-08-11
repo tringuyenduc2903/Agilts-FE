@@ -66,7 +66,8 @@
     "view_wishlist": "View wishlist",
     "no_product_in_wishlist": "No product in wishlist.",
     "color": "Color",
-    "register": "Register"
+    "register": "Register",
+    "order_details": "Order Details"
   },
 
   "common": {
@@ -329,6 +330,38 @@
     "update_the_quotation": "Update the quotation",
     "mess_no_cur_order": "You don't have a product yet!",
     "change": "Change",
-    "manufacturer": "Manufacturer"
+    "manufacturer": "Manufacturer",
+    "shipping_type": "Shipping type",
+    "payment_methods": "Payment methods",
+    "vehicle_registration_support_fee": "Vehicle registration support fee",
+    "registration_fee": "Registration fee",
+    "license_plate_registration_fee": "License plate registration fee",
+    "tax": "Tax",
+    "shipping_fee": "Shipping fee",
+    "quote": "Quote",
+    "mess_alert_place_order": "I agree with {terms_and_services} of {web_name}",
+    "terms_and_services": "Terms and Services",
+    "purchase": "Purchase",
+    "pick_up_in_store": "Pick up in store",
+    "pay_at_the_store": "Pay at the store",
+    "registration_options": "Registration options",
+    "license_plate_registration_option": "License plate registration option",
+    "registration_options_1": "First time (5%)",
+    "registration_options_2": "2nd time onwards (1%)",
+    "license_plate_registration_option_1": "Region I (Hanoi City, Ho Chi Minh City includes all districts directly under the city, regardless of inner city or suburbs)",
+    "license_plate_registration_option_2": "Region II (Cities directly under the Central Government (except Hanoi City and Ho Chi Minh City)) includes all districts directly under the city regardless of inner city or suburbs; cities under the province , town includes all wards and communes of the city and town, regardless of whether the wards are inner city, inner city or suburban communes, suburban communes)",
+    "license_plate_registration_option_3": "Region III (Areas other than region I and region II)",
+    "note": "Note",
+    "success_order": "Thank you for ordering!",
+    "view_order": "View order",
+    "continue_shopping": "Continue shopping",
+    "pending": "Waiting for payment",
+    "waiting_for_shipping": "Waiting for shipping",
+    "waiting_for_delivery": "Waiting for delivery",
+    "order_complete": "Complete",
+    "cancelled": "Cancelled",
+    "return_refund": "Return/Refund",
+    "order_code": "Order code",
+    "review": "Review"
   }
 }

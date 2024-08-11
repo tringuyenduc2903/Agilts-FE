@@ -231,3 +231,98 @@ export type Wishlist = {
   created_at: string;
   updated_at: string;
 };
+
+export type Order = {
+  id: 1;
+  address?: {
+    address_detail: string;
+    address_preview: string;
+    country: string;
+    created_at: string;
+    default: boolean;
+    deleted_at: string | null;
+    district: string;
+    id: number;
+    province: string;
+    type: number;
+    updated_at: string;
+    ward: string;
+  };
+  identification?: {
+    created_at: string;
+    customer_id: number;
+    default: boolean;
+    deleted_at: string | null;
+    expiry_date: string;
+    id: number;
+    issuance_date: string;
+    issued_name: string;
+    number: string;
+    type: number;
+    type_preview: string;
+    updated_at: string;
+  };
+  tax: {
+    raw: number;
+    preview: string;
+  };
+  shipping_fee: {
+    raw: number;
+    preview: string;
+  };
+  handling_fee: {
+    raw: number;
+    preview: string;
+  };
+  other_fees: {
+    vehicle_registration_support_fee: {
+      raw: number;
+      preview: string;
+    };
+    registration_fee: {
+      raw: number;
+      preview: string;
+    };
+    license_plate_registration_fee: {
+      raw: number;
+      preview: string;
+    };
+  };
+  total: {
+    raw: number;
+    preview: string;
+  };
+  status: string;
+  note: string;
+  shipping_type: string;
+  transaction_type: string;
+  other_fields: {
+    vehicle_registration_support: boolean;
+    registration_option?: string;
+    license_plate_registration_option?: string;
+  };
+  address_id?: number;
+  identification_id?: number;
+  customer_id: number;
+  invoice_products: [
+    {
+      id: number;
+      price: {
+        raw: number;
+        preview: string;
+      };
+      value_added_tax: number;
+      amount: number;
+      invoice_id: number;
+      option: ProductOption & {
+        value_added_tax: number;
+        product: Product;
+      };
+      vehicle_id: number | null;
+      created_at: string;
+      updated_at: string;
+    }
+  ];
+  created_at: string;
+  updated_at: string;
+};

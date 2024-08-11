@@ -118,7 +118,6 @@ function UpdateDocumentModal() {
       });
     }
   }, [isSuccess, errors, refetchDocument, setVisiblePopup, setVisibleModal, t]);
-  console.log(watchValue);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'
@@ -192,7 +191,7 @@ function UpdateDocumentModal() {
             <input
               {...register('number')}
               className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base'
-              type='number'
+              type='text'
               id='number'
               name='number'
               placeholder={`${t('document_number')}...`}

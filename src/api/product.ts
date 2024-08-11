@@ -1,13 +1,16 @@
 import { axiosInstance, getLangRoute } from '@/config/axios';
-import { notFound } from 'next/navigation';
-export const getProducts = async (search: string | null) => {
+export const getProducts = async (
+  search: string | null,
+  type: 'motor-cycle' | 'square-parts' | 'accessories'
+) => {
   try {
     const res = await axiosInstance.get(
       `/api${getLangRoute()}/product${
-        search ? `?${search}&perPage=12` : '?perPage=12'
+        search
+          ? `?${search}&perPage=12&product_type=${type}`
+          : `?perPage=12&product_type=${type}`
       }`
     );
-    if (res.status !== 200) return notFound();
     return {
       type: 'success',
       data: res.data,
@@ -19,10 +22,14 @@ export const getProducts = async (search: string | null) => {
     };
   }
 };
-export const getProductDetails = async (id: string) => {
+export const getProductDetails = async (
+  id: string,
+  type: 'motor-cycle' | 'square-parts' | 'accessories'
+) => {
   try {
-    const res = await axiosInstance.get(`/api${getLangRoute()}/product/${id}`);
-    if (res.status !== 200) return notFound();
+    const res = await axiosInstance.get(
+      `/api${getLangRoute()}/product/${type}/${id}`
+    );
     return {
       type: 'success',
       data: res.data,
@@ -34,10 +41,13 @@ export const getProductDetails = async (id: string) => {
     };
   }
 };
-export const getFilterProduct = async () => {
+export const getFilterProduct = async (
+  type: 'motor-cycle' | 'square-parts' | 'accessories'
+) => {
   try {
-    const res = await axiosInstance.get(`/api${getLangRoute()}/filter-product`);
-    if (res.status !== 200) return notFound();
+    const res = await axiosInstance.get(
+      `/api${getLangRoute()}/filter/product/${type}`
+    );
     return {
       type: 'success',
       data: res.data,
@@ -60,7 +70,6 @@ export const getProductReview = async ({
     const res = await axiosInstance.get(
       `/api${getLangRoute()}/review/${id}${search && `?${search}`}`
     );
-    if (res.status !== 200) return notFound();
     return {
       type: 'success',
       data: res.data,
@@ -78,7 +87,6 @@ export const getFilterReview = async (id: string | number) => {
     const res = await axiosInstance.get(
       `/api${getLangRoute()}/filter-review/${id}`
     );
-    if (res.status !== 200) return notFound();
     return {
       type: 'success',
       data: res.data,
@@ -102,7 +110,6 @@ export const postReviewImage = async (body: any) => {
         },
       }
     );
-    if (res.status !== 200) return notFound();
     return {
       type: 'success',
       data: res.data,
@@ -121,7 +128,39 @@ export const postReviewUser = async (body: any) => {
       `/api${getLangRoute()}/review-user`,
       body
     );
-    if (res.status !== 200) return notFound();
+    return {
+      type: 'success',
+      data: res.data,
+    };
+  } catch (error: any) {
+    return {
+      type: 'error',
+      data: error?.response?.data,
+    };
+  }
+};
+
+export const postPriceQuote = async (body: any) => {
+  try {
+    const res = await axiosInstance.post(
+      `/api${getLangRoute()}/price-quote`,
+      body
+    );
+    return {
+      type: 'success',
+      data: res.data,
+    };
+  } catch (error: any) {
+    return {
+      type: 'error',
+      data: error?.response?.data,
+    };
+  }
+};
+
+export const purchaseMotorbike = async (body: any) => {
+  try {
+    const res = await axiosInstance.post(`/api${getLangRoute()}/order`, body);
     return {
       type: 'success',
       data: res.data,

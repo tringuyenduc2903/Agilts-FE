@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
+import { VehicleRegistrationSupportProvider } from './_contexts/VehicleRegistrationSupportProvider';
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('head');
 
@@ -15,5 +16,9 @@ export default async function StoresLayout({
   params: { locale: string };
 }>) {
   unstable_setRequestLocale(locale || 'vi');
-  return <>{children}</>;
+  return (
+    <VehicleRegistrationSupportProvider>
+      {children}
+    </VehicleRegistrationSupportProvider>
+  );
 }

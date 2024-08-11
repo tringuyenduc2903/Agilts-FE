@@ -4,12 +4,7 @@ import { useTranslations } from 'next-intl';
 import { useParams, usePathname, useRouter } from 'next/navigation';
 import React, { useContext } from 'react';
 import { FaPen, FaRegCircleUser } from 'react-icons/fa6';
-import {
-  TiDocument,
-  TiLocationOutline,
-  TiShoppingCart,
-  TiClipboard,
-} from 'react-icons/ti';
+import { TiDocument, TiLocationOutline, TiClipboard } from 'react-icons/ti';
 
 function Aside() {
   const { locale } = useParams();
@@ -68,19 +63,6 @@ function Aside() {
             >
               <TiLocationOutline className='text-2xl' />
               <p>{t('address')}</p>
-            </button>
-          </li>
-          <li className='w-full'>
-            <button
-              className={`w-full px-4 py-3 text-sm md:text-base font-medium flex items-center justify-start gap-2 ${
-                pathname.includes('cart')
-                  ? 'bg-red-500 text-white'
-                  : 'hover:bg-neutral-100 transition-colors'
-              }`}
-              onClick={() => router.push(`/${locale}/user/account/cart`)}
-            >
-              <TiShoppingCart className='text-2xl' />
-              <p>{t('cart')}</p>
             </button>
           </li>
           <li className='w-full'>

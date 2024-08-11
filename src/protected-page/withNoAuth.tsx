@@ -4,7 +4,7 @@ import React, { useContext } from 'react';
 import { UserContext } from '@/contexts/UserProvider';
 function withNoAuth(Component: any) {
   return function useAuth(props: any) {
-    const { isLoadingUser, isSuccessUser } = useContext(UserContext);
+    const { isLoadingUser, isSuccessUser, user } = useContext(UserContext);
     const router = useRouter();
     if (isLoadingUser) {
       return (
@@ -13,7 +13,7 @@ function withNoAuth(Component: any) {
         </div>
       );
     }
-    if (!isLoadingUser && isSuccessUser) {
+    if (!isLoadingUser && isSuccessUser && user) {
       return router.replace(`/`);
     }
     return <Component {...props} />;

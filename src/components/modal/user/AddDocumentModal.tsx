@@ -169,7 +169,7 @@ function AddDocumentModal() {
             <input
               {...register('number')}
               className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base'
-              type='number'
+              type='text'
               id='number'
               name='number'
               placeholder={`${t('document_number')}...`}

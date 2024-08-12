@@ -33,7 +33,7 @@
     "account_description": "Quản lý đơn mua và địa chỉ",
     "search": "Tìm kiếm",
     "cart_title": "Giỏ hàng",
-    "wishlist_title": "Danh sách ước",
+    "wishlist_title": "Danh sách mong muốn",
     "purchase": "Đơn đặt hàng"
   },
   "header": {
@@ -62,11 +62,14 @@
     "quantity": "Số lượng",
     "order_total": "Tổng đơn hàng",
     "view_cart": "Xem giỏ hàng",
-    "wishlist": "Danh sách ước",
+    "wishlist": "Danh sách mong muống",
     "view_wishlist": "Xem danh sách",
     "no_product_in_wishlist": "Không có sản phẩm nào trong danh sách.",
     "color": "Màu sắc",
-    "register": "Đăng ký"
+    "register": "Đăng ký",
+    "motor-cycle": "Xe máy",
+    "square-parts": "Phụ tùng",
+    "accessories": "Phụ kiện"
   },
   "common": {
     "view-more": "Xem thêm",
@@ -316,9 +319,9 @@
     "product_reviews": "Đánh giá sản phẩm",
     "mess_reviews": "Hãy chia sẻ những điều bạn thích về sản phẩm này với người khác.",
     "mess_success_review": "Đánh giá sản phẩm thành công!",
-    "mess_success_wishlist": "Thêm sản phẩm vào danh sách ước thành công!",
-    "wishlist": "Danh sách ước",
-    "empty_wishlist": "Danh sách ước của bạn hiện đang trống.",
+    "mess_success_wishlist": "Thêm sản phẩm vào danh sách mong muốn thành công!",
+    "wishlist": "Danh sách mong muốn",
+    "empty_wishlist": "Danh sách mong muốn của bạn hiện đang trống.",
     "buy_now": "Mua ngay",
     "mess_no_address_default": "Bạn chưa có địa chỉ mặc định nào.",
     "mess_no_document_default": "Bạn chưa có hồ sơ mặc định nào.",
@@ -361,6 +364,11 @@
     "return_refund": "Trả hàng/Hoàn tiền",
     "order_code": "Mã đơn hàng",
     "order_details": "Chi tiết đơn hàng",
-    "review": "Đánh giá"
+    "review": "Đánh giá",
+    "motor-cycle": "Xe máy",
+    "square-parts": "Phụ tùng",
+    "accessories": "Phụ kiện",
+    "mess_no_phone": "Bạn chưa có số điện thoại.",
+    "mess_success_post_cart": "Thêm sản phẩm thành công!"
   }
 }

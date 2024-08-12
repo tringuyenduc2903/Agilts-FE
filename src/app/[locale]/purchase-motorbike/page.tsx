@@ -89,7 +89,7 @@ function PurchaseMotorbikePage() {
   const t = useTranslations('common');
   const { setVisibleModal } = useContext(ModalContext);
   const { setVisiblePopup } = useContext(PopupContext);
-  const { defaultAddress, defaultDocument } = useContext(UserContext);
+  const { user, defaultAddress, defaultDocument } = useContext(UserContext);
   const [toggleSupport, setToggleSupport] = useState(false);
   const noteRef = useRef<HTMLInputElement | null>(null);
   const [vehicleRegistrationSupportModal, setVehicleRegistrationSupportModal] =
@@ -281,6 +281,27 @@ function PurchaseMotorbikePage() {
         {product ? (
           <div className='flex flex-col gap-12'>
             <div className='flex flex-col gap-4'>
+              <div className='flex flex-col gap-2'>
+                <div className='flex flex-col sm:flex-row sm:items-center gap-2'>
+                  <h2 className='text-base md:text-lg flex items-center'>
+                    {t('phone')} <span className='sm:block hidden'>:</span>
+                  </h2>
+                  <div className='flex flex-col sm:flex-row sm:items-center gap-2'>
+                    {user && user?.phone_number ? (
+                      <p>{user?.phone_number}</p>
+                    ) : (
+                      <button
+                        className='hover:text-blue-500 transition-colors'
+                        onClick={() =>
+                          router.push(`/${locale}/user/settings/account`)
+                        }
+                      >
+                        {t('mess_no_phone')}
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
               <div className='flex flex-col gap-2'>
                 <div className='flex flex-col sm:flex-row sm:items-center gap-2'>
                   <h2 className='text-base md:text-lg flex items-center'>

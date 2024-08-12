@@ -4,9 +4,9 @@ import { useSearchParams } from 'next/navigation';
 import { useResponsive } from '@/lib/hooks/useResponsive';
 import { useFetch } from '@/lib/hooks/useFetch';
 import { getFilterProduct, getProducts } from '@/api/product';
-const ProductsDesktop = lazy(() => import('./_components/desktop'));
-const ProductsMobile = lazy(() => import('./_components/mobile'));
-function ProductsLayout() {
+const ProductsDesktop = lazy(() => import('../_components/desktop'));
+const ProductsMobile = lazy(() => import('../_components/mobile'));
+function AccessoriesLayout() {
   const searchParams = useSearchParams();
   const state = useResponsive();
   const {
@@ -14,14 +14,14 @@ function ProductsLayout() {
     data: filterData,
     isSuccess: isSuccessFilter,
     isLoading: isLoadingFilter,
-  } = useFetch(async () => await getFilterProduct('motor-cycle'));
+  } = useFetch(async () => await getFilterProduct('accessories'));
   const {
     fetchData: getProductMutation,
     data: productsData,
     isSuccess: isSuccessProducts,
     isLoading: isLoadingProducts,
   } = useFetch(
-    async () => await getProducts(searchParams.toString(), 'motor-cycle')
+    async () => await getProducts(searchParams.toString(), 'accessories')
   );
   useEffect(() => {
     getFilterProductMutation();
@@ -56,4 +56,4 @@ function ProductsLayout() {
   );
 }
 
-export default ProductsLayout;
+export default AccessoriesLayout;

@@ -39,6 +39,25 @@ const nextConfig = {
     missingSuspenseWithCSRBailout: false,
     instrumentationHook: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/products',
+        destination: '/products/motor-cycle',
+        permanent: true,
+      },
+      {
+        source: '/user/settings',
+        destination: '/user/settings/password-and-security',
+        permanent: true,
+      },
+      {
+        source: '/user/account',
+        destination: '/user/account/documents',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default withNextIntl(nextConfig);

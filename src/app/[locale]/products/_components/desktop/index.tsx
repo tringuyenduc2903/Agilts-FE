@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import {
   TbSearch,
@@ -38,6 +38,7 @@ function ProductsDesktop({
   isLoadingProducts,
 }: Props) {
   const { locale } = useParams();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const t = useTranslations('common');
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -90,7 +91,10 @@ function ProductsDesktop({
   }, [isSuccessFilter, filterData]);
   return (
     <>
-      <BreadCrumbs path={`/${locale}/products`} />
+      <BreadCrumbs
+        path={`/${locale}/products`}
+        details={t(pathname.split('/products')[1].replace('/', ''))}
+      />
       <section className='w-full min-h-screen py-16 m-auto px-4 md:px-8 xl:px-16 gap-16 overflow-hidden grid grid-cols-10'>
         <div className='col-span-2 rounded-sm border-r border-neutral-200 px-4'>
           {isSuccessFilter && !isLoadingFilter && (

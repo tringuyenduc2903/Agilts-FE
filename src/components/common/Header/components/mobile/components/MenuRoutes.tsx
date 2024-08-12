@@ -21,10 +21,10 @@ import { UserContext } from '@/contexts/UserProvider';
 import { useDispatch } from 'react-redux';
 import { setCurMotorbike, setUser } from '@/lib/redux/slice/userSlice';
 import { deleteCookie, setCookie } from 'cookies-next';
-import { subRoutes } from '../../../headerData';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { useFetch } from '@/lib/hooks/useFetch';
 import { logout } from '@/api/user';
+import { subRoutesPage } from '../../../headerData';
 type Props = {
   isOpenMenu: boolean;
   closeMenu: () => void;
@@ -203,7 +203,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
           <div
             className={`cursor-pointer ${
               hoverRoute === 'pages' ||
-              subRoutes.includes(pathname.replace('/', ''))
+              subRoutesPage.includes(pathname.replace('/', ''))
                 ? 'text-red-500'
                 : ''
             } transition-colors`}
@@ -228,11 +228,13 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
             <ul
               style={{
                 height:
-                  subRoute === 'pages' ? `${subRoutes.length * 48}px` : '0px',
+                  subRoute === 'pages'
+                    ? `${subRoutesPage.length * 48}px`
+                    : '0px',
               }}
               className='transition-[height] duration-200 bg-white text-neutral-500 uppercase overflow-hidden'
             >
-              {subRoutes.map((r) => {
+              {subRoutesPage.map((r) => {
                 return (
                   <li key={r} className='w-full px-2 text-sm'>
                     <Link

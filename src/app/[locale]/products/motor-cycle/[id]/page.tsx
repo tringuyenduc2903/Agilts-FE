@@ -2,8 +2,9 @@ import { getProductDetails } from '@/api/product';
 import { Params } from '@/types/types';
 import { notFound } from 'next/navigation';
 import React from 'react';
-import { metadata } from './layout';
 import dynamic from 'next/dynamic';
+import { Metadata } from 'next';
+export const metadata: Metadata = {};
 const BreadCrumbs = dynamic(() => import('@/components/ui/BreadCrumbs'), {
   ssr: false,
   loading: () => <section className='w-full h-[68px] skeleton'></section>,
@@ -69,7 +70,7 @@ export default async function ProductDetailsPage({
   metadata.openGraph = {
     siteName: process.env.NEXT_PUBLIC_WEBSITE_NAME,
     type: 'website',
-    url: `${process.env.NEXT_CLIENT_URL}/products/${repo.data.search_url}`,
+    url: `${process.env.NEXT_CLIENT_URL}/products/motor-cycle/${repo.data.search_url}`,
     images: [
       {
         url: repo.data.seo?.image,
@@ -79,7 +80,7 @@ export default async function ProductDetailsPage({
   return (
     <main className='w-full min-h-screen py-[72px] flex flex-col gap-12 text-sm md:text-base'>
       <BreadCrumbs
-        path={`/${params.locale}/products`}
+        path={`/${params.locale}/products/motor-cycle`}
         details={repo?.data?.name}
       />
       <Aside product={repo?.data} />

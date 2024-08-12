@@ -67,7 +67,9 @@
     "no_product_in_wishlist": "No product in wishlist.",
     "color": "Color",
     "register": "Register",
-    "order_details": "Order Details"
+    "motor-cycle": "Motorcycle",
+    "square-parts": "Square parts",
+    "accessories": "Accessories"
   },
 
   "common": {
@@ -362,6 +364,11 @@
     "cancelled": "Cancelled",
     "return_refund": "Return/Refund",
     "order_code": "Order code",
-    "review": "Review"
+    "review": "Review",
+    "motor-cycle": "Motorcycle",
+    "square-parts": "Square parts",
+    "accessories": "Accessories",
+    "mess_no_phone": "You don't have a phone number yet.",
+    "mess_success_post_cart": "Added product successfully!"
   }
 }

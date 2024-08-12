@@ -10,7 +10,7 @@ import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import MenuIcon from './components/MenuIcon';
 import { title } from '@/config/config';
-import { subRoutes } from '../../headerData';
+import { subRoutesPage, subRoutesProduct } from '../../headerData';
 import Cart from './components/Cart';
 import { UserContext } from '@/contexts/UserProvider';
 function DesktopNavigation() {
@@ -126,7 +126,7 @@ function DesktopNavigation() {
                 <span
                   className={`absolute left-1/2 -translate-x-1/2 -bottom-1 ${
                     hoverMenu === 'pages' ||
-                    subRoutes.includes(pathname.replace('/', ''))
+                    subRoutesPage.includes(pathname.replace('/', ''))
                       ? 'w-8'
                       : 'w-0'
                   } h-[2px] bg-red-500 transition-all duration-300`}
@@ -137,17 +137,17 @@ function DesktopNavigation() {
               style={{
                 height:
                   hoverMenu === 'pages'
-                    ? `${subRoutes.length * 48 + 64}px`
+                    ? `${subRoutesPage.length * 48 + 64}px`
                     : '0px',
               }}
               className='absolute left-0 w-[240px] transition-[height] duration-300 bg-white text-neutral-500 uppercase overflow-hidden'
             >
-              {subRoutes?.map((r, index) => {
+              {subRoutesPage?.map((r, index) => {
                 return (
                   <li
                     key={r}
                     className={`w-full px-4 ${index === 0 ? 'pt-8' : ''} ${
-                      index === subRoutes.length - 1 ? 'pb-8' : ''
+                      index === subRoutesPage.length - 1 ? 'pb-8' : ''
                     }`}
                   >
                     <Link
@@ -173,26 +173,70 @@ function DesktopNavigation() {
               })}
             </ul>
           </div>
-          <Link
-            className={`h-full uppercase flex justify-center items-center px-4 ${
+          <div
+            className={`relative h-full px-4 cursor-pointer ${
               hoverMenu === 'products' ? 'bg-white' : ''
             }`}
-            href={`/${locale}/products`}
             onMouseOver={() => setHoverMenu('products')}
             onMouseOut={() => setHoverMenu(null)}
-            prefetch={true}
           >
-            <p className='relative py-1'>
-              <span>{t('products')}</span>
-              <span
-                className={`absolute left-1/2 -translate-x-1/2 -bottom-1 ${
-                  hoverMenu === 'products' || pathname === '/products'
-                    ? 'w-8'
-                    : 'w-0'
-                } h-[2px] bg-red-500 transition-all duration-300`}
-              ></span>
-            </p>
-          </Link>
+            <button
+              className={`w-full h-full uppercase flex justify-center items-center px-4 ${
+                hoverMenu === 'products' ? 'bg-white' : ''
+              }`}
+            >
+              <p className='relative py-1'>
+                <span>{t('products')}</span>
+                <span
+                  className={`absolute left-1/2 -translate-x-1/2 -bottom-1 ${
+                    hoverMenu === 'products' ||
+                    subRoutesProduct.includes(pathname.replace('/', ''))
+                      ? 'w-8'
+                      : 'w-0'
+                  } h-[2px] bg-red-500 transition-all duration-300`}
+                ></span>
+              </p>
+            </button>
+            <ul
+              style={{
+                height:
+                  hoverMenu === 'products'
+                    ? `${subRoutesProduct.length * 48 + 64}px`
+                    : '0px',
+              }}
+              className='absolute left-0 w-[240px] transition-[height] duration-300 bg-white text-neutral-500 uppercase overflow-hidden'
+            >
+              {subRoutesProduct?.map((r, index) => {
+                return (
+                  <li
+                    key={r}
+                    className={`w-full px-4 ${index === 0 ? 'pt-8' : ''} ${
+                      index === subRoutesProduct.length - 1 ? 'pb-8' : ''
+                    }`}
+                  >
+                    <Link
+                      className='relative w-full h-[48px] flex items-center gap-2 px-4'
+                      href={`/${locale}/products/${r}`}
+                      onMouseOver={() => setHoverSubMenu(r)}
+                      onMouseOut={() => setHoverSubMenu(null)}
+                      prefetch={true}
+                    >
+                      <span className='w-6 h-[2px] bg-red-600'></span>
+                      <span
+                        className={`absolute w-[180px] px-4 left-0 top-1/2 -translate-y-1/2 ${
+                          hoverSubMenu === r || pathname === `/products/${r}`
+                            ? 'translate-x-[20%]'
+                            : 'translate-x-0'
+                        } bg-white transition-all duration-300`}
+                      >
+                        {t(r)}
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
           <div
             className={`relative h-full px-4 cursor-pointer ${
               hoverMenu === 'languages' ? 'bg-white' : ''

@@ -291,7 +291,7 @@ function ProductDetails({ product }: Props) {
                             }
                             onClick={() =>
                               router.push(
-                                `/${locale}/products?page=1&category=${c.id}`,
+                                `/${locale}/products/motor-cycle?page=1&category=${c.id}`,
                                 {
                                   scroll: true,
                                 }

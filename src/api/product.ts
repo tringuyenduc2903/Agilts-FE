@@ -5,7 +5,7 @@ export const getProducts = async (
 ) => {
   try {
     const res = await axiosInstance.get(
-      `/api${getLangRoute()}/product/${type}/${
+      `/api${getLangRoute()}/product/${type}${
         search ? `?${search}&perPage=12` : `?perPage=12`
       }`
     );
@@ -155,7 +155,20 @@ export const postPriceQuote = async (body: any) => {
     };
   }
 };
-
+export const postCart = async (body: any) => {
+  try {
+    const res = await axiosInstance.post(`/api${getLangRoute()}/cart`, body);
+    return {
+      type: 'success',
+      data: res.data,
+    };
+  } catch (error: any) {
+    return {
+      type: 'error',
+      data: error?.response?.data,
+    };
+  }
+};
 export const purchaseMotorbike = async (body: any) => {
   try {
     const res = await axiosInstance.post(`/api${getLangRoute()}/order`, body);

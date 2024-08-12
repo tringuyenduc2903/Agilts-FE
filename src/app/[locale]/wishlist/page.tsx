@@ -71,7 +71,6 @@ function WishlistPage() {
                   <tr className='uppercase font-bold tracking-wide'>
                     <td className='px-2 py-4 text-center'>{t('product')}</td>
                     <td className='px-2 py-4 text-center'>{t('color')}</td>
-                    <td className='px-2 py-4 text-center'>{t('created_at')}</td>
                     <td className='px-2 py-4 text-center'>{t('actions')}</td>
                   </tr>
                 </thead>
@@ -107,9 +106,6 @@ function WishlistPage() {
                         </td>
                         <td className='px-2 py-4 text-center'>
                           {w.product_preview.color}
-                        </td>
-                        <td className='px-2 py-4 text-center'>
-                          {w.created_at}
                         </td>
                         <td className='px-2 py-4'>
                           <div className='w-full flex justify-center gap-4'>
@@ -149,7 +145,7 @@ function WishlistPage() {
         </section>
       )}
       {isLoadingWishlist && (
-        <section className='container m-auto px-4 w-full h-full skeleton'></section>
+        <section className='container m-auto px-4 w-full h-[50vh] skeleton'></section>
       )}
     </main>
   );

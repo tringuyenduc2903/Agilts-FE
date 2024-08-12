@@ -6,6 +6,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('head');
 
   return {
+    robots: { index: true, follow: true },
     title: t('product_title'),
     description: t('product_description', { name: title }),
   };

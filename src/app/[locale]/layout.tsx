@@ -39,6 +39,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('head');
 
   return {
+    robots: { index: true, follow: true },
     title: {
       template: `%s | ${title}`,
       default: t('home_title', { name: title }),
@@ -61,6 +62,10 @@ export async function generateMetadata(): Promise<Metadata> {
           url: `${process.env.NEXT_CLIENT_URL}/logo.png`,
         },
       ],
+    },
+    other: {
+      'google-site-verification': process.env
+        .NEXT_GOOGLE_SEARCH_CONSOLE as string,
     },
   };
 }

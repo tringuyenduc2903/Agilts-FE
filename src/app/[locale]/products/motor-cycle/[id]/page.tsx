@@ -65,6 +65,7 @@ export default async function ProductDetailsPage({
 }) {
   const repo = await getProductDetails(params.id, 'motor-cycle');
   if (repo.type === 'error') return notFound();
+  metadata.robots = { index: true, follow: true };
   metadata.title = repo.data.seo.title;
   metadata.keywords = repo.data.seo.title;
   metadata.openGraph = {

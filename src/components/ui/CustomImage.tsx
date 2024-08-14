@@ -74,7 +74,7 @@ function CustomImage({
           return (
             <Image
               key={index}
-              className='object-cover cursor-pointer'
+              className='object-cover cursor-pointer border border-neutral-300'
               src={
                 isError
                   ? isErrorImageLarger

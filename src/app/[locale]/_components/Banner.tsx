@@ -152,6 +152,7 @@ function Banner() {
   useEffect(() => {
     if (
       isAutoChangeSlide &&
+      formatData &&
       formatData?.homepage_automatically_switch_banners?.value &&
       formatData?.homepage_time_to_automatically_switch_banners?.value
     ) {
@@ -170,6 +171,8 @@ function Banner() {
     >
       {!isFetching &&
         isSuccess &&
+        formatData &&
+        Array.isArray(formatData?.homepage_banners?.value) &&
         formatData?.homepage_banners?.value?.map((b: any, index: number) => {
           return (
             <article
@@ -302,6 +305,7 @@ function Banner() {
         })}
       {!isFetching &&
         isSuccess &&
+        formatData &&
         formatData?.homepage_banners?.value?.[curSlide] &&
         formatData?.homepage_show_navigation_button?.value && (
           <div className='absolute z-20 w-full bottom-6 hidden md:flex justify-between px-8'>

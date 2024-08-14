@@ -1,12 +1,9 @@
-import { getLangRoute } from '@/config/axios';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const adminApi = createApi({
   reducerPath: 'adminApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: `${
-      process.env.NEXT_PUBLIC_BACKEND_ADMIN_URL
-    }/api${getLangRoute()}`,
+    baseUrl: `${process.env.NEXT_PUBLIC_BACKEND_ADMIN_URL}/api`,
     prepareHeaders: (headers) => {
       return headers;
     },

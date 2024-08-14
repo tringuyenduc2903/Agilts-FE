@@ -62,7 +62,7 @@ function Footer() {
                 {t('about')} {title}
               </p>
               <p className='text-neutral-400 text-sm md:text-base'>
-                {formatData?.footer_about_description?.value}
+                {formatData?.footer_about?.value?.description}
               </p>
             </div>
             <div className='col-span-1 flex flex-col gap-4'>
@@ -70,7 +70,7 @@ function Footer() {
                 {t('office_hours')}
               </p>
               <ul className='text-neutral-400 text-sm sm:text-base md:text-lg flex flex-col gap-2'>
-                {(formatData?.footer_about_time?.value as FooterTime[])?.map(
+                {(formatData?.footer_about?.value?.time as FooterTime[])?.map(
                   (v) => {
                     return (
                       <li key={v?.title}>

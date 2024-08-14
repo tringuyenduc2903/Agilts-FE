@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useGetSettingsQuery } from '@/lib/redux/query/adminQuery';
 import { BannerPage } from '@/types/types';
+import CustomImage from '@/components/ui/CustomImage';
 function Banner() {
   const router = useRouter();
   const t = useTranslations('common');
@@ -28,13 +29,6 @@ function Banner() {
   const btnRef = useRef<HTMLDivElement | null>(null);
   const tagRef = useRef<HTMLParagraphElement | null>(null);
   const { data, isSuccess, isFetching } = useGetSettingsQuery('homepage');
-  const formatData = useMemo(() => {
-    return isSuccess && data
-      ? data.reduce((acc: {}, curValue: BannerPage) => {
-          return { ...acc, [curValue.key]: curValue };
-        }, {})
-      : null;
-  }, [isSuccess, data]);
   useGSAP(
     () => {
       if (imgRef.current) {
@@ -135,35 +129,28 @@ function Banner() {
   );
   const handlePrevSlide = useCallback(() => {
     setCurSlide((prevSlide) => {
-      if (prevSlide === 0)
-        return formatData?.homepage_banners?.value?.length - 1;
+      if (prevSlide === 0) return data[0]?.value?.banners?.length - 1;
       return prevSlide - 1;
     });
-  }, [formatData]);
+  }, [data]);
 
   const handleNextSlide = useCallback(() => {
     setCurSlide((prevSlide) => {
-      if (prevSlide === formatData?.homepage_banners?.value?.length - 1)
-        return 0;
+      if (prevSlide === data[0]?.value?.banners?.length - 1) return 0;
       return prevSlide + 1;
     });
-  }, [formatData]);
+  }, [data]);
 
   useEffect(() => {
-    if (
-      isAutoChangeSlide &&
-      formatData &&
-      formatData?.homepage_automatically_switch_banners?.value &&
-      formatData?.homepage_time_to_automatically_switch_banners?.value
-    ) {
+    if (isAutoChangeSlide && data) {
       const autoChangeSlide = setInterval(() => {
         handleNextSlide();
-      }, formatData?.homepage_time_to_automatically_switch_banners?.value);
+      }, data[0]?.value?.time_to_automatically_switch_banners);
       return () => {
         clearInterval(autoChangeSlide);
       };
     }
-  }, [isAutoChangeSlide, formatData]);
+  }, [isAutoChangeSlide, data]);
   return (
     <section
       className='relative pt-[72px] w-full h-[70vh] md:h-screen overflow-hidden'
@@ -171,9 +158,8 @@ function Banner() {
     >
       {!isFetching &&
         isSuccess &&
-        formatData &&
-        Array.isArray(formatData?.homepage_banners?.value) &&
-        formatData?.homepage_banners?.value?.map((b: any, index: number) => {
+        data &&
+        data[0]?.value?.banners.map((b: any, index: number) => {
           return (
             <article
               className={`w-full h-full absolute ${
@@ -186,12 +172,12 @@ function Banner() {
                 className='w-full h-full z-0'
                 ref={curSlide === index ? imgRef : null}
               >
-                <Image
+                <CustomImage
+                  className='w-full h-full bg-center'
                   width={1800}
                   height={1000}
-                  className='w-full h-full object-cover aspect-auto bg-center'
-                  src={b?.image?.image}
-                  alt={b?.image?.alt}
+                  image={b?.image}
+                  isErrorImageLarger={true}
                 />
               </div>
               <div className='absolute top-0 left-0 w-full h-full flex justify-between items-center z-[100]'>
@@ -242,6 +228,9 @@ function Banner() {
                           className='relative w-max sm:w-[220px] h-[36px] sm:h-[46px] md:h-[55px] uppercase bg-red-600 text-white px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center text-sm'
                           onMouseEnter={() => setIsHoverButton('view-more')}
                           onMouseLeave={() => setIsHoverButton(null)}
+                          onClick={() =>
+                            window.open(b?.actions[0]?.link, '_blank')
+                          }
                         >
                           <span
                             className={`w-[142px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${
@@ -287,7 +276,7 @@ function Banner() {
                           {curSlide + 1 >= 10
                             ? curSlide + 1
                             : `0${curSlide + 1}`}
-                          /{formatData?.homepage_banners?.value?.length}
+                          /{data[0]?.value?.banners?.length}
                         </p>
                         <p
                           ref={curSlide === index ? tagRef : null}
@@ -305,9 +294,8 @@ function Banner() {
         })}
       {!isFetching &&
         isSuccess &&
-        formatData &&
-        formatData?.homepage_banners?.value?.[curSlide] &&
-        formatData?.homepage_show_navigation_button?.value && (
+        data[0]?.value?.show_navigation_button &&
+        data[0]?.value?.banners[curSlide] && (
           <div className='absolute z-20 w-full bottom-6 hidden md:flex justify-between px-8'>
             <button
               className='relative w-[200px] h-[55px] uppercase bg-neutral-50 text-neutral-800 px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center'

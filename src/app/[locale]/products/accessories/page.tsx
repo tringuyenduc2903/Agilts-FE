@@ -14,7 +14,9 @@ function AccessoriesLayout() {
     data: filterData,
     isSuccess: isSuccessFilter,
     isLoading: isLoadingFilter,
-  } = useFetch(async () => await getFilterProduct('accessories'));
+  } = useFetch(
+    async () => await getFilterProduct(searchParams.toString(), 'accessories')
+  );
   const {
     fetchData: getProductMutation,
     data: productsData,

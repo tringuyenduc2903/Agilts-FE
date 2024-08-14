@@ -14,7 +14,9 @@ function MotorCycleLayout() {
     data: filterData,
     isSuccess: isSuccessFilter,
     isLoading: isLoadingFilter,
-  } = useFetch(async () => await getFilterProduct('motor-cycle'));
+  } = useFetch(
+    async () => await getFilterProduct(searchParams.toString(), 'motor-cycle')
+  );
   const {
     fetchData: getProductMutation,
     data: productsData,
@@ -25,8 +27,6 @@ function MotorCycleLayout() {
   );
   useEffect(() => {
     getFilterProductMutation();
-  }, []);
-  useEffect(() => {
     getProductMutation();
   }, [searchParams]);
   return (

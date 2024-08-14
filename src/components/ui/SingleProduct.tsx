@@ -218,6 +218,13 @@ SingleProduct.Image = function ProductImage({
       }
     }
   }, [isWishlist, user, locale, router]);
+  const handleAddToCart = useCallback(async () => {
+    if (!user) {
+      router.push(`/${locale}/login`);
+    } else {
+      await postCartMutation();
+    }
+  }, [user, router, locale, postCartMutation]);
   useEffect(() => {
     if (isLoadingPostWishlist || isLoadingDeleteWishlist || isLoadingPostCart) {
       setVisiblePopup({ visibleLoadingPopup: true });
@@ -284,7 +291,7 @@ SingleProduct.Image = function ProductImage({
       } relative group overflow-hidden`}
     >
       <CustomImage
-        className='object-cover w-auto h-auto aspect-auto bg-center'
+        className='object-cover bg-center'
         image={
           selectedOption
             ? selectedOption.images[0]
@@ -321,7 +328,7 @@ SingleProduct.Image = function ProductImage({
               isLoadingPostWishlist ||
               isLoadingPostCart
             }
-            onClick={async () => await postCartMutation()}
+            onClick={handleAddToCart}
           >
             <FaCartPlus className='text-2xl' />
           </button>

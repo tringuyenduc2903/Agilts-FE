@@ -9,55 +9,70 @@ const BreadCrumbs = dynamic(() => import('@/components/ui/BreadCrumbs'), {
   ssr: false,
   loading: () => <section className='w-full h-[68px] skeleton'></section>,
 });
-const Aside = dynamic(() => import('./_components/aside'), {
+const Aside = dynamic(() => import('../../_components/product-details/aside'), {
   ssr: false,
 });
-const ProductDetails = dynamic(() => import('./_components/productDetails'), {
-  ssr: false,
-  loading: () => (
-    <section className='container md:m-auto px-6 md:px-0 grid grid-cols-1 lg:grid-cols-2 gap-16 py-8 md:py-16 overflow-hidden'>
-      <div className='col-span-1 w-full h-[550px] skeleton'></div>
-      <div className='col-span-1 w-full h-[550px] skeleton'></div>
-    </section>
-  ),
-});
-const Description = dynamic(() => import('./_components/description'), {
-  ssr: false,
-  loading: () => (
-    <section className='container md:m-auto px-6 md:px-0 flex flex-col gap-4 w-full'>
-      <div className='w-[250px] h-[32px] skeleton'></div>
-      <div className='w-full h-[480px] skeleton'></div>
-    </section>
-  ),
-});
-const Specifications = dynamic(() => import('./_components/specifications'), {
-  ssr: false,
-  loading: () => (
-    <section className='container md:m-auto px-6 md:px-0 w-full flex flex-col gap-4'>
-      <div className='w-[250px] h-[32px] skeleton'></div>
-      <div className='w-full h-[480px] skeleton'></div>
-    </section>
-  ),
-});
-const Videos = dynamic(() => import('./_components/videos'), {
-  ssr: false,
+const ProductDetails = dynamic(
+  () => import('../../_components/product-details/productDetails'),
+  {
+    ssr: false,
+    loading: () => (
+      <section className='container md:m-auto px-6 md:px-0 grid grid-cols-1 lg:grid-cols-2 gap-16 py-8 md:py-16 overflow-hidden'>
+        <div className='col-span-1 w-full h-[550px] skeleton'></div>
+        <div className='col-span-1 w-full h-[550px] skeleton'></div>
+      </section>
+    ),
+  }
+);
+const Description = dynamic(
+  () => import('../../_components/product-details/description'),
+  {
+    ssr: false,
+    loading: () => (
+      <section className='container md:m-auto px-6 md:px-0 flex flex-col gap-4 w-full'>
+        <div className='w-[250px] h-[32px] skeleton'></div>
+        <div className='w-full h-[480px] skeleton'></div>
+      </section>
+    ),
+  }
+);
+const Specifications = dynamic(
+  () => import('../../_components/product-details/specifications'),
+  {
+    ssr: false,
+    loading: () => (
+      <section className='container md:m-auto px-6 md:px-0 w-full flex flex-col gap-4'>
+        <div className='w-[250px] h-[32px] skeleton'></div>
+        <div className='w-full h-[480px] skeleton'></div>
+      </section>
+    ),
+  }
+);
+const Videos = dynamic(
+  () => import('../../_components/product-details/videos'),
+  {
+    ssr: false,
 
-  loading: () => (
-    <section className='container md:m-auto px-6 md:px-0 w-full flex flex-col gap-4'>
-      <div className='w-[250px] h-[32px] skeleton'></div>
-      <div className='w-full h-[480px] skeleton'></div>
-    </section>
-  ),
-});
-const Reviews = dynamic(() => import('./_components/reviews'), {
-  ssr: false,
-  loading: () => (
-    <section className='container md:m-auto px-6 md:px-0 w-full flex flex-col gap-4'>
-      <div className='w-[250px] h-[32px] skeleton'></div>
-      <div className='w-full h-[480px] skeleton'></div>
-    </section>
-  ),
-});
+    loading: () => (
+      <section className='container md:m-auto px-6 md:px-0 w-full flex flex-col gap-4'>
+        <div className='w-[250px] h-[32px] skeleton'></div>
+        <div className='w-full h-[480px] skeleton'></div>
+      </section>
+    ),
+  }
+);
+const Reviews = dynamic(
+  () => import('../../_components/product-details/reviews'),
+  {
+    ssr: false,
+    loading: () => (
+      <section className='container md:m-auto px-6 md:px-0 w-full flex flex-col gap-4'>
+        <div className='w-[250px] h-[32px] skeleton'></div>
+        <div className='w-full h-[480px] skeleton'></div>
+      </section>
+    ),
+  }
+);
 export default async function ProductDetailsPage({
   params,
 }: {

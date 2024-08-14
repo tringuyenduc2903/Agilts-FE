@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import errorImage from '@/assets/not-found-img.avif';
 import errorImageLarger from '@/assets/not-found-img-larger.png';
 import { ModalContext } from '@/contexts/ModalProvider';
@@ -30,10 +30,14 @@ function CustomImage({
   const [fallbackImg, setFallbackImg] = useState(false);
   const [fallBackListImage, setFallBackListImage] = useState<number[]>([]);
   const { setVisibleModal } = useContext(ModalContext);
+  useEffect(() => {
+    setFallbackImg(false);
+    setFallBackListImage([]);
+  }, [image?.image, images]);
   if (image) {
     return (
       <Image
-        className={`w-full h-full object-cover cursor-pointer ${className}`}
+        className={`object-cover w-full h-[${height}px] bg-center ${className}`}
         width={width}
         height={height}
         src={
@@ -70,9 +74,7 @@ function CustomImage({
           return (
             <Image
               key={index}
-              className={`w-[${width ? `${width}px` : '100%'}] h-[${
-                height ? `${height}px` : '100%'
-              }] object-cover cursor-pointer`}
+              className='object-cover cursor-pointer'
               src={
                 isError
                   ? isErrorImageLarger
@@ -109,4 +111,4 @@ function CustomImage({
   return <></>;
 }
 
-export default CustomImage;
+export default React.memo(CustomImage);

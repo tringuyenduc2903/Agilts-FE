@@ -174,9 +174,13 @@ function ProductDetails({ product }: Props) {
                 ? selectedOptionDetails.images[0]
                 : product.images[0]
             }
-            images={product.images}
+            images={
+              selectedOptionDetails
+                ? selectedOptionDetails.images
+                : product.images
+            }
             isShowDetails={true}
-            width={550}
+            width={600}
             height={600}
             isErrorImageLarger={true}
             fetchPriority='high'
@@ -184,7 +188,11 @@ function ProductDetails({ product }: Props) {
         </div>
         <div className='w-full grid grid-cols-3 gap-6'>
           <CustomImage
-            images={product.images}
+            images={
+              selectedOptionDetails
+                ? selectedOptionDetails.images
+                : product.images
+            }
             isShowDetails={true}
             width={250}
             height={180}
@@ -291,7 +299,7 @@ function ProductDetails({ product }: Props) {
                             }
                             onClick={() =>
                               router.push(
-                                `/${locale}/products/motor-cycle?page=1&category=${c.id}`,
+                                `/${locale}/products/accessories?page=1&category=${c.id}`,
                                 {
                                   scroll: true,
                                 }

@@ -40,11 +40,14 @@ export const getProductDetails = async (
   }
 };
 export const getFilterProduct = async (
+  search: string,
   type: 'motor-cycle' | 'square-parts' | 'accessories'
 ) => {
   try {
     const res = await axiosInstance.get(
-      `/api${getLangRoute()}/filter/product/${type}`
+      `/api${getLangRoute()}/filter/product/${type}${
+        search ? `?${search}` : ''
+      }`
     );
     return {
       type: 'success',

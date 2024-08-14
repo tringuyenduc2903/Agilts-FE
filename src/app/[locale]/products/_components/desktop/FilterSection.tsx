@@ -63,16 +63,18 @@ function FilterSection({
     });
   }, [manufacturer, searchParams, createQueryString]);
   const renderedOptionType = useMemo(() => {
-    return option_type?.data?.map((o) => {
+    return option_type?.data?.map((o, index) => {
       return (
         <li className='h-max' key={o}>
           <button
             className={`text-start font-bold text-sm md:text-base text-neutral-500 hover:text-red-500 ${
-              searchParams.get(option_type.name) === o.toString()
+              searchParams.get(option_type.name) === index.toString()
                 ? 'text-red-500'
                 : ''
             } transition-colors`}
-            onClick={() => createQueryString(option_type.name, o)}
+            onClick={() =>
+              createQueryString(option_type.name, index.toString())
+            }
           >
             {o}
           </button>

@@ -24,7 +24,7 @@ import { deleteCookie, setCookie } from 'cookies-next';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { useFetch } from '@/lib/hooks/useFetch';
 import { logout } from '@/api/user';
-import { subRoutesPage } from '../../../headerData';
+import { subRoutesPage, subRoutesProduct } from '../../../headerData';
 type Props = {
   isOpenMenu: boolean;
   closeMenu: () => void;
@@ -262,23 +262,67 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
               })}
             </ul>
           </div>
-          <Link
-            className={`h-full uppercase ${
-              hoverRoute === 'products' || pathname === '/products'
+          <div
+            className={`cursor-pointer ${
+              hoverRoute === 'products' || pathname.includes('products')
                 ? 'text-red-500'
                 : ''
             } transition-colors`}
-            href={`/${locale}/products`}
-            onClick={() => handleRedirect('/products')}
+            onClick={() =>
+              setSubRoute((prevState) => {
+                if (prevState === 'products') return null;
+                return 'products';
+              })
+            }
             onMouseEnter={() => setHoverRoute('products')}
             onMouseLeave={() => setHoverRoute(null)}
             aria-disabled={isLoadingLogout}
-            prefetch={true}
           >
-            <p className='relative py-1'>
-              <span>{t('products')}</span>
-            </p>
-          </Link>
+            <button className='w-full uppercase flex justify-between items-center gap-8'>
+              <p>{t('products')}</p>
+              <FaAngleRight
+                className={`${
+                  subRoute === 'products' ? 'rotate-90' : 'rotate-0'
+                } transition-all duration-100 text-sm`}
+              />
+            </button>
+            <ul
+              style={{
+                height:
+                  subRoute === 'products'
+                    ? `${subRoutesProduct.length * 48}px`
+                    : '0px',
+              }}
+              className='transition-[height] duration-200 bg-white text-neutral-500 uppercase overflow-hidden'
+            >
+              {subRoutesProduct.map((r) => {
+                return (
+                  <li key={r} className='w-full px-2 text-sm'>
+                    <Link
+                      className='relative w-full h-[48px] flex items-center gap-2 px-4'
+                      href={`/${locale}/products/${r}`}
+                      onClick={() => handleRedirect(r)}
+                      onMouseOver={() => setHoverSubRoute(r)}
+                      onMouseOut={() => setHoverSubRoute(null)}
+                      aria-disabled={isLoadingLogout}
+                      prefetch={true}
+                    >
+                      <span className='w-6 h-[2px] bg-red-600'></span>
+                      <span
+                        className={`absolute w-[180px] px-4 left-0 top-1/2 -translate-y-1/2 ${
+                          hoverSubRoute === r || pathname === `/products/${r}`
+                            ? 'translate-x-[20%]'
+                            : 'translate-x-0'
+                        } bg-white transition-all duration-300`}
+                      >
+                        {t(r)}
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
           <Link
             className={`h-full uppercase ${
               hoverRoute === 'cart' || pathname === '/cart'

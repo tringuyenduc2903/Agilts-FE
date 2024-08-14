@@ -14,7 +14,9 @@ function SquarePartsLayout() {
     data: filterData,
     isSuccess: isSuccessFilter,
     isLoading: isLoadingFilter,
-  } = useFetch(async () => await getFilterProduct('square-parts'));
+  } = useFetch(
+    async () => await getFilterProduct(searchParams.toString(), 'square-parts')
+  );
   const {
     fetchData: getProductMutation,
     data: productsData,

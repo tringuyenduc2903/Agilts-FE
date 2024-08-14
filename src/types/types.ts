@@ -326,3 +326,56 @@ export type Order = {
   created_at: string;
   updated_at: string;
 };
+
+export type BannerPage = {
+  id: number;
+  key: string;
+  name: string;
+  value:
+    | [
+        {
+          image: SingleImage;
+          subtitle: string;
+          title: string;
+          description: string;
+          page_name: string;
+          banner_description: string;
+          actions: {
+            title: string;
+            link: string;
+          };
+        }
+      ]
+    | boolean
+    | number;
+};
+export type FooterTime = {
+  title: string;
+  description: string;
+};
+export type FooterBranch = {
+  name: string;
+  phone_number: string;
+  image: SingleImage | null;
+  address: {
+    country: string;
+    province: string;
+    district: string;
+    ward: string;
+    address_detail: string;
+    address_preview: string;
+  };
+};
+export type FooterService = {
+  title: string;
+  link: string;
+};
+export type FooterPage = {
+  id: number;
+  key: string;
+  name: string;
+  value: string | FooterTime[] | FooterBranch | FooterService[];
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+};

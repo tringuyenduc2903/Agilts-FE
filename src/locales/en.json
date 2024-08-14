@@ -369,6 +369,8 @@
     "square-parts": "Square parts",
     "accessories": "Accessories",
     "mess_no_phone": "You don't have a phone number yet.",
-    "mess_success_post_cart": "Added product successfully!"
+    "mess_success_post_cart": "Added product successfully!",
+    "office_hours": "Office hours",
+    "about": "About"
   }
 }

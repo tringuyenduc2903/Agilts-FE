@@ -291,12 +291,14 @@ function StoresPage() {
               {renderedDistricts}
             </ul>
           </div>
-          <button
-            className='col-span-1 h-[40px] font-bold py-2 border border-neutral-500 bg-white rounded-sm text-sm md:text-base'
-            onClick={() => deleteQueryString()}
-          >
-            {t('delete')}
-          </button>
+          {searchPrams.toString() && (
+            <button
+              className='col-span-1 h-[40px] font-bold py-2 border border-neutral-500 bg-white rounded-sm text-sm md:text-base'
+              onClick={() => deleteQueryString()}
+            >
+              {t('delete')}
+            </button>
+          )}
           <button
             className='col-span-1 h-[40px] font-bold py-2 bg-neutral-800 text-white rounded-sm text-sm md:text-base'
             onClick={handleSearch}

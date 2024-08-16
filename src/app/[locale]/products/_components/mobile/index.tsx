@@ -74,152 +74,158 @@ function ProductsMobile({
   }, [isSuccessFilter, filterData]);
   const renderedManufacturer = useMemo(() => {
     return (
-      isSuccessFilter &&
-      convertData(formatFilter?.manufacturer?.data)?.map((d) => {
-        return (
-          <li className='h-max' key={d.id}>
-            <button
-              className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
-                searchParams.get(formatFilter?.manufacturer?.name) ===
-                d.id.toString()
-                  ? 'text-red-500'
-                  : ''
-              } transition-colors`}
-              onClick={() => {
-                setSelectedTab(null);
-                setForm((prevForm) => ({
-                  ...prevForm,
-                  manufacturer: d.value,
-                }));
-              }}
-            >
-              {d.value}
-            </button>
-          </li>
-        );
-      })
+      (isSuccessFilter &&
+        convertData(formatFilter?.manufacturer?.data)?.map((d) => {
+          return (
+            <li className='h-max' key={d.id}>
+              <button
+                className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
+                  searchParams.get(formatFilter?.manufacturer?.name) ===
+                  d.id.toString()
+                    ? 'text-red-500'
+                    : ''
+                } transition-colors`}
+                onClick={() => {
+                  setSelectedTab(null);
+                  setForm((prevForm) => ({
+                    ...prevForm,
+                    manufacturer: d.value,
+                  }));
+                }}
+              >
+                {d.value}
+              </button>
+            </li>
+          );
+        })) ||
+      []
     );
   }, [isSuccessFilter, formatFilter?.manufacturer, searchParams]);
   const renderedOptionType = useMemo(() => {
     return (
-      isSuccessFilter &&
-      formatFilter?.option_type?.data?.map((d: string) => {
-        return (
-          <li className='h-max' key={d}>
-            <button
-              className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
-                searchParams.get(formatFilter?.manufacturer?.name) ===
-                d.toString()
-                  ? 'text-red-500'
-                  : ''
-              } transition-colors`}
-              onClick={() => {
-                setSelectedTab(null);
-                setForm((prevForm) => ({
-                  ...prevForm,
-                  option_type: d,
-                }));
-              }}
-            >
-              {d}
-            </button>
-          </li>
-        );
-      })
+      (isSuccessFilter &&
+        formatFilter?.option_type?.data?.map((d: string) => {
+          return (
+            <li className='h-max' key={d}>
+              <button
+                className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
+                  searchParams.get(formatFilter?.manufacturer?.name) ===
+                  d.toString()
+                    ? 'text-red-500'
+                    : ''
+                } transition-colors`}
+                onClick={() => {
+                  setSelectedTab(null);
+                  setForm((prevForm) => ({
+                    ...prevForm,
+                    option_type: d,
+                  }));
+                }}
+              >
+                {d}
+              </button>
+            </li>
+          );
+        })) ||
+      []
     );
   }, [isSuccessFilter, formatFilter?.option_type, searchParams]);
   const renderedCategories = useMemo(() => {
     return (
-      isSuccessFilter &&
-      convertData(formatFilter?.category?.data)?.map((d) => {
-        return (
-          <li className='h-max' key={d.id}>
-            <button
-              className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
-                searchParams.get(formatFilter?.category?.name) ===
-                d.id.toString()
-                  ? 'text-red-500'
-                  : ''
-              } transition-colors`}
-              onClick={() => {
-                setSelectedTab(null);
-                setForm((prevForm) => ({
-                  ...prevForm,
-                  category: {
-                    name: formatFilter?.category?.name,
-                    preview: d.value,
-                    value: d.id,
-                  },
-                }));
-              }}
-            >
-              {d.value}
-            </button>
-          </li>
-        );
-      })
+      (isSuccessFilter &&
+        convertData(formatFilter?.category?.data)?.map((d) => {
+          return (
+            <li className='h-max' key={d.id}>
+              <button
+                className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
+                  searchParams.get(formatFilter?.category?.name) ===
+                  d.id.toString()
+                    ? 'text-red-500'
+                    : ''
+                } transition-colors`}
+                onClick={() => {
+                  setSelectedTab(null);
+                  setForm((prevForm) => ({
+                    ...prevForm,
+                    category: {
+                      name: formatFilter?.category?.name,
+                      preview: d.value,
+                      value: d.id,
+                    },
+                  }));
+                }}
+              >
+                {d.value}
+              </button>
+            </li>
+          );
+        })) ||
+      []
     );
   }, [isSuccessFilter, formatFilter?.category, searchParams]);
 
   const renderedVersion = useMemo(() => {
     return (
-      isSuccessFilter &&
-      convertData(formatFilter?.version?.data)?.map((d) => {
-        return (
-          <li className='h-max' key={d.id}>
-            <button
-              className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
-                searchParams.get(formatFilter?.version.name) === d.id.toString()
-                  ? 'text-red-500'
-                  : ''
-              } transition-colors`}
-              onClick={() => {
-                setSelectedTab(null);
-                setForm((prevForm) => ({
-                  ...prevForm,
-                  model: {
-                    name: formatFilter?.version?.name,
-                    value: d.id,
-                  },
-                }));
-              }}
-            >
-              {d.value}
-            </button>
-          </li>
-        );
-      })
+      (isSuccessFilter &&
+        convertData(formatFilter?.version?.data)?.map((d) => {
+          return (
+            <li className='h-max' key={d.id}>
+              <button
+                className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
+                  searchParams.get(formatFilter?.version.name) ===
+                  d.id.toString()
+                    ? 'text-red-500'
+                    : ''
+                } transition-colors`}
+                onClick={() => {
+                  setSelectedTab(null);
+                  setForm((prevForm) => ({
+                    ...prevForm,
+                    model: {
+                      name: formatFilter?.version?.name,
+                      value: d.id,
+                    },
+                  }));
+                }}
+              >
+                {d.value}
+              </button>
+            </li>
+          );
+        })) ||
+      []
     );
   }, [isSuccessFilter, formatFilter?.version, searchParams]);
 
   const renderedColors = useMemo(() => {
     return (
-      isSuccessFilter &&
-      convertData(formatFilter?.color?.data)?.map((d) => {
-        return (
-          <li className='h-max' key={d.id}>
-            <button
-              className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
-                searchParams.get(formatFilter?.color.name) === d.id.toString()
-                  ? 'text-red-500'
-                  : ''
-              } transition-colors`}
-              onClick={() => {
-                setSelectedTab(null);
-                setForm((prevForm) => ({
-                  ...prevForm,
-                  color: {
-                    name: formatFilter?.color?.name,
-                    value: d.id,
-                  },
-                }));
-              }}
-            >
-              {d.value}
-            </button>
-          </li>
-        );
-      })
+      (isSuccessFilter &&
+        convertData(formatFilter?.color?.data)?.map((d) => {
+          return (
+            <li className='h-max' key={d.id}>
+              <button
+                className={`font-medium text-sm md:text-base text-neutral-500 hover:text-red-500 ${
+                  searchParams.get(formatFilter?.color.name) === d.id.toString()
+                    ? 'text-red-500'
+                    : ''
+                } transition-colors`}
+                onClick={() => {
+                  setSelectedTab(null);
+                  setForm((prevForm) => ({
+                    ...prevForm,
+                    color: {
+                      name: formatFilter?.color?.name,
+                      value: d.id,
+                    },
+                  }));
+                }}
+              >
+                {d.value}
+              </button>
+            </li>
+          );
+        })) ||
+      []
     );
   }, [isSuccessFilter, formatFilter?.color, searchParams]);
 
@@ -467,106 +473,119 @@ function ProductsMobile({
                 </ul>
               )}
             </div>
-            <div className='flex flex-col gap-2'>
-              <h2 className='text-base font-medium'>
-                {formatFilter?.manufacturer?.label}
-              </h2>
-              <button
-                className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
-                onClick={() => handleSelectedTab('manufacturer')}
-              >
-                <p>{form?.manufacturer ? form?.manufacturer : t('all')}</p>
-                <FaAngleDown />
-              </button>
-              {selectedTab === 'manufacturer' && (
-                <ul className='w-full h-auto max-h-[40vh] p-4 flex flex-col gap-1 border border-neutral-300 overflow-y-auto'>
-                  {renderedManufacturer}
-                </ul>
-              )}
-            </div>
-            <div className='flex flex-col gap-2'>
-              <h2 className='text-base font-medium'>
-                {formatFilter?.option_type?.label}
-              </h2>
-              <button
-                className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
-                onClick={() => handleSelectedTab('option_type')}
-              >
-                <p>{form?.option_type ? form?.option_type : t('all')}</p>
-                <FaAngleDown />
-              </button>
-              {selectedTab === 'option_type' && (
-                <ul className='w-full h-auto max-h-[40vh] p-4 flex flex-col gap-1 border border-neutral-300 overflow-y-auto'>
-                  {renderedOptionType}
-                </ul>
-              )}
-            </div>
-            <div className='flex flex-col gap-2'>
-              <h2 className='text-base font-medium'>
-                {formatFilter?.category?.label}
-              </h2>
-              <button
-                className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
-                onClick={() => handleSelectedTab('category')}
-              >
-                <p>
-                  {form?.category?.name ? form?.category?.preview : t('all')}
-                </p>
-                <FaAngleDown />
-              </button>
-              {selectedTab === 'category' && (
-                <ul className='w-full h-auto max-h-[40vh] p-4 flex flex-col gap-1 border border-neutral-300 overflow-y-auto'>
-                  {renderedCategories}
-                </ul>
-              )}
-            </div>
-            <div className='flex flex-col gap-2'>
-              <h2 className='text-base font-medium'>
-                {formatFilter?.version?.label}
-              </h2>
-              <button
-                className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
-                onClick={() => handleSelectedTab('model')}
-              >
-                <p>{form?.version?.name ? form?.version?.value : t('all')}</p>
-                <FaAngleDown />
-              </button>
-              {selectedTab === 'model' && (
-                <ul className='w-full h-auto max-h-[40vh] p-4 flex flex-col gap-1 border border-neutral-300 overflow-y-auto'>
-                  {renderedVersion}
-                </ul>
-              )}
-            </div>
-            <div className='flex flex-col gap-2'>
-              <h2 className='text-base font-medium'>
-                {formatFilter?.color?.label}
-              </h2>
-              <button
-                className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
-                onClick={() => handleSelectedTab('color')}
-              >
-                <p>{form?.color?.name ? form?.color?.value : t('all')}</p>
-                <FaAngleDown />
-              </button>
-              {selectedTab === 'color' && (
-                <ul className='w-full h-auto max-h-[40vh] p-4 flex flex-col gap-1 border border-neutral-300 overflow-y-auto'>
-                  {renderedColors}
-                </ul>
-              )}
-            </div>
-            <div className='flex flex-col gap-4'>
-              <h2 className='text-base font-medium'>{t('price')}</h2>
-              <div className='w-full flex justify-center items-center'>
-                <RangeSlider
-                  min={Number(formatFilter?.minPrice?.data?.raw)}
-                  max={Number(formatFilter?.maxPrice?.data?.raw)}
-                  onChange={({ min, max }) => {
-                    setPriceMin(min);
-                    setPriceMax(max);
-                  }}
-                />
+            {renderedManufacturer?.length > 0 && (
+              <div className='flex flex-col gap-2'>
+                <h2 className='text-base font-medium'>
+                  {formatFilter?.manufacturer?.label}
+                </h2>
+                <button
+                  className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
+                  onClick={() => handleSelectedTab('manufacturer')}
+                >
+                  <p>{form?.manufacturer ? form?.manufacturer : t('all')}</p>
+                  <FaAngleDown />
+                </button>
+                {selectedTab === 'manufacturer' && (
+                  <ul className='w-full h-auto max-h-[40vh] p-4 flex flex-col gap-1 border border-neutral-300 overflow-y-auto'>
+                    {renderedManufacturer}
+                  </ul>
+                )}
               </div>
-            </div>
+            )}
+            {renderedOptionType?.length > 0 && (
+              <div className='flex flex-col gap-2'>
+                <h2 className='text-base font-medium'>
+                  {formatFilter?.option_type?.label}
+                </h2>
+                <button
+                  className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
+                  onClick={() => handleSelectedTab('option_type')}
+                >
+                  <p>{form?.option_type ? form?.option_type : t('all')}</p>
+                  <FaAngleDown />
+                </button>
+                {selectedTab === 'option_type' && (
+                  <ul className='w-full h-auto max-h-[40vh] p-4 flex flex-col gap-1 border border-neutral-300 overflow-y-auto'>
+                    {renderedOptionType}
+                  </ul>
+                )}
+              </div>
+            )}
+            {renderedCategories?.length > 0 && (
+              <div className='flex flex-col gap-2'>
+                <h2 className='text-base font-medium'>
+                  {formatFilter?.category?.label}
+                </h2>
+                <button
+                  className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
+                  onClick={() => handleSelectedTab('category')}
+                >
+                  <p>
+                    {form?.category?.name ? form?.category?.preview : t('all')}
+                  </p>
+                  <FaAngleDown />
+                </button>
+                {selectedTab === 'category' && (
+                  <ul className='w-full h-auto max-h-[40vh] p-4 flex flex-col gap-1 border border-neutral-300 overflow-y-auto'>
+                    {renderedCategories}
+                  </ul>
+                )}
+              </div>
+            )}
+            {renderedVersion?.length > 0 && (
+              <div className='flex flex-col gap-2'>
+                <h2 className='text-base font-medium'>
+                  {formatFilter?.version?.label}
+                </h2>
+                <button
+                  className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
+                  onClick={() => handleSelectedTab('model')}
+                >
+                  <p>{form?.version?.name ? form?.version?.value : t('all')}</p>
+                  <FaAngleDown />
+                </button>
+                {selectedTab === 'model' && (
+                  <ul className='w-full h-auto max-h-[40vh] p-4 flex flex-col gap-1 border border-neutral-300 overflow-y-auto'>
+                    {renderedVersion}
+                  </ul>
+                )}
+              </div>
+            )}
+            {renderedColors?.length > 0 && (
+              <div className='flex flex-col gap-2'>
+                <h2 className='text-base font-medium'>
+                  {formatFilter?.color?.label}
+                </h2>
+                <button
+                  className='w-full px-4 py-2 border border-neutral-300 flex justify-between items-center'
+                  onClick={() => handleSelectedTab('color')}
+                >
+                  <p>{form?.color?.name ? form?.color?.value : t('all')}</p>
+                  <FaAngleDown />
+                </button>
+                {selectedTab === 'color' && (
+                  <ul className='w-full h-auto max-h-[40vh] p-4 flex flex-col gap-1 border border-neutral-300 overflow-y-auto'>
+                    {renderedColors}
+                  </ul>
+                )}
+              </div>
+            )}
+            {formatFilter?.minPrice?.data?.raw &&
+              formatFilter?.maxPrice?.data?.raw && (
+                <div className='flex flex-col gap-4'>
+                  <h2 className='text-base font-medium'>{t('price')}</h2>
+                  <div className='w-full flex justify-center items-center'>
+                    <RangeSlider
+                      min={Number(formatFilter?.minPrice?.data?.raw)}
+                      max={Number(formatFilter?.maxPrice?.data?.raw)}
+                      onChange={({ min, max }) => {
+                        setPriceMin(min);
+                        setPriceMax(max);
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
             <div className='w-full flex justify-end gap-4'>
               <button
                 className='px-6 py-2 border border-neutral-300 text-sm font-bold rounded-sm'

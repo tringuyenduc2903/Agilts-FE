@@ -156,15 +156,17 @@ function ProductsDesktop({
                 </button>
                 <SortSection action={selectedAction} />
               </div>
-              <div className='relative max-w-[250px] w-full'>
-                <button
-                  className='w-full py-2 bg-neutral-800 text-neutral-50 rounded-sm flex justify-center items-center gap-2'
-                  onClick={() => deleteQueryString()}
-                >
-                  <TbFilterX className='text-2xl' />
-                  <p className='text-lg font-bold'>{t('clear')}</p>
-                </button>
-              </div>
+              {searchParams.toString() && (
+                <div className='relative max-w-[250px] w-full'>
+                  <button
+                    className='w-full py-2 bg-neutral-800 text-neutral-50 rounded-sm flex justify-center items-center gap-2'
+                    onClick={() => deleteQueryString()}
+                  >
+                    <TbFilterX className='text-2xl' />
+                    <p className='text-lg font-bold'>{t('clear')}</p>
+                  </button>
+                </div>
+              )}
             </div>
             {!isLoadingProducts && productsData && (
               <div className='w-full flex justify-end'>

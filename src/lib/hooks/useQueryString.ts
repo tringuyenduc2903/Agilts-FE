@@ -53,7 +53,7 @@ const useQueryString = (): [
   );
   const deleteQueryString = useCallback(
     (isBoolean = true) => {
-      router.push(pathname + '?' + 'page=1', { scroll: false });
+      router.push(pathname, { scroll: false });
       isBoolean && scrollToTop();
     },
     [router, pathname]

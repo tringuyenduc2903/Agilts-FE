@@ -20,12 +20,15 @@ export const formatDate = (date: string) => {
   return isValid(parsedDate) ? format(parsedDate, 'yyyy-MM-dd') : '';
 };
 export const convertData = (data: { [key: string]: string }) => {
-  return Object.entries(data)?.map(([key, value]) => {
-    return (
-      {
-        id: key,
-        value: value,
-      } || {}
-    );
-  });
+  return (
+    data &&
+    Object.entries(data)?.map(([key, value]) => {
+      return (
+        {
+          id: key,
+          value: value,
+        } || {}
+      );
+    })
+  );
 };

@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { FaAngleRight } from 'react-icons/fa6';
 import ChangePasswordPopup from './_components/change_password';
-import withAuth from '@/protected-page/withAuth';
+import withAuth from '@/components/protected-page/withAuth';
 import TwoFactorAuthenticationPopup from './_components/two_factor_authentication';
 import { ModalContext } from '@/contexts/ModalProvider';
 function PasswordAndSecurityPage() {

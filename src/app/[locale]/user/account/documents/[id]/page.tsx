@@ -1,7 +1,7 @@
 'use client';
 import Loading from '@/app/[locale]/loading';
 import { UserContext } from '@/contexts/UserProvider';
-import withAuth from '@/protected-page/withAuth';
+import withAuth from '@/components/protected-page/withAuth';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useMemo } from 'react';

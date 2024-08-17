@@ -119,8 +119,12 @@ export type ProductOption = {
   status: string;
   type: string;
   updated_at: string;
-  version: string;
-  weight: string | null;
+  version: string | null;
+  volume?: string | number | null;
+  width?: string | number | null;
+  weight?: string | number | null;
+  length?: string | number | null;
+  height?: string | number | null;
 };
 export type Product = {
   id: number;
@@ -208,6 +212,15 @@ export type Review = {
       name: string;
     };
   } | null;
+  parent_preview: {
+    search_url: string;
+    name: string;
+    option_id: number;
+    sku: string;
+    color: string;
+    version: string;
+    volume: null;
+  };
   reviewable_preview: {
     name: string;
   };

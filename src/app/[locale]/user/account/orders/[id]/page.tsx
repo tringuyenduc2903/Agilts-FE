@@ -4,7 +4,7 @@ import CustomImage from '@/components/ui/CustomImage';
 import { statusOrder } from '@/config/config';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { useFetch } from '@/lib/hooks/useFetch';
-import withAuth from '@/protected-page/withAuth';
+import withAuth from '@/components/protected-page/withAuth';
 import { Order } from '@/types/types';
 import { useTranslations } from 'next-intl';
 import { notFound, useParams, useRouter } from 'next/navigation';

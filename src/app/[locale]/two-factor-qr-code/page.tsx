@@ -7,7 +7,7 @@ import bgImg from '@/assets/port-title-area.jpg';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { verifyTwoFactor } from '@/api/user';
-import withNoAuth from '@/protected-page/withNoAuth';
+import withNoAuth from '@/components/protected-page/withNoAuth';
 type Form = {
   code: string;
   recovery_code: string;

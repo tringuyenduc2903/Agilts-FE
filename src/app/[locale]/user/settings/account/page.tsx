@@ -3,7 +3,7 @@ import 'react-phone-number-input/style.css';
 import { UserContext } from '@/contexts/UserProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
 import PhoneInputWithCountry from 'react-phone-number-input/react-hook-form';
-import withAuth from '@/protected-page/withAuth';
+import withAuth from '@/components/protected-page/withAuth';
 import React, {
   useCallback,
   useContext,

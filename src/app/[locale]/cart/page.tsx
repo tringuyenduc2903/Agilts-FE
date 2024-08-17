@@ -5,7 +5,7 @@ import bgImg from '@/assets/port-title-area.jpg';
 import { useTranslations } from 'next-intl';
 import { FaRegPenToSquare, FaRegTrashCan } from 'react-icons/fa6';
 import { useParams, useRouter } from 'next/navigation';
-import withAuth from '@/protected-page/withAuth';
+import withAuth from '@/components/protected-page/withAuth';
 import { UserContext } from '@/contexts/UserProvider';
 
 function CartPage() {

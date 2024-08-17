@@ -8,7 +8,7 @@ import { useParams, useSearchParams } from 'next/navigation';
 import { FaRegEye, FaRegEyeSlash } from 'react-icons/fa6';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { resetPassword } from '@/api/user';
-import withNoAuth from '@/protected-page/withNoAuth';
+import withNoAuth from '@/components/protected-page/withNoAuth';
 
 type Form = {
   email: string;

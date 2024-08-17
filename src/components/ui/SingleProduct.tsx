@@ -13,7 +13,6 @@ import React, {
   useMemo,
   useCallback,
   useEffect,
-  useState,
 } from 'react';
 import { FaStar, FaRegHeart, FaHeart, FaCartPlus } from 'react-icons/fa6';
 import { useResponsive } from '@/lib/hooks/useResponsive';
@@ -52,10 +51,10 @@ export function SingleProduct({
       product.options.find((o) => {
         return (
           o.color === searchParams.get('color') ||
-          searchParams.get('version')?.includes(o.version) ||
+          searchParams.get('version')?.includes(o.version as string) ||
           o.type === searchParams.get('option_type') ||
           (o.color === searchParams.get('color') &&
-            searchParams.get('version')?.includes(o.version) &&
+            searchParams.get('version')?.includes(o.version as string) &&
             o.type === searchParams.get('option_type'))
         );
       }) || product.options[0]
@@ -140,9 +139,9 @@ SingleProduct.Price = function ProductPrice() {
     return product.options.find((o) => {
       return (
         o.color === searchParams.get('color') ||
-        searchParams.get('version')?.includes(o.version) ||
+        searchParams.get('version')?.includes(o.version as string) ||
         (o.color === searchParams.get('color') &&
-          searchParams.get('version')?.includes(o.version))
+          searchParams.get('version')?.includes(o.version as string))
       );
     });
   }, [searchParams, product.options]);

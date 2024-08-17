@@ -4,7 +4,7 @@ import Table from '@/components/ui/Table';
 import { statusOrder } from '@/config/config';
 import { useFetch } from '@/lib/hooks/useFetch';
 import useQueryString from '@/lib/hooks/useQueryString';
-import withAuth from '@/protected-page/withAuth';
+import withAuth from '@/components/protected-page/withAuth';
 import { Order } from '@/types/types';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';

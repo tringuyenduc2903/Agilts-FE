@@ -1,5 +1,5 @@
 'use client';
-import withAuth from '@/protected-page/withAuth';
+import withAuth from '@/components/protected-page/withAuth';
 import { useTranslations } from 'next-intl';
 import { useParams, useRouter } from 'next/navigation';
 import React from 'react';
@@ -21,7 +21,10 @@ function Page() {
         eligendi natus excepturi, atque in?
       </p>
       <div className='w-full flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6'>
-        <button className='w-full sm:w-[242px] text-sm sm:text-base uppercase font-medium px-6 py-2 sm:py-3 border border-neutral-300 rounded-sm tracking-normal' onClick={() => router.push(`/${locale}/user/account/orders`)}>
+        <button
+          className='w-full sm:w-[242px] text-sm sm:text-base uppercase font-medium px-6 py-2 sm:py-3 border border-neutral-300 rounded-sm tracking-normal'
+          onClick={() => router.push(`/${locale}/user/account/orders`)}
+        >
           {t('view_order')}
         </button>
         <button

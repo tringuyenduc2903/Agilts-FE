@@ -4,7 +4,7 @@ import NotFoundItem from '@/components/ui/NotFoundItem';
 import { UserContext } from '@/contexts/UserProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { PopupContext } from '@/contexts/PopupProvider';
-import withAuth from '@/protected-page/withAuth';
+import withAuth from '@/components/protected-page/withAuth';
 import { Address } from '@/types/types';
 import { useTranslations } from 'next-intl';
 import React, {

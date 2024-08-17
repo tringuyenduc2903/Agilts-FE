@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { forgotPassword } from '@/api/user';
-import withNoAuth from '@/protected-page/withNoAuth';
+import withNoAuth from '@/components/protected-page/withNoAuth';
 
 type Form = {
   email: string;

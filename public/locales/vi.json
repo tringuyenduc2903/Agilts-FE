@@ -371,6 +371,12 @@
     "mess_no_phone": "Bạn chưa có số điện thoại.",
     "mess_success_post_cart": "Thêm sản phẩm thành công!",
     "office_hours": "Giờ hành chính",
-    "about": "Về"
+    "about": "Về",
+    "intro_form": "Tự do & Chinh phục",
+    "width": "Chiều rộng",
+    "length": "Chiều dài",
+    "height": "Chiều cao",
+    "volume": "Thể tích",
+    "weight": "Khối lượng"
   }
 }

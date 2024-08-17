@@ -1,5 +1,5 @@
 'use client';
-import withAuth from '@/protected-page/withAuth';
+import withAuth from '@/components/protected-page/withAuth';
 import React, {
   use,
   useCallback,

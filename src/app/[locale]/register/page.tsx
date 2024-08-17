@@ -1,5 +1,11 @@
 'use client';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import bgLogo from '@/assets/h4-slider-img-1.jpg';
 import Image from 'next/image';
@@ -13,14 +19,31 @@ import {
 import { useTranslations } from 'next-intl';
 import { getCookies } from 'cookies-next';
 import { PopupContext } from '@/contexts/PopupProvider';
-import { Register } from '@/types/types';
+import { Register, SingleImage } from '@/types/types';
 import { registerAccount } from '@/api/user';
 import { UserContext } from '@/contexts/UserProvider';
-import withNoAuth from '@/protected-page/withNoAuth';
+import withNoAuth from '@/components/protected-page/withNoAuth';
+import { useGetSettingsQuery } from '@/lib/redux/query/adminQuery';
+import { useResponsive } from '@/lib/hooks/useResponsive';
+import CustomImage from '@/components/ui/CustomImage';
 function RegisterPage() {
   const { locale } = useParams();
   const router = useRouter();
   const { refetchUser } = useContext(UserContext);
+  const { data, isSuccess } = useGetSettingsQuery('auth');
+  const authBannerSmall = useMemo(() => {
+    return (
+      (isSuccess && data?.find((b: any) => b?.key === 'auth_small_banner')) ||
+      null
+    );
+  }, [isSuccess, data]);
+  const authBannerLarge = useMemo(() => {
+    return (
+      (isSuccess && data?.find((b: any) => b?.key === 'auth_large_banner')) ||
+      null
+    );
+  }, [isSuccess, data]);
+  const index = useResponsive();
   const t = useTranslations('common');
   const {
     register,
@@ -89,14 +112,21 @@ function RegisterPage() {
         style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       ></section>
       <section className='fixed w-full h-full top-0 left-0'>
-        <Image
-          fetchPriority='high'
-          className='w-full h-full object-cover'
-          src={bgLogo}
-          alt='bg-logo'
-        />
+        {isSuccess && authBannerLarge && authBannerSmall && (
+          <CustomImage
+            fetchPriority='high'
+            className='w-full h-full object-cover'
+            image={
+              index.isDesktop
+                ? (authBannerLarge?.value?.image as SingleImage)
+                : (authBannerSmall?.value?.image as SingleImage)
+            }
+            width={1800}
+            height={1000}
+          />
+        )}
       </section>
-      <section className='relative z-10 w-full min-h-screen px-4 py-32 md:px-0 md:w-4/5 lg:w-2/3 2xl:w-1/2 rounded-sm grid lg:grid-cols-2 overflow-hidden'>
+      <section className='relative z-10 w-full min-h-screen px-4 py-32 md:px-0 md:w-4/5 lg:w-2/3 rounded-sm grid lg:grid-cols-2 overflow-hidden'>
         <form
           onSubmit={handleSubmit(onSubmit)}
           method='POST'
@@ -225,10 +255,28 @@ function RegisterPage() {
             </div>
           </div>
         </form>
-        <div className='hidden col-span-1 bg-neutral-800 text-white lg:flex flex-col justify-center items-center gap-8 px-16'>
-          <h1 className='uppercase text-[56px] leading-[56px] font-bold tracking-[4px]'>
-            The black & white form
+        <div className='hidden col-span-1 bg-neutral-800 text-white lg:flex flex-col justify-center items-center gap-8 px-24'>
+          <h1 className='uppercase text-[56px] leading-[72px] font-bold tracking-[4px]'>
+            {t('intro_form')}
           </h1>
+          <div className='flex items-center gap-4'>
+            <button
+              type='button'
+              className='bg-white rounded-full p-3 text-neutral-800 hover:text-red-500 transition-colors'
+              disabled={isSubmitting}
+              onClick={() => redirectToOauth('google')}
+            >
+              <FaGoogle className='text-xl' />
+            </button>
+            <button
+              type='button'
+              className='bg-white rounded-full p-3 text-neutral-800 hover:text-blue-500 transition-colors'
+              disabled={isSubmitting}
+              onClick={() => redirectToOauth('facebook')}
+            >
+              <FaFacebookF className='text-xl' />
+            </button>
+          </div>
         </div>
       </section>
     </main>

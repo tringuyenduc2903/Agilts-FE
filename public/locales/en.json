@@ -371,6 +371,12 @@
     "mess_no_phone": "You don't have a phone number yet.",
     "mess_success_post_cart": "Added product successfully!",
     "office_hours": "Office hours",
-    "about": "About"
+    "about": "About",
+    "intro_form": "Freedom & Conquest",
+    "width": "Width",
+    "length": "Length",
+    "height": "Height",
+    "volume": "Volume",
+    "weight": "Weight"
   }
 }

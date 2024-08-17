@@ -1,10 +1,14 @@
 'use client';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
-import bgLogo from '@/assets/h4-slider-img-1.jpg';
-import Image from 'next/image';
 import {
   FaFacebookF,
   FaGoogle,
@@ -13,13 +17,30 @@ import {
 } from 'react-icons/fa6';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { login } from '@/api/user';
-import { Login } from '@/types/types';
+import { Login, SingleImage } from '@/types/types';
 import { UserContext } from '@/contexts/UserProvider';
-import withNoAuth from '@/protected-page/withNoAuth';
+import withNoAuth from '@/components/protected-page/withNoAuth';
+import { useGetSettingsQuery } from '@/lib/redux/query/adminQuery';
+import CustomImage from '@/components/ui/CustomImage';
+import { useResponsive } from '@/lib/hooks/useResponsive';
 function LoginPage() {
   const { locale } = useParams();
   const router = useRouter();
   const { refetchUser } = useContext(UserContext);
+  const { data, isSuccess } = useGetSettingsQuery('auth');
+  const authBannerSmall = useMemo(() => {
+    return (
+      (isSuccess && data?.find((b: any) => b?.key === 'auth_small_banner')) ||
+      null
+    );
+  }, [isSuccess, data]);
+  const authBannerLarge = useMemo(() => {
+    return (
+      (isSuccess && data?.find((b: any) => b?.key === 'auth_large_banner')) ||
+      null
+    );
+  }, [isSuccess, data]);
+  const index = useResponsive();
   const t = useTranslations('common');
   const { setVisiblePopup } = useContext(PopupContext);
   const [errors, setErrors] = useState<any>(null);
@@ -80,17 +101,24 @@ function LoginPage() {
         style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       ></section>
       <section className='fixed w-full h-full top-0 left-0'>
-        <Image
-          fetchPriority='high'
-          className='w-full h-full object-cover'
-          src={bgLogo}
-          alt='bg-logo'
-        />
+        {isSuccess && authBannerLarge && authBannerSmall && (
+          <CustomImage
+            fetchPriority='high'
+            className='w-full h-full object-cover'
+            image={
+              index.isDesktop
+                ? (authBannerLarge?.value?.image as SingleImage)
+                : (authBannerSmall?.value?.image as SingleImage)
+            }
+            width={1800}
+            height={1000}
+          />
+        )}
       </section>
-      <section className='relative z-10 w-full min-h-screen px-4 py-32 md:px-0 md:w-4/5 lg:w-2/3 2xl:w-1/2 rounded-sm grid xl:grid-cols-2 overflow-hidden'>
-        <div className='hidden col-span-1 bg-neutral-800 text-white xl:flex flex-col justify-center items-center gap-8 px-16'>
-          <h1 className='uppercase text-[56px] leading-[56px] font-bold tracking-[4px]'>
-            The black & white form
+      <section className='relative z-10 w-full min-h-screen px-4 py-32 md:px-0 md:w-4/5 lg:w-2/3 rounded-sm grid xl:grid-cols-2 overflow-hidden'>
+        <div className='hidden col-span-1 bg-neutral-800 text-white xl:flex flex-col justify-center items-center gap-8 px-24'>
+          <h1 className='uppercase text-[56px] leading-[72px] font-bold tracking-[4px]'>
+            {t('intro_form')}
           </h1>
           <div className='flex items-center gap-4'>
             <button

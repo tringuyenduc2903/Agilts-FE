@@ -19,15 +19,18 @@ import { UserContext } from '@/contexts/UserProvider';
 import { useFetch } from '@/lib/hooks/useFetch';
 import { createWishlist, deleteWishlist } from '@/api/wishlist';
 import { setCookie } from 'cookies-next';
+import useQueryString from '@/lib/hooks/useQueryString';
 type Props = {
   product: Product;
 };
 function ProductDetails({ product }: Props) {
+  console.log(product);
   const { locale } = useParams();
   const { user, wishlist, refetchWishlist } = useContext(UserContext);
   const router = useRouter();
   const t = useTranslations('common');
   const { setVisiblePopup } = useContext(PopupContext);
+  const [createQueryString] = useQueryString();
   const [isHoverAddToCart, setIsHoverAddToCart] = useState(false);
   const [curOption, setCurOption] = useState<ProductOption['version']>('');
   const [selectedOption, setSelectedOption] = useState<ProductOption[] | null>(
@@ -57,24 +60,33 @@ function ProductDetails({ product }: Props) {
   const versions = useMemo(() => {
     const newVersions = new Map<string, ProductOption[]>();
     product?.options?.forEach((item) => {
-      const versionOptions = newVersions.get(item.version);
-      if (versionOptions) {
-        versionOptions.push(item);
-      } else {
-        newVersions.set(item.version, [item]);
+      if (item.version) {
+        const versionOptions = newVersions.get(item.version);
+        if (versionOptions) {
+          versionOptions.push(item);
+        } else {
+          newVersions.set(item.version, [item]);
+        }
       }
     });
     return Array.from(newVersions);
   }, [product]);
   useEffect(() => {
-    setCurOption(versions[0]?.[0]);
-    setSelectedOption(versions[0]?.[1]);
-    setSelectedOptionDetails(versions[0]?.[1][0]);
-  }, []);
+    if (versions?.length > 0) {
+      setCurOption(versions[0]?.[0]);
+      setSelectedOption(versions[0]?.[1]);
+      setSelectedOptionDetails(versions[0]?.[1][0]);
+    } else {
+      setSelectedOptionDetails(product?.options[0]);
+    }
+  }, [product]);
   const handleSetCurOption = useCallback(
     (version: string) => {
       setCurOption(version);
       const selectedDetails = versions.find((v) => v[0] === version);
+      if (selectedDetails) {
+        createQueryString('option', selectedDetails?.[1][0].id.toString());
+      }
       if (selectedDetails?.[1]) {
         setSelectedOption(selectedDetails?.[1]);
       }
@@ -82,7 +94,7 @@ function ProductDetails({ product }: Props) {
         setSelectedOptionDetails(selectedDetails?.[1][0]);
       }
     },
-    [versions]
+    [versions, createQueryString]
   );
   const handleBuyNow = useCallback(() => {
     if (!user) {
@@ -95,43 +107,46 @@ function ProductDetails({ product }: Props) {
     }
   }, [user, router, locale, selectedOptionDetails, setCookie]);
   const renderedOptions = useMemo(() => {
-    return versions.map((v: any, index: number) => {
-      return (
-        <button
-          key={index}
-          onClick={() => handleSetCurOption(v[0])}
-          disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
-          className={`border ${
-            curOption === v[0]
-              ? 'border-red-500 text-red-500'
-              : 'border-neutral-300'
-          } px-4 py-1 font-bold`}
-        >
-          {v[0]}
-        </button>
-      );
-    });
+    return (
+      versions.map((v: any, index: number) => {
+        return (
+          <button
+            key={index}
+            onClick={() => handleSetCurOption(v[0])}
+            disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
+            className={`border ${
+              curOption === v[0]
+                ? 'border-red-500 text-red-500'
+                : 'border-neutral-300'
+            } px-4 py-1 font-bold`}
+          >
+            {v[0]}
+          </button>
+        );
+      }) || []
+    );
   }, [product.options, curOption]);
   const renderedColors = useMemo(() => {
     return (
-      selectedOptionDetails &&
-      selectedOption?.map((s) => {
-        return (
-          <li key={s.id}>
-            <button
-              className={`border ${
-                selectedOptionDetails.id === s.id
-                  ? 'border-red-500 text-red-500'
-                  : 'border-neutral-300'
-              } px-4 py-1 font-bold`}
-              onClick={() => setSelectedOptionDetails(s)}
-              disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
-            >
-              {s.color}
-            </button>
-          </li>
-        );
-      })
+      (selectedOptionDetails &&
+        selectedOption?.map((s) => {
+          return (
+            <li key={s.id}>
+              <button
+                className={`border ${
+                  selectedOptionDetails.id === s.id
+                    ? 'border-red-500 text-red-500'
+                    : 'border-neutral-300'
+                } px-4 py-1 font-bold`}
+                onClick={() => setSelectedOptionDetails(s)}
+                disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
+              >
+                {s.color}
+              </button>
+            </li>
+          );
+        })) ||
+      []
     );
   }, [selectedOption, selectedOptionDetails]);
   useEffect(() => {
@@ -261,15 +276,17 @@ function ProductDetails({ product }: Props) {
             )
           </button>
         </div>
-        <div className='flex flex-col gap-4'>
-          <p className='uppercase font-bold text-base md:text-lg'>
-            {t('options')}
-          </p>
-          <div className='w-full flex gap-4'>
-            <ul className='flex flex-wrap gap-4'>{renderedOptions}</ul>
+        {renderedOptions?.length > 0 && (
+          <div className='flex flex-col gap-4'>
+            <p className='uppercase font-bold text-base md:text-lg'>
+              {t('options')}
+            </p>
+            <div className='w-full flex gap-4'>
+              <ul className='flex flex-wrap gap-4'>{renderedOptions}</ul>
+            </div>
           </div>
-        </div>
-        {renderedColors && (
+        )}
+        {renderedColors?.length > 0 && (
           <div className='flex flex-col gap-4'>
             <p className='uppercase font-bold text-base md:text-lg'>
               {t('colors')}
@@ -339,6 +356,46 @@ function ProductDetails({ product }: Props) {
                   {selectedOptionDetails.sku}
                 </span>
               </p>
+              {selectedOptionDetails?.volume && (
+                <p className='flex gap-2'>
+                  <span className='text-red-500'>{t('volume')}:</span>
+                  <span className='text-neutral-500'>
+                    {selectedOptionDetails?.volume}
+                  </span>
+                </p>
+              )}
+              {selectedOptionDetails?.weight && (
+                <p className='flex gap-2'>
+                  <span className='text-red-500'>{t('weight')}:</span>
+                  <span className='text-neutral-500'>
+                    {selectedOptionDetails?.weight}
+                  </span>
+                </p>
+              )}
+              {selectedOptionDetails?.length && (
+                <p className='flex gap-2'>
+                  <span className='text-red-500'>{t('length')}:</span>
+                  <span className='text-neutral-500'>
+                    {selectedOptionDetails?.length}
+                  </span>
+                </p>
+              )}
+              {selectedOptionDetails?.width && (
+                <p className='flex gap-2'>
+                  <span className='text-red-500'>{t('width')}:</span>
+                  <span className='text-neutral-500'>
+                    {selectedOptionDetails?.width}
+                  </span>
+                </p>
+              )}
+              {selectedOptionDetails?.height && (
+                <p className='flex gap-2'>
+                  <span className='text-red-500'>{t('height')}:</span>
+                  <span className='text-neutral-500'>
+                    {selectedOptionDetails?.height}
+                  </span>
+                </p>
+              )}
               {selectedOptionDetails.quantity && (
                 <p className='flex gap-2'>
                   <span className='text-red-500'>{t('quantity')}:</span>

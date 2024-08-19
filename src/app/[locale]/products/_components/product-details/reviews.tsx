@@ -64,7 +64,7 @@ function Reviews({
         );
       })
     );
-  }, [isSuccessFilter, filterData, createQueryString]);
+  }, [searchParams, isSuccessFilter, filterData, createQueryString]);
   const renderedReviews = useMemo(() => {
     return (
       isSuccessReview &&

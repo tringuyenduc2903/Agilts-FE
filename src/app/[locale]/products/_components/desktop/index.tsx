@@ -70,7 +70,7 @@ function ProductsDesktop({
         handleSearch();
       }
     },
-    [createQueryString, removeValueQueryString, inputRef.current]
+    [inputRef.current, handleSearch]
   );
   useLayoutEffect(() => {
     handleResetSelectedAction();

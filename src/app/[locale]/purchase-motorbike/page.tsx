@@ -183,6 +183,7 @@ function PurchaseMotorbikePage() {
     }
     setIsLoadingOrder(false);
   }, [
+    locale,
     defaultAddress,
     defaultDocument,
     product,

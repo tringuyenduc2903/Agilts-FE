@@ -47,7 +47,7 @@ function ConfirmPasswordModal() {
         await confirmPasswordStatusMutation();
       }
     },
-    [confirmPassword]
+    [confirmPasswordStatusMutation]
   );
   useEffect(() => {
     if (isSubmitting) {

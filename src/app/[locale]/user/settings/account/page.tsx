@@ -116,7 +116,7 @@ function AccountsPage() {
         await refetchUser();
       }
     },
-    [updateUser, refetchUser]
+    [refetchUser]
   );
   useEffect(() => {
     fetchSocials();

@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUser, userInfo } from '@/lib/redux/slice/userSlice';
 import { Address, Cart, Document, User, Wishlist } from '@/types/types';
 import { useFetch } from '@/lib/hooks/useFetch';
-import { getUser } from '@/api/user';
+import { getCart, getUser } from '@/api/user';
 import { getAddress } from '@/api/address';
 import { getDocuments } from '@/api/document';
 import { getWishlist } from '@/api/wishlist';
@@ -19,29 +19,31 @@ type FetchData = {
   isLoadingUser: boolean;
   isSuccessUser: boolean;
   isErrorUser: boolean;
-  refetchUser: () => Promise<void>;
-  cart: Cart | null;
-  wishlist: Wishlist[] | [];
   isLoadingWishlist: boolean;
+  isLoadingAddress: boolean;
+  isLoadingDocuments: boolean;
+  isLoadingCart: boolean;
+  cart: Cart[] | [];
+  wishlist: Wishlist[] | [];
   addresses: Address[];
+  allDocuments: Document[];
+  defaultAddress: Address | null;
+  defaultDocument: Document | null;
+  setAddresses: Dispatch<SetStateAction<Address[] | []>>;
+  setDefaultAddress: Dispatch<SetStateAction<Address | null>>;
+  setDefaultDocument: Dispatch<SetStateAction<Document | null>>;
+  refetchUser: () => Promise<void>;
   refetchAddress: () => Promise<void>;
   refetchDocument: () => Promise<void>;
   refetchWishlist: () => Promise<void>;
-  isLoadingAddress: boolean;
-  allDocuments: Document[];
-  isLoadingDocuments: boolean;
-  setAddresses: Dispatch<SetStateAction<Address[] | []>>;
-  defaultAddress: Address | null;
-  setDefaultAddress: Dispatch<SetStateAction<Address | null>>;
-  defaultDocument: Document | null;
-  setDefaultDocument: Dispatch<SetStateAction<Document | null>>;
+  refetchCart: () => Promise<void>;
 };
 export const UserContext = createContext({} as FetchData);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch();
   const user = useSelector(userInfo);
-  const [cart, setCart] = useState<Cart | null>(null);
+  const [cart, setCart] = useState<Cart[] | []>([]);
   const [wishlist, setWishlist] = useState<Wishlist[] | []>([]);
   const [defaultAddress, setDefaultAddress] = useState<Address | null>(null);
   const [addresses, setAddresses] = useState<Address[] | []>([]);
@@ -76,12 +78,24 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     isLoading: isLoadingDocuments,
     refetch: refetchDocument,
   } = useFetch(async () => await getDocuments());
+  const {
+    fetchData: fetchCart,
+    data: cartData,
+    isSuccess: isSuccessCart,
+    isLoading: isLoadingCart,
+    refetch: refetchCart,
+  } = useFetch(async () => await getCart());
   useEffect(() => {
     fetchUser();
   }, []);
   useEffect(() => {
     if (user) {
-      Promise.allSettled([fetchWishlist(), fetchAddress(), fetchDocument()]);
+      Promise.allSettled([
+        fetchWishlist(),
+        fetchAddress(),
+        fetchDocument(),
+        fetchCart(),
+      ]);
     }
   }, [user]);
   useEffect(() => {
@@ -129,27 +143,34 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       setDefaultDocument(documentsData?.find((d: Document) => d.default));
     }
   }, [isSuccessDocument, documentsData]);
+  useEffect(() => {
+    if (isSuccessCart && cartData) {
+      setCart(cartData);
+    }
+  }, [isSuccessCart, cartData]);
   const contextValue = {
     user,
-    isLoadingUser,
     isSuccessUser,
     isErrorUser,
-    refetchUser,
     cart,
     wishlist,
-    isLoadingWishlist,
     defaultAddress,
-    setDefaultAddress,
     addresses,
-    refetchAddress,
-    refetchDocument,
-    refetchWishlist,
-    setAddresses,
     defaultDocument,
     allDocuments,
-    setDefaultDocument,
-    isLoadingDocuments,
+    isLoadingUser,
+    isLoadingWishlist,
     isLoadingAddress,
+    isLoadingDocuments,
+    isLoadingCart,
+    setAddresses,
+    setDefaultAddress,
+    setDefaultDocument,
+    refetchUser,
+    refetchWishlist,
+    refetchAddress,
+    refetchDocument,
+    refetchCart,
   };
   return (
     <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>

@@ -69,7 +69,7 @@ function LoginPage() {
         }
       }
     },
-    [login, refetchUser, locale, router]
+    [refetchUser, locale, router]
   );
   const redirectToOauth = useCallback((provider: 'google' | 'facebook') => {
     if (typeof window !== 'undefined') {

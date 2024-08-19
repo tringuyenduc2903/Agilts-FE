@@ -34,7 +34,7 @@ function OrdersPage() {
         </option>
       );
     });
-  }, [statusOrder]);
+  }, [statusOrder, t]);
   const renderedOrder = useMemo(() => {
     return (
       isSuccessOrders &&
@@ -72,7 +72,7 @@ function OrdersPage() {
         );
       })
     );
-  }, [isSuccessOrders, ordersData, statusOrder, router, locale]);
+  }, [isSuccessOrders, ordersData, statusOrder, router, locale, t]);
   return (
     <div className='w-full h-full flex flex-col gap-6'>
       <section className='pb-4 border-b border-neutral-300 flex flex-col sm:flex-row gap-4 justify-between sm:items-center'>

@@ -226,9 +226,16 @@ export type Review = {
   };
   updated_at: string;
 };
-export type Cart = ProductOption & {
-  name: string;
-  quantity: number;
+export type Cart = {
+  id: number;
+  customer_id: number;
+  amount: number;
+  option_id: number;
+  option: ProductOption & {
+    product: Product;
+  };
+  created_at: string;
+  updated_at: string;
 };
 export type Wishlist = {
   id: number;

@@ -10,34 +10,36 @@ import Stars from '@/components/ui/Stars';
 import { useTranslations } from 'next-intl';
 import { scrollToElement } from '@/lib/utils/scrollElement';
 import { Product, ProductOption } from '@/types/types';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { TbHeart, TbHeartFilled } from 'react-icons/tb';
+import { FaCartPlus } from 'react-icons/fa6';
 import CustomImage from '@/components/ui/CustomImage';
 import { FaMinus } from 'react-icons/fa6';
 import { UserContext } from '@/contexts/UserProvider';
 import { useFetch } from '@/lib/hooks/useFetch';
 import { createWishlist, deleteWishlist } from '@/api/wishlist';
 import { setCookie } from 'cookies-next';
-import useQueryString from '@/lib/hooks/useQueryString';
+import { postCart } from '@/api/product';
 type Props = {
   product: Product;
 };
 function ProductDetails({ product }: Props) {
-  console.log(product);
   const { locale } = useParams();
   const { user, wishlist, refetchWishlist } = useContext(UserContext);
+  const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations('common');
   const { setVisiblePopup } = useContext(PopupContext);
-  const [createQueryString] = useQueryString();
   const [isHoverAddToCart, setIsHoverAddToCart] = useState(false);
+  const [isBuyNow, setIsBuyNow] = useState(false);
   const [curOption, setCurOption] = useState<ProductOption['version']>('');
   const [selectedOption, setSelectedOption] = useState<ProductOption[] | null>(
     null
   );
   const [selectedOptionDetails, setSelectedOptionDetails] =
     useState<ProductOption | null>(null);
+  const [quantity, setQuantity] = useState(1);
   const isWishlist = useMemo(() => {
     return wishlist.find(
       (w) => w.product_preview.option_id === selectedOptionDetails?.id
@@ -57,6 +59,16 @@ function ProductDetails({ product }: Props) {
     isLoading: isLoadingDeleteWishlist,
     isSuccess: isSuccessDeleteWishlist,
   } = useFetch(async () => await deleteWishlist(isWishlist?.id as number));
+  const {
+    fetchData: postCartMutation,
+    isSuccess: isSuccessPostCart,
+    isLoading: isLoadingPostCart,
+    isError: isErrorPostCart,
+    error: errorPostCart,
+  } = useFetch(
+    async () =>
+      await postCart({ option: selectedOptionDetails?.id, amount: quantity })
+  );
   const versions = useMemo(() => {
     const newVersions = new Map<string, ProductOption[]>();
     product?.options?.forEach((item) => {
@@ -79,14 +91,37 @@ function ProductDetails({ product }: Props) {
     } else {
       setSelectedOptionDetails(product?.options[0]);
     }
-  }, [product]);
+  }, [product, versions]);
+  const handleChangeQuantity = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { value } = e.target;
+      setQuantity(() => {
+        const quantity = Number(value);
+        if (quantity > (selectedOptionDetails?.quantity as number))
+          return selectedOptionDetails?.quantity as number;
+        if (quantity <= 0) return 1;
+        return quantity;
+      });
+    },
+    [selectedOptionDetails]
+  );
+  const increaseQuantity = useCallback(() => {
+    setQuantity((prevQuantity) => {
+      if (prevQuantity > (selectedOptionDetails?.quantity as number))
+        return selectedOptionDetails?.quantity as number;
+      return prevQuantity + 1;
+    });
+  }, [selectedOptionDetails]);
+  const decreaseQuantity = useCallback(() => {
+    setQuantity((prevQuantity) => {
+      if (prevQuantity <= 1) return 1;
+      return prevQuantity - 1;
+    });
+  }, []);
   const handleSetCurOption = useCallback(
     (version: string) => {
       setCurOption(version);
       const selectedDetails = versions.find((v) => v[0] === version);
-      if (selectedDetails) {
-        createQueryString('option', selectedDetails?.[1][0].id.toString());
-      }
       if (selectedDetails?.[1]) {
         setSelectedOption(selectedDetails?.[1]);
       }
@@ -94,18 +129,22 @@ function ProductDetails({ product }: Props) {
         setSelectedOptionDetails(selectedDetails?.[1][0]);
       }
     },
-    [versions, createQueryString]
+    [versions]
   );
-  const handleBuyNow = useCallback(() => {
+  const handleBuyNow = useCallback(async () => {
     if (!user) {
       router.push(`/${locale}/login`);
-    } else {
+    }
+    if (pathname.includes('motor-cycle')) {
       setCookie('buy_now', JSON.stringify(selectedOptionDetails), {
         expires: new Date(new Date().getTime() + 30 * 60000),
       });
       router.push(`/${locale}/purchase-motorbike`);
+    } else {
+      setIsBuyNow(true);
+      await postCartMutation();
     }
-  }, [user, router, locale, selectedOptionDetails, setCookie]);
+  }, [pathname, user, router, locale, selectedOptionDetails, postCartMutation]);
   const renderedOptions = useMemo(() => {
     return (
       versions.map((v: any, index: number) => {
@@ -113,7 +152,11 @@ function ProductDetails({ product }: Props) {
           <button
             key={index}
             onClick={() => handleSetCurOption(v[0])}
-            disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
+            disabled={
+              isLoadingPostWishlist ||
+              isLoadingDeleteWishlist ||
+              isLoadingPostCart
+            }
             className={`border ${
               curOption === v[0]
                 ? 'border-red-500 text-red-500'
@@ -139,7 +182,11 @@ function ProductDetails({ product }: Props) {
                     : 'border-neutral-300'
                 } px-4 py-1 font-bold`}
                 onClick={() => setSelectedOptionDetails(s)}
-                disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
+                disabled={
+                  isLoadingPostWishlist ||
+                  isLoadingDeleteWishlist ||
+                  isLoadingPostCart
+                }
               >
                 {s.color}
               </button>
@@ -178,12 +225,53 @@ function ProductDetails({ product }: Props) {
       refetchWishlist();
     }
   }, [isSuccessPostWishlist, isSuccessDeleteWishlist]);
+  useEffect(() => {
+    if (isLoadingPostWishlist || isLoadingDeleteWishlist || isLoadingPostCart) {
+      setVisiblePopup({ visibleLoadingPopup: true });
+    } else {
+      setVisiblePopup({ visibleLoadingPopup: false });
+    }
+  }, [
+    isLoadingPostWishlist,
+    isLoadingDeleteWishlist,
+    isLoadingPostCart,
+    setVisiblePopup,
+  ]);
+  useEffect(() => {
+    if (isSuccessPostCart && !isBuyNow) {
+      setVisiblePopup({
+        visibleToastPopup: {
+          type: 'success',
+          message: t('mess_success_post_cart'),
+        },
+      });
+    }
+    if (isSuccessPostCart && isBuyNow) {
+      router.push(`/${locale}/cart`);
+    }
+    if (isErrorPostCart && errorPostCart) {
+      setVisiblePopup({
+        visibleToastPopup: {
+          type: 'error',
+          message: errorPostCart?.message,
+        },
+      });
+    }
+  }, [
+    isSuccessPostCart,
+    isErrorPostCart,
+    errorPostCart,
+    setVisiblePopup,
+    t,
+    router,
+    locale,
+  ]);
   return (
     <section className='container md:m-auto px-6 md:px-0 grid grid-cols-1 lg:grid-cols-2 gap-16 py-8 md:py-16 overflow-hidden'>
       <div className='col-span-1 flex flex-col items-start gap-6'>
-        <div className='w-full'>
+        <div className='w-full max-h-[600px]'>
           <CustomImage
-            className='border border-neutral-300 rounded-sm'
+            className='border border-neutral-300 rounded-sm cursor-pointer'
             image={
               selectedOptionDetails
                 ? selectedOptionDetails.images[0]
@@ -228,7 +316,11 @@ function ProductDetails({ product }: Props) {
                 <button
                   className='w-max'
                   aria-label='wishlist-btn'
-                  disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
+                  disabled={
+                    isLoadingPostWishlist ||
+                    isLoadingDeleteWishlist ||
+                    isLoadingPostCart
+                  }
                   onClick={async () =>
                     isWishlist
                       ? await deleteWishlistMutation()
@@ -267,7 +359,11 @@ function ProductDetails({ product }: Props) {
             type='button'
             className='text-[10px] sm:text-[12px] md:text-sm font-medium text-neutral-500 hover:text-neutral-800 transition-colors uppercase'
             onClick={() => scrollToElement('reviews')}
-            disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
+            disabled={
+              isLoadingPostWishlist ||
+              isLoadingDeleteWishlist ||
+              isLoadingPostCart
+            }
           >
             (
             {Number(product?.reviews_count) > 1
@@ -316,7 +412,9 @@ function ProductDetails({ product }: Props) {
                             }
                             onClick={() =>
                               router.push(
-                                `/${locale}/products/accessories?page=1&category=${c.id}`,
+                                `/${locale}/products/${
+                                  pathname.split('/').splice(2, 1)[0]
+                                }?page=1&category=${c.id}`,
                                 {
                                   scroll: true,
                                 }
@@ -409,13 +507,66 @@ function ProductDetails({ product }: Props) {
             </div>
           )}
         </div>
-        <div className='flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-8'>
+        {!pathname.includes('motor-cycle') && (
+          <div className='flex flex-col gap-8 w-full md:w-max'>
+            <div className='flex items-center flex-col sm:flex-row gap-6'>
+              <div className='h-[52px] w-max border border-red-500 rounded-sm'>
+                <button
+                  className='h-full px-4 py-2 text-xl border-r border-red-500'
+                  onClick={decreaseQuantity}
+                >
+                  -
+                </button>
+                <input
+                  className='px-4 text-center max-w-[64px]'
+                  type='number'
+                  value={quantity}
+                  onChange={handleChangeQuantity}
+                />
+                <button
+                  className='h-full px-4 py-2 text-xl border-l border-red-500'
+                  onClick={increaseQuantity}
+                >
+                  +
+                </button>
+              </div>
+              <button
+                className='w-full md:w-max h-[52px] px-12 py-2 border border-red-500 bg-red-50 hover:bg-white text-red-500 transition-colors rounded-sm text-sm md:text-base flex justify-center items-center gap-4'
+                onClick={postCartMutation}
+                disabled={
+                  isLoadingPostWishlist ||
+                  isLoadingDeleteWishlist ||
+                  isLoadingPostCart
+                }
+              >
+                <FaCartPlus className='text-2xl' />
+                <span>{t('add_to_cart')}</span>
+              </button>
+            </div>
+            <button
+              className='h-[52px] px-12 py-2 bg-red-600 border border-red-500 text-white rounded-sm text-sm md:text-base'
+              onClick={handleBuyNow}
+              disabled={
+                isLoadingPostWishlist ||
+                isLoadingDeleteWishlist ||
+                isLoadingPostCart
+              }
+            >
+              {t('buy_now')}
+            </button>
+          </div>
+        )}
+        {pathname.includes('motor-cycle') && (
           <button
             className='relative w-max sm:w-[220px] sm:h-[55px] uppercase bg-red-600 text-white px-6 py-3 font-bold rounded-sm tracking-[2px] flex items-center text-sm'
             onMouseEnter={() => setIsHoverAddToCart(true)}
             onMouseLeave={() => setIsHoverAddToCart(false)}
             onClick={handleBuyNow}
-            disabled={isLoadingPostWishlist || isLoadingDeleteWishlist}
+            disabled={
+              isLoadingPostWishlist ||
+              isLoadingDeleteWishlist ||
+              isLoadingPostCart
+            }
           >
             <span
               className={`w-[142px] sm:absolute sm:top-1/2 sm:left-4 sm:-translate-y-1/2 ${
@@ -429,7 +580,7 @@ function ProductDetails({ product }: Props) {
               <span className='w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-l-[10px] border-l-white'></span>
             </span>
           </button>
-        </div>
+        )}
         {selectedOptionDetails &&
           selectedOptionDetails?.specifications?.length > 0 && (
             <div className='flex flex-col gap-4'>

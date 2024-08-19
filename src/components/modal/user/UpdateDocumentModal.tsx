@@ -67,7 +67,7 @@ function UpdateDocumentModal() {
       setType(null);
       reset();
     }
-  }, [state.visibleUpdateDocumentModal]);
+  }, [state.visibleUpdateDocumentModal, reset, setValue]);
   const handleSelectedType = useCallback((code: number) => {
     setType(code);
     setOpenType(false);

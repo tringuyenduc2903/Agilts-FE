@@ -30,7 +30,7 @@ export default function CategoriesSection({ name, data, label }: PropsFilter) {
         </li>
       );
     });
-  }, [convertData, createQueryString, searchParams, name]);
+  }, [data, createQueryString, searchParams, name]);
   return (
     <div className='flex flex-col gap-6'>
       <h1 className='text-xl md:text-2xl font-bold uppercase border-b borer-neutral-300 pb-6'>

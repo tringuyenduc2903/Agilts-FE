@@ -46,7 +46,13 @@ function WishlistPage() {
     if (isSuccessDelete) {
       refetchWishlist();
     }
-  }, [isErrorDelete, errorDelete, setVisiblePopup, isSuccessDelete]);
+  }, [
+    isErrorDelete,
+    errorDelete,
+    setVisiblePopup,
+    isSuccessDelete,
+    refetchWishlist,
+  ]);
   return (
     <main className='w-full min-h-max py-[72px] flex flex-col gap-16'>
       <section className='absolute h-[280px] w-full -z-10 hidden lg:block'>

@@ -56,7 +56,7 @@ function AddDocumentModal() {
     if (!state.visibleAddDocumentModal) {
       reset();
     }
-  }, [state.visibleAddDocumentModal]);
+  }, [state.visibleAddDocumentModal, reset]);
   const handleSelectedType = useCallback((code: number) => {
     setType(code);
     setOpenType(false);
@@ -72,7 +72,7 @@ function AddDocumentModal() {
         setIsSuccess(true);
       }
     },
-    [createDocument, curType]
+    [curType]
   );
   useEffect(() => {
     if (isSubmitting) {
@@ -95,7 +95,7 @@ function AddDocumentModal() {
       reset();
       setIsSuccess(false);
     }
-  }, [isSuccess, refetchDocument, setVisiblePopup, setVisibleModal, t]);
+  }, [isSuccess, refetchDocument, setVisiblePopup, setVisibleModal, t, reset]);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'

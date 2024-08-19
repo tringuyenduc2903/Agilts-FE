@@ -100,7 +100,12 @@ function ProductsMobile({
         })) ||
       []
     );
-  }, [isSuccessFilter, formatFilter?.manufacturer, searchParams]);
+  }, [
+    isSuccessFilter,
+    formatFilter?.manufacturer?.data,
+    formatFilter?.manufacturer?.name,
+    searchParams,
+  ]);
   const renderedOptionType = useMemo(() => {
     return (
       (isSuccessFilter &&
@@ -129,7 +134,12 @@ function ProductsMobile({
         })) ||
       []
     );
-  }, [isSuccessFilter, formatFilter?.option_type, searchParams]);
+  }, [
+    isSuccessFilter,
+    formatFilter?.option_type?.data,
+    formatFilter?.manufacturer?.name,
+    searchParams,
+  ]);
   const renderedCategories = useMemo(() => {
     return (
       (isSuccessFilter &&

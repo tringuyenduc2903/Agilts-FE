@@ -133,6 +133,7 @@ function AddressPage() {
     isLoadingDelete,
     isLoadingUpdate,
     setVisibleModal,
+    handleDeleteAddress,
   ]);
   useEffect(() => {
     if (isLoadingUpdate) {

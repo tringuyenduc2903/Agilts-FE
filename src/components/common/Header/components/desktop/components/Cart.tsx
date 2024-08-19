@@ -14,7 +14,7 @@ function Cart() {
   const [isHoverButton, setIsHoverButton] = useState(false);
   return cart ? (
     <div className='w-full h-full py-12 flex flex-col justify-between gap-8'>
-      <div className='px-4 w-full flex gap-8'>
+      {/* <div className='px-4 w-full flex gap-8'>
         <Image
           className='size-[120px] object-cover'
           src={cart.images[0].image}
@@ -55,7 +55,7 @@ function Cart() {
         >
           {cart?.price.preview}
         </p>
-      </div>
+      </div> */}
       <div className='px-4'>
         <button
           className='w-full flex justify-center items-center bg-red-600'

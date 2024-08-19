@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const useDebounce = (value: any, delay: number) => {
+const useDebounce = (value: any, delay?: number) => {
   const [debounceValue, setDebounceValue] = useState<any>();
   useEffect(() => {
     const timeoutId = setTimeout(

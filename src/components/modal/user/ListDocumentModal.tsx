@@ -59,7 +59,7 @@ function ListDocumentModal() {
         </li>
       );
     });
-  }, [allDocuments, t, curDocument]);
+  }, [allDocuments, t, curDocument, handleSelectedDocument]);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'

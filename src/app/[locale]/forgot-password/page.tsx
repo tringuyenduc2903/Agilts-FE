@@ -21,20 +21,17 @@ function ForgotPasswordPage() {
     handleSubmit,
     formState: { isSubmitting },
   } = useForm<Form>();
-  const onSubmit: SubmitHandler<Form> = useCallback(
-    async (data) => {
-      const res = await forgotPassword(data.email);
-      if (res.type === 'error') {
-        setErrors(res.data);
-        setSuccess(null);
-      }
-      if (res.type === 'success') {
-        setSuccess(res.data);
-        setErrors(null);
-      }
-    },
-    [forgotPassword]
-  );
+  const onSubmit: SubmitHandler<Form> = useCallback(async (data) => {
+    const res = await forgotPassword(data.email);
+    if (res.type === 'error') {
+      setErrors(res.data);
+      setSuccess(null);
+    }
+    if (res.type === 'success') {
+      setSuccess(res.data);
+      setErrors(null);
+    }
+  }, []);
   useEffect(() => {
     if (isSubmitting) {
       setVisiblePopup({ visibleLoadingPopup: true });

@@ -23,7 +23,7 @@ function LicensePlateRegistrationOptionModal({ cb }: Props) {
   const handleSave = useCallback(() => {
     setCurLicensePlateRegistrationOption(defaultValue);
     cb();
-  }, [defaultValue, cb]);
+  }, [defaultValue, cb, setCurLicensePlateRegistrationOption]);
   const renderedOptions = useMemo(() => {
     return license_plate_registration_option?.map((o: Option) => {
       return (
@@ -52,7 +52,7 @@ function LicensePlateRegistrationOptionModal({ cb }: Props) {
         </li>
       );
     });
-  }, [license_plate_registration_option, t, defaultValue]);
+  }, [t, defaultValue, handleChangeValue]);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'

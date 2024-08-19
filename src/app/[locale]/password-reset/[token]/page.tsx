@@ -50,7 +50,7 @@ function ResetPasswordPage() {
         setSuccess(res.data);
       }
     },
-    [resetPassword, token]
+    [token]
   );
   useEffect(() => {
     if (isSubmitting) {

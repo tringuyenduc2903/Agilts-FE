@@ -66,7 +66,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
   );
   const handleLogout = useCallback(async () => {
     await logoutMutation();
-  }, [logout]);
+  }, [logoutMutation]);
   useEffect(() => {
     closeMenu();
     if (isSuccessLogout) {

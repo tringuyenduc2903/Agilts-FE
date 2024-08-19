@@ -29,29 +29,26 @@ const ReviewsModal = () => {
   const [isLoadingPostReview, setIsLoadingPostReview] = useState(false);
   const [successPostReview, setSuccessPostReview] = useState<any>(null);
   const [errorPostReview, setErrorPostReview] = useState<any>(null);
-  const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
-      const formData = new FormData();
-      acceptedFiles.forEach((file) => {
-        formData.append('image', file);
-        setPreviewImages((prevImages) => {
-          return [...prevImages, file];
-        });
+  const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    const formData = new FormData();
+    acceptedFiles.forEach((file) => {
+      formData.append('image', file);
+      setPreviewImages((prevImages) => {
+        return [...prevImages, file];
       });
-      setIsLoadingPostImage(true);
-      const res = await postReviewImage(formData);
-      if (res.type === 'error') {
-        setErrorPostImage(res.data);
-        setSuccessPostImage(null);
-      }
-      if (res.type === 'success') {
-        setErrorPostImage(null);
-        setSuccessPostImage(res.data);
-      }
-      setIsLoadingPostImage(false);
-    },
-    [postReviewImage, previewImages]
-  );
+    });
+    setIsLoadingPostImage(true);
+    const res = await postReviewImage(formData);
+    if (res.type === 'error') {
+      setErrorPostImage(res.data);
+      setSuccessPostImage(null);
+    }
+    if (res.type === 'success') {
+      setErrorPostImage(null);
+      setSuccessPostImage(res.data);
+    }
+    setIsLoadingPostImage(false);
+  }, []);
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
   const { sectionRef, clickOutside } = useClickOutside(() =>
     setVisibleModal('visibleReviewModal')
@@ -115,7 +112,7 @@ const ReviewsModal = () => {
       setErrorPostReview(res.data);
     }
     setIsLoadingPostReview(false);
-  }, [postReviewImage, message, rate, images, version]);
+  }, [message, rate, images, version]);
   useEffect(() => {
     if (!isLoadingPostImage && successPostImage) {
       setImages((prevImages) => {
@@ -140,7 +137,7 @@ const ReviewsModal = () => {
     }
   }, [isLoadingPostReview, setVisiblePopup]);
   useEffect(() => {
-    if (!isLoadingPostReview && successPostImage) {
+    if (!isLoadingPostReview && successPostReview) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
@@ -158,6 +155,7 @@ const ReviewsModal = () => {
       });
     }
   }, [
+    t,
     isLoadingPostReview,
     successPostReview,
     errorPostReview,
@@ -173,7 +171,6 @@ const ReviewsModal = () => {
           : 'w-0 h-0 -z-10'
       }`}
       onClick={() => clickOutside}
-      aria-disabled={isLoadingPostReview || isLoadingPostImage}
     >
       <div
         className='bg-white text-neutral-800 text-sm md:text-base px-4 py-8 rounded-sm flex flex-col gap-6 min-h-[40vh] max-h-[80vh] w-full sm:w-3/4 md:w-2/3 xl:w-1/2 overflow-y-auto'

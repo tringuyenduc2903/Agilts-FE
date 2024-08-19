@@ -205,7 +205,9 @@ SingleProduct.Image = function ProductImage({
     isLoading: isLoadingPostCart,
     isError: isErrorPostCart,
     error: errorPostCart,
-  } = useFetch(async () => await postCart({ version: selectedOption?.id }));
+  } = useFetch(
+    async () => await postCart({ option: selectedOption?.id, amount: 1 })
+  );
   const handleWishlist = useCallback(async () => {
     if (!user) {
       router.push(`/${locale}/login`);
@@ -216,7 +218,14 @@ SingleProduct.Image = function ProductImage({
         await createWishlistMutation();
       }
     }
-  }, [isWishlist, user, locale, router]);
+  }, [
+    isWishlist,
+    user,
+    locale,
+    router,
+    createWishlistMutation,
+    deleteWishlistMutation,
+  ]);
   const handleAddToCart = useCallback(async () => {
     if (!user) {
       router.push(`/${locale}/login`);

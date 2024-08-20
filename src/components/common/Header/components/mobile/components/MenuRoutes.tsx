@@ -31,7 +31,7 @@ type Props = {
 };
 const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
   const { locale } = useParams();
-  const { user } = useContext(UserContext);
+  const { user, setCart } = useContext(UserContext);
   const t = useTranslations('header');
   const dispatch = useDispatch();
   const { setVisiblePopup } = useContext(PopupContext);
@@ -79,6 +79,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
       });
       dispatch(setUser(null));
       dispatch(setCurMotorbike(null));
+      setCart([]);
       deleteCookie('buy_now');
       router.replace(`/${locale}`);
     }

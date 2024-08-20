@@ -315,10 +315,10 @@ function DesktopNavigation() {
             </Link>
             <div
               className={`bg-white absolute right-0 w-[420px] rounded-sm h-0 ${
-                cart ? 'group-hover:h-[40vh]' : 'group-hover:h-[6vh]'
+                cart.length > 0 ? 'group-hover:h-[40vh]' : 'group-hover:h-[6vh]'
               } transition-[height] duration-150 overflow-y-auto`}
             >
-              {cart ? (
+              {cart.length > 0 ? (
                 <Cart />
               ) : (
                 <p className='w-full h-full flex justify-center items-center font-bold uppercase'>

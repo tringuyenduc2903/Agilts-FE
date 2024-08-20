@@ -36,7 +36,7 @@ const MenuIcon: React.FC<Props> = React.memo(
     const t = useTranslations('header');
     const dispatch = useDispatch();
     const { setVisiblePopup } = useContext(PopupContext);
-    const { user } = useContext(UserContext);
+    const { user, setCart } = useContext(UserContext);
     const router = useRouter();
     const container = useRef<HTMLButtonElement | null>(null);
     const circlesRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -113,6 +113,7 @@ const MenuIcon: React.FC<Props> = React.memo(
         closeMenu();
         dispatch(setUser(null));
         dispatch(setCurMotorbike(null));
+        setCart([]);
         deleteCookie('buy_now');
         setVisiblePopup({
           visibleToastPopup: {

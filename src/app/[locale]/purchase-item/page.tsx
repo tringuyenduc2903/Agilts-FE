@@ -218,9 +218,13 @@ function PurchaseItemLayout() {
             })}
           </button>
           <button
-            className='px-4 py-2 text-base md:text-lg bg-red-500 text-white font-bold'
+            className={`px-4 py-2 text-base md:text-lg bg-red-500 text-white font-bold ${
+              isLoadingOrder || items.length === 0
+                ? 'cursor-not-allowed'
+                : 'cursor-pointer'
+            }`}
             onClick={handleOrder}
-            disabled={isLoadingOrder}
+            disabled={isLoadingOrder || items.length === 0}
           >
             {t('order')}
           </button>

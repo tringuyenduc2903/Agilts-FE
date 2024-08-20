@@ -240,6 +240,7 @@ function ProductDetails({ product }: Props) {
   ]);
   useEffect(() => {
     if (isSuccessPostCart && !isBuyNow) {
+      refetchCart();
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',

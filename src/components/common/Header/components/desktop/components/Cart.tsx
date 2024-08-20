@@ -1,9 +1,10 @@
 'use client';
+import CustomImage from '@/components/ui/CustomImage';
 import { UserContext } from '@/contexts/UserProvider';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { FaXmark } from 'react-icons/fa6';
 
 function Cart() {
@@ -12,50 +13,45 @@ function Cart() {
   const { locale } = useParams();
   const router = useRouter();
   const [isHoverButton, setIsHoverButton] = useState(false);
-  return cart ? (
-    <div className='w-full h-full py-12 flex flex-col justify-between gap-8'>
-      {/* <div className='px-4 w-full flex gap-8'>
-        <Image
-          className='size-[120px] object-cover'
-          src={cart.images[0].image}
-          alt={cart.images[0].alt}
-          width={120}
-          height={120}
-        />
-        <div className='w-full flex flex-col gap-4'>
-          <div className='flex justify-between'>
-            <p
-              title={cart.name}
-              className='max-w-[280px] truncate text-lg font-bold'
-            >
-              {cart.name}
-            </p>
-            <button
-              className='hover:text-red-500 text-neutral-500 transition-colors'
-              aria-label='remove-item'
-            >
-              <FaXmark
-                className='text-xl'
-                // onClick={() => dispatch(removeCart(null))}
+  const renderedCart = useMemo(() => {
+    return cart.map((c) => {
+      return (
+        <article key={c.id}>
+          <div className='px-4 w-full flex gap-8'>
+            <div className='size-[120px]'>
+              <CustomImage
+                image={c?.option?.images[0]}
+                width={120}
+                height={120}
               />
-            </button>
+            </div>
+            <div className='w-full flex flex-col gap-2'>
+              <div className='flex justify-between'>
+                <p
+                  title={c?.option?.product?.name}
+                  className='max-w-[280px] truncate text-lg font-bold'
+                >
+                  {c?.option?.product?.name}
+                </p>
+              </div>
+              <p className='flex items-center gap-2 uppercase text-red-500 text-sm font-bold'>
+                <span>{t('quantity')}:</span>
+                <span>{c?.amount}</span>
+              </p>
+              <p className='text-sm font-bold'>{c?.option?.price?.preview}</p>
+            </div>
           </div>
-          <p className='flex items-center gap-2 uppercase text-red-500 text-sm font-bold'>
-            <span>{t('quantity')}:</span>
-            <span>{cart.quantity}</span>
-          </p>
-          <p className='text-sm font-bold'>{cart?.price.preview}</p>
-        </div>
-      </div>
-      <div className='bg-neutral-100 p-4 flex justify-between'>
-        <p className='uppercase font-bold'>{t('order_total')}:</p>
-        <p
-          title={cart?.price.preview}
-          className='max-w-[280px] truncate font-bold'
-        >
-          {cart?.price.preview}
-        </p>
-      </div> */}
+          <div className='bg-neutral-100 p-4 flex justify-between'>
+            <p className='uppercase font-bold'>{t('order_total')}:</p>
+            <p className='max-w-[280px] truncate font-bold'>{t('total')}</p>
+          </div>
+        </article>
+      );
+    });
+  }, [cart, t]);
+  return cart.length > 0 ? (
+    <div className='w-full h-full py-12 flex flex-col justify-between gap-8'>
+      {renderedCart}
       <div className='px-4'>
         <button
           className='w-full flex justify-center items-center bg-red-600'

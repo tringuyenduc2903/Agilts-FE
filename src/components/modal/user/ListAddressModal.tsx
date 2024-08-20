@@ -11,6 +11,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+import { FaPlus } from 'react-icons/fa6';
 function ListAddressModal() {
   const { state, setVisibleModal } = useContext(ModalContext);
   const [curAddress, setCurAddress] = useState<Address | null>(null);
@@ -69,12 +70,19 @@ function ListAddressModal() {
         <div className='flex justify-between items-center gap-2'>
           <h1 className='text-lg md:text-xl font-bold'>{t('address_list')}</h1>
         </div>
-        <div className='w-full h-full'>
+        <div className='w-full h-full flex flex-col gap-6'>
           {renderedAddress?.length > 0 ? (
             <ul>{renderedAddress}</ul>
           ) : (
             <NotFoundItem message={t('mess_no_address')} />
           )}
+          <button
+            className='w-max border border-red-500 px-4 py-2 text-red-500 text-sm md:text-base flex justify-center items-center gap-2'
+            onClick={() => setVisibleModal('visibleAddAddressModal')}
+          >
+            <FaPlus className='text-xl' />
+            <span className='font-medium'>{t('add_address')}</span>
+          </button>
         </div>
         <div className='absolute bottom-0 left-0 w-full h-[64px] px-4 bg-white flex justify-end items-center gap-4 border-t border-neutral-300'>
           <button

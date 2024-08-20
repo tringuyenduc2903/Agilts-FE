@@ -26,7 +26,8 @@ type Props = {
 };
 function ProductDetails({ product }: Props) {
   const { locale } = useParams();
-  const { user, wishlist, refetchWishlist } = useContext(UserContext);
+  const { user, wishlist, refetchWishlist, refetchCart } =
+    useContext(UserContext);
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations('common');
@@ -247,7 +248,8 @@ function ProductDetails({ product }: Props) {
       });
     }
     if (isSuccessPostCart && isBuyNow) {
-      router.push(`/${locale}/cart`);
+      refetchCart();
+      router.push(`/${locale}/cart?itemKey=${selectedOptionDetails?.id}`);
     }
     if (isErrorPostCart && errorPostCart) {
       setVisiblePopup({
@@ -258,6 +260,7 @@ function ProductDetails({ product }: Props) {
       });
     }
   }, [
+    product,
     isSuccessPostCart,
     isErrorPostCart,
     errorPostCart,
@@ -265,6 +268,7 @@ function ProductDetails({ product }: Props) {
     t,
     router,
     locale,
+    refetchCart,
   ]);
   return (
     <section className='container md:m-auto px-6 md:px-0 grid grid-cols-1 lg:grid-cols-2 gap-16 py-8 md:py-16 overflow-hidden'>

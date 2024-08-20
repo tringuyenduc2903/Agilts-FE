@@ -100,7 +100,7 @@ export type SingleImage = {
 export type ProductOption = {
   color: string;
   created_at: string;
-  id: number | string;
+  id: number;
   images: SingleImage[];
   price: {
     raw: number;

@@ -9,7 +9,7 @@ function Page() {
   const { locale } = useParams();
   const router = useRouter();
   return (
-    <main className='w-full h-max py-[96px] px-4 flex justify-center items-center flex-col gap-6 sm:h-[60vh]'>
+    <main className='w-full py-[96px] px-4 flex justify-center items-center flex-col gap-6 sm:h-[60vh]'>
       <div className='bg-green-500 text-white rounded-full p-4 md:p-6'>
         <GiCheckMark className='text-2xl md:text-4xl' />
       </div>

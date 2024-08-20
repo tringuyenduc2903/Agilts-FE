@@ -361,7 +361,20 @@ export const resendVerifyAccount = async () => {
     };
   }
 };
-
+export const getCart = async () => {
+  try {
+    const res = await axiosInstance.get(`/api/cart`);
+    return {
+      type: 'success',
+      data: res.data,
+    };
+  } catch (error: any) {
+    return {
+      type: 'error',
+      data: error?.response?.data,
+    };
+  }
+};
 export const getOrders = async (search: string | null) => {
   try {
     const res = await axiosInstance.get(
@@ -378,7 +391,36 @@ export const getOrders = async (search: string | null) => {
     };
   }
 };
-
+export const updateCart = async (id: number, amount: number) => {
+  try {
+    const res = await axiosInstance.put(`/api${getLangRoute()}/cart/${id}`, {
+      amount: amount,
+    });
+    return {
+      type: 'success',
+      data: res.data,
+    };
+  } catch (error: any) {
+    return {
+      type: 'error',
+      data: error?.response?.data,
+    };
+  }
+};
+export const deleteCart = async (id: number) => {
+  try {
+    const res = await axiosInstance.delete(`/api${getLangRoute()}/cart/${id}`);
+    return {
+      type: 'success',
+      data: res.data,
+    };
+  } catch (error: any) {
+    return {
+      type: 'error',
+      data: error?.response?.data,
+    };
+  }
+};
 export const getOrderDetails = async (id: string | number) => {
   try {
     const res = await axiosInstance.get(`/api${getLangRoute()}/order/${id}`);

@@ -32,6 +32,7 @@ type FetchData = {
   setAddresses: Dispatch<SetStateAction<Address[] | []>>;
   setDefaultAddress: Dispatch<SetStateAction<Address | null>>;
   setDefaultDocument: Dispatch<SetStateAction<Document | null>>;
+  setCart: Dispatch<SetStateAction<Cart[] | []>>;
   refetchUser: () => Promise<void>;
   refetchAddress: () => Promise<void>;
   refetchDocument: () => Promise<void>;
@@ -166,6 +167,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     setAddresses,
     setDefaultAddress,
     setDefaultDocument,
+    setCart,
     refetchUser,
     refetchWishlist,
     refetchAddress,

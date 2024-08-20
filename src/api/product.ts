@@ -186,3 +186,18 @@ export const purchaseMotorbike = async (body: any) => {
     };
   }
 };
+
+export const purchaseItem = async (body: any) => {
+  try {
+    const res = await axiosInstance.post(`/api${getLangRoute()}/order`, body);
+    return {
+      type: 'success',
+      data: res.data,
+    };
+  } catch (error: any) {
+    return {
+      type: 'error',
+      data: error?.response?.data,
+    };
+  }
+};

@@ -377,6 +377,9 @@
     "length": "Length",
     "height": "Height",
     "volume": "Volume",
-    "weight": "Weight"
+    "weight": "Weight",
+    "mess_update_cart": "Cart updated successfully!",
+    "mess_delete_cart": "Product deleted successfully!",
+    "order": "Order"
   }
 }

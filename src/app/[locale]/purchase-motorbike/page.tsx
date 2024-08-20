@@ -292,7 +292,7 @@ function PurchaseMotorbikePage() {
                       <p>{user?.phone_number}</p>
                     ) : (
                       <button
-                        className='hover:text-blue-500 transition-colors'
+                        className='hover:text-blue-500 transition-colors text-sm md:text-base'
                         onClick={() =>
                           router.push(`/${locale}/user/settings/account`)
                         }

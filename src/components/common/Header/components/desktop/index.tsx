@@ -310,7 +310,7 @@ function DesktopNavigation() {
               <span
                 className={`p-2 size-[24px] text-[12px] flex justify-center items-center font-bold group-hover:text-white group-hover:bg-red-500 bg-neutral-300 transition-colors`}
               >
-                {cart ? 1 : 0}
+                {cart.length > 0 ? cart.length : 0}
               </span>
             </Link>
             <div

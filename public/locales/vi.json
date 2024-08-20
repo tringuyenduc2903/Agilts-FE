@@ -377,6 +377,9 @@
     "length": "Chiều dài",
     "height": "Chiều cao",
     "volume": "Thể tích",
-    "weight": "Khối lượng"
+    "weight": "Khối lượng",
+    "mess_update_cart": "Cập nhật giỏ hàng thành công!",
+    "mess_delete_cart": "Xóa sản phẩm thành công!",
+    "order": "Đặt hàng"
   }
 }

@@ -63,10 +63,10 @@ function WishlistPage() {
           fetchPriority='high'
         />
       </section>
-      <section className='lg:container m-auto py-8 w-full h-[280px] flex flex-col justify-center items-center gap-4 lg:items-start bg-neutral-800 lg:bg-transparent'>
-        <p className='text-center md:text-start text-2xl sm:text-4xl md:text-[70px] md:leading-[70px] font-bold text-white lg:text-neutral-800 tracking-[4px]'>
+      <section className='lg:container m-auto py-8 w-full h-[180px] md:h-[280px] flex flex-col justify-center items-center gap-4 lg:items-start bg-neutral-800 lg:bg-transparent'>
+        <h1 className='text-center lg:text-start text-2xl sm:text-4xl md:text-[70px] md:leading-[70px] font-bold text-white lg:text-neutral-800 tracking-[4px]'>
           {t('wishlist')}
-        </p>
+        </h1>
       </section>
       {!isLoadingWishlist && (
         <section className='w-full h-full container m-auto px-4'>
@@ -136,7 +136,7 @@ function WishlistPage() {
           ) : (
             <div className='h-full flex flex-col items-center gap-6'>
               <div className='border border-neutral-300 w-full px-4 py-8 flex justify-center items-center'>
-                <p className='font-bold text-neutral-800 text-base sm:text-lg md:text-xl'>
+                <p className='font-bold text-neutral-800 text-base sm:text-lg md:text-xl text-center'>
                   {t('empty_wishlist')}
                 </p>
               </div>

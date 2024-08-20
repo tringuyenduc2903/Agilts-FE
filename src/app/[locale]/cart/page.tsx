@@ -127,7 +127,6 @@ function CartPage() {
     );
   }, [router, locale, selectedOptions]);
   const debouncedAmounts = useDebounce(updateOption, 1000);
-  console.log(selectedOptions);
   useEffect(() => {
     const itemKey = Number(searchParams.get('itemKey'));
     if (itemKey) {

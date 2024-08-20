@@ -5,7 +5,6 @@ type Props = {
   isCheck: boolean;
 };
 function CustomCheckbox({ cb, isCheck }: Props) {
-  console.log(isCheck);
   return (
     <button
       aria-label='checkbox'

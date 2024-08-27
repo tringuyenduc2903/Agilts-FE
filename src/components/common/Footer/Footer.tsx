@@ -7,12 +7,10 @@ import {
   FooterService,
   FooterTime,
 } from '@/types/types';
-import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
 import { FaLocationDot, FaPhone } from 'react-icons/fa6';
 function Footer() {
-  const t = useTranslations('common');
   const { data, isFetching, isSuccess } = useGetSettingsQuery('footer');
   const formatData = useMemo(() => {
     return isSuccess && data
@@ -59,7 +57,7 @@ function Footer() {
           <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-8 xl:gap-16'>
             <div className='col-span-1 flex flex-col gap-4'>
               <p className='text-white font-bold text-xl md:text-2xl tracking-[2px] md:tracking-[4px] uppercase'>
-                {t('about')} {title}
+                Về {title}
               </p>
               <p className='text-neutral-400 text-sm md:text-base'>
                 {formatData?.footer_about?.value?.description}
@@ -67,7 +65,7 @@ function Footer() {
             </div>
             <div className='col-span-1 flex flex-col gap-4'>
               <p className='text-white font-bold text-xl md:text-2xl tracking-[2px] md:tracking-[4px] uppercase'>
-                {t('office_hours')}
+                Giờ hành chính
               </p>
               <ul className='text-neutral-400 text-sm sm:text-base md:text-lg flex flex-col gap-2'>
                 {(formatData?.footer_about?.value?.time as FooterTime[])?.map(
@@ -83,7 +81,7 @@ function Footer() {
             </div>
             <div className='col-span-1 flex flex-col gap-4'>
               <p className='text-white font-bold text-xl md:text-2xl tracking-[2px] md:tracking-[4px] uppercase'>
-                {t('our-services')}
+                Dịch vụ
               </p>
               <ul className='text-neutral-400 text-sm sm:text-base md:text-lg flex flex-col gap-2'>
                 {(formatData?.footer_services?.value as FooterService[])?.map(
@@ -104,7 +102,7 @@ function Footer() {
             </div>
             <div className='col-span-1 flex flex-col gap-4'>
               <p className='text-white font-bold text-xl md:text-2xl tracking-[2px] md:tracking-[4px] uppercase'>
-                {t('branch')}
+                Chi nhánh
               </p>
               <ul className='text-neutral-400 text-sm sm:text-base md:text-lg flex flex-col gap-2'>
                 <li>
@@ -152,11 +150,11 @@ function Footer() {
           </div>
         </section>
       )}
-      <section className='bg-neutral-950 py-8'>
+      {/* <section className='bg-neutral-950 py-8'>
         <p className='text-neutral-300 text-sm text-center'>
           © 2019 QODE INTERACTIVE, ALL RIGHTS RESERVED
         </p>
-      </section>
+      </section> */}
     </footer>
   );
 }

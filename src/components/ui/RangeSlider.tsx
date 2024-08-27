@@ -93,17 +93,11 @@ const RangeSlider: React.FC<Props> = ({ min, max, onChange }) => {
       </div>
       <div className='flex items-center gap-2 text-base md:text-lg font-bold'>
         <div className='flex items-center gap-2'>
-          <p
-            className='w-auto max-w-[128px] truncate'
-            title={formatPrice(minVal)}
-          >
+          <p className='w-auto' title={formatPrice(minVal)}>
             {formatPrice(minVal)}
           </p>
           <span>-</span>
-          <p
-            className='w-auto max-w-[128px] truncate'
-            title={formatPrice(maxVal)}
-          >
+          <p className='w-auto' title={formatPrice(maxVal)}>
             {formatPrice(maxVal)}
           </p>
         </div>

@@ -14,11 +14,9 @@ import { ModalContext } from '@/contexts/ModalProvider';
 import useClickOutside from '@/lib/hooks/useClickOutside';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { useDropzone } from 'react-dropzone';
-import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { postReviewImage, postReviewUser } from '@/api/product';
 const ReviewsModal = () => {
-  const t = useTranslations('common');
   const { state, setVisibleModal } = useContext(ModalContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const [images, setImages] = useState<string[]>([]);
@@ -50,7 +48,7 @@ const ReviewsModal = () => {
     setIsLoadingPostImage(false);
   }, []);
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
-  const { sectionRef, clickOutside } = useClickOutside(() =>
+  const sectionRef = useClickOutside(() =>
     setVisibleModal('visibleReviewModal')
   );
   const [rate, setRate] = useState(5);
@@ -65,19 +63,19 @@ const ReviewsModal = () => {
   const getRatingText = useMemo(() => {
     switch (rate) {
       case 1:
-        return t('poor');
+        return 'Tệ';
       case 2:
-        return t('not_satisfied');
+        return 'Không hài lòng';
       case 3:
-        return t('average');
+        return 'Hài lòng';
       case 4:
-        return t('satisfied');
+        return 'Vừa ý';
       case 5:
-        return t('excellent');
+        return 'Xuất sắc';
       default:
         return '';
     }
-  }, [rate, t]);
+  }, [rate]);
   const renderedStars = useMemo(() => {
     return [...Array(5)].map((_, index) => {
       return (
@@ -141,7 +139,7 @@ const ReviewsModal = () => {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
-          message: t('mess_success_review'),
+          message: 'Đánh giá sản phẩm thành công!',
         },
       });
       setVisibleModal('visibleReviewModal');
@@ -155,7 +153,6 @@ const ReviewsModal = () => {
       });
     }
   }, [
-    t,
     isLoadingPostReview,
     successPostReview,
     errorPostReview,
@@ -170,7 +167,7 @@ const ReviewsModal = () => {
           ? 'w-full h-full z-[999] py-8'
           : 'w-0 h-0 -z-10'
       }`}
-      onClick={() => clickOutside}
+      onClick={() => setVisibleModal('visibleReviewModal')}
     >
       <div
         className='bg-white text-neutral-800 text-sm md:text-base px-4 py-8 rounded-sm flex flex-col gap-6 min-h-[40vh] max-h-[80vh] w-full sm:w-3/4 md:w-2/3 xl:w-1/2 overflow-y-auto'
@@ -178,9 +175,7 @@ const ReviewsModal = () => {
       >
         <div className='px-6 flex flex-col gap-4'>
           <div className='flex justify-between items-center'>
-            <p className='text-xl md:text-2xl font-bold'>
-              {t('product_reviews')}
-            </p>
+            <p className='text-xl md:text-2xl font-bold'>Đánh giá sản phẩm</p>
             <button
               aria-label='close-modal'
               onClick={() => setVisibleModal('visibleReviewModal')}
@@ -200,7 +195,7 @@ const ReviewsModal = () => {
             </div>
           </div>
           <div className='flex sm:flex-row items-center gap-4'>
-            <p>{t('evaluate')}:</p>
+            <p>Đánh giá:</p>
             <div className='flex items-center gap-4'>
               <div className='flex text-lg'>{renderedStars}</div>
               <p className='sm:block hidden text-yellow'>{getRatingText}</p>
@@ -222,7 +217,7 @@ const ReviewsModal = () => {
               >
                 <IoCloudUploadOutline className='text-2xl md:text-4xl text-red-500' />
                 <p className='font-bold text-sm md:text-base text-center'>
-                  {t('mess_upload_img')}
+                  Kéo và thả hoặc tải hình ảnh của bạn lên đây
                 </p>
               </div>
               <input
@@ -273,7 +268,7 @@ const ReviewsModal = () => {
             } focus:outline-none rounded-[4px] p-4`}
             name='reviews'
             id='reviews'
-            placeholder={t('mess_reviews')}
+            placeholder='Hãy chia sẻ những điều bạn thích về sản phẩm này với người khác.'
             cols={10}
             rows={5}
             value={message}
@@ -284,14 +279,14 @@ const ReviewsModal = () => {
               onClick={() => setVisibleModal('visibleReviewsModal')}
               disabled={isLoadingPostImage || isLoadingPostReview}
             >
-              {t('return')}
+              Trở lại
             </button>
             <button
               className='bg-red-500 hover:bg-neutral-800 px-2 py-1 text-white rounded-sm transition-colors'
               onClick={handleReviews}
               disabled={isLoadingPostImage || isLoadingPostReview}
             >
-              {t('complete')}
+              Hoàn thành
             </button>
           </div>
         </div>

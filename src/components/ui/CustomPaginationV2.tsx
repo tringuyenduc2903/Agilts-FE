@@ -8,7 +8,6 @@ import {
 import useQueryString from '@/lib/hooks/useQueryString';
 import { useSearchParams } from 'next/navigation';
 import { scrollToTop } from '@/lib/utils/scrollElement';
-import { useTranslations } from 'next-intl';
 type Props = {
   totalPage: number;
   scroll?: boolean;
@@ -17,7 +16,6 @@ type Props = {
 const CustomPaginationV2: React.FC<Props> = ({ totalPage, scroll = false }) => {
   const [createQueryString] = useQueryString();
   const searchQuery = useSearchParams();
-  const t = useTranslations('common');
   const curPage = Number(searchQuery.get('page')) || 1;
   const handleNext = useCallback(
     (page: string) => {
@@ -61,7 +59,7 @@ const CustomPaginationV2: React.FC<Props> = ({ totalPage, scroll = false }) => {
           onClick={() => handleNext(value)}
           disabled={curPage >= totalPage}
         >
-          {t('next_btn')}
+          Sau
         </button>
       );
     }
@@ -78,7 +76,7 @@ const CustomPaginationV2: React.FC<Props> = ({ totalPage, scroll = false }) => {
           onClick={() => handlePrevious(value)}
           disabled={curPage <= 1}
         >
-          {t('prev_btn')}
+          Trước
         </button>
       );
     }

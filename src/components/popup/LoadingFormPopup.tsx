@@ -1,9 +1,7 @@
 import React, { useContext } from 'react';
-import { useTranslations } from 'next-intl';
 import { PopupContext } from '@/contexts/PopupProvider';
 
 function LoadingFormPopup() {
-  const t = useTranslations('common');
   const { state } = useContext(PopupContext);
   return (
     <section
@@ -13,7 +11,7 @@ function LoadingFormPopup() {
       } justify-center items-center`}
     >
       <h1 className='text-2xl md:text-4xl font-bold tracking-[4px] md:tracking-[8px] uppercase text-white'>
-        {t('loading')}...
+        Đang tải...
       </h1>
     </section>
   );

@@ -1,4 +1,4 @@
-import { axiosInstance, getLangRoute } from '@/config/axios';
+import { axiosInstance } from '@/config/axios';
 import { getCsrfCookie } from './csrfCookie';
 import { Login, Register } from '@/types/types';
 export const getUser = async () => {
@@ -18,10 +18,7 @@ export const getUser = async () => {
 export const updateUser = async (body: any) => {
   try {
     await getCsrfCookie();
-    const res = await axiosInstance.put(
-      `/api${getLangRoute()}/user/profile-information`,
-      body
-    );
+    const res = await axiosInstance.put(`/api/user/profile-information`, body);
     return {
       type: 'success',
       data: res.data,
@@ -36,7 +33,7 @@ export const updateUser = async (body: any) => {
 export const login = async (body: Login) => {
   try {
     await getCsrfCookie();
-    const res = await axiosInstance.post(`/api${getLangRoute()}/login`, body);
+    const res = await axiosInstance.post(`/api/login`, body);
     return {
       type: 'success',
       data: res.data,
@@ -52,10 +49,7 @@ export const login = async (body: Login) => {
 export const registerAccount = async (body: Register) => {
   try {
     await getCsrfCookie();
-    const res = await axiosInstance.post(
-      `/api${getLangRoute()}/register`,
-      body
-    );
+    const res = await axiosInstance.post(`/api/register`, body);
     return {
       type: 'success',
       data: res.data,
@@ -70,7 +64,7 @@ export const registerAccount = async (body: Register) => {
 export const logout = async () => {
   try {
     await getCsrfCookie();
-    const res = await axiosInstance.post(`/api${getLangRoute()}/logout`);
+    const res = await axiosInstance.post(`/api/logout`);
     return {
       type: 'success',
       data: res.data,
@@ -86,10 +80,9 @@ export const logout = async () => {
 export const confirmPassword = async (password: string) => {
   try {
     await getCsrfCookie();
-    const res = await axiosInstance.post(
-      `/api${getLangRoute()}/user/confirm-password`,
-      { password: password }
-    );
+    const res = await axiosInstance.post(`/api/user/confirm-password`, {
+      password: password,
+    });
     return {
       type: 'success',
       data: res.data,
@@ -104,9 +97,7 @@ export const confirmPassword = async (password: string) => {
 
 export const confirmPasswordStatus = async () => {
   try {
-    const res = await axiosInstance.get(
-      `/api${getLangRoute()}/user/confirmed-password-status`
-    );
+    const res = await axiosInstance.get(`/api/user/confirmed-password-status`);
     return {
       type: 'success',
       data: res.data,
@@ -121,12 +112,9 @@ export const confirmPasswordStatus = async () => {
 
 export const forgotPassword = async (email: string) => {
   try {
-    const res = await axiosInstance.post(
-      `/api${getLangRoute()}/forgot-password`,
-      {
-        email: email,
-      }
-    );
+    const res = await axiosInstance.post(`/api/forgot-password`, {
+      email: email,
+    });
     return {
       type: 'success',
       data: res.data,
@@ -141,10 +129,7 @@ export const forgotPassword = async (email: string) => {
 
 export const resetPassword = async (body: any) => {
   try {
-    const res = await axiosInstance.post(
-      `/api${getLangRoute()}/reset-password`,
-      body
-    );
+    const res = await axiosInstance.post(`/api/reset-password`, body);
     return {
       type: 'success',
       data: res.data,
@@ -159,10 +144,7 @@ export const resetPassword = async (body: any) => {
 export const changePassword = async (body: any) => {
   try {
     await getCsrfCookie();
-    const res = await axiosInstance.put(
-      `/api${getLangRoute()}/user/password`,
-      body
-    );
+    const res = await axiosInstance.put(`/api/user/password`, body);
     return {
       type: 'success',
       data: res.data,
@@ -176,7 +158,7 @@ export const changePassword = async (body: any) => {
 };
 export const getSocials = async () => {
   try {
-    const res = await axiosInstance.get(`/api${getLangRoute()}/social`);
+    const res = await axiosInstance.get(`/api/social`);
     return {
       type: 'success',
       data: res.data,
@@ -190,9 +172,7 @@ export const getSocials = async () => {
 };
 export const deleteSocial = async (id: string | number) => {
   try {
-    const res = await axiosInstance.delete(
-      `/api${getLangRoute()}/social/${id}`
-    );
+    const res = await axiosInstance.delete(`/api/social/${id}`);
     return {
       type: 'success',
       data: res.data,
@@ -207,7 +187,7 @@ export const deleteSocial = async (id: string | number) => {
 export const turnOn2FA = async () => {
   try {
     const res = await axiosInstance.post(
-      `/api${getLangRoute()}/user/two-factor-authentication`,
+      `/api/user/two-factor-authentication`,
       {
         force: true,
       }
@@ -226,9 +206,7 @@ export const turnOn2FA = async () => {
 
 export const twoFactorQrCode = async () => {
   try {
-    const res = await axiosInstance.get(
-      `/api${getLangRoute()}/user/two-factor-qr-code`
-    );
+    const res = await axiosInstance.get(`/api/user/two-factor-qr-code`);
     return {
       type: 'success',
       data: res.data,
@@ -243,9 +221,7 @@ export const twoFactorQrCode = async () => {
 
 export const twoFactorSecretKey = async () => {
   try {
-    const res = await axiosInstance.get(
-      `/api${getLangRoute()}/user/two-factor-secret-key`
-    );
+    const res = await axiosInstance.get(`/api/user/two-factor-secret-key`);
     return {
       type: 'success',
       data: res.data,
@@ -261,7 +237,7 @@ export const twoFactorSecretKey = async () => {
 export const confirm2FA = async (code: string) => {
   try {
     const res = await axiosInstance.post(
-      `/api${getLangRoute()}/user/confirmed-two-factor-authentication`,
+      `/api/user/confirmed-two-factor-authentication`,
       { code: code }
     );
     return {
@@ -278,9 +254,7 @@ export const confirm2FA = async (code: string) => {
 
 export const getRecoveryCodes = async () => {
   try {
-    const res = await axiosInstance.get(
-      `/api${getLangRoute()}/user/two-factor-recovery-codes`
-    );
+    const res = await axiosInstance.get(`/api/user/two-factor-recovery-codes`);
     return {
       type: 'success',
       data: res.data,
@@ -295,9 +269,7 @@ export const getRecoveryCodes = async () => {
 
 export const postRecoveryCodes = async () => {
   try {
-    const res = await axiosInstance.post(
-      `/api${getLangRoute()}/user/two-factor-recovery-codes`
-    );
+    const res = await axiosInstance.post(`/api/user/two-factor-recovery-codes`);
     return {
       type: 'success',
       data: res.data,
@@ -312,10 +284,7 @@ export const postRecoveryCodes = async () => {
 
 export const verifyTwoFactor = async (body: any) => {
   try {
-    const res = await axiosInstance.post(
-      `/api${getLangRoute()}/two-factor-challenge`,
-      body
-    );
+    const res = await axiosInstance.post(`/api/two-factor-challenge`, body);
     return {
       type: 'success',
       data: res.data,
@@ -331,7 +300,7 @@ export const verifyTwoFactor = async (body: any) => {
 export const turnOf2FA = async () => {
   try {
     const res = await axiosInstance.delete(
-      `/api${getLangRoute()}/user/two-factor-authentication`
+      `/api/user/two-factor-authentication`
     );
     return {
       type: 'success',
@@ -348,7 +317,7 @@ export const turnOf2FA = async () => {
 export const resendVerifyAccount = async () => {
   try {
     const res = await axiosInstance.post(
-      `/api${getLangRoute()}/email/verification-notification`
+      `/api/email/verification-notification`
     );
     return {
       type: 'success',
@@ -378,7 +347,7 @@ export const getCart = async () => {
 export const getOrders = async (search: string | null) => {
   try {
     const res = await axiosInstance.get(
-      `/api${getLangRoute()}/order${search ? `?${search}` : ''}`
+      `/api/order${search ? `?${search}` : ''}`
     );
     return {
       type: 'success',
@@ -393,7 +362,7 @@ export const getOrders = async (search: string | null) => {
 };
 export const updateCart = async (id: number, amount: number) => {
   try {
-    const res = await axiosInstance.put(`/api${getLangRoute()}/cart/${id}`, {
+    const res = await axiosInstance.put(`/api/cart/${id}`, {
       amount: amount,
     });
     return {
@@ -409,7 +378,7 @@ export const updateCart = async (id: number, amount: number) => {
 };
 export const deleteCart = async (id: number) => {
   try {
-    const res = await axiosInstance.delete(`/api${getLangRoute()}/cart/${id}`);
+    const res = await axiosInstance.delete(`/api/cart/${id}`);
     return {
       type: 'success',
       data: res.data,
@@ -423,7 +392,7 @@ export const deleteCart = async (id: number) => {
 };
 export const getOrderDetails = async (id: string | number) => {
   try {
-    const res = await axiosInstance.get(`/api${getLangRoute()}/order/${id}`);
+    const res = await axiosInstance.get(`/api/order/${id}`);
     return {
       type: 'success',
       data: res.data,

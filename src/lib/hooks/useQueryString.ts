@@ -7,7 +7,7 @@ const useQueryString = (): [
     value: string | string[],
     isBoolean?: boolean
   ) => void,
-  (name: string) => void,
+  (name: string | string[]) => void,
   (isBoolean?: boolean) => void
 ] => {
   const searchQuery = useSearchParams();
@@ -42,9 +42,15 @@ const useQueryString = (): [
     [router, searchQuery, pathname]
   );
   const removeValueQueryString = useCallback(
-    (name: string) => {
+    (name: string | string[]) => {
       const newQuery = new URLSearchParams(searchQuery.toString());
-      newQuery.delete(name);
+      if (Array.isArray(name)) {
+        name.forEach((value) => {
+          newQuery.delete(value);
+        });
+      } else {
+        newQuery.delete(name);
+      }
       return router.push(`${pathname}?${newQuery.toString()}`, {
         scroll: false,
       });

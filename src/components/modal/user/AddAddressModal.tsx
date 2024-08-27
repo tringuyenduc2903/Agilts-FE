@@ -1,17 +1,13 @@
 'use client';
-import { createAddress } from '@/api/address';
 import { defaultCountry } from '@/config/config';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { PopupContext } from '@/contexts/PopupProvider';
-import { UserContext } from '@/contexts/UserProvider';
-import { useFetch } from '@/lib/hooks/useFetch';
+import { useCreateAddressMutation } from '@/lib/redux/query/appQuery';
 import {
   useGetDistrictsQuery,
   useGetProvincesQuery,
   useGetWardsQuery,
 } from '@/lib/redux/query/countryQuery';
-import { useTranslations } from 'next-intl';
-import { useParams } from 'next/navigation';
 import React, {
   useCallback,
   useContext,
@@ -24,49 +20,39 @@ import { FaCheck } from 'react-icons/fa6';
 type PartOfCountry = {
   id: string;
   full_name: string;
-  full_name_en: string;
 };
 type Form = {
   province: {
     code: string;
     full_name: string;
-    full_name_en: string;
   };
   district: {
     code: string;
     full_name: string;
-    full_name_en: string;
   };
   ward: {
     code: string;
     full_name: string;
-    full_name_en: string;
   };
   address_detail: string;
   default: boolean;
   type: null | number;
 };
 function AddAddressModal() {
-  const { locale } = useParams();
-  const t = useTranslations('common');
   const { state, setVisibleModal } = useContext(ModalContext);
-  const { refetchAddress } = useContext(UserContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const [country, setCountry] = useState<Form>({
     province: {
       code: '',
       full_name: '',
-      full_name_en: '',
     },
     district: {
       code: '',
       full_name: '',
-      full_name_en: '',
     },
     ward: {
       code: '',
       full_name: '',
-      full_name_en: '',
     },
     address_detail: '',
     default: false,
@@ -83,30 +69,21 @@ function AddAddressModal() {
     country.district.code,
     { skip: !country.district.code }
   );
-  const {
-    fetchData: createAddressMutation,
-    isLoading: isLoadingPost,
-    isSuccess: isSuccessPost,
-    isError: isErrorPost,
-    error: errorPost,
-  } = useFetch(
-    async () =>
-      await createAddress({
-        default: country.default,
-        type: country.type,
-        country: defaultCountry,
-        province: country.province.full_name,
-        district: country.district.full_name,
-        ward: country.ward.full_name,
-        address_detail: country.address_detail,
-      })
-  );
+  const [
+    createAddress,
+    {
+      isLoading: isLoadingPost,
+      isSuccess: isSuccessPost,
+      isError: isErrorPost,
+      error: errorPost,
+    },
+  ] = useCreateAddressMutation();
   const errors = useMemo(() => {
     if (isErrorPost && errorPost) {
       const error = errorPost as any;
       return {
-        errors: error?.errors,
-        message: error?.message,
+        errors: error?.data?.errors,
+        message: error?.data?.message,
       };
     }
     return null;
@@ -118,13 +95,12 @@ function AddAddressModal() {
     });
   }, []);
   const handleSelectCountry = useCallback(
-    (full_name: string, full_name_en: string, value: string, code: string) => {
+    (full_name: string, value: string, code: string) => {
       setCountry((prevCountry) => {
         return {
           ...prevCountry,
           [full_name]: {
             full_name: value,
-            full_name_en: full_name_en,
             code: code,
           },
         };
@@ -143,28 +119,17 @@ function AddAddressModal() {
               className='text-sm md:text-base w-full px-4 py-2 hover:bg-neutral-100 transition-colors text-start'
               type='button'
               onClick={() =>
-                handleSelectCountry(
-                  'province',
-                  p?.full_name_en,
-                  p?.full_name,
-                  p?.id
-                )
+                handleSelectCountry('province', p?.full_name, p?.id)
               }
               disabled={isLoadingPost}
             >
-              {locale === 'vi' ? p?.full_name : p?.full_name_en}
+              {p?.full_name}
             </button>
           </li>
         );
       })
     );
-  }, [
-    isSuccessProvinces,
-    provincesData,
-    isLoadingPost,
-    locale,
-    handleSelectCountry,
-  ]);
+  }, [isSuccessProvinces, provincesData, isLoadingPost, handleSelectCountry]);
   const renderedDistricts = useMemo(() => {
     return (
       isSuccessDistricts &&
@@ -175,28 +140,17 @@ function AddAddressModal() {
               className='text-sm md:text-base w-full px-4 py-2 hover:bg-neutral-100 transition-colors text-start'
               type='button'
               onClick={() =>
-                handleSelectCountry(
-                  'district',
-                  d?.full_name_en,
-                  d?.full_name,
-                  d?.id
-                )
+                handleSelectCountry('district', d?.full_name, d?.id)
               }
               disabled={isLoadingPost}
             >
-              {locale === 'vi' ? d?.full_name : d?.full_name_en}
+              {d?.full_name}
             </button>
           </li>
         );
       })
     );
-  }, [
-    isSuccessDistricts,
-    districtsData,
-    isLoadingPost,
-    locale,
-    handleSelectCountry,
-  ]);
+  }, [isSuccessDistricts, districtsData, isLoadingPost, handleSelectCountry]);
   const renderedWards = useMemo(() => {
     return (
       isSuccessWards &&
@@ -206,40 +160,30 @@ function AddAddressModal() {
             <button
               className='text-sm md:text-base w-full px-4 py-2 hover:bg-neutral-100 transition-colors text-start'
               type='button'
-              onClick={() =>
-                handleSelectCountry(
-                  'ward',
-                  w?.full_name_en,
-                  w?.full_name,
-                  w?.id
-                )
-              }
+              onClick={() => handleSelectCountry('ward', w?.full_name, w?.id)}
               disabled={isLoadingPost}
             >
-              {locale === 'vi' ? w?.full_name : w?.full_name_en}
+              {w?.full_name}
             </button>
           </li>
         );
       })
     );
-  }, [isSuccessWards, wardsData, isLoadingPost, locale, handleSelectCountry]);
+  }, [isSuccessWards, wardsData, isLoadingPost, , handleSelectCountry]);
   useEffect(() => {
     if (!state.visibleAddAddressModal) {
       setCountry({
         province: {
           code: '',
           full_name: '',
-          full_name_en: '',
         },
         district: {
           code: '',
           full_name: '',
-          full_name_en: '',
         },
         ward: {
           code: '',
           full_name: '',
-          full_name_en: '',
         },
         address_detail: '',
         default: false,
@@ -255,12 +199,10 @@ function AddAddressModal() {
           district: {
             code: '',
             full_name: '',
-            full_name_en: '',
           },
           ward: {
             code: '',
             full_name: '',
-            full_name_en: '',
           },
         };
       });
@@ -269,9 +211,17 @@ function AddAddressModal() {
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      await createAddressMutation();
+      await createAddress({
+        default: country.default,
+        type: country.type,
+        country: defaultCountry,
+        province: country.province.full_name,
+        district: country.district.full_name,
+        ward: country.ward.full_name,
+        address_detail: country.address_detail,
+      });
     },
-    [createAddressMutation]
+    [createAddress, country]
   );
   useEffect(() => {
     if (isLoadingPost) {
@@ -282,12 +232,11 @@ function AddAddressModal() {
   }, [isLoadingPost, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessPost) {
-      refetchAddress();
       setVisibleModal('visibleAddAddressModal');
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
-          message: t('mess_add_address'),
+          message: 'Thêm địa chỉ thành công!',
         },
       });
     }
@@ -300,15 +249,7 @@ function AddAddressModal() {
         },
       });
     }
-  }, [
-    isSuccessPost,
-    isErrorPost,
-    errorPost,
-    refetchAddress,
-    setVisiblePopup,
-    setVisibleModal,
-    t,
-  ]);
+  }, [isSuccessPost, isErrorPost, errorPost, setVisiblePopup, setVisibleModal]);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'
@@ -320,7 +261,7 @@ function AddAddressModal() {
         onSubmit={handleSubmit}
       >
         <div className='flex justify-between gap-4'>
-          <h1 className='text-lg md:text-xl font-bold'>{t('add_address')}</h1>
+          <h1 className='text-lg md:text-xl font-bold'>Thêm địa chỉ</h1>
         </div>
         <div className='flex flex-col gap-4'>
           <div className='relative w-full'>
@@ -331,10 +272,8 @@ function AddAddressModal() {
               disabled={isLoadingPost}
             >
               {country?.province?.full_name
-                ? locale === 'vi'
-                  ? country.province.full_name
-                  : country.province.full_name_en
-                : t('select_province')}
+                ? country.province.full_name
+                : 'Tỉnh/Thành phố'}
             </button>
             <ul
               className={`absolute top-[110%] left-0 w-full bg-white z-10 border-neutral-400 ${
@@ -347,7 +286,7 @@ function AddAddressModal() {
                   type='button'
                   disabled
                 >
-                  {t('select_province')}
+                  Tỉnh/Thành phố
                 </button>
               </li>
               {renderedProvinces}
@@ -366,10 +305,8 @@ function AddAddressModal() {
               disabled={isLoadingPost}
             >
               {country?.district?.full_name
-                ? locale === 'vi'
-                  ? country.district.full_name
-                  : country.district.full_name_en
-                : t('select_district')}
+                ? country.district.full_name
+                : 'Quận/Huyện'}
             </button>
             <ul
               className={`absolute top-[110%] left-0 w-full bg-white z-10 border-neutral-400 ${
@@ -386,7 +323,7 @@ function AddAddressModal() {
                   type='button'
                   disabled
                 >
-                  {t('select_district')}
+                  Phường/Xã
                 </button>
               </li>
               {renderedDistricts}
@@ -404,11 +341,7 @@ function AddAddressModal() {
               onClick={() => handleChangeTab('wards')}
               disabled={isLoadingPost}
             >
-              {country?.ward?.full_name
-                ? locale === 'vi'
-                  ? country.ward.full_name
-                  : country.ward.full_name_en
-                : t('select_ward')}
+              {country?.ward?.full_name ? country.ward.full_name : 'Phường/Xã'}
             </button>
             <ul
               className={`absolute top-[110%] left-0 w-full bg-white z-10 border-neutral-400 ${
@@ -425,7 +358,7 @@ function AddAddressModal() {
                   type='button'
                   disabled
                 >
-                  {t('select_ward')}
+                  Phường/Xã
                 </button>
               </li>
               {renderedWards}
@@ -440,7 +373,7 @@ function AddAddressModal() {
             <input
               className='text-sm md:text-base w-full border border-neutral-400 px-4 py-2'
               type='text'
-              placeholder={`${t('address_details')}...`}
+              placeholder='Địa chỉ chi tiết'
               value={country.address_detail}
               onChange={(e) =>
                 setCountry({ ...country, address_detail: e.target.value })
@@ -455,7 +388,7 @@ function AddAddressModal() {
           </div>
         </div>
         <div className='flex flex-col gap-2'>
-          <p className='text-sm md:text-base'>{t('type_of_address')}:</p>
+          <p className='text-sm md:text-base'>Loại địa chỉ:</p>
           <div className='flex items-center gap-4'>
             <button
               className={`text-sm md:text-base border ${
@@ -467,7 +400,7 @@ function AddAddressModal() {
               onClick={() => setCountry({ ...country, type: 0 })}
               disabled={isLoadingPost}
             >
-              {t('type_home')}
+              Nhà riêng
             </button>
             <button
               className={`text-sm md:text-base border ${
@@ -479,7 +412,7 @@ function AddAddressModal() {
               onClick={() => setCountry({ ...country, type: 1 })}
               disabled={isLoadingPost}
             >
-              {t('type_office')}
+              Văn phòng
             </button>
           </div>
           {errors?.errors.type && (
@@ -506,7 +439,7 @@ function AddAddressModal() {
                 <FaCheck className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2' />
               )}
             </span>
-            <p>{t('set_default_address')}</p>
+            <p>Đặt làm địa chỉ mặc định</p>
           </button>
         </div>
         <div className='w-full flex justify-end items-center gap-4'>
@@ -516,14 +449,14 @@ function AddAddressModal() {
             onClick={() => setVisibleModal('visibleAddAddressModal')}
             disabled={isLoadingPost}
           >
-            {t('return')}
+            Trở lại
           </button>
           <button
             type='submit'
             className='px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition-colors'
             disabled={isLoadingPost}
           >
-            {t('complete')}
+            Hoàn thành
           </button>
         </div>
       </form>

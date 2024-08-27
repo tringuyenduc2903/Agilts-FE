@@ -1,18 +1,10 @@
 'use client';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import React from 'react';
-import { useTranslations } from 'next-intl';
 
 const BreadCrumbs = React.memo(
   ({ path, details }: { path: string; details?: string }) => {
-    const { locale } = useParams();
-    const t = useTranslations('common');
-
-    const formatPath = path
-      .replace(`/${locale}`, '')
-      .replace('/', '')
-      .split('/');
+    const formatPath = path.replace(``, '').replace('/', '').split('/');
 
     const renderedBreadcrumbs = formatPath.map((b, index) => {
       const fullPath = formatPath.slice(0, index + 1).join('/');
@@ -21,9 +13,9 @@ const BreadCrumbs = React.memo(
           <span className='w-[32px] relative before:absolute before:w-[24px] before:h-[1px] before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-neutral-800'></span>
           <Link
             className='font-bold uppercase tracking-[2px] hover:text-red-500 transition-colors'
-            href={`/${locale}/${fullPath}`}
+            href={`/${fullPath}`}
           >
-            {t(`${b}`)}
+            {b}
           </Link>
         </div>
       );
@@ -34,9 +26,9 @@ const BreadCrumbs = React.memo(
         <div className='container m-auto px-4 py-6 flex flex-wrap items-center gap-4 text-[12px] md:text-sm'>
           <Link
             className='font-bold uppercase tracking-[2px] hover:text-red-500 transition-colors'
-            href={`/${locale}`}
+            href={``}
           >
-            {t('home')}
+            Trang chủ
           </Link>
           {renderedBreadcrumbs}
           {details && (

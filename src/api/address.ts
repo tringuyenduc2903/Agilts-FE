@@ -1,8 +1,8 @@
-import { axiosInstance, getLangRoute } from '@/config/axios';
+import { axiosInstance } from '@/config/axios';
 
 export const getAddress = async () => {
   try {
-    const res = await axiosInstance.get(`/api${getLangRoute()}/address`);
+    const res = await axiosInstance.get(`/api/address`);
     return {
       type: 'success',
       data: res.data,
@@ -17,7 +17,7 @@ export const getAddress = async () => {
 
 export const createAddress = async (body: any) => {
   try {
-    const res = await axiosInstance.post(`/api${getLangRoute()}/address`, body);
+    const res = await axiosInstance.post(`/api/address`, body);
     return {
       type: 'success',
       data: res.data,
@@ -38,10 +38,7 @@ export const updateAddress = async ({
   address_id: string | number;
 }) => {
   try {
-    const res = await axiosInstance.put(
-      `/api${getLangRoute()}/address/${address_id}`,
-      body
-    );
+    const res = await axiosInstance.put(`/api/address/${address_id}`, body);
     return {
       type: 'success',
       data: res.data,
@@ -56,9 +53,7 @@ export const updateAddress = async ({
 
 export const deleteAddress = async (id: string | number) => {
   try {
-    const res = await axiosInstance.delete(
-      `/api${getLangRoute()}/address/${id}`
-    );
+    const res = await axiosInstance.delete(`/api/address/${id}`);
     return {
       type: 'success',
       data: res.data,

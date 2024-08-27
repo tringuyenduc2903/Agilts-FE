@@ -1,5 +1,6 @@
 import { registerOTel } from '@vercel/otel';
+import { title } from './config/config';
 
 export function register() {
-  registerOTel(process.env.NEXT_PUBLIC_WEBSITE_NAME);
+  registerOTel(title);
 }

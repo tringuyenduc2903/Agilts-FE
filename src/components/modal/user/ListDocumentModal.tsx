@@ -3,7 +3,6 @@ import NotFoundItem from '@/components/ui/NotFoundItem';
 import { UserContext } from '@/contexts/UserProvider';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { Document } from '@/types/types';
-import { useTranslations } from 'next-intl';
 import React, {
   useCallback,
   useContext,
@@ -16,7 +15,6 @@ function ListDocumentModal() {
   const [curDocument, setCurDocument] = useState<Document | null>(null);
   const { allDocuments, defaultDocument, setDefaultDocument } =
     useContext(UserContext);
-  const t = useTranslations('common');
   const handleSelectedDocument = useCallback((d: Document) => {
     setCurDocument(d);
   }, []);
@@ -52,14 +50,14 @@ function ListDocumentModal() {
             <p>{d.type_preview}</p>
             {d.default && (
               <p className='w-max border border-red-500 px-4 py-1 text-red-500 font-medium text-sm'>
-                {t('default')}
+                Mặc định
               </p>
             )}
           </div>
         </li>
       );
     });
-  }, [allDocuments, t, curDocument, handleSelectedDocument]);
+  }, [allDocuments, curDocument, handleSelectedDocument]);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'
@@ -67,13 +65,13 @@ function ListDocumentModal() {
     >
       <div className='relative bg-white text-neutral-800 text-sm md:text-base px-4 py-8 rounded-sm flex flex-col gap-6 min-h-[40vh] max-h-[80vh] w-full sm:w-3/4 md:w-2/3 xl:w-1/2 overflow-y-auto'>
         <div className='flex justify-between items-center gap-2'>
-          <h1 className='text-lg md:text-xl font-bold'>{t('document_list')}</h1>
+          <h1 className='text-lg md:text-xl font-bold'>Danh sách hồ sơ</h1>
         </div>
         <div className='w-full h-full'>
           {renderedDocuments?.length > 0 ? (
             <ul>{renderedDocuments}</ul>
           ) : (
-            <NotFoundItem message={t('mess_no_document')} />
+            <NotFoundItem message='Bạn chưa có hồ sơ nào!' />
           )}
         </div>
         <div className='absolute bottom-0 left-0 w-full h-[64px] px-4 bg-white flex justify-end items-center gap-4 border-t border-neutral-300'>
@@ -82,14 +80,14 @@ function ListDocumentModal() {
             className='px-4 py-2 border border-neutral-300 text-neutral-600 hover:text-neutral-800 hover:border-neutral-400 transition-colors'
             onClick={() => setVisibleModal('visibleListDocumentModal')}
           >
-            {t('return')}
+            Trở lại
           </button>
           <button
             type='submit'
             className='px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition-colors'
             onClick={handleConfirmAddress}
           >
-            {t('confirm')}
+            Xác nhận
           </button>
         </div>
       </div>

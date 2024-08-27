@@ -1,13 +1,12 @@
-import { axiosInstance, getLangRoute } from '@/config/axios';
+import { axiosInstance } from '@/config/axios';
 export const getProducts = async (
   search: string | null,
+  perPage: number,
   type: 'motor-cycle' | 'square-parts' | 'accessories'
 ) => {
   try {
     const res = await axiosInstance.get(
-      `/api${getLangRoute()}/product/${type}${
-        search ? `?${search}&perPage=12` : `?perPage=12`
-      }`
+      `/api/product/${type}?perPage=${perPage}${search ? `&${search}` : ``}`
     );
     return {
       type: 'success',
@@ -25,9 +24,7 @@ export const getProductDetails = async (
   type: 'motor-cycle' | 'square-parts' | 'accessories'
 ) => {
   try {
-    const res = await axiosInstance.get(
-      `/api${getLangRoute()}/product/${type}/${id}`
-    );
+    const res = await axiosInstance.get(`/api/product/${type}/${id}`);
     return {
       type: 'success',
       data: res.data,
@@ -45,9 +42,7 @@ export const getFilterProduct = async (
 ) => {
   try {
     const res = await axiosInstance.get(
-      `/api${getLangRoute()}/filter/product/${type}${
-        search ? `?${search}` : ''
-      }`
+      `/api/filter/product/${type}${search ? `?${search}` : ''}`
     );
     return {
       type: 'success',
@@ -69,7 +64,7 @@ export const getProductReview = async ({
 }) => {
   try {
     const res = await axiosInstance.get(
-      `/api${getLangRoute()}/review/${id}${search && `?${search}`}`
+      `/api/review/${id}${search && `?${search}`}`
     );
     return {
       type: 'success',
@@ -85,9 +80,7 @@ export const getProductReview = async ({
 
 export const getFilterReview = async (id: string | number) => {
   try {
-    const res = await axiosInstance.get(
-      `/api${getLangRoute()}/filter/review/${id}`
-    );
+    const res = await axiosInstance.get(`/api/filter/review/${id}`);
     return {
       type: 'success',
       data: res.data,
@@ -102,15 +95,11 @@ export const getFilterReview = async (id: string | number) => {
 
 export const postReviewImage = async (body: any) => {
   try {
-    const res = await axiosInstance.post(
-      `/api${getLangRoute()}/review-image`,
-      body,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-    );
+    const res = await axiosInstance.post(`/api/review-image`, body, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return {
       type: 'success',
       data: res.data,
@@ -125,10 +114,7 @@ export const postReviewImage = async (body: any) => {
 
 export const postReviewUser = async (body: any) => {
   try {
-    const res = await axiosInstance.post(
-      `/api${getLangRoute()}/review-user`,
-      body
-    );
+    const res = await axiosInstance.post(`/api/review-user`, body);
     return {
       type: 'success',
       data: res.data,
@@ -143,10 +129,7 @@ export const postReviewUser = async (body: any) => {
 
 export const postPriceQuote = async (body: any) => {
   try {
-    const res = await axiosInstance.post(
-      `/api${getLangRoute()}/price-quote`,
-      body
-    );
+    const res = await axiosInstance.post(`/api/price-quote`, body);
     return {
       type: 'success',
       data: res.data,
@@ -160,7 +143,7 @@ export const postPriceQuote = async (body: any) => {
 };
 export const postCart = async (body: any) => {
   try {
-    const res = await axiosInstance.post(`/api${getLangRoute()}/cart`, body);
+    const res = await axiosInstance.post(`/api/cart`, body);
     return {
       type: 'success',
       data: res.data,
@@ -174,7 +157,7 @@ export const postCart = async (body: any) => {
 };
 export const purchaseMotorbike = async (body: any) => {
   try {
-    const res = await axiosInstance.post(`/api${getLangRoute()}/order`, body);
+    const res = await axiosInstance.post(`/api/order`, body);
     return {
       type: 'success',
       data: res.data,
@@ -189,7 +172,7 @@ export const purchaseMotorbike = async (body: any) => {
 
 export const purchaseItem = async (body: any) => {
   try {
-    const res = await axiosInstance.post(`/api${getLangRoute()}/order`, body);
+    const res = await axiosInstance.post(`/api/order`, body);
     return {
       type: 'success',
       data: res.data,

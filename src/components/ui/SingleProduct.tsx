@@ -1,6 +1,5 @@
 'use client';
 import { Product, ProductOption } from '@/types/types';
-import { useTranslations } from 'next-intl';
 import {
   useParams,
   usePathname,
@@ -79,10 +78,9 @@ export function SingleProduct({
 }
 SingleProduct.Category = function ProductType() {
   const { product } = useProductContext();
-  const t = useTranslations('common');
   return (
     <p className='font-bold text-sm md:text-base flex items-center gap-2 max-w-[280px] truncate'>
-      <span>{t('category')}:</span>
+      <span>Danh mục:</span>
       <span className='text-red-500'>
         {product?.categories.length > 0
           ? product?.categories?.map((c) => c.name).join(', ')
@@ -113,13 +111,12 @@ SingleProduct.Title = function ProductTitle() {
 };
 SingleProduct.Rate = function ProductRate() {
   const { product } = useProductContext();
-  const t = useTranslations('common');
   return (
     <p
       title={product?.reviews_avg_rate}
       className='font-bold flex items-center gap-2 text-sm md:text-base'
     >
-      <span>{t('reviews')}:</span>
+      <span>Đánh giá:</span>
       {product?.reviews_avg_rate ? (
         <span className='flex items-center gap-1'>
           <span> {Math.ceil(Number(product?.reviews_avg_rate) * 2) / 2} </span>
@@ -134,7 +131,6 @@ SingleProduct.Rate = function ProductRate() {
 SingleProduct.Price = function ProductPrice() {
   const { product } = useProductContext();
   const searchParams = useSearchParams();
-  const t = useTranslations('common');
   const selectedOption = useMemo(() => {
     return product.options.find((o) => {
       return (
@@ -159,7 +155,7 @@ SingleProduct.Price = function ProductPrice() {
           title={product?.options_min_price.preview}
           className={`w-full truncate overflow-hidden flex items-center gap-2`}
         >
-          <span> {t('from')}</span>
+          <span>Từ</span>
           <span>{product?.options_min_price.preview}</span>
         </p>
       )}
@@ -172,11 +168,9 @@ SingleProduct.Image = function ProductImage({
 }: {
   customClass?: string;
 }) {
-  const t = useTranslations('common');
   const state = useResponsive();
   const router = useRouter();
   const pathname = usePathname();
-  const { locale } = useParams();
   const { product, selectedOption } = useProductContext();
   const { setVisiblePopup } = useContext(PopupContext);
   const { user, wishlist, refetchWishlist } = useContext(UserContext);
@@ -210,7 +204,7 @@ SingleProduct.Image = function ProductImage({
   );
   const handleWishlist = useCallback(async () => {
     if (!user) {
-      router.push(`/${locale}/login`);
+      router.push(`/login`);
     } else {
       if (isWishlist) {
         await deleteWishlistMutation();
@@ -221,18 +215,17 @@ SingleProduct.Image = function ProductImage({
   }, [
     isWishlist,
     user,
-    locale,
     router,
     createWishlistMutation,
     deleteWishlistMutation,
   ]);
   const handleAddToCart = useCallback(async () => {
     if (!user) {
-      router.push(`/${locale}/login`);
+      router.push(`/login`);
     } else {
       await postCartMutation();
     }
-  }, [user, router, locale, postCartMutation]);
+  }, [user, router, postCartMutation]);
   useEffect(() => {
     if (isLoadingPostWishlist || isLoadingDeleteWishlist || isLoadingPostCart) {
       setVisiblePopup({ visibleLoadingPopup: true });
@@ -250,7 +243,7 @@ SingleProduct.Image = function ProductImage({
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
-          message: t('mess_success_wishlist'),
+          message: 'Thêm sản phẩm vào danh sách mong muốn thành công!',
         },
       });
     }
@@ -267,14 +260,13 @@ SingleProduct.Image = function ProductImage({
     isErrorPostWishlist,
     errorPostWishlist,
     setVisiblePopup,
-    t,
   ]);
   useEffect(() => {
     if (isSuccessPostCart) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
-          message: t('mess_success_post_cart'),
+          message: 'Thêm sản phẩm thành công!',
         },
       });
     }
@@ -286,7 +278,7 @@ SingleProduct.Image = function ProductImage({
         },
       });
     }
-  }, [isSuccessPostCart, isErrorPostCart, errorPostCart, setVisiblePopup, t]);
+  }, [isSuccessPostCart, isErrorPostCart, errorPostCart, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessPostWishlist || isSuccessDeleteWishlist) {
       refetchWishlist();

@@ -1,10 +1,8 @@
 'use client';
-import { createDocument } from '@/api/document';
 import { documents } from '@/config/config';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { PopupContext } from '@/contexts/PopupProvider';
-import { UserContext } from '@/contexts/UserProvider';
-import { useTranslations } from 'next-intl';
+import { useCreateDocumentMutation } from '@/lib/redux/query/appQuery';
 import React, {
   useCallback,
   useContext,
@@ -22,10 +20,20 @@ type Form = {
   default: boolean;
 };
 function AddDocumentModal() {
-  const t = useTranslations('common');
   const { state, setVisibleModal } = useContext(ModalContext);
-  const { refetchDocument } = useContext(UserContext);
   const { setVisiblePopup } = useContext(PopupContext);
+  const [
+    createDocument,
+    {
+      isSuccess: isSuccessCreate,
+      isLoading: isLoadingCreate,
+      isError: isErrorCreate,
+      error: errorCreate,
+    },
+  ] = useCreateDocumentMutation();
+  const errors = useMemo(() => {
+    return isErrorCreate && (errorCreate as any)?.data;
+  }, [isErrorCreate, errorCreate]);
   const [openType, setOpenType] = useState(false);
   const [type, setType] = useState<number | null>(null);
   const curType = useMemo(() => {
@@ -33,8 +41,6 @@ function AddDocumentModal() {
     if (valid) return valid;
     return null;
   }, [type]);
-  const [errors, setErrors] = useState<any>(null);
-  const [isSuccess, setIsSuccess] = useState(false);
   const {
     register,
     handleSubmit,
@@ -63,39 +69,30 @@ function AddDocumentModal() {
   }, []);
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {
-      const res = await createDocument({ ...data, type: curType?.code });
-      if (res.type === 'error') {
-        setErrors(res.data);
-        setIsSuccess(false);
-      } else {
-        setErrors(null);
-        setIsSuccess(true);
-      }
+      await createDocument({ ...data, type: curType?.code });
     },
-    [curType]
+    [curType, createDocument]
   );
   useEffect(() => {
-    if (isSubmitting) {
+    if (isSubmitting || isLoadingCreate) {
       setVisiblePopup({ visibleLoadingPopup: true });
     } else {
       setVisiblePopup({ visibleLoadingPopup: false });
     }
-  }, [isSubmitting, setVisiblePopup]);
+  }, [isSubmitting, isLoadingCreate, setVisiblePopup]);
   useEffect(() => {
-    if (isSuccess) {
-      refetchDocument();
+    if (isSuccessCreate) {
       setVisibleModal('visibleAddDocumentModal');
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
-          message: t('mess_add_document'),
+          message: 'Thêm hồ sơ thành công!',
         },
       });
       setType(null);
       reset();
-      setIsSuccess(false);
     }
-  }, [isSuccess, refetchDocument, setVisiblePopup, setVisibleModal, t, reset]);
+  }, [isSuccessCreate, setVisiblePopup, setVisibleModal, reset]);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'
@@ -108,19 +105,17 @@ function AddDocumentModal() {
       >
         <div className='w-full min-h-[40vh] max-h-[60vh] px-4 pt-8 pb-24 overflow-y-auto flex flex-col gap-6'>
           <div className='flex justify-between gap-4'>
-            <h1 className='text-lg md:text-xl font-bold'>
-              {t('add_document')}
-            </h1>
+            <h1 className='text-lg md:text-xl font-bold'>Thêm hồ sơ</h1>
           </div>
           <div className='relative w-full flex flex-col gap-2'>
-            <p>{t('document_type')}</p>
+            <p>Loại hồ sơ</p>
             <button
               className='text-sm md:text-base w-full border border-neutral-300 rounded-sm px-4 py-2 text-start'
               type='button'
               onClick={() => setOpenType(!openType)}
-              disabled={isSubmitting}
+              disabled={isSubmitting || isLoadingCreate}
             >
-              {curType ? t(`${curType.name}`) : t('select_document')}
+              {curType ? curType.name : 'Chọn hồ sơ'}
             </button>
             <ul
               className={`absolute top-[110%] left-0 w-full bg-white z-10 border-neutral-300 ${
@@ -132,9 +127,9 @@ function AddDocumentModal() {
                   className='w-full px-4 py-2 hover:bg-neutral-100 transition-colors text-start'
                   type='button'
                   onClick={() => handleSelectedType(0)}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isLoadingCreate}
                 >
-                  {t('identity_card')}
+                  Chứng minh nhân dân
                 </button>
               </li>
               <li className='w-full h-[40px]'>
@@ -142,9 +137,9 @@ function AddDocumentModal() {
                   className='w-full px-4 py-2 hover:bg-neutral-100 transition-colors text-start'
                   type='button'
                   onClick={() => handleSelectedType(1)}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isLoadingCreate}
                 >
-                  {t('citizen_identification_card')}
+                  Căn cước công dân
                 </button>
               </li>
               <li className='w-full h-[40px]'>
@@ -152,79 +147,79 @@ function AddDocumentModal() {
                   className='w-full px-4 py-2 hover:bg-neutral-100 transition-colors text-start'
                   type='button'
                   onClick={() => handleSelectedType(2)}
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isLoadingCreate}
                 >
-                  {t('passport')}
+                  Hộ chiếu
                 </button>
               </li>
             </ul>
-            {errors?.errors.type && (
+            {errors?.errors?.type && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
                 {errors.errors.type[0]}
               </p>
             )}
           </div>
           <div className='flex flex-col gap-2'>
-            <label htmlFor='number'>{t('document_number')}</label>
+            <label htmlFor='number'>Mã hồ sơ</label>
             <input
               {...register('number')}
               className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base'
               type='text'
               id='number'
               name='number'
-              placeholder={`${t('document_number')}...`}
-              disabled={isSubmitting}
+              placeholder='Mã hồ sơ...'
+              disabled={isSubmitting || isLoadingCreate}
             />
-            {errors?.errors.number && (
+            {errors?.errors?.number && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
                 {errors.errors.number[0]}
               </p>
             )}
           </div>
           <div className='flex flex-col gap-2'>
-            <label htmlFor='issued_name'>{t('issued_name')}</label>
+            <label htmlFor='issued_name'>Nơi cấp hồ sơ</label>
             <input
               {...register('issued_name')}
               className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base'
               type='text'
               id='issued_name'
               name='issued_name'
-              placeholder={`${t('issued_name')}...`}
-              disabled={isSubmitting}
+              placeholder={`Nơi cấp hồ sơ...`}
+              disabled={isSubmitting || isLoadingCreate}
             />
-            {errors?.errors.issued_name && (
+            {errors?.errors?.issued_name && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
                 {errors.errors.issued_name[0]}
               </p>
             )}
           </div>
           <div className='flex flex-col gap-2'>
-            <label htmlFor='issuance_date'>{t('issuance_date')}</label>
+            <label htmlFor='issuance_date'>Ngày cấp</label>
             <input
               {...register('issuance_date')}
               className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base'
               type='date'
               id='issuance_date'
               name='issuance_date'
-              disabled={isSubmitting}
+              disabled={isSubmitting || isLoadingCreate}
             />
-            {errors?.errors.issuance_date && (
+            {errors?.errors?.issuance_date && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
                 {errors.errors.issuance_date[0]}
               </p>
             )}
           </div>
           <div className='flex flex-col gap-2'>
-            <label htmlFor='expiry_date'>{t('expiry_date')}</label>
+            <label htmlFor='expiry_date'>Ngày hết hạn</label>
             <input
               {...register('expiry_date')}
               className='w-full h-full px-4 py-3 border border-neutral-300 rounded-sm text-sm md:text-base'
               type='date'
               id='expiry_date'
               name='expiry_date'
-              disabled={isSubmitting}
+              disabled={isSubmitting || isLoadingCreate}
             />
-            {errors?.errors.expiry_date && (
+            {errors?.errors?.expiry_date && (
               <p className='text-red-500 font-bold text-sm md:text-base'>
                 {errors.errors.expiry_date[0]}
               </p>
@@ -235,7 +230,7 @@ function AddDocumentModal() {
               type='button'
               className='text-sm md:text-base w-max flex justify-start items-center gap-2'
               onClick={() => setValue('default', !watchValue?.default)}
-              disabled={isSubmitting}
+              disabled={isSubmitting || isLoadingCreate}
             >
               <span
                 className={`relative w-[18px] h-[18px] ${
@@ -248,7 +243,7 @@ function AddDocumentModal() {
                   <FaCheck className='absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2' />
                 )}
               </span>
-              <p>{t('set_default_document')}</p>
+              <p>Đặt làm hồ sơ mặc định</p>
             </button>
           </div>
         </div>
@@ -257,16 +252,16 @@ function AddDocumentModal() {
             type='button'
             className='px-4 py-2 border border-neutral-300 text-neutral-600 hover:text-neutral-800 hover:border-neutral-400 transition-colors'
             onClick={() => setVisibleModal('visibleAddDocumentModal')}
-            disabled={isSubmitting}
+            disabled={isSubmitting || isLoadingCreate}
           >
-            {t('return')}
+            Trở lại
           </button>
           <button
             type='submit'
             className='px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition-colors'
-            disabled={isSubmitting}
+            disabled={isSubmitting || isLoadingCreate}
           >
-            {t('complete')}
+            Hoàn thành
           </button>
         </div>
       </form>

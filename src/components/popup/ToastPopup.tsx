@@ -34,7 +34,7 @@ const ToastPopup = () => {
     <ToastContainer
       limit={1}
       className='text-sm md:text-base'
-      position='bottom-right'
+      position='top-center'
       autoClose={3000}
       closeOnClick
       pauseOnFocusLoss

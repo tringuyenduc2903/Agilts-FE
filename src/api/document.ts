@@ -1,8 +1,8 @@
-import { axiosInstance, getLangRoute } from '@/config/axios';
+import { axiosInstance } from '@/config/axios';
 
 export const getDocuments = async () => {
   try {
-    const res = await axiosInstance.get(`/api${getLangRoute()}/identification`);
+    const res = await axiosInstance.get(`/api/identification`);
     return {
       type: 'success',
       data: res.data,
@@ -17,10 +17,7 @@ export const getDocuments = async () => {
 
 export const createDocument = async (body: any) => {
   try {
-    const res = await axiosInstance.post(
-      `/api${getLangRoute()}/identification`,
-      body
-    );
+    const res = await axiosInstance.post(`/api/identification`, body);
     return {
       type: 'success',
       data: res.data,
@@ -41,10 +38,7 @@ export const updateDocument = async ({
   id: string | number;
 }) => {
   try {
-    const res = await axiosInstance.put(
-      `/api${getLangRoute()}/document/${id}`,
-      body
-    );
+    const res = await axiosInstance.put(`/api/document/${id}`, body);
     return {
       type: 'success',
       data: res.data,
@@ -59,9 +53,7 @@ export const updateDocument = async ({
 
 export const deleteDocument = async (id: string) => {
   try {
-    const res = await axiosInstance.delete(
-      `/api${getLangRoute()}/identification/${id}`
-    );
+    const res = await axiosInstance.delete(`/api/identification/${id}`);
     return {
       type: 'success',
       data: res.data,

@@ -1,6 +1,14 @@
-import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
-export default async function RootPage() {
-  const locale = cookies().get('NEXT_LOCALE')?.value || 'vi';
-  redirect(`/${locale}`);
+import dynamic from 'next/dynamic';
+const DynamicBanner = dynamic(() => import('./_components/Banner'), {
+  ssr: false,
+  loading: () => (
+    <section className='skeleton relative w-full h-screen'></section>
+  ),
+});
+export default async function Home() {
+  return (
+    <main>
+      <DynamicBanner />
+    </main>
+  );
 }

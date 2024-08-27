@@ -1,7 +1,6 @@
 'use client';
 import { useMemo } from 'react';
 import CustomPaginationV2 from './CustomPaginationV2';
-import { useTranslations } from 'next-intl';
 type Props = {
   tHeader: string[];
   renderedData: any;
@@ -9,7 +8,6 @@ type Props = {
   curPage?: number;
 };
 const Table = ({ tHeader, renderedData, totalPage, curPage }: Props) => {
-  const t = useTranslations('common');
   const tdHeader = useMemo(() => {
     return tHeader.map((h, index) => {
       return (
@@ -33,7 +31,7 @@ const Table = ({ tHeader, renderedData, totalPage, curPage }: Props) => {
       ) : (
         <div className='w-full h-[30vh] flex justify-center items-center'>
           <p className='text-xl md:text-2xl font-bold'>
-            {t('mess_no_cur_order')}
+            Bạn chưa có sản phẩm cho mình!
           </p>
         </div>
       )}

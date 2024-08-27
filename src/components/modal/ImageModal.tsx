@@ -22,7 +22,7 @@ function ImageModal() {
   const imgRef = useRef<HTMLImageElement | null>(null);
   const [fallbackImg, setFallbackImg] = useState(false);
   const { state, setVisibleModal } = useContext(ModalContext);
-  const { sectionRef, clickOutside } = useClickOutside(() =>
+  const sectionRef = useClickOutside(() =>
     setVisibleModal('visibleImageModal')
   );
   const [curImage, setCurImage] = useState(
@@ -87,7 +87,7 @@ function ImageModal() {
     <section
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       className='fixed top-0 left-0 w-full h-full z-[999] flex justify-center items-center px-6'
-      onClick={() => clickOutside}
+      onClick={() => setVisibleModal('visibleImageModal')}
     >
       <div
         ref={sectionRef as LegacyRef<HTMLDivElement>}

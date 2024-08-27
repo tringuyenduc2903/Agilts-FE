@@ -1,11 +1,10 @@
 'use client';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import React, { useContext } from 'react';
 import { UserContext } from '@/contexts/UserProvider';
 function withAuth(Component: any) {
   return function useAuth(props: any) {
     const { isLoadingUser, isErrorUser } = useContext(UserContext);
-    const { locale } = useParams();
     const router = useRouter();
     if (isLoadingUser) {
       return (
@@ -15,7 +14,7 @@ function withAuth(Component: any) {
       );
     }
     if (!isLoadingUser && isErrorUser) {
-      return router.replace(`/${locale}/login`);
+      return router.replace(`/login`);
     }
     return <Component {...props} />;
   };

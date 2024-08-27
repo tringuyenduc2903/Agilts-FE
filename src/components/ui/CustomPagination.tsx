@@ -1,6 +1,5 @@
 'use client';
 import useQueryString from '@/lib/hooks/useQueryString';
-import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import React, { useCallback, useState } from 'react';
 type Props = {
@@ -8,7 +7,6 @@ type Props = {
   totalPage: number;
 };
 function CustomPagination({ totalPage }: Props) {
-  const t = useTranslations('common');
   const [isHoverButton, setIsHoverButton] = useState<String | null>(null);
   const searchParams = useSearchParams();
   const [createQueryString] = useQueryString();
@@ -67,7 +65,7 @@ function CustomPagination({ totalPage }: Props) {
               isHoverButton === 'prev' ? '-translate-x-[27%]' : 'translate-x-0'
             } px-4 z-10 transition-all duration-200 bg-white text-sm`}
           >
-            {t('prev_btn')}
+            Trước
           </span>
           <span className='w-full flex items-center'>
             <span className='w-0 h-0 border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent border-r-[10px] border-r-neutral-700'></span>
@@ -105,7 +103,7 @@ function CustomPagination({ totalPage }: Props) {
                 isHoverButton === 'next' ? 'translate-x-[88%]' : 'translate-x-0'
               } px-4 z-10 bg-white transition-all duration-200 text-sm`}
             >
-              {t('next_btn')}
+              Sau
             </span>
             <span className='w-full flex items-center'>
               <span className='w-full h-[1px] bg-neutral-800'></span>

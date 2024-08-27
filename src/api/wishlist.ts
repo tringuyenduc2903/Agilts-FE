@@ -1,7 +1,7 @@
-import { axiosInstance, getLangRoute } from '@/config/axios';
+import { axiosInstance } from '@/config/axios';
 export const getWishlist = async () => {
   try {
-    const res = await axiosInstance.get(`/api${getLangRoute()}/wishlist`);
+    const res = await axiosInstance.get(`/api/wishlist`);
     return {
       type: 'success',
       data: res.data,
@@ -15,10 +15,7 @@ export const getWishlist = async () => {
 };
 export const createWishlist = async (body: any) => {
   try {
-    const res = await axiosInstance.post(
-      `/api${getLangRoute()}/wishlist`,
-      body
-    );
+    const res = await axiosInstance.post(`/api/wishlist`, body);
     return {
       type: 'success',
       data: res.data,
@@ -33,9 +30,7 @@ export const createWishlist = async (body: any) => {
 
 export const deleteWishlist = async (id: string | number) => {
   try {
-    const res = await axiosInstance.delete(
-      `/api${getLangRoute()}/wishlist/${id}`
-    );
+    const res = await axiosInstance.delete(`/api/wishlist/${id}`);
     return {
       type: 'success',
       data: res.data,

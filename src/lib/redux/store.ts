@@ -1,19 +1,19 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userReducer from './slice/userSlice';
 import { countryApi } from './query/countryQuery';
-import { storesApi } from './query/storesQuery';
+import { appApi } from './query/appQuery';
 import { adminApi } from './query/adminQuery';
 export const store = configureStore({
   reducer: {
     user: userReducer,
     [countryApi.reducerPath]: countryApi.reducer,
-    [storesApi.reducerPath]: storesApi.reducer,
+    [appApi.reducerPath]: appApi.reducer,
     [adminApi.reducerPath]: adminApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       countryApi.middleware,
-      storesApi.middleware,
+      appApi.middleware,
       adminApi.middleware
     ),
 });

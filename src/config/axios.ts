@@ -1,10 +1,6 @@
-import { getCookies } from 'cookies-next';
+import type { BaseQueryFn } from '@reduxjs/toolkit/query';
+import type { AxiosRequestConfig, AxiosError } from 'axios';
 import axios from 'axios';
-export const getLangRoute = () => {
-  const cookies = getCookies();
-  const curLang = cookies?.NEXT_LOCALE || 'vi';
-  return curLang === 'en' ? '/en' : '';
-};
 
 export const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
@@ -14,3 +10,39 @@ export const axiosInstance = axios.create({
   withCredentials: true,
   withXSRFToken: true,
 });
+
+export const axiosBaseQuery =
+  (): BaseQueryFn<
+    {
+      url: string;
+      method?: AxiosRequestConfig['method'];
+      data?: AxiosRequestConfig['data'];
+      params?: AxiosRequestConfig['params'];
+      headers?: AxiosRequestConfig['headers'];
+    },
+    unknown,
+    unknown
+  > =>
+  async ({ url, method, data, params, headers }) => {
+    try {
+      const config: AxiosRequestConfig = {
+        url,
+        method,
+        data,
+        params,
+        headers,
+      };
+
+      const result = await axiosInstance(config);
+
+      return { data: result.data };
+    } catch (axiosError) {
+      const err = axiosError as AxiosError;
+      return {
+        error: {
+          status: err.response?.status,
+          data: err.response?.data,
+        },
+      };
+    }
+  };

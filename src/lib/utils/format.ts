@@ -32,3 +32,21 @@ export const convertData = (data: { [key: string]: string }) => {
     })
   );
 };
+export function formatNumber(number: number) {
+  return number.toLocaleString('vi-VN');
+}
+
+export const formatAndPreserveCursor = (e: any) => {
+  const input = e.target;
+  const { value } = input;
+  const cursorPosition = input.selectionStart;
+  const numericValue = value.replace(/\D/g, '');
+  const formattedValue = formatNumber(Number(numericValue));
+
+  // Update the input value
+  input.value = formattedValue;
+
+  // Restore the cursor position
+  const diff = formattedValue.length - numericValue.length;
+  input.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
+};

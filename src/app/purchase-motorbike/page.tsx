@@ -568,7 +568,8 @@ function PurchaseMotorbikePage() {
             )}
             <div className='w-full flex flex-col md:flex-row justify-between md:items-center gap-4'>
               <p className='text-sm md:text-base'>
-                Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo{' '}
+                Nhấn &quot;Đặt hàng&quot; đồng nghĩa với việc bạn đồng ý tuân
+                theo{' '}
                 <button className='text-sm md:text-base text-blue-500'>
                   Điều khoản {title}
                 </button>

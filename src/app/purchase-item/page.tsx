@@ -80,7 +80,7 @@ function PurchaseItemLayout() {
     } else {
       setVisiblePopup({ visibleLoadingPopup: false });
     }
-  }, [isLoadingOrder]);
+  }, [isLoadingOrder, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessOrder && orderData) {
       setCookie(
@@ -296,7 +296,7 @@ function PurchaseItemLayout() {
           </div>
           <div className='w-full flex justify-between items-center gap-4'>
             <p className='text-sm md:text-base text-neutral-500'>
-              Tổn thanh toán:
+              Tổng thanh toán:
             </p>
             <p className='text-lg md:text-xl text-red-500 font-bold'>
               {formatNumber(totalPrice)} VND
@@ -305,7 +305,7 @@ function PurchaseItemLayout() {
         </div>
         <div className='w-full flex flex-col md:flex-row justify-between md:items-center gap-4'>
           <p className='text-sm md:text-base'>
-            Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo{' '}
+            Nhấn &quot;Đặt hàng&quot; đồng nghĩa với việc bạn đồng ý tuân theo{' '}
             <button className='text-sm md:text-base text-blue-500'>
               Điều khoản {title}
             </button>

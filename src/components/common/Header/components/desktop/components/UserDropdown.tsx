@@ -60,7 +60,7 @@ function UserDropdown({ isOpenMenu, closeMenu }: Props) {
         },
       });
     }
-  }, [isSuccessLogout, isErrorLogout, errorLogout]);
+  }, [isSuccessLogout, isErrorLogout, errorLogout, setVisiblePopup]);
   return (
     <div
       className={`absolute top-[130%] right-0 bg-white border border-neutral-200 shadow ${

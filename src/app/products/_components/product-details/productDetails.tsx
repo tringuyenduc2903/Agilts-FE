@@ -17,9 +17,12 @@ import CustomImage from '@/components/ui/CustomImage';
 import { FaMinus } from 'react-icons/fa6';
 import { UserContext } from '@/contexts/UserProvider';
 import { useFetch } from '@/lib/hooks/useFetch';
-import { createWishlist, deleteWishlist } from '@/api/wishlist';
 import { setCookie } from 'cookies-next';
 import { postCart } from '@/api/product';
+import {
+  useCreateWishlistMutation,
+  useDeleteWishlistMutation,
+} from '@/lib/redux/query/appQuery';
 type Props = {
   product: Product;
 };
@@ -42,20 +45,19 @@ function ProductDetails({ product }: Props) {
       (w) => w.product_preview.option_id === selectedOptionDetails?.id
     );
   }, [wishlist, selectedOptionDetails]);
-  const {
-    fetchData: createWishlistMutation,
-    isSuccess: isSuccessPostWishlist,
-    isLoading: isLoadingPostWishlist,
-    isError: isErrorPostWishlist,
-    error: errorPostWishlist,
-  } = useFetch(
-    async () => await createWishlist({ version: selectedOptionDetails?.id })
-  );
-  const {
-    fetchData: deleteWishlistMutation,
-    isLoading: isLoadingDeleteWishlist,
-    isSuccess: isSuccessDeleteWishlist,
-  } = useFetch(async () => await deleteWishlist(isWishlist?.id as number));
+  const [
+    createWishlist,
+    {
+      isSuccess: isSuccessPostWishlist,
+      isLoading: isLoadingPostWishlist,
+      isError: isErrorPostWishlist,
+      error: errorPostWishlist,
+    },
+  ] = useCreateWishlistMutation();
+  const [
+    deleteWishlist,
+    { isLoading: isLoadingDeleteWishlist, isSuccess: isSuccessDeleteWishlist },
+  ] = useDeleteWishlistMutation();
   const {
     fetchData: postCartMutation,
     isSuccess: isSuccessPostCart,
@@ -207,7 +209,7 @@ function ProductDetails({ product }: Props) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: errorPostWishlist?.message,
+          message: (errorPostWishlist as any)?.data?.message,
         },
       });
     }
@@ -314,8 +316,8 @@ function ProductDetails({ product }: Props) {
                   }
                   onClick={async () =>
                     isWishlist
-                      ? await deleteWishlistMutation()
-                      : await createWishlistMutation()
+                      ? await deleteWishlist(selectedOptionDetails.id)
+                      : await createWishlist(selectedOptionDetails.id)
                   }
                 >
                   {isWishlist ? (

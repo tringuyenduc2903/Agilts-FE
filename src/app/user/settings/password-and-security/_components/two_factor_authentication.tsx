@@ -180,7 +180,14 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
         },
       });
     }
-  }, [isSuccessDelete, isErrorDelete, errorDelete, setVisiblePopup, closeForm]);
+  }, [
+    isSuccessDelete,
+    isErrorDelete,
+    errorDelete,
+    setVisiblePopup,
+    closeForm,
+    refetchUser,
+  ]);
   const handleDownload = useCallback(() => {
     if (isSuccessListCodes && listCodes) {
       const element = document.createElement('a');

@@ -1,28 +1,23 @@
 'use client';
-import { getOrders } from '@/api/user';
 import Table from '@/components/ui/Table';
 import { statusOrder } from '@/config/config';
-import { useFetch } from '@/lib/hooks/useFetch';
 import useQueryString from '@/lib/hooks/useQueryString';
 import withAuth from '@/components/protected-page/withAuth';
 import { Order } from '@/types/types';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useMemo } from 'react';
 import { FaRegEye } from 'react-icons/fa6';
+import { useGetOrdersQuery } from '@/lib/redux/query/appQuery';
 
 function OrdersPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const {
-    fetchData: fetchOrders,
     isLoading: isLoadingOrders,
     data: ordersData,
     isSuccess: isSuccessOrders,
-  } = useFetch(async () => await getOrders(searchParams.toString()));
+  } = useGetOrdersQuery(null);
   const [createQueryString, _, deleteQueryString] = useQueryString();
-  useEffect(() => {
-    fetchOrders();
-  }, [searchParams]);
   const renderedStatusOrder = useMemo(() => {
     return statusOrder?.map((s) => {
       return (
@@ -31,7 +26,7 @@ function OrdersPage() {
         </option>
       );
     });
-  }, [statusOrder]);
+  }, []);
   const renderedOrder = useMemo(() => {
     return (
       isSuccessOrders &&
@@ -67,7 +62,7 @@ function OrdersPage() {
         );
       })
     );
-  }, [isSuccessOrders, ordersData, statusOrder, router]);
+  }, [isSuccessOrders, ordersData, router]);
   return (
     <div className='w-full h-full flex flex-col gap-6'>
       <section className='pb-4 border-b border-neutral-300 flex flex-col sm:flex-row gap-4 justify-between sm:items-center'>

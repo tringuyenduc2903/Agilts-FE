@@ -49,11 +49,7 @@ const ChangePasswordPopup: React.FC<Props> = ({ closeForm }) => {
     } else {
       setVisiblePopup({ visibleLoadingPopup: false });
     }
-  }, [
-    isSubmitting || isLoadingCSRF || isLoading,
-    setVisiblePopup,
-    closeAllPopup,
-  ]);
+  }, [isSubmitting, isLoadingCSRF, isLoading, setVisiblePopup, closeAllPopup]);
   useEffect(() => {
     if (isSuccess) {
       closeForm();

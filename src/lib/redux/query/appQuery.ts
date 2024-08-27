@@ -233,11 +233,11 @@ export const appApi = createApi({
         providesTags: ['wishlist'],
       }),
       createWishlist: builder.mutation({
-        query: ({ id, option }) => ({
-          url: `/api/wishlist/${id}`,
-          method: 'DELETE',
+        query: (version) => ({
+          url: `/api/wishlist`,
+          method: 'POST',
           data: {
-            option: option,
+            version: version,
           },
         }),
         invalidatesTags: ['wishlist'],

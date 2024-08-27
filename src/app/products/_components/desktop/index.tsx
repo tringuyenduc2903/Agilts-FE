@@ -11,7 +11,7 @@ import ProductsSection from './ProductSection';
 import { SkeletonProduct } from './Skeleton';
 import useQueryString from '@/lib/hooks/useQueryString';
 import { VscSettings } from 'react-icons/vsc';
-import { FaAngleLeft, FaAngleRight, FaCheck } from 'react-icons/fa6';
+import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
 import { GrSort } from 'react-icons/gr';
 import Link from 'next/link';
 import FilterSection from './FilterSection';

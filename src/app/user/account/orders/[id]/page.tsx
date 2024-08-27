@@ -1,13 +1,12 @@
 'use client';
-import { getOrderDetails } from '@/api/user';
 import CustomImage from '@/components/ui/CustomImage';
 import { statusOrder } from '@/config/config';
 import { ModalContext } from '@/contexts/ModalProvider';
-import { useFetch } from '@/lib/hooks/useFetch';
 import withAuth from '@/components/protected-page/withAuth';
 import { Order } from '@/types/types';
 import { notFound, useParams, useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useGetOrderDetailsQuery } from '@/lib/redux/query/appQuery';
 
 function OrderDetailsPage() {
   const { id } = useParams();
@@ -15,23 +14,17 @@ function OrderDetailsPage() {
   const [order, setOrder] = useState<Order | null>(null);
   const { setVisibleModal } = useContext(ModalContext);
   const {
-    fetchData: fetchOrder,
     data: orderData,
     isLoading: isLoadingOrder,
     isSuccess: isSuccessOrder,
     isError: isErrorOrder,
-  } = useFetch(async () => await getOrderDetails(id as string));
+  } = useGetOrderDetailsQuery(id);
   const curStatus = useMemo(() => {
     if (isSuccessOrder && orderData) {
       return statusOrder.find((o) => o.name === orderData?.status);
     }
     return null;
-  }, [isSuccessOrder, orderData, statusOrder]);
-  useEffect(() => {
-    if (id) {
-      fetchOrder();
-    }
-  }, [id]);
+  }, [isSuccessOrder, orderData]);
   useEffect(() => {
     if (isSuccessOrder && orderData) {
       setOrder(orderData);

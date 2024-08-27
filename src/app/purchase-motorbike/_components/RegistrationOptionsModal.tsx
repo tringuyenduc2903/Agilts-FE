@@ -45,12 +45,12 @@ function RegistrationOptionsModal({ cb }: Props) {
             </button>
           </div>
           <div className='flex flex-col gap-2'>
-            <p>{t(o.name)}</p>
+            <p>{o.name}</p>
           </div>
         </li>
       );
     });
-  }, [t, defaultValue, handleChangeValue]);
+  }, [defaultValue, handleChangeValue]);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'

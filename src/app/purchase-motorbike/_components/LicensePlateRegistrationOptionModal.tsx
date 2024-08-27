@@ -45,12 +45,12 @@ function LicensePlateRegistrationOptionModal({ cb }: Props) {
             </button>
           </div>
           <div className='flex flex-col gap-2'>
-            <p>{t(o.name)}</p>
+            <p>{o.name}</p>
           </div>
         </li>
       );
     });
-  }, [t, defaultValue, handleChangeValue]);
+  }, [defaultValue, handleChangeValue]);
   return (
     <section
       className='fixed top-0 left-0 w-full h-full z-[9999] py-16 px-4 flex justify-center items-center'
@@ -60,7 +60,7 @@ function LicensePlateRegistrationOptionModal({ cb }: Props) {
         <div className='w-full min-h-[40vh] max-h-[60vh] px-4 pt-8 pb-24 overflow-y-auto flex flex-col gap-6'>
           <div className='flex justify-between items-center gap-2'>
             <h1 className='text-lg md:text-xl font-bold'>
-              {t('license_plate_registration_option')}
+              Tùy đăng ký biển số
             </h1>
           </div>
           <div className='w-full h-full'>

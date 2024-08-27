@@ -35,8 +35,8 @@ function MobileNavigation() {
         </button>
       </header>
       <MenuRoutes
-        isOpenMenu={isOpenMenu}
-        closeMenu={() => setIsOpenMenu(false)}
+      // isOpenMenu={isOpenMenu}
+      // closeMenu={() => setIsOpenMenu(false)}
       />
     </>
   );

@@ -1,11 +1,6 @@
 'use client';
 import { Product, ProductOption } from '@/types/types';
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React, {
   useContext,
   createContext,
@@ -18,9 +13,12 @@ import { useResponsive } from '@/lib/hooks/useResponsive';
 import CustomImage from './CustomImage';
 import { UserContext } from '@/contexts/UserProvider';
 import { useFetch } from '@/lib/hooks/useFetch';
-import { createWishlist, deleteWishlist } from '@/api/wishlist';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { postCart } from '@/api/product';
+import {
+  useCreateWishlistMutation,
+  useDeleteWishlistMutation,
+} from '@/lib/redux/query/appQuery';
 type PropsProductContext = {
   product: Product;
   selectedOption: ProductOption | null;
@@ -173,26 +171,23 @@ SingleProduct.Image = function ProductImage({
   const pathname = usePathname();
   const { product, selectedOption } = useProductContext();
   const { setVisiblePopup } = useContext(PopupContext);
-  const { user, wishlist, refetchWishlist } = useContext(UserContext);
+  const { user, wishlist } = useContext(UserContext);
   const isWishlist = useMemo(() => {
     return wishlist.find(
       (w) => w.product_preview.option_id === selectedOption?.id
     );
   }, [wishlist, selectedOption]);
-  const {
-    fetchData: createWishlistMutation,
-    isSuccess: isSuccessPostWishlist,
-    isLoading: isLoadingPostWishlist,
-    isError: isErrorPostWishlist,
-    error: errorPostWishlist,
-  } = useFetch(
-    async () => await createWishlist({ version: selectedOption?.id })
-  );
-  const {
-    fetchData: deleteWishlistMutation,
-    isLoading: isLoadingDeleteWishlist,
-    isSuccess: isSuccessDeleteWishlist,
-  } = useFetch(async () => await deleteWishlist(isWishlist?.id as number));
+  const [
+    createWishlist,
+    {
+      isSuccess: isSuccessPostWishlist,
+      isLoading: isLoadingPostWishlist,
+      isError: isErrorPostWishlist,
+      error: errorPostWishlist,
+    },
+  ] = useCreateWishlistMutation();
+  const [deleteWishlist, { isLoading: isLoadingDeleteWishlist }] =
+    useDeleteWishlistMutation();
   const {
     fetchData: postCartMutation,
     isSuccess: isSuccessPostCart,
@@ -207,17 +202,18 @@ SingleProduct.Image = function ProductImage({
       router.push(`/login`);
     } else {
       if (isWishlist) {
-        await deleteWishlistMutation();
+        await deleteWishlist(isWishlist.id);
       } else {
-        await createWishlistMutation();
+        await createWishlist(selectedOption?.id);
       }
     }
   }, [
     isWishlist,
     user,
     router,
-    createWishlistMutation,
-    deleteWishlistMutation,
+    selectedOption,
+    createWishlist,
+    deleteWishlist,
   ]);
   const handleAddToCart = useCallback(async () => {
     if (!user) {
@@ -251,7 +247,7 @@ SingleProduct.Image = function ProductImage({
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: errorPostWishlist?.message,
+          message: (errorPostWishlist as any)?.data?.message,
         },
       });
     }
@@ -279,11 +275,6 @@ SingleProduct.Image = function ProductImage({
       });
     }
   }, [isSuccessPostCart, isErrorPostCart, errorPostCart, setVisiblePopup]);
-  useEffect(() => {
-    if (isSuccessPostWishlist || isSuccessDeleteWishlist) {
-      refetchWishlist();
-    }
-  }, [isSuccessPostWishlist, isSuccessDeleteWishlist]);
   return (
     <div
       className={`${

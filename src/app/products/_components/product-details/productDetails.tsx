@@ -16,10 +16,9 @@ import { FaCartPlus } from 'react-icons/fa6';
 import CustomImage from '@/components/ui/CustomImage';
 import { FaMinus } from 'react-icons/fa6';
 import { UserContext } from '@/contexts/UserProvider';
-import { useFetch } from '@/lib/hooks/useFetch';
 import { setCookie } from 'cookies-next';
-import { postCart } from '@/api/product';
 import {
+  useCreateCartMutation,
   useCreateWishlistMutation,
   useDeleteWishlistMutation,
 } from '@/lib/redux/query/appQuery';
@@ -56,16 +55,15 @@ function ProductDetails({ product }: Props) {
   ] = useCreateWishlistMutation();
   const [deleteWishlist, { isLoading: isLoadingDeleteWishlist }] =
     useDeleteWishlistMutation();
-  const {
-    fetchData: postCartMutation,
-    isSuccess: isSuccessPostCart,
-    isLoading: isLoadingPostCart,
-    isError: isErrorPostCart,
-    error: errorPostCart,
-  } = useFetch(
-    async () =>
-      await postCart({ option: selectedOptionDetails?.id, amount: quantity })
-  );
+  const [
+    createCart,
+    {
+      isSuccess: isSuccessPostCart,
+      isLoading: isLoadingPostCart,
+      isError: isErrorPostCart,
+      error: errorPostCart,
+    },
+  ] = useCreateCartMutation();
   const versions = useMemo(() => {
     const newVersions = new Map<string, ProductOption[]>();
     product?.options?.forEach((item) => {
@@ -139,10 +137,13 @@ function ProductDetails({ product }: Props) {
         router.push(`/purchase-motorbike`);
       } else {
         setIsBuyNow(true);
-        await postCartMutation();
+        await createCart({
+          option: selectedOptionDetails?.id,
+          amount: quantity,
+        });
       }
     }
-  }, [pathname, user, router, selectedOptionDetails, postCartMutation]);
+  }, [pathname, user, router, selectedOptionDetails, quantity, createCart]);
   const renderedOptions = useMemo(() => {
     return (
       versions.map((v: any, index: number) => {
@@ -166,7 +167,14 @@ function ProductDetails({ product }: Props) {
         );
       }) || []
     );
-  }, [product.options, curOption]);
+  }, [
+    versions,
+    handleSetCurOption,
+    curOption,
+    isLoadingPostWishlist,
+    isLoadingDeleteWishlist,
+    isLoadingPostCart,
+  ]);
   const renderedColors = useMemo(() => {
     return (
       (selectedOptionDetails &&
@@ -193,7 +201,13 @@ function ProductDetails({ product }: Props) {
         })) ||
       []
     );
-  }, [selectedOption, selectedOptionDetails]);
+  }, [
+    selectedOption,
+    selectedOptionDetails,
+    isLoadingPostWishlist,
+    isLoadingDeleteWishlist,
+    isLoadingPostCart,
+  ]);
   useEffect(() => {
     if (isSuccessPostWishlist) {
       setVisiblePopup({
@@ -245,7 +259,7 @@ function ProductDetails({ product }: Props) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: errorPostCart?.message,
+          message: (errorPostCart as any)?.data?.message,
         },
       });
     }
@@ -255,6 +269,8 @@ function ProductDetails({ product }: Props) {
     isErrorPostCart,
     errorPostCart,
     setVisiblePopup,
+    selectedOptionDetails,
+    isBuyNow,
     router,
   ]);
   return (
@@ -516,7 +532,12 @@ function ProductDetails({ product }: Props) {
               </div>
               <button
                 className='w-full md:w-max h-[52px] px-12 py-2 border border-red-500 bg-red-50 hover:bg-white text-red-500 transition-colors rounded-sm text-sm md:text-base flex justify-center items-center gap-4'
-                onClick={postCartMutation}
+                onClick={async () =>
+                  await createCart({
+                    option: selectedOptionDetails?.id,
+                    amount: quantity,
+                  })
+                }
                 disabled={
                   isLoadingPostWishlist ||
                   isLoadingDeleteWishlist ||

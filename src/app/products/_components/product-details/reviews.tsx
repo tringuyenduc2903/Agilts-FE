@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import CustomPaginationV2 from '@/components/ui/CustomPaginationV2';
 import NotFoundItem from '@/components/ui/NotFoundItem';
 import Stars from '@/components/ui/Stars';
@@ -8,9 +8,11 @@ import { convertData } from '@/lib/utils/format';
 import { Review } from '@/types/types';
 import { useSearchParams } from 'next/navigation';
 import CustomImage from '@/components/ui/CustomImage';
-import { useFetch } from '@/lib/hooks/useFetch';
-import { getFilterReview, getProductReview } from '@/api/product';
 import LoadingMultiItem from '@/components/ui/LoadingMultiItem';
+import {
+  useGetFilterReviewQuery,
+  useGetProductReviewQuery,
+} from '@/lib/redux/query/appQuery';
 
 function Reviews({
   product_id,
@@ -24,23 +26,18 @@ function Reviews({
   const searchParams = useSearchParams();
   const [createQueryString, removeValueQueryString] = useQueryString();
   const {
-    fetchData: getProductReviewMutation,
     data: reviewData,
     isLoading: isLoadingReview,
     isSuccess: isSuccessReview,
-  } = useFetch(
-    async () =>
-      await getProductReview({
-        id: product_id,
-        search: searchParams.toString(),
-      })
-  );
+  } = useGetProductReviewQuery({
+    id: product_id,
+    search: searchParams.toString(),
+  });
   const {
-    fetchData: getFilterReviewMutation,
     data: filterData,
     isLoading: isLoadingFilter,
     isSuccess: isSuccessFilter,
-  } = useFetch(async () => await getFilterReview(product_id));
+  } = useGetFilterReviewQuery(product_id);
   const renderedFilter = useMemo(() => {
     return (
       isSuccessFilter &&
@@ -124,12 +121,6 @@ function Reviews({
       })
     );
   }, [isSuccessReview, reviewData]);
-  useEffect(() => {
-    getFilterReviewMutation();
-  }, []);
-  useEffect(() => {
-    getProductReviewMutation();
-  }, [searchParams]);
   return (
     <section
       id='reviews'

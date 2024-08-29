@@ -1,10 +1,5 @@
 'use client';
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useRouter } from 'next/navigation';
@@ -145,7 +140,7 @@ function Banner() {
         clearInterval(autoChangeSlide);
       };
     }
-  }, [isAutoChangeSlide, data]);
+  }, [isAutoChangeSlide, data, handleNextSlide]);
   return (
     <section
       className='relative pt-[72px] w-full h-[70vh] md:h-screen overflow-hidden'

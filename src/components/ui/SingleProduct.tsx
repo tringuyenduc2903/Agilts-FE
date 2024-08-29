@@ -12,10 +12,9 @@ import { FaStar, FaRegHeart, FaHeart, FaCartPlus } from 'react-icons/fa6';
 import { useResponsive } from '@/lib/hooks/useResponsive';
 import CustomImage from './CustomImage';
 import { UserContext } from '@/contexts/UserProvider';
-import { useFetch } from '@/lib/hooks/useFetch';
 import { PopupContext } from '@/contexts/PopupProvider';
-import { postCart } from '@/api/product';
 import {
+  useCreateCartMutation,
   useCreateWishlistMutation,
   useDeleteWishlistMutation,
 } from '@/lib/redux/query/appQuery';
@@ -184,15 +183,15 @@ SingleProduct.Image = function ProductImage() {
   ] = useCreateWishlistMutation();
   const [deleteWishlist, { isLoading: isLoadingDeleteWishlist }] =
     useDeleteWishlistMutation();
-  const {
-    fetchData: postCartMutation,
-    isSuccess: isSuccessPostCart,
-    isLoading: isLoadingPostCart,
-    isError: isErrorPostCart,
-    error: errorPostCart,
-  } = useFetch(
-    async () => await postCart({ option: selectedOption?.id, amount: 1 })
-  );
+  const [
+    createCart,
+    {
+      isSuccess: isSuccessPostCart,
+      isLoading: isLoadingPostCart,
+      isError: isErrorPostCart,
+      error: errorPostCart,
+    },
+  ] = useCreateCartMutation();
   const handleWishlist = useCallback(async () => {
     if (!user) {
       router.push(`/login`);
@@ -200,7 +199,7 @@ SingleProduct.Image = function ProductImage() {
       if (isWishlist) {
         await deleteWishlist(isWishlist.id);
       } else {
-        await createWishlist(selectedOption?.id);
+        await createWishlist({ option: selectedOption?.id, amount: 1 });
       }
     }
   }, [
@@ -215,9 +214,9 @@ SingleProduct.Image = function ProductImage() {
     if (!user) {
       router.push(`/login`);
     } else {
-      await postCartMutation();
+      await createCart(selectedOption?.id);
     }
-  }, [user, router, postCartMutation]);
+  }, [createCart, user, router, selectedOption]);
   useEffect(() => {
     if (isLoadingPostWishlist || isLoadingDeleteWishlist || isLoadingPostCart) {
       setVisiblePopup({ visibleLoadingPopup: true });
@@ -266,7 +265,7 @@ SingleProduct.Image = function ProductImage() {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: errorPostCart?.message,
+          message: (errorPostCart as any)?.data?.message,
         },
       });
     }

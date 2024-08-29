@@ -1,9 +1,7 @@
 'use client';
-import { updateDocument } from '@/api/document';
 import { documents } from '@/config/config';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { PopupContext } from '@/contexts/PopupProvider';
-import { UserContext } from '@/contexts/UserProvider';
 import { useUpdateDocumentMutation } from '@/lib/redux/query/appQuery';
 import { formatDate } from '@/lib/utils/format';
 import React, {

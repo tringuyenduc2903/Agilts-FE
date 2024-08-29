@@ -106,7 +106,7 @@ function PurchaseItemLayout() {
     router,
     isErrorOrder,
     errorOrder,
-    setVisibleModal,
+    setVisiblePopup,
   ]);
   return (
     <main className='w-full min-h-max py-[72px] flex flex-col gap-16'>

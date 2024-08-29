@@ -187,6 +187,7 @@ function PurchaseMotorbikePage() {
     }
     await createOrder(form);
   }, [
+    createOrder,
     defaultAddress,
     defaultDocument,
     product,
@@ -216,7 +217,13 @@ function PurchaseMotorbikePage() {
         },
       });
     }
-  }, [isSuccessPriceQuote, priceQuoteData, isErrorPriceQuote, errorPriceQuote]);
+  }, [
+    isSuccessPriceQuote,
+    priceQuoteData,
+    isErrorPriceQuote,
+    errorPriceQuote,
+    setVisiblePopup,
+  ]);
   useEffect(() => {
     if (isSuccessOrder && orderData) {
       router.replace(`/success-order`);
@@ -236,7 +243,7 @@ function PurchaseMotorbikePage() {
     isErrorOrder,
     errorOrder,
     router,
-    deleteCookie,
+    setVisiblePopup,
   ]);
   return (
     <main className='w-full py-[72px] flex flex-col gap-16'>

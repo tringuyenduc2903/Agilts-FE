@@ -321,7 +321,7 @@ function FilterSection({ filter, isSuccessFilter, closeFilter }: Filter) {
         priceMax.toString(),
       ]
     );
-  }, [createQueryString, priceMin, priceMax, form]);
+  }, [closeFilter, createQueryString, priceMin, priceMax, form]);
   const handleDeleteQueryString = useCallback(() => {
     closeFilter();
     setForm((prevForm) => {
@@ -356,7 +356,7 @@ function FilterSection({ filter, isSuccessFilter, closeFilter }: Filter) {
       };
     }),
       deleteQueryString(false);
-  }, [deleteQueryString]);
+  }, [closeFilter, deleteQueryString]);
   return (
     <section
       ref={sectionRef}

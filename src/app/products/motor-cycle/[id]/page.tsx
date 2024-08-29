@@ -5,7 +5,33 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { Metadata } from 'next';
 import Link from 'next/link';
-export const metadata: Metadata = {};
+
+// Hàm để tạo metadata dựa trên dữ liệu sản phẩm
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const repo = await getProductDetails(params.id, 'motor-cycle');
+  if (repo.type === 'error') return {};
+
+  return {
+    title: repo.data.seo.title,
+    robots: { index: true, follow: true },
+    keywords: repo.data.seo.title,
+    openGraph: {
+      siteName: process.env.NEXT_PUBLIC_WEBSITE_NAME,
+      type: 'website',
+      url: `${process.env.NEXT_CLIENT_URL}/products/motor-cycle/${repo.data.search_url}`,
+      images: [
+        {
+          url: repo.data.seo?.image,
+        },
+      ],
+    },
+  };
+}
+
 const Aside = dynamic(() => import('../../_components/product-details/aside'), {
   ssr: false,
 });
@@ -70,6 +96,7 @@ const Reviews = dynamic(
     ),
   }
 );
+
 export default async function ProductDetailsPage({
   params,
 }: {
@@ -77,19 +104,6 @@ export default async function ProductDetailsPage({
 }) {
   const repo = await getProductDetails(params.id, 'motor-cycle');
   if (repo.type === 'error') return notFound();
-  metadata.robots = { index: true, follow: true };
-  metadata.title = repo.data.seo.title;
-  metadata.keywords = repo.data.seo.title;
-  metadata.openGraph = {
-    siteName: process.env.NEXT_PUBLIC_WEBSITE_NAME,
-    type: 'website',
-    url: `${process.env.NEXT_CLIENT_URL}/products/motor-cycle/${repo.data.search_url}`,
-    images: [
-      {
-        url: repo.data.seo?.image,
-      },
-    ],
-  };
   return (
     <main className='w-full min-h-screen py-[72px] flex flex-col gap-12 text-sm md:text-base'>
       <section className='bg-neutral-100 text-neutral-800'>
@@ -105,7 +119,7 @@ export default async function ProductDetailsPage({
             className='font-bold uppercase tracking-[2px] hover:text-red-500 transition-colors'
             href='/products/motor-cycle'
           >
-            Xe máy
+            Phụ kiện
           </Link>
           <span className='w-[32px] relative before:absolute before:w-[24px] before:h-[1px] before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 before:bg-neutral-800'></span>
           <p className='font-bold uppercase tracking-[2px]'>

@@ -1,9 +1,6 @@
 'use client';
-import { updateAddress } from '@/api/address';
-import { defaultCountry } from '@/config/config';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { PopupContext } from '@/contexts/PopupProvider';
-import { useFetch } from '@/lib/hooks/useFetch';
 import { useUpdateAddressMutation } from '@/lib/redux/query/appQuery';
 import {
   useGetDistrictsQuery,

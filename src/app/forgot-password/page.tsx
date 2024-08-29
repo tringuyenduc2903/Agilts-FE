@@ -50,7 +50,7 @@ function ForgotPasswordPage() {
         },
       });
     }
-  }, [isSuccess, data, isError, error]);
+  }, [isSuccess, data, isError, error, setVisiblePopup]);
   return (
     <main className='w-full pt-[72px] flex flex-col'>
       <section className='absolute h-full w-full -z-10 hidden lg:block'>

@@ -88,15 +88,21 @@ function LoginPage() {
     } else {
       setVisiblePopup({ visibleLoadingPopup: false });
     }
-    if (!isSubmitting && errors) {
+    if (!isSubmitting && errorLogin) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: errors?.message,
+          message: (errorLogin as any)?.data?.message,
         },
       });
     }
-  }, [isSubmitting, isLoadingCSRF, isLoadingLogin, setVisiblePopup]);
+  }, [
+    isSubmitting,
+    isLoadingCSRF,
+    isLoadingLogin,
+    errorLogin,
+    setVisiblePopup,
+  ]);
 
   useEffect(() => {
     if (isSuccessLogin) {

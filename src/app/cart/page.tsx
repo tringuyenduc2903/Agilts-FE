@@ -15,7 +15,7 @@ import { UserContext } from '@/contexts/UserProvider';
 import CustomImage from '@/components/ui/CustomImage';
 import { Cart } from '@/types/types';
 import { PopupContext } from '@/contexts/PopupProvider';
-import CustomCheckbox from '@/components/ui/CustomCheckbox';
+import CustomCheckbox from '@/components/ui/form/CustomCheckbox';
 import {
   useDeleteCartMutation,
   useUpdateCartMutation,
@@ -142,7 +142,7 @@ function CartPage() {
     if (itemKey) {
       setSelectedOptions((prevOptions) => [...prevOptions, itemKey]);
     }
-  }, [searchParams.get('itemKey')]);
+  }, [searchParams]);
   useEffect(() => {
     if (isLoadingUpdate || isLoadingDelete) {
       setVisiblePopup({ visibleLoadingPopup: true });
@@ -273,8 +273,11 @@ function CartPage() {
                   title='Làm mới giỏ hàng'
                   aria-label='refresh-item'
                   className='w-max hover:text-green-500 transition-colors'
-                  onClick={() =>
-                    updateCart({ id: c.id, amount: products[index].amount })
+                  onClick={async () =>
+                    await updateCart({
+                      id: c.id,
+                      amount: products[index].amount,
+                    })
                   }
                   disabled={isLoadingCart || isLoadingUpdate || isLoadingDelete}
                 >
@@ -285,7 +288,7 @@ function CartPage() {
                 title='Xóa sản phẩm'
                 aria-label='remove-item'
                 className='w-max hover:text-red-500 transition-colors'
-                onClick={() => deleteCart(c.id)}
+                onClick={async () => await deleteCart(c.id)}
                 disabled={isLoadingCart || isLoadingUpdate || isLoadingDelete}
               >
                 <FaRegTrashCan className='text-2xl' />
@@ -295,7 +298,20 @@ function CartPage() {
         </tr>
       );
     });
-  }, [cart, products, selectedOptions]);
+  }, [
+    cart,
+    products,
+    selectedOptions,
+    updateCart,
+    deleteCart,
+    handleChangeQuantity,
+    handleDecreaseQuantity,
+    handleIncreaseQuantity,
+    handleSetSelectedOptions,
+    isLoadingCart,
+    isLoadingDelete,
+    isLoadingUpdate,
+  ]);
   return (
     <main className='w-full min-h-max py-[72px] flex flex-col gap-16'>
       <section className='absolute h-[280px] w-full -z-10 hidden lg:block'>

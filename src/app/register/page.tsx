@@ -80,15 +80,15 @@ function RegisterPage() {
     } else {
       setVisiblePopup({ visibleLoadingPopup: false });
     }
-    if (!isSubmitting && errors) {
+    if (!isSubmitting && errorRegister) {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'error',
-          message: errors?.message,
+          message: (errorRegister as any)?.data?.message,
         },
       });
     }
-  }, [isSubmitting, isLoadingRegister, setVisiblePopup]);
+  }, [isSubmitting, isLoadingRegister, errorRegister, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessRegister) {
       setVisiblePopup({

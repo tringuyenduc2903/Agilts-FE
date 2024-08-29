@@ -18,7 +18,7 @@ function ProductsSection({ products, total_pages }: Props) {
           key={p?.id}
           product={p}
         >
-          <SingleProduct.Image customClass='h-[150px] md:h-[180px]' />
+          <SingleProduct.Image />
           <div
             className='flex flex-col gap-2 cursor-pointer'
             onClick={() =>

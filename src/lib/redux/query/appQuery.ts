@@ -312,6 +312,18 @@ export const appApi = createApi({
           method: 'GET',
         }),
       }),
+      getProductReview: builder.query({
+        query: ({ id, search }) => ({
+          url: `/api/review/${id}${search ? `?${search}` : ''}`,
+          method: 'GET',
+        }),
+      }),
+      getFilterReview: builder.query({
+        query: (id) => ({
+          url: `/api/filter/review/${id}`,
+          method: 'GET',
+        }),
+      }),
       postPriceQuote: builder.mutation({
         query: (body) => ({
           url: `/price-quote`,
@@ -380,6 +392,8 @@ export const {
   useCreateOrderMutation,
   useGetProductsQuery,
   useGetFilterProductQuery,
+  useGetProductReviewQuery,
+  useGetFilterReviewQuery,
   usePostPriceQuoteMutation,
   useGetSettingsQuery,
   useGetStoresQuery,

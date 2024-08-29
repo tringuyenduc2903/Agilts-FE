@@ -9,10 +9,11 @@ import React, {
   useState,
 } from 'react';
 import bgImg from '@/assets/port-title-area.jpg';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { PopupContext } from '@/contexts/PopupProvider';
 import withNoAuth from '@/components/protected-page/withNoAuth';
 import { useVerifyTwoFactorMutation } from '@/lib/redux/query/appQuery';
+import CustomInputText from '@/components/ui/form/CustomInputText';
 type Form = {
   code: string;
   recovery_code: string;
@@ -26,11 +27,11 @@ function TwoFactorQrCodePage() {
   const errors = useMemo(() => {
     return isError && (error as any)?.data;
   }, [isError, error]);
+  const methods = useForm<Form>();
   const {
-    register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<Form>();
+  } = methods;
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {
       await verifyTwoFactor(
@@ -83,87 +84,75 @@ function TwoFactorQrCodePage() {
           </p>
         </div>
         <div className='col-span-1 px-4'>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            method='POST'
-            className='flex flex-col gap-4'
-          >
-            {curInput === 'code' && (
-              <div className='flex flex-col gap-2'>
-                <label
-                  className='lg:text-neutral-800 text-white text-center lg:text-start'
-                  htmlFor='code'
-                >
-                  Nhập mã
-                </label>
-                <div className='relative w-full'>
-                  <input
-                    className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+          <FormProvider {...methods}>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              method='POST'
+              className='flex flex-col gap-4'
+            >
+              {curInput === 'code' && (
+                <div className='flex flex-col gap-2'>
+                  <label
+                    className='lg:text-neutral-800 text-white text-center lg:text-start'
+                    htmlFor='code'
+                  >
+                    Nhập mã
+                  </label>
+                  <CustomInputText
+                    form_name='code'
                     type='text'
                     placeholder='Nhập mã gồm 6 chữ số do ứng dụng xác thực tạo'
-                    {...register('code')}
+                    error={errors?.code?.[0]}
                     disabled={isSubmitting || isLoading}
                   />
-                  {errors?.code && (
-                    <p className='text-red-500 font-bold text-sm md:text-base'>
-                      {errors.code[0]}
-                    </p>
-                  )}
                 </div>
-              </div>
-            )}
-            {curInput === 'recovery' && (
-              <div className='flex flex-col gap-2'>
-                <label
-                  className='lg:text-neutral-800 text-white text-center lg:text-start'
-                  htmlFor='recovery_code'
-                >
-                  Nhập mã khôi phục
-                </label>
-                <div className='relative w-full'>
-                  <input
-                    className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+              )}
+              {curInput === 'recovery' && (
+                <div className='flex flex-col gap-2'>
+                  <label
+                    className='lg:text-neutral-800 text-white text-center lg:text-start'
+                    htmlFor='recovery_code'
+                  >
+                    Nhập mã khôi phục
+                  </label>
+                  <CustomInputText
+                    form_name='recovery_code'
                     type='text'
                     placeholder='Nhập mã khôi phục'
-                    {...register('recovery_code')}
+                    error={errors?.recovery_code?.[0]}
                     disabled={isSubmitting || isLoading}
                   />
-                  {errors?.recovery_code && (
-                    <p className='text-red-500 font-bold text-sm md:text-base'>
-                      {errors.recovery_code[0]}
-                    </p>
-                  )}
                 </div>
-              </div>
-            )}
-            {curInput === 'recovery' && (
+              )}
+              {curInput === 'recovery' && (
+                <button
+                  className='w-max text-sm font-bold text-blue-700'
+                  type='button'
+                  onClick={() => setCurInput('code')}
+                  disabled={isSubmitting || isLoading}
+                >
+                  Sử dụng mã xác thực ứng dụng
+                </button>
+              )}
+              {curInput === 'code' && (
+                <button
+                  className='w-max text-sm font-bold text-blue-700'
+                  type='button'
+                  onClick={() => setCurInput('recovery')}
+                  disabled={isSubmitting || isLoading}
+                >
+                  Sử dụng mã khôi phục
+                </button>
+              )}
               <button
-                className='w-max text-sm font-bold text-blue-700'
-                type='button'
-                onClick={() => setCurInput('code')}
+                className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
+                type='submit'
                 disabled={isSubmitting || isLoading}
               >
-                Sử dụng mã xác thực ứng dụng
+                Xác nhận
               </button>
-            )}
-            {curInput === 'code' && (
-              <button
-                className='w-max text-sm font-bold text-blue-700'
-                type='button'
-                onClick={() => setCurInput('recovery')}
-                disabled={isSubmitting || isLoading}
-              >
-                Sử dụng mã khôi phục
-              </button>
-            )}
-            <button
-              className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
-              type='submit'
-              disabled={isSubmitting || isLoading}
-            >
-              Xác nhận
-            </button>
-          </form>
+            </form>
+          </FormProvider>
         </div>
       </section>
     </main>

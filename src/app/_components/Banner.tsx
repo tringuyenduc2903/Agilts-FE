@@ -2,16 +2,14 @@
 import React, {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react';
-import Image from 'next/image';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { useRouter } from 'next/navigation';
-import { useGetSettingsQuery } from '@/lib/redux/query/adminQuery';
 import CustomImage from '@/components/ui/CustomImage';
+import { useGetSettingsQuery } from '@/lib/redux/query/appQuery';
 function Banner() {
   const router = useRouter();
   const [curSlide, setCurSlide] = useState(0);

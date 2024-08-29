@@ -1,13 +1,14 @@
 'use client';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import bgImg from '@/assets/port-title-area.jpg';
 import Image from 'next/image';
 import { useParams, useSearchParams } from 'next/navigation';
 import { PopupContext } from '@/contexts/PopupProvider';
 import withNoAuth from '@/components/protected-page/withNoAuth';
-import CustomInputPassword from '@/components/ui/CustomInputPassword';
+import CustomInputPassword from '@/components/ui/form/CustomInputPassword';
 import { useResetPasswordMutation } from '@/lib/redux/query/appQuery';
+import CustomInputText from '@/components/ui/form/CustomInputText';
 
 type Form = {
   email: string;
@@ -23,17 +24,18 @@ function ResetPasswordPage() {
   const errors = useMemo(() => {
     return isError && (error as any)?.data;
   }, [isError, error]);
-  const {
-    register,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<Form>({
+  const methods = useForm<Form>({
     defaultValues: {
       email: searchParams.get('email') || '',
       password: '',
       password_confirmation: '',
     },
   });
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {
       await resetPassword({ ...data, token: token });
@@ -81,51 +83,36 @@ function ResetPasswordPage() {
           </p>
         </div>
         <div className='col-span-1 px-4'>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            method='POST'
-            className='flex flex-col gap-4'
-          >
-            <div className='w-full flex flex-col gap-2'>
-              <input
-                className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+          <FormProvider {...methods}>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              method='POST'
+              className='flex flex-col gap-4'
+            >
+              <CustomInputText
+                form_name='email'
                 type='email'
-                placeholder='Email'
-                {...register('email')}
                 disabled
+                error={errors?.email?.[0]}
               />
-              {errors?.email && (
-                <p className='text-red-500 font-bold text-sm md:text-base'>
-                  {errors.email[0]}
-                </p>
-              )}
-            </div>
-            <div className='w-full flex flex-col gap-2'>
               <CustomInputPassword
                 placeholder='Nhập mật khẩu...'
-                {...register('password')}
                 disabled={isSubmitting || isLoading}
+                error={errors?.password?.[0]}
               />
-              {errors?.password && (
-                <p className='text-red-500 font-bold text-sm md:text-base'>
-                  {errors.password[0]}
-                </p>
-              )}
-            </div>
-            <div className='w-full flex flex-col gap-2'>
               <CustomInputPassword
+                form_name='password_confirmation'
                 placeholder='Nhập lại mật khẩu...'
-                {...register('password_confirmation')}
                 disabled={isSubmitting || isLoading}
               />
-            </div>
-            <button
-              className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
-              type='submit'
-            >
-              Xác nhận
-            </button>
-          </form>
+              <button
+                className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
+                type='submit'
+              >
+                Xác nhận
+              </button>
+            </form>
+          </FormProvider>
         </div>
       </section>
     </main>

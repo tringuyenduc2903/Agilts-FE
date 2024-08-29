@@ -1,6 +1,6 @@
 'use client';
 import { title } from '@/config/config';
-import { useGetSettingsQuery } from '@/lib/redux/query/adminQuery';
+import { useGetSettingsQuery } from '@/lib/redux/query/appQuery';
 import {
   FooterBranch,
   FooterPage,

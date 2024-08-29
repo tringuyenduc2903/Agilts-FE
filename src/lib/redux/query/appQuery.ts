@@ -312,6 +312,19 @@ export const appApi = createApi({
           method: 'GET',
         }),
       }),
+      postPriceQuote: builder.mutation({
+        query: (body) => ({
+          url: `/price-quote`,
+          method: 'POST',
+          body: body,
+        }),
+      }),
+      getSettings: builder.query({
+        query: (setting_type) => ({
+          url: `/setting/${setting_type}`,
+          method: 'GET',
+        }),
+      }),
       getStores: builder.query({
         query: ({ search, perPage }) => ({
           url: `/api/branch?perPage=${perPage ? perPage : '16'}${
@@ -367,5 +380,7 @@ export const {
   useCreateOrderMutation,
   useGetProductsQuery,
   useGetFilterProductQuery,
+  usePostPriceQuoteMutation,
+  useGetSettingsQuery,
   useGetStoresQuery,
 } = appApi;

@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { PopupContext } from '@/contexts/PopupProvider';
 import withNoAuth from '@/components/protected-page/withNoAuth';
 import { useForgotPasswordMutation } from '@/lib/redux/query/appQuery';
+import CustomInputText from '@/components/ui/form/CustomInputText';
 
 type Form = {
   email: string;
@@ -77,16 +78,13 @@ function ForgotPasswordPage() {
             >
               Tìm tài khoản của bạn
             </label>
-            <div className='relative w-full'>
-              <input
-                className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
-                type='email'
-                formNoValidate
-                placeholder='Nhập địa chỉ email...'
-                {...register('email')}
-                disabled={isSubmitting}
-              />
-            </div>
+            <CustomInputText
+              form_name='email'
+              type='email'
+              placeholder='Nhập địa chỉ email...'
+              disabled={isSubmitting}
+              reacthooksform={false}
+            />
             <button
               className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
               disabled={isSubmitting}

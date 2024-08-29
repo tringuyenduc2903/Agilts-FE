@@ -25,7 +25,6 @@ function CustomImage({
   height,
   isErrorImageLarger,
   isShowDetails,
-  className,
 }: Props) {
   const [fallbackImg, setFallbackImg] = useState(false);
   const [fallBackListImage, setFallBackListImage] = useState<number[]>([]);
@@ -37,7 +36,7 @@ function CustomImage({
   if (image) {
     return (
       <Image
-        className={`object-cover w-full h-[${height}px] bg-center ${className}`}
+        className='object-cover w-full h-full bg-center'
         width={width}
         height={height}
         src={

@@ -11,7 +11,7 @@ import ProductsSection from './ProductSection';
 import { SkeletonProduct } from './Skeleton';
 import useQueryString from '@/lib/hooks/useQueryString';
 import { VscSettings } from 'react-icons/vsc';
-import { FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
+import { FaMagnifyingGlass, FaAngleLeft, FaAngleRight } from 'react-icons/fa6';
 import { GrSort } from 'react-icons/gr';
 import Link from 'next/link';
 import FilterSection from './FilterSection';
@@ -40,24 +40,30 @@ function ProductsDesktop({
 }: Props) {
   const searchParams = useSearchParams();
   const carouselRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const [createQueryString, removeValueQueryString] = useQueryString();
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
   const [showPrevButton, setShowPrevButton] = useState(false);
   const [showNextButton, setShowNextButton] = useState(false);
-
   const handleSelectedAction = useCallback((action: string) => {
     setSelectedAction((prevAction) => (prevAction === action ? null : action));
   }, []);
-
   const handleSearch = useCallback(() => {
-    const searchValue = searchParams.get('search');
-    if (searchValue) {
-      createQueryString('search', searchValue);
-    } else {
-      removeValueQueryString('search');
+    if (inputRef.current) {
+      inputRef.current.value
+        ? createQueryString('search', inputRef.current.value)
+        : removeValueQueryString('search');
     }
-  }, [searchParams, createQueryString, removeValueQueryString]);
-
+  }, [inputRef, createQueryString, removeValueQueryString]);
+  const handleKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSearch();
+      }
+    },
+    [handleSearch]
+  );
   const scrollCarousel = (direction: 'left' | 'right') => {
     if (carouselRef.current) {
       const scrollAmount = direction === 'left' ? -200 : 200;
@@ -74,14 +80,13 @@ function ProductsDesktop({
   }, []);
 
   useEffect(() => {
-    handleSearch();
     checkCarouselButtons();
     window.addEventListener('resize', checkCarouselButtons);
 
     return () => {
       window.removeEventListener('resize', checkCarouselButtons);
     };
-  }, [handleSearch, checkCarouselButtons]);
+  }, [checkCarouselButtons]);
 
   useEffect(() => {
     if (carouselRef.current) {
@@ -154,8 +159,26 @@ function ProductsDesktop({
           <p className='font-bold uppercase tracking-[2px]'>{page}</p>
         </div>
       </section>
+      <section className='w-full m-auto py-4 px-4 md:px-8 xl:px-16'>
+        <div className='relative w-full border border-neutral-300 flex justify-between items-center'>
+          <FaMagnifyingGlass className='absolute top-1/2 -translate-y-1/2 left-4 text-neutral-500 text-xl' />
+          <input
+            ref={inputRef}
+            className='flex-1 rounded-sm px-12 py-3'
+            type='text'
+            placeholder='Tìm kiếm sản phẩm...'
+            onKeyDown={handleKeyPress}
+          />
+          <button
+            className='px-4 border-l border-neutral-300 font-bold text-red-500'
+            onClick={handleSearch}
+          >
+            Tìm kiếm
+          </button>
+        </div>
+      </section>
       <section className='m-auto py-4 px-4 md:px-8 xl:px-16 overflow-hidden'>
-        <div className='flex items-center justify-between my-4'>
+        <div className='flex items-center justify-between'>
           {showPrevButton && (
             <button
               className='bg-red-600 hover:bg-red-500 transition-colors px-1 py-2'

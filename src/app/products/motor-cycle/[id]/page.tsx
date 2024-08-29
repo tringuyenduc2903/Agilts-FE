@@ -93,7 +93,7 @@ export default async function ProductDetailsPage({
   return (
     <main className='w-full min-h-screen py-[72px] flex flex-col gap-12 text-sm md:text-base'>
       <section className='bg-neutral-100 text-neutral-800'>
-        <div className='py-6 container m-auto flex flex-wrap items-center gap-4 text-base'>
+        <div className='py-6 container m-auto hidden md:flex flex-wrap items-center gap-4 text-base'>
           <Link
             className='font-bold uppercase tracking-[2px] hover:text-red-500 transition-colors'
             href='/'

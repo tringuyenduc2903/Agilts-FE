@@ -161,11 +161,7 @@ SingleProduct.Price = function ProductPrice() {
   );
 };
 
-SingleProduct.Image = function ProductImage({
-  customClass,
-}: {
-  customClass?: string;
-}) {
+SingleProduct.Image = function ProductImage() {
   const state = useResponsive();
   const router = useRouter();
   const pathname = usePathname();
@@ -277,12 +273,9 @@ SingleProduct.Image = function ProductImage({
   }, [isSuccessPostCart, isErrorPostCart, errorPostCart, setVisiblePopup]);
   return (
     <div
-      className={`${
-        customClass ? customClass : 'w-full h-[350px]'
-      } relative group overflow-hidden`}
+      className={`max-h-[180px] xl:max-h-[280px] relative group h-full overflow-hidden`}
     >
       <CustomImage
-        className='object-cover bg-center'
         image={
           selectedOption
             ? selectedOption.images[0]

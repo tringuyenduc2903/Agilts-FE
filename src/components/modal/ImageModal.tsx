@@ -87,7 +87,6 @@ function ImageModal() {
     <section
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
       className='fixed top-0 left-0 w-full h-full z-[999] flex justify-center items-center px-6'
-      onClick={() => setVisibleModal('visibleImageModal')}
     >
       <div
         ref={sectionRef as LegacyRef<HTMLDivElement>}
@@ -129,9 +128,9 @@ function ImageModal() {
               src={
                 fallbackImg
                   ? errorImage
-                  : state?.visibleImageModal?.images[curImage].image
+                  : state?.visibleImageModal?.images[curImage]?.image
               }
-              alt={state?.visibleImageModal?.images[curImage].alt}
+              alt={state?.visibleImageModal?.images[curImage]?.alt}
               width={1500}
               height={800}
               onError={() => setFallbackImg(true)}

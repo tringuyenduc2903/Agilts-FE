@@ -38,6 +38,7 @@ type FetchData = {
   defaultDocument: Document | null;
   setAddresses: Dispatch<SetStateAction<Address[] | []>>;
   setDefaultAddress: Dispatch<SetStateAction<Address | null>>;
+  setAllDocuments: Dispatch<SetStateAction<Document[] | []>>;
   setDefaultDocument: Dispatch<SetStateAction<Document | null>>;
 };
 export const UserContext = createContext({} as FetchData);
@@ -85,6 +86,16 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     getUser(null);
   }, []);
+  useEffect(() => {
+    if (!user) {
+      setAddresses([]);
+      setAllDocuments([]);
+      setDefaultAddress(null);
+      setDefaultDocument(null);
+      setCart([]);
+      setWishlist([]);
+    }
+  }, [user]);
   useEffect(() => {
     if (isSuccessUser && userData) {
       dispatch(setUser(userData));
@@ -157,6 +168,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     isLoadingCart,
     setAddresses,
     setDefaultAddress,
+    setAllDocuments,
     setDefaultDocument,
   };
   return (

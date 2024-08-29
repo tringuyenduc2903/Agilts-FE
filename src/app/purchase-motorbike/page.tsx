@@ -12,7 +12,6 @@ import { UserContext } from '@/contexts/UserProvider';
 import { TbRefresh } from 'react-icons/tb';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { Address, Document, ProductOption } from '@/types/types';
-import { usePostPriceQuoteMutation } from '@/lib/redux/query/adminQuery';
 import { ModalContext } from '@/contexts/ModalProvider';
 import { deleteCookie, getCookie } from 'cookies-next';
 import { useRouter } from 'next/navigation';
@@ -20,7 +19,10 @@ import { VehicleRegistrationSupportContext } from './_contexts/VehicleRegistrati
 import logo from '../../../public/logo.png';
 import RegistrationOptionsModal from './_components/RegistrationOptionsModal';
 import LicensePlateRegistrationOptionModal from './_components/LicensePlateRegistrationOptionModal';
-import { useCreateOrderMutation } from '@/lib/redux/query/appQuery';
+import {
+  useCreateOrderMutation,
+  usePostPriceQuoteMutation,
+} from '@/lib/redux/query/appQuery';
 import ProgressMotor from '@/components/common/Progress/ProgressMotor';
 import { title } from '@/config/config';
 import Image from 'next/image';

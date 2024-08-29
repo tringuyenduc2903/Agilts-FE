@@ -1,6 +1,8 @@
 export const title = process.env.NEXT_PUBLIC_WEBSITE_NAME;
 export const defaultCountry = 'Việt Nam';
 export const defaultTimezone = 'Asia/Ho_Chi_Minh';
+export const referrerURL =
+  typeof window !== 'undefined' ? document.referrer : '';
 export const sortItem = [
   {
     sortColumn: 'name',

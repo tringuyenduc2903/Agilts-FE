@@ -19,7 +19,7 @@ function ProductsSection({ products, total_pages, current_page }: Props) {
           key={p?.id}
           product={p}
         >
-          <SingleProduct.Image customClass='h-[280px]' />
+          <SingleProduct.Image />
           <div
             className='flex flex-col gap-2 cursor-pointer'
             onClick={() =>
@@ -43,7 +43,9 @@ function ProductsSection({ products, total_pages, current_page }: Props) {
   }, [products, router, pathname]);
   return (
     <div className='w-full flex flex-col items-center gap-16'>
-      <div className='w-full grid grid-cols-5 gap-16'>{renderedProducts}</div>
+      <div className='w-full grid grid-cols-4 2xl:grid-cols-5 gap-16'>
+        {renderedProducts}
+      </div>
       {Number(total_pages) > 1 && (
         <CustomPagination
           curPage={Number(current_page)}

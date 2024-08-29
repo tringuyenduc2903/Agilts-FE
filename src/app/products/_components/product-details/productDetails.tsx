@@ -54,10 +54,8 @@ function ProductDetails({ product }: Props) {
       error: errorPostWishlist,
     },
   ] = useCreateWishlistMutation();
-  const [
-    deleteWishlist,
-    { isLoading: isLoadingDeleteWishlist, isSuccess: isSuccessDeleteWishlist },
-  ] = useDeleteWishlistMutation();
+  const [deleteWishlist, { isLoading: isLoadingDeleteWishlist }] =
+    useDeleteWishlistMutation();
   const {
     fetchData: postCartMutation,
     isSuccess: isSuccessPostCart,
@@ -262,9 +260,8 @@ function ProductDetails({ product }: Props) {
   return (
     <section className='container md:m-auto px-6 md:px-0 grid grid-cols-1 lg:grid-cols-2 gap-16 py-8 md:py-16 overflow-hidden'>
       <div className='col-span-1 flex flex-col items-start gap-6'>
-        <div className='w-full max-h-[600px]'>
+        <div className='w-full max-h-[600px] border border-neutral-300 cursor-pointer overflow-hidden'>
           <CustomImage
-            className='border border-neutral-300 rounded-sm cursor-pointer'
             image={
               selectedOptionDetails
                 ? selectedOptionDetails.images[0]
@@ -338,7 +335,7 @@ function ProductDetails({ product }: Props) {
           <div className='flex flex-col sm:flex-row sm:items-center sm:gap-4'>
             <p
               title={selectedOptionDetails?.price.preview}
-              className='max-w-[280px] truncate font-bold text-lg md:text-xl'
+              className='max-w-[280px] truncate font-bold text-xl md:text-2xl'
             >
               {selectedOptionDetails?.price.preview}
             </p>

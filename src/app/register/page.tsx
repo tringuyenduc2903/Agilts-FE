@@ -1,17 +1,21 @@
 'use client';
 import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { FaFacebookF, FaGoogle } from 'react-icons/fa6';
 import { PopupContext } from '@/contexts/PopupProvider';
 import { Register, SingleImage } from '@/types/types';
 import { UserContext } from '@/contexts/UserProvider';
 import withNoAuth from '@/components/protected-page/withNoAuth';
-import { useGetSettingsQuery } from '@/lib/redux/query/adminQuery';
 import { useResponsive } from '@/lib/hooks/useResponsive';
 import CustomImage from '@/components/ui/CustomImage';
-import { useRegisterMutation } from '@/lib/redux/query/appQuery';
-import CustomInputPassword from '@/components/ui/CustomInputPassword';
+import {
+  useGetSettingsQuery,
+  useRegisterMutation,
+} from '@/lib/redux/query/appQuery';
+import CustomInputPassword from '@/components/ui/form/CustomInputPassword';
+import { referrerURL } from '@/config/config';
+import CustomInputText from '@/components/ui/form/CustomInputText';
 function RegisterPage() {
   const router = useRouter();
   const { refetchUser, getCsrfCookie, isLoadingCSRF } = useContext(UserContext);
@@ -44,11 +48,12 @@ function RegisterPage() {
   const errors = useMemo(() => {
     return isErrorRegister && (errorRegister as any)?.data;
   }, [isErrorRegister, errorRegister]);
+  const methods = useForm<Register>();
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<Register>();
+  } = methods;
   const { setVisiblePopup } = useContext(PopupContext);
   const onSubmit: SubmitHandler<Register> = useCallback(
     async (data) => {
@@ -60,7 +65,11 @@ function RegisterPage() {
   const redirectToOauth = useCallback((provider: 'google' | 'facebook') => {
     if (typeof window !== 'undefined') {
       window.open(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/redirect/${provider}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/redirect/${provider}${
+          referrerURL.includes(process.env.NEXT_PUBLIC_CLIENT_URL as string)
+            ? `?cb=${referrerURL}`
+            : ''
+        }`,
         '_self'
       );
     }
@@ -128,103 +137,87 @@ function RegisterPage() {
         )}
       </section>
       <section className='relative z-10 w-full min-h-screen px-4 py-32 md:px-0 md:w-4/5 lg:w-2/3 rounded-sm grid 2xl:grid-cols-2 overflow-hidden'>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          method='POST'
-          className='col-span-1 px-8 py-16 bg-neutral-50 flex flex-col justify-center items-center gap-4'
-        >
-          <h1 className='font-bold text-2xl md:text-4xl uppercase tracking-[4px] md:tracking-[8px]'>
-            Đăng ký
-          </h1>
-          <div className='w-full flex flex-col gap-2'>
-            <input
-              className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
-              type='name'
+        <FormProvider {...methods}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            method='POST'
+            className='col-span-1 px-8 py-16 bg-neutral-50 flex flex-col justify-center items-center gap-4'
+          >
+            <h1 className='font-bold text-2xl md:text-4xl uppercase tracking-[4px] md:tracking-[8px]'>
+              Đăng ký
+            </h1>
+            <CustomInputText
+              form_name='name'
+              type='text'
               placeholder='Nhập tên người dùng...'
-              disabled={isSubmitting || isLoadingCSRF || isLoadingRegister}
-              {...register('name')}
+              error={errors?.errors?.name?.[0]}
+              disabled={isSubmitting || isLoadingCSRF}
             />
-            {errors?.errors?.name && (
-              <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors?.errors.name[0]}
-              </p>
-            )}
-          </div>
-          <div className='w-full flex flex-col gap-2'>
-            <input
-              className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+            <CustomInputText
+              form_name='email'
               type='email'
               placeholder='Địa chỉ email'
-              {...register('email')}
-              disabled={isSubmitting || isLoadingCSRF || isLoadingRegister}
+              error={errors?.errors?.email?.[0]}
+              disabled={isSubmitting || isLoadingCSRF}
             />
-            {errors?.errors?.email && (
-              <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors?.errors.email[0]}
-              </p>
-            )}
-          </div>
-          <div className='w-full flex flex-col gap-2'>
             <CustomInputPassword
               placeholder='Nhập mật khẩu...'
-              {...register('password')}
               disabled={isSubmitting || isLoadingCSRF || isLoadingRegister}
+              error={errors?.errors?.password?.[0]}
             />
-            {errors?.errors?.password && (
-              <p className='text-red-500 font-bold text-sm md:text-base'>
-                {errors?.errors.password[0]}
-              </p>
-            )}
-          </div>
-          <div className='w-full flex flex-col gap-2'>
             <CustomInputPassword
+              form_name='password_confirmation'
               placeholder='Nhập lại mật khẩu...'
               {...register('password_confirmation')}
               disabled={isSubmitting || isLoadingCSRF || isLoadingRegister}
             />
-          </div>
-          <button
-            className='w-full rounded-sm bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
-            type='submit'
-            disabled={isSubmitting || isLoadingCSRF || isLoadingRegister}
-          >
-            Đăng ký
-          </button>
-          <div>
-            <div className='flex items-center gap-2'>
-              <p>Đã có tài khoản?</p>
-              <button
-                type='button'
-                className='font-bold'
-                onClick={() => router.push(`/login`)}
-                disabled={isSubmitting || isLoadingCSRF || isLoadingRegister}
-              >
-                Đăng nhập
-              </button>
-            </div>
-            <div className='flex lg:hidden flex-col gap-2 items-center'>
-              <p className='text-base font-bold'>Hoặc</p>
-              <div className='flex items-center gap-4'>
+            <button
+              className='w-full rounded-sm bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
+              type='submit'
+              disabled={isSubmitting || isLoadingCSRF || isLoadingRegister}
+            >
+              Đăng ký
+            </button>
+            <div>
+              <div className='flex items-center gap-2'>
+                <p>Đã có tài khoản?</p>
                 <button
                   type='button'
-                  className='bg-neutral-800 rounded-full p-2 text-white hover:text-red-500 transition-colors'
+                  className='font-bold'
+                  onClick={() => router.push(`/login`)}
                   disabled={isSubmitting || isLoadingCSRF || isLoadingRegister}
-                  onClick={() => redirectToOauth('google')}
                 >
-                  <FaGoogle className='text-lg' />
-                </button>
-                <button
-                  type='button'
-                  className='bg-neutral-800 rounded-full p-2 text-white hover:text-blue-500 transition-colors'
-                  disabled={isSubmitting || isLoadingCSRF || isLoadingRegister}
-                  onClick={() => redirectToOauth('facebook')}
-                >
-                  <FaFacebookF className='text-lg' />
+                  Đăng nhập
                 </button>
               </div>
+              <div className='flex 2xl:hidden flex-col gap-2 items-center'>
+                <p className='text-base font-bold'>Hoặc</p>
+                <div className='flex items-center gap-4'>
+                  <button
+                    type='button'
+                    className='bg-neutral-800 rounded-full p-2 text-white hover:text-red-500 transition-colors'
+                    disabled={
+                      isSubmitting || isLoadingCSRF || isLoadingRegister
+                    }
+                    onClick={() => redirectToOauth('google')}
+                  >
+                    <FaGoogle className='text-lg' />
+                  </button>
+                  <button
+                    type='button'
+                    className='bg-neutral-800 rounded-full p-2 text-white hover:text-blue-500 transition-colors'
+                    disabled={
+                      isSubmitting || isLoadingCSRF || isLoadingRegister
+                    }
+                    onClick={() => redirectToOauth('facebook')}
+                  >
+                    <FaFacebookF className='text-lg' />
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </FormProvider>
         <div className='hidden col-span-1 bg-neutral-800 text-white 2xl:flex flex-col justify-center items-center gap-8 px-24'>
           <h1 className='uppercase text-[56px] leading-[72px] font-bold tracking-[4px]'>
             Tự do & Chinh phục

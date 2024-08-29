@@ -12,7 +12,7 @@ import React, {
   useState,
 } from 'react';
 import { FaAngleLeft, FaXmark } from 'react-icons/fa6';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { PopupContext } from '@/contexts/PopupProvider';
 import {
   useConfirm2FAMutation,
@@ -23,6 +23,7 @@ import {
   useTwoFactorQrCodeQuery,
   useTwoFactorSecretKeyQuery,
 } from '@/lib/redux/query/appQuery';
+import CustomInputText from '@/components/ui/form/CustomInputText';
 type Props = {
   closeForm: () => void;
 };
@@ -90,11 +91,11 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
       error: errorDelete,
     },
   ] = useTurnOf2FAMutation();
+  const methods = useForm<Form>();
   const {
-    register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<Form>();
+  } = methods;
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {
       await confirm2FA({ code: Number(data.code) });
@@ -398,33 +399,28 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
             </div>
             <p className='text-xl md:text-2xl font-bold'>Nhập mã</p>
             <p>Nhập mã gồm 6 chữ số do ứng dụng xác thực tạo</p>
-            <form
-              className='flex flex-col gap-4'
-              onSubmit={handleSubmit(onSubmit)}
-              method='POST'
-            >
-              <div className='relative w-full flex flex-col gap-2'>
-                <input
-                  disabled={isSubmitting || isLoadingConfirm}
-                  className='w-full h-full px-4 py-3 md:py-4 border border-neutral-500 rounded-sm text-sm md:text-base'
+            <FormProvider {...methods}>
+              <form
+                className='flex flex-col gap-4'
+                onSubmit={handleSubmit(onSubmit)}
+                method='POST'
+              >
+                <CustomInputText
+                  form_name='code'
                   type='text'
                   placeholder='Mã'
-                  {...register('code')}
+                  error={errorsConfirm?.errors?.code?.[0]}
+                  disabled={isSubmitting || isLoadingConfirm}
                 />
-                {errorsConfirm?.errors?.code && (
-                  <p className='text-red-500 font-bold text-sm md:text-base'>
-                    {errorsConfirm.errors.code[0]}
-                  </p>
-                )}
-              </div>
-              <button
-                type='submit'
-                className='font-bold bg-neutral-800 text-white py-2 px-4 md:py-3 md:px-6 rounded-sm'
-                disabled={isSubmitting || isLoadingConfirm}
-              >
-                Xác nhận
-              </button>
-            </form>
+                <button
+                  type='submit'
+                  className='font-bold bg-neutral-800 text-white py-2 px-4 md:py-3 md:px-6 rounded-sm'
+                  disabled={isSubmitting || isLoadingConfirm}
+                >
+                  Xác nhận
+                </button>
+              </form>
+            </FormProvider>
           </div>
         )}
         {curStep === 4 && (

@@ -1,5 +1,5 @@
 'use client';
-import CustomRadio from '@/components/ui/CustomRadio';
+import CustomRadio from '@/components/ui/form/CustomRadio';
 import useClickOutside from '@/lib/hooks/useClickOutside';
 import useQueryString from '@/lib/hooks/useQueryString';
 import {

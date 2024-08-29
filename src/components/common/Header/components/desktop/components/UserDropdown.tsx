@@ -1,5 +1,7 @@
 import { PopupContext } from '@/contexts/PopupProvider';
+import { UserContext } from '@/contexts/UserProvider';
 import { useLogoutMutation } from '@/lib/redux/query/appQuery';
+import { setUser } from '@/lib/redux/slice/userSlice';
 import { useRouter } from 'next/navigation';
 import React, { useCallback, useContext, useEffect } from 'react';
 import {
@@ -9,12 +11,15 @@ import {
   IoHelpCircleOutline,
   IoExitOutline,
 } from 'react-icons/io5';
+import { useDispatch } from 'react-redux';
 type Props = {
   isOpenMenu: boolean;
   closeMenu: () => void;
 };
 function UserDropdown({ isOpenMenu, closeMenu }: Props) {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { getCsrfCookie, isLoadingCSRF } = useContext(UserContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const handleRedirect = useCallback(
     (url: string) => {
@@ -34,15 +39,16 @@ function UserDropdown({ isOpenMenu, closeMenu }: Props) {
   ] = useLogoutMutation();
   const handleLogout = useCallback(async () => {
     closeMenu();
+    await getCsrfCookie();
     await logout(null);
-  }, [closeMenu, logout]);
+  }, [closeMenu, getCsrfCookie, logout]);
   useEffect(() => {
-    if (isLoadingLogout) {
+    if (isLoadingLogout || isLoadingCSRF) {
       setVisiblePopup({ visibleLoadingPopup: true });
     } else {
       setVisiblePopup({ visibleLoadingPopup: false });
     }
-  }, [isLoadingLogout, setVisiblePopup]);
+  }, [isLoadingLogout, isLoadingCSRF, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessLogout) {
       setVisiblePopup({
@@ -51,6 +57,7 @@ function UserDropdown({ isOpenMenu, closeMenu }: Props) {
           message: 'Đăng xuất thành công!',
         },
       });
+      dispatch(setUser(null));
     }
     if (isErrorLogout && errorLogout) {
       setVisiblePopup({
@@ -60,7 +67,7 @@ function UserDropdown({ isOpenMenu, closeMenu }: Props) {
         },
       });
     }
-  }, [isSuccessLogout, isErrorLogout, errorLogout, setVisiblePopup]);
+  }, [isSuccessLogout, isErrorLogout, errorLogout, setVisiblePopup, dispatch]);
   return (
     <div
       className={`absolute top-[130%] right-0 bg-white border border-neutral-200 shadow ${

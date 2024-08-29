@@ -120,38 +120,18 @@ function DesktopNavigation() {
         </Link>
         <Link
           className={`h-full uppercase flex justify-center items-center px-4 ${
-            hoverMenu === 'stores' ? 'bg-white' : ''
+            hoverMenu === 'contact' ? 'bg-white' : ''
           }`}
-          href={`/stores`}
-          onMouseOver={() => setHoverMenu('stores')}
+          href={`/contact`}
+          onMouseOver={() => setHoverMenu('contact')}
           onMouseOut={() => setHoverMenu(null)}
           prefetch={true}
         >
           <p className='relative py-1'>
-            <span>Hệ thống cửa hàng</span>
+            <span>Liên hệ chúng tôi</span>
             <span
               className={`absolute left-1/2 -translate-x-1/2 -bottom-1 ${
-                hoverMenu === 'stores' || pathname.includes('stores')
-                  ? 'w-8'
-                  : 'w-0'
-              } h-[2px] bg-red-500 transition-all duration-300`}
-            ></span>
-          </p>
-        </Link>
-        <Link
-          className={`h-full uppercase flex justify-center items-center px-4 ${
-            hoverMenu === 'about-us' ? 'bg-white' : ''
-          }`}
-          href={`/about-us`}
-          onMouseOver={() => setHoverMenu('about-us')}
-          onMouseOut={() => setHoverMenu(null)}
-          prefetch={true}
-        >
-          <p className='relative py-1'>
-            <span>Về chúng tôi</span>
-            <span
-              className={`absolute left-1/2 -translate-x-1/2 -bottom-1 ${
-                hoverMenu === 'about-us' || pathname.includes('about-us')
+                hoverMenu === 'contact' || pathname.includes('contact')
                   ? 'w-8'
                   : 'w-0'
               } h-[2px] bg-red-500 transition-all duration-300`}

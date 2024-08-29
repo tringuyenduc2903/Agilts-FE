@@ -189,21 +189,25 @@ function ProductsDesktop({
             </button>
           )}
           <div ref={carouselRef} className='carousel-container'>
-            <div className='carousel-item'>
-              <button
-                className={`flex items-center gap-4 text-lg uppercase font-bold ${
-                  !searchParams.get('category') ? 'text-red-500' : ''
-                }`}
-                onClick={() => removeValueQueryString('category')}
-              >
-                Tất cả
-              </button>
-            </div>
-            {!isLoadingFilter && renderedCategory}
+            {!isLoadingFilter && (
+              <>
+                <div className='carousel-item'>
+                  <button
+                    className={`flex items-center gap-4 text-lg uppercase font-bold ${
+                      !searchParams.get('category') ? 'text-red-500' : ''
+                    }`}
+                    onClick={() => removeValueQueryString('category')}
+                  >
+                    Tất cả
+                  </button>
+                </div>
+                {renderedCategory}
+              </>
+            )}
             {isLoadingFilter && (
               <LoadingMultiItem
-                customClass='w-[42px] h-6 skeleton'
-                number={5}
+                customClass='w-[52px] h-6 skeleton'
+                number={6}
               />
             )}
           </div>

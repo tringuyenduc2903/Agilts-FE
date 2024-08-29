@@ -5,6 +5,7 @@ import logo from '../.././../../../../public/logo.png';
 import { useRouter } from 'next/navigation';
 import { FaAlignRight } from 'react-icons/fa6';
 import MenuRoutes from './components/MenuRoutes';
+import { title } from '@/config/config';
 function MobileNavigation() {
   const router = useRouter();
   const [isOpenMenu, setIsOpenMenu] = useState(false);
@@ -16,15 +17,20 @@ function MobileNavigation() {
           aria-label='btn-back-home'
           onClick={() => router.push(``)}
         >
-          <div className='w-[42px] h-[42px] overflow-hidden'>
-            <Image
-              width={42}
-              height={42}
-              className='w-full h-full object-cover'
-              src={logo}
-              alt='logo'
-              fetchPriority='high'
-            />
+          <div className='flex items-center'>
+            <div className='w-[42px] h-[42px] overflow-hidden'>
+              <Image
+                width={42}
+                height={42}
+                className='w-full h-full object-cover'
+                src={logo}
+                alt='logo'
+                fetchPriority='high'
+              />
+            </div>
+            <p className='text-xl font-bold uppercase'>
+              {title?.replace('A', '')}
+            </p>
           </div>
         </button>
         <button
@@ -35,8 +41,8 @@ function MobileNavigation() {
         </button>
       </header>
       <MenuRoutes
-      // isOpenMenu={isOpenMenu}
-      // closeMenu={() => setIsOpenMenu(false)}
+        isOpenMenu={isOpenMenu}
+        closeMenu={() => setIsOpenMenu(false)}
       />
     </>
   );

@@ -39,7 +39,7 @@ function MotorCycleLayout() {
             page={'Xe máy'}
           />
         )}
-        {/* {state.isMobile && (
+        {state.isMobile && (
           <ProductsMobile
             filterData={filterData}
             isSuccessFilter={isSuccessFilter}
@@ -47,7 +47,7 @@ function MotorCycleLayout() {
             isSuccessProducts={isSuccessProducts}
             isLoadingProducts={isLoadingProducts}
           />
-        )} */}
+        )}
       </Suspense>
     </main>
   );

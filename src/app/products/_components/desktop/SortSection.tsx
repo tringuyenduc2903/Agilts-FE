@@ -1,19 +1,23 @@
 import { sortItem } from '@/config/config';
 import useQueryString from '@/lib/hooks/useQueryString';
 import { useSearchParams } from 'next/navigation';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { FaCheck } from 'react-icons/fa6';
 type Props = any;
 function SortSection({ action, closeAction }: Props) {
   const [createQueryString] = useQueryString();
   const searchParams = useSearchParams();
-  const isActive = (column: string, direction: string | null) => {
-    const currentColumn = searchParams.get('sortColumn');
-    const currentDirection = searchParams.get('sortDirection');
-    return (
-      currentColumn === column && (!direction || currentDirection === direction)
-    );
-  };
+  const isActive = useCallback(
+    (column: string, direction: string | null) => {
+      const currentColumn = searchParams.get('sortColumn');
+      const currentDirection = searchParams.get('sortDirection');
+      return (
+        currentColumn === column &&
+        (!direction || currentDirection === direction)
+      );
+    },
+    [searchParams]
+  );
   return (
     <div
       className={`absolute top-[110%] right-0 bg-white w-max flex flex-col gap-2 ${

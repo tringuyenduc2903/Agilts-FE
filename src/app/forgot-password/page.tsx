@@ -1,6 +1,6 @@
 'use client';
 import React, { useCallback, useContext, useEffect } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import bgImg from '@/assets/port-title-area.jpg';
 import Image from 'next/image';
 import { PopupContext } from '@/contexts/PopupProvider';
@@ -15,14 +15,14 @@ function ForgotPasswordPage() {
   const { setVisiblePopup } = useContext(PopupContext);
   const [forgotPassword, { data, isSuccess, isLoading, isError, error }] =
     useForgotPasswordMutation();
+  const methods = useForm<Form>();
   const {
-    register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<Form>();
+  } = methods;
   const onSubmit: SubmitHandler<Form> = useCallback(
     async (data) => {
-      await forgotPassword(data.email);
+      await forgotPassword({ email: data.email });
     },
     [forgotPassword]
   );
@@ -52,7 +52,7 @@ function ForgotPasswordPage() {
     }
   }, [isSuccess, data, isError, error, setVisiblePopup]);
   return (
-    <main className='w-full pt-[72px] flex flex-col'>
+    <main className='relative w-full min-h-[60vh] pt-[72px] flex flex-col'>
       <section className='absolute h-full w-full -z-10 hidden lg:block'>
         <Image
           className='w-full h-full object-cover'
@@ -67,31 +67,33 @@ function ForgotPasswordPage() {
           </p>
         </div>
         <div className='col-span-1 px-4'>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            method='POST'
-            className='flex flex-col gap-4'
-          >
-            <label
-              className='lg:text-neutral-800 text-white text-center lg:text-start'
-              htmlFor='email'
+          <FormProvider {...methods}>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              method='POST'
+              className='flex flex-col gap-4'
             >
-              Tìm tài khoản của bạn
-            </label>
-            <CustomInputText
-              form_name='email'
-              type='email'
-              placeholder='Nhập địa chỉ email...'
-              disabled={isSubmitting}
-              reacthooksform={false}
-            />
-            <button
-              className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
-              disabled={isSubmitting}
-            >
-              Xác nhận
-            </button>
-          </form>
+              <label
+                className='lg:text-neutral-800 text-white text-center lg:text-start'
+                htmlFor='email'
+              >
+                Tìm tài khoản của bạn
+              </label>
+              <CustomInputText
+                form_name='email'
+                type='email'
+                formNoValidate
+                placeholder='Nhập địa chỉ email...'
+                disabled={isSubmitting}
+              />
+              <button
+                className='w-full rounded-sm bg-red-500 lg:bg-neutral-800 text-white py-3 md:py-4 font-bold tracking-[4px] text-base md:text-lg'
+                disabled={isSubmitting}
+              >
+                Xác nhận
+              </button>
+            </form>
+          </FormProvider>
         </div>
       </section>
     </main>

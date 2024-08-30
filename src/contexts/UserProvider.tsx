@@ -84,6 +84,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     isLoading: isLoadingCart,
   } = useGetCartQuery(null, { skip: !user });
   useEffect(() => {
+    getCsrfCookie(null);
     getUser(null);
   }, []);
   useEffect(() => {

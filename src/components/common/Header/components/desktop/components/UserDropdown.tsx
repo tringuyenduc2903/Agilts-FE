@@ -19,7 +19,7 @@ type Props = {
 function UserDropdown({ isOpenMenu, closeMenu }: Props) {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { getCsrfCookie, isLoadingCSRF } = useContext(UserContext);
+  const { refetchUser, getCsrfCookie, isLoadingCSRF } = useContext(UserContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const handleRedirect = useCallback(
     (url: string) => {
@@ -51,6 +51,7 @@ function UserDropdown({ isOpenMenu, closeMenu }: Props) {
   }, [isLoadingLogout, isLoadingCSRF, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessLogout) {
+      refetchUser();
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
@@ -67,7 +68,14 @@ function UserDropdown({ isOpenMenu, closeMenu }: Props) {
         },
       });
     }
-  }, [isSuccessLogout, isErrorLogout, errorLogout, setVisiblePopup, dispatch]);
+  }, [
+    isSuccessLogout,
+    isErrorLogout,
+    errorLogout,
+    setVisiblePopup,
+    dispatch,
+    refetchUser,
+  ]);
   return (
     <div
       className={`absolute top-[130%] right-0 bg-white border border-neutral-200 shadow ${

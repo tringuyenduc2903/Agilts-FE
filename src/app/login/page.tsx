@@ -17,7 +17,7 @@ import CustomInputText from '@/components/ui/form/CustomInputText';
 
 function LoginPage() {
   const router = useRouter();
-  const { getCsrfCookie, isLoadingCSRF } = useContext(UserContext);
+  const { refetchUser, getCsrfCookie, isLoadingCSRF } = useContext(UserContext);
   const { data: settingsData, isSuccess: isSuccessSettings } =
     useGetSettingsQuery('auth');
   const authBannerSmall = useMemo(() => {
@@ -107,14 +107,9 @@ function LoginPage() {
     if (isSuccessLogin) {
       loginData?.two_factor
         ? router.push(`/two-factor-qr-code`)
-        : setVisiblePopup({
-            visibleToastPopup: {
-              type: 'success',
-              message: 'Đăng nhập thành công',
-            },
-          });
+        : refetchUser();
     }
-  }, [isSuccessLogin, loginData, router, setVisiblePopup]);
+  }, [isSuccessLogin, loginData, router, refetchUser]);
 
   return (
     <main className='relative w-full h-full flex justify-center items-center font-medium text-sm sm:text-base overflow-y-auto'>

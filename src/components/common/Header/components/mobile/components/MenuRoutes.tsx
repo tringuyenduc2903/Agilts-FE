@@ -21,7 +21,8 @@ type Props = {
   closeMenu: () => void;
 };
 const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
-  const { user, getCsrfCookie, isLoadingCSRF } = useContext(UserContext);
+  const { user, refetchUser, getCsrfCookie, isLoadingCSRF } =
+    useContext(UserContext);
   const dispatch = useDispatch();
   const { setVisiblePopup } = useContext(PopupContext);
   const router = useRouter();
@@ -57,6 +58,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
           message: `Đăng xuất thành công!`,
         },
       });
+      refetchUser();
       dispatch(setUser(null));
       dispatch(setCurMotorbike(null));
       deleteCookie('buy_now');
@@ -79,6 +81,7 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
     dispatch,
     router,
     deleteCookie,
+    refetchUser,
   ]);
   return (
     <aside

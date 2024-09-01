@@ -6,7 +6,6 @@ import dynamic from 'next/dynamic';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
-// Hàm để tạo metadata dựa trên dữ liệu sản phẩm
 export async function generateMetadata({
   params,
 }: {
@@ -31,10 +30,6 @@ export async function generateMetadata({
     },
   };
 }
-
-const Aside = dynamic(() => import('../../_components/product-details/aside'), {
-  ssr: false,
-});
 const ProductDetails = dynamic(
   () => import('../../_components/product-details/productDetails'),
   {
@@ -47,56 +42,23 @@ const ProductDetails = dynamic(
     ),
   }
 );
-const Description = dynamic(
-  () => import('../../_components/product-details/description'),
+const ProductTab = dynamic(
+  () => import('../../_components/product-details/productTab'),
   {
     ssr: false,
     loading: () => (
-      <section className='container md:m-auto px-6 md:px-0 flex flex-col gap-4 w-full'>
-        <div className='w-[250px] h-[32px] skeleton'></div>
-        <div className='w-full h-[480px] skeleton'></div>
+      <section className='container m-auto px-4 py-8 bg-neutral-100 flex flex-col gap-6'>
+        <div className='flex justify-center items-center gap-8 bg-white py-4'>
+          <div className='skeleton w-[52px] h-[24px]'></div>
+          <div className='skeleton w-[52px] h-[24px]'></div>
+          <div className='skeleton w-[52px] h-[24px]'></div>
+          <div className='skeleton w-[52px] h-[24px]'></div>
+        </div>
+        <div className='w-full h-[40vh] skeleton'></div>
       </section>
     ),
   }
 );
-const Specifications = dynamic(
-  () => import('../../_components/product-details/specifications'),
-  {
-    ssr: false,
-    loading: () => (
-      <section className='container md:m-auto px-6 md:px-0 w-full flex flex-col gap-4'>
-        <div className='w-[250px] h-[32px] skeleton'></div>
-        <div className='w-full h-[480px] skeleton'></div>
-      </section>
-    ),
-  }
-);
-const Videos = dynamic(
-  () => import('../../_components/product-details/videos'),
-  {
-    ssr: false,
-
-    loading: () => (
-      <section className='container md:m-auto px-6 md:px-0 w-full flex flex-col gap-4'>
-        <div className='w-[250px] h-[32px] skeleton'></div>
-        <div className='w-full h-[480px] skeleton'></div>
-      </section>
-    ),
-  }
-);
-const Reviews = dynamic(
-  () => import('../../_components/product-details/reviews'),
-  {
-    ssr: false,
-    loading: () => (
-      <section className='container md:m-auto px-6 md:px-0 w-full flex flex-col gap-4'>
-        <div className='w-[250px] h-[32px] skeleton'></div>
-        <div className='w-full h-[480px] skeleton'></div>
-      </section>
-    ),
-  }
-);
-
 export default async function ProductDetailsPage({
   params,
 }: {
@@ -127,22 +89,18 @@ export default async function ProductDetailsPage({
           </p>
         </div>
       </section>
-      <Aside product={repo?.data} />
       <ProductDetails product={repo?.data} />
-      {repo?.data?.description && (
-        <Description description={repo?.data?.description} />
-      )}
-      {repo?.data?.specifications?.length > 0 && (
-        <Specifications specifications={repo?.data?.specifications} />
-      )}
-      {repo?.data?.videos.length > 0 && <Videos videos={repo?.data?.videos} />}
-      {repo?.data?.reviews_avg_rate && repo?.data?.reviews_count && (
-        <Reviews
-          product_id={repo?.data?.id}
-          reviews_avg_rate={repo?.data?.reviews_avg_rate}
-          reviews_count={repo?.data?.reviews_count}
-        />
-      )}
+      <ProductTab
+        specifications={repo?.data?.specifications}
+        description={repo?.data?.description}
+        videos={repo?.data?.videos}
+      />
+      {/*
+      <Reviews
+        product_id={repo?.data?.id}
+        reviews_avg_rate={repo?.data?.reviews_avg_rate}
+        reviews_count={repo?.data?.reviews_count}
+      /> */}
     </main>
   );
 }

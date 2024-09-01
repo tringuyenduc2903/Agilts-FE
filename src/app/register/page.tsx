@@ -18,7 +18,7 @@ import { referrerURL } from '@/config/config';
 import CustomInputText from '@/components/ui/form/CustomInputText';
 function RegisterPage() {
   const router = useRouter();
-  const { refetchUser, getCsrfCookie, isLoadingCSRF } = useContext(UserContext);
+  const { getCsrfCookie, isLoadingCSRF } = useContext(UserContext);
   const { data: settingsData, isSuccess: isSuccessSettings } =
     useGetSettingsQuery('auth');
   const authBannerSmall = useMemo(() => {
@@ -97,7 +97,6 @@ function RegisterPage() {
           message: 'Đăng ký tài khoản thành công!',
         },
       });
-      refetchUser();
     }
     if (isErrorRegister && errorRegister) {
       setVisiblePopup({
@@ -113,7 +112,6 @@ function RegisterPage() {
     errorRegister,
     setVisiblePopup,
     router,
-    refetchUser,
   ]);
   return (
     <main className='w-full h-full flex justify-center items-center font-medium text-sm sm:text-base overflow-y-auto'>

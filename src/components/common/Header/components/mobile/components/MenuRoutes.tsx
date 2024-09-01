@@ -151,16 +151,6 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
             <FaXmark className='text-2xl' />
           </button>
         </div>
-        {user && (
-          <button
-            className='mt-auto ml-auto bg-red-600 text-white px-8 py-2 tracking-[2px] text-base md:text-lg font-bold rounded-sm'
-            onClick={handleLogout}
-            disabled={isLoadingLogout}
-          >
-            Đăng xuất
-          </button>
-        )}
-
         <div className='flex flex-col gap-4'>
           <Link
             className={`uppercase text-lg font-semibold hover:text-red-500 transition-colors ${
@@ -208,6 +198,15 @@ const MenuRoutes: React.FC<Props> = React.memo(({ isOpenMenu, closeMenu }) => {
             Liên hệ chúng tôi
           </Link>
         </div>
+        {user && (
+          <button
+            className='mt-auto ml-auto bg-red-600 text-white px-8 py-2 tracking-[2px] text-base md:text-lg font-bold rounded-sm'
+            onClick={handleLogout}
+            disabled={isLoadingLogout}
+          >
+            Đăng xuất
+          </button>
+        )}
       </div>
     </aside>
   );

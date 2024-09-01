@@ -7,7 +7,7 @@ import {
   useGetProductsQuery,
 } from '@/lib/redux/query/appQuery';
 const ProductsDesktop = lazy(() => import('../_components/desktop'));
-// const ProductsMobile = lazy(() => import('../_components/mobile'));
+const ProductsMobile = lazy(() => import('../_components/mobile'));
 function AccessoriesLayout() {
   const searchParams = useSearchParams();
   const state = useResponsive();
@@ -39,7 +39,7 @@ function AccessoriesLayout() {
             page='Phụ kiện'
           />
         )}
-        {/* {state.isMobile && (
+        {state.isMobile && (
           <ProductsMobile
             filterData={filterData}
             isSuccessFilter={isSuccessFilter}
@@ -47,7 +47,7 @@ function AccessoriesLayout() {
             isSuccessProducts={isSuccessProducts}
             isLoadingProducts={isLoadingProducts}
           />
-        )} */}
+        )}
       </Suspense>
     </main>
   );

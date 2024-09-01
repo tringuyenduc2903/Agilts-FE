@@ -1,5 +1,4 @@
 'use client';
-import { UserContext } from '@/contexts/UserProvider';
 import Image from 'next/image';
 import React, {
   useCallback,
@@ -20,7 +19,6 @@ type Form = {
 };
 function TwoFactorQrCodePage() {
   const [curInput, setCurInput] = useState('code');
-  const { refetchUser } = useContext(UserContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const [verifyTwoFactor, { isSuccess, isLoading, isError, error }] =
     useVerifyTwoFactorMutation();
@@ -57,7 +55,6 @@ function TwoFactorQrCodePage() {
           message: 'Xác thực tài khoản thành công!',
         },
       });
-      refetchUser();
     }
     if (isError && error) {
       setVisiblePopup({
@@ -67,7 +64,7 @@ function TwoFactorQrCodePage() {
         },
       });
     }
-  }, [isSuccess, isError, error, setVisiblePopup, refetchUser]);
+  }, [isSuccess, isError, error, setVisiblePopup]);
   return (
     <main className='w-full pt-[72px] flex flex-col'>
       <section className='absolute h-full w-full -z-10 hidden lg:block'>

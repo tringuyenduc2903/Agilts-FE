@@ -26,6 +26,7 @@ type Props = {
   product: Product;
 };
 function ProductDetails({ product }: Props) {
+  console.log(product)
   const { user, wishlist } = useContext(UserContext);
   const pathname = usePathname();
   const router = useRouter();

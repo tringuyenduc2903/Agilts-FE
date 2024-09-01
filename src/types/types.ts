@@ -176,8 +176,8 @@ export type Product = {
   status: string;
   specifications: [
     {
-      key: string;
-      value: string;
+      title: string;
+      description: string;
     }
   ];
   deleted_at: string;
@@ -217,9 +217,9 @@ export type Review = {
     name: string;
     option_id: number;
     sku: string;
-    color: string;
-    version: string;
-    volume: null;
+    color: string | null;
+    version: string | null;
+    volume: string | null;
   };
   reviewable_preview: {
     name: string;

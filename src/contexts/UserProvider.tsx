@@ -14,7 +14,7 @@ import {
   useGetCartQuery,
   useGetCsrfCookieMutation,
   useGetDocumentQuery,
-  useGetUserMutation,
+  useGetUserQuery,
   useGetWishlistQuery,
 } from '@/lib/redux/query/appQuery';
 type FetchData = {
@@ -23,7 +23,6 @@ type FetchData = {
   user: User | null;
   isLoadingUser: boolean;
   isSuccessUser: boolean;
-  refetchUser: any;
   isErrorUser: boolean;
   isLoadingWishlist: boolean;
   isLoadingAddress: boolean;
@@ -44,8 +43,10 @@ type FetchData = {
 export const UserContext = createContext({} as FetchData);
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const [getCsrfCookie, { isLoading: isLoadingCSRF }] =
-    useGetCsrfCookieMutation();
+  const [
+    getCsrfCookie,
+    { isLoading: isLoadingCSRF, isSuccess: isSuccessCSRF },
+  ] = useGetCsrfCookieMutation();
   const dispatch = useDispatch();
   const user = useSelector(userInfo);
   const [cart, setCart] = useState<Cart[] | []>([]);
@@ -54,15 +55,12 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [addresses, setAddresses] = useState<Address[] | []>([]);
   const [defaultDocument, setDefaultDocument] = useState<Document | null>(null);
   const [allDocuments, setAllDocuments] = useState<Document[] | []>([]);
-  const [
-    getUser,
-    {
-      data: userData,
-      isSuccess: isSuccessUser,
-      isLoading: isLoadingUser,
-      isError: isErrorUser,
-    },
-  ] = useGetUserMutation();
+  const {
+    data: userData,
+    isSuccess: isSuccessUser,
+    isLoading: isLoadingUser,
+    isError: isErrorUser,
+  } = useGetUserQuery(null);
   const {
     data: wishListData,
     isSuccess: isSuccessWishlist,
@@ -85,7 +83,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   } = useGetCartQuery(null, { skip: !user });
   useEffect(() => {
     getCsrfCookie(null);
-    getUser(null);
   }, []);
   useEffect(() => {
     if (!user) {
@@ -154,7 +151,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     user,
     isSuccessUser,
     isErrorUser,
-    refetchUser: getUser,
     cart,
     setCart,
     wishlist,

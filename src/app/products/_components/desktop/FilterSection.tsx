@@ -363,7 +363,7 @@ function FilterSection({ filter, isSuccessFilter, closeFilter }: Filter) {
       className='fixed top-0 left-0 w-full h-full z-[9999] flex justify-center items-center'
       style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
     >
-      <div className='relative max-w-[4/5] h-5/6 bg-white rounded-sm overflow-hidden'>
+      <div className='relative w-1/2 2xl:w-1/3 h-5/6 bg-white rounded-sm overflow-hidden'>
         <div className='py-6 border-b border-neutral-300 flex justify-between items-center gap-4 px-4'>
           <div className='flex-1 flex justify-center items-center'>
             <h1 className='text-xl font-bold'>Tìm kiếm nâng cao</h1>
@@ -632,7 +632,7 @@ function FilterSection({ filter, isSuccessFilter, closeFilter }: Filter) {
                     }
                     isCheck={!form.volume.value}
                   />
-                  <span className='font-medium'>Tất cả thể tích</span>
+                  <span className='font-medium'>Tất cả dung tích</span>
                 </button>
                 {renderedVolume}
               </div>

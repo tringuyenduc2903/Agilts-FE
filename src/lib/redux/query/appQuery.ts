@@ -4,6 +4,7 @@ export const appApi = createApi({
   reducerPath: 'appApi',
   baseQuery: axiosBaseQuery(),
   tagTypes: [
+    'user',
     'address',
     'document',
     'cart',
@@ -20,13 +21,14 @@ export const appApi = createApi({
           method: 'GET',
         }),
       }),
-      getUser: builder.mutation({
+      getUser: builder.query({
         query: () => {
           return {
             url: `/api/user`,
             method: 'GET',
           };
         },
+        providesTags: ['user'],
       }),
       login: builder.mutation({
         query: (body) => ({
@@ -34,6 +36,7 @@ export const appApi = createApi({
           method: 'POST',
           data: body,
         }),
+        invalidatesTags: ['user'],
       }),
       register: builder.mutation({
         query: (body) => ({
@@ -41,12 +44,14 @@ export const appApi = createApi({
           method: 'POST',
           data: body,
         }),
+        invalidatesTags: ['user'],
       }),
       logout: builder.mutation({
         query: () => ({
           url: `/api/logout`,
           method: 'POST',
         }),
+        invalidatesTags: ['user'],
       }),
       confirmPassword: builder.mutation({
         query: (body) => ({
@@ -126,12 +131,14 @@ export const appApi = createApi({
           method: 'POST',
           data: body,
         }),
+        invalidatesTags: ['user'],
       }),
       turnOf2FA: builder.mutation({
         query: () => ({
           url: `/api/user/two-factor-authentication`,
           method: 'POST',
         }),
+        invalidatesTags: ['user'],
       }),
       getAddress: builder.query({
         query: () => ({
@@ -275,6 +282,7 @@ export const appApi = createApi({
           method: 'PUT',
           data: body,
         }),
+        invalidatesTags: ['user'],
       }),
       getOrders: builder.query({
         query: (search) => ({
@@ -351,7 +359,7 @@ export const appApi = createApi({
 
 export const {
   useGetCsrfCookieMutation,
-  useGetUserMutation,
+  useGetUserQuery,
   useRegisterMutation,
   useLoginMutation,
   useLogoutMutation,

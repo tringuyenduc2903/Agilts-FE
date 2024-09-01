@@ -33,6 +33,7 @@ function Reviews({
     id: product_id,
     search: searchParams.toString(),
   });
+  console.log(reviewData);
   const {
     data: filterData,
     isLoading: isLoadingFilter,

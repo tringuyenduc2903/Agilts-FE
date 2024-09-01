@@ -41,8 +41,7 @@ const socials: Social = {
   },
 };
 function AccountsPage() {
-  const { user, refetchUser, getCsrfCookie, isLoadingCSRF } =
-    useContext(UserContext);
+  const { user, getCsrfCookie, isLoadingCSRF } = useContext(UserContext);
   const { setVisibleModal } = useContext(ModalContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const [
@@ -133,10 +132,9 @@ function AccountsPage() {
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
-          message: `Thay đổi thông tin tài khoản thành công!`,
+          message: `Cập nhật thông tin tài khoản thành công!`,
         },
       });
-      refetchUser();
     }
     if (isErrorUpdate && errorUpdate) {
       setVisiblePopup({
@@ -146,13 +144,7 @@ function AccountsPage() {
         },
       });
     }
-  }, [
-    isSuccessUpdate,
-    refetchUser,
-    isErrorUpdate,
-    errorUpdate,
-    setVisiblePopup,
-  ]);
+  }, [isSuccessUpdate, isErrorUpdate, errorUpdate, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessPostData) {
       setVisiblePopup({
@@ -173,6 +165,7 @@ function AccountsPage() {
   }, [isSuccessPostData, isErrorPostData, errorPostData, setVisiblePopup]);
   useEffect(() => {
     if (isSuccessDelete) {
+      setVisibleModal('visibleConfirmModal');
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',

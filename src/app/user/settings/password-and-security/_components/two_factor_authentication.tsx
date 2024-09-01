@@ -31,7 +31,7 @@ type Form = {
   code: string;
 };
 const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
-  const { user, refetchUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const { setVisibleModal } = useContext(ModalContext);
   const { setVisiblePopup } = useContext(PopupContext);
   const [curStep, setCurStep] = useState(1);
@@ -164,7 +164,6 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
   }, [isSuccessConfirm]);
   useEffect(() => {
     if (isSuccessDelete) {
-      refetchUser();
       setVisiblePopup({
         visibleToastPopup: {
           type: 'success',
@@ -181,14 +180,7 @@ const TwoFactorAuthenticationPopup: React.FC<Props> = ({ closeForm }) => {
         },
       });
     }
-  }, [
-    isSuccessDelete,
-    isErrorDelete,
-    errorDelete,
-    setVisiblePopup,
-    closeForm,
-    refetchUser,
-  ]);
+  }, [isSuccessDelete, isErrorDelete, errorDelete, setVisiblePopup, closeForm]);
   const handleDownload = useCallback(() => {
     if (isSuccessListCodes && listCodes) {
       const element = document.createElement('a');
